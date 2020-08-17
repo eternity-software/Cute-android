@@ -14,6 +14,8 @@
 
     <color name="colorBackground">#403D49</color>
     <color name="colorBackgroundElements">#707070</color>
+    <color name="colorFrontElements">#A2A2A2</color>
+    <color name="colorText">#FFFFFF</color>
 
 
     <color name="colorWhite">#FFFFFF</color>

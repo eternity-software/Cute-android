@@ -8,6 +8,20 @@
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
+    <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
     <style name="SplashTheme" parent="Theme.AppCompat">
         <item name="android:windowBackground">@drawable/splash</item>
     </style>

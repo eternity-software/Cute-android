@@ -2,14 +2,23 @@ package ru.etysoft.cute;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
-public class SettingsActivity extends AppCompatActivity {
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+
+public class SettingsActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
 
     //Константы
     private String ISDARK_THEME = "APP_THEME_NIGHT";
@@ -43,9 +52,28 @@ public class SettingsActivity extends AppCompatActivity {
                 changeTheme(buttonView);
             }
         });
+
+        TextView verisonTextView = findViewById(R.id.versionTextView);
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            verisonTextView.setText("version: " + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            verisonTextView.setText("version: unknown");
+        }
+
     }
 
 
+   // Показ FloatingBottomSheet
+    public void showBSheet(View v)
+    {
+        FloatingBottomSheet bottomSheet = new  FloatingBottomSheet();
+        bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
+        Drawable icon = ContextCompat.getDrawable(this, R.drawable.logo);
+        bottomSheet.setContent(icon, "Test floating", "It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. ", "1", "2", null, null);
+    }
 
 
 
@@ -70,5 +98,8 @@ public class SettingsActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onButtonClicked(String text) {
 
+    }
 }
