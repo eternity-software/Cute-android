@@ -10,11 +10,20 @@ public class SplashScreen extends AppCompatActivity {
     private String ISDARK_THEME = "APP_THEME_NIGHT";
 
     private AppSettings appSettings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         appSettings = new AppSettings(this);
+
+        // Запуск активности
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
+
+        // Инициализация текущей темы и её применение
         if(appSettings.getBoolean(ISDARK_THEME))
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -23,9 +32,5 @@ public class SplashScreen extends AppCompatActivity {
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        finish();
     }
 }

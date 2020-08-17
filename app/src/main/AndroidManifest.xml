@@ -9,9 +9,8 @@
         android:roundIcon="@mipmap/launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Settings"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".SettingsActivity"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".SplashScreen"

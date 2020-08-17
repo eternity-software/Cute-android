@@ -3,25 +3,20 @@
     >
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <stroke
-                android:width="1dp"
-                android:color="@color/colorPrimaryGray" />
-            <solid android:color="@color/colorBackground" />
+            <solid android:color="@color/colorMain" />
             <padding
                 android:left="1dp"
                 android:right="1dp"
                 android:bottom="1dp"
                 android:top="1dp" />
-            <corners android:radius="100dp" />
+            <corners android:radius="10dp" />
         </shape>
     </item>
     <item
         android:state_enabled="false">
         <shape android:shape="rectangle">
-            <stroke
-                android:width="1dp"
-                android:color="@color/colorPrimaryGray" />
-            <solid android:color="@color/colorBackground" />
+
+            <solid android:color="@color/colorPrimaryDark" />
 
             <padding
                 android:left="1dp"
@@ -29,7 +24,7 @@
                 android:bottom="1dp"
                 android:top="1dp" />
 
-            <corners android:radius="100dp" />
+            <corners android:radius="10dp" />
 
         </shape>
 
@@ -37,11 +32,9 @@
 
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <stroke
-                android:width="1dp"
-                android:color="@color/colorBackgroundElements" />
 
-            <solid android:color="@color/colorBackgroundElements" />
+
+            <solid android:color="@color/colorMainSupport" />
 
             <padding
                 android:left="1dp"
@@ -49,7 +42,7 @@
                 android:bottom="1dp"
                 android:top="1dp" />
 
-            <corners android:radius="100dp" />
+            <corners android:radius="10dp" />
 
         </shape>
 

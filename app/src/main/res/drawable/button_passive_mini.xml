@@ -12,7 +12,7 @@
                 android:right="1dp"
                 android:bottom="1dp"
                 android:top="1dp" />
-            <corners android:radius="100dp" />
+            <corners android:radius="10dp" />
         </shape>
     </item>
     <item
@@ -29,7 +29,7 @@
                 android:bottom="1dp"
                 android:top="1dp" />
 
-            <corners android:radius="100dp" />
+            <corners android:radius="10dp" />
 
         </shape>
 
@@ -49,7 +49,7 @@
                 android:bottom="1dp"
                 android:top="1dp" />
 
-            <corners android:radius="100dp" />
+            <corners android:radius="10dp" />
 
         </shape>
 
