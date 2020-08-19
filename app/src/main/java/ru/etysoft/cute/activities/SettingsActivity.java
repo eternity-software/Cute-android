@@ -1,8 +1,4 @@
-package ru.etysoft.cute;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
+package ru.etysoft.cute.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -14,8 +10,12 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
+import ru.etysoft.cute.AppSettings;
+import ru.etysoft.cute.R;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 
 public class SettingsActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
@@ -66,27 +66,35 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
     }
 
 
-   // Показ FloatingBottomSheet
-    public void showBSheet(View v)
-    {
-        FloatingBottomSheet bottomSheet = new  FloatingBottomSheet();
+    // Показ FloatingBottomSheet
+    public void showBSheet(View v) {
+        final FloatingBottomSheet bottomSheet = new FloatingBottomSheet();
+
         bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
         Drawable icon = ContextCompat.getDrawable(this, R.drawable.logo);
-        bottomSheet.setContent(icon, "Test floating", "It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. ", "1", "2", null, null);
+        bottomSheet.setCancelable(true);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheet.getDialog().cancel();
+            }
+        };
+
+        bottomSheet.setContent(icon, "Test floating", "It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. ", "1", "2", null, onClickListener);
     }
 
 
+    public void showMeet(View v) {
+        Intent intent = new Intent(SettingsActivity.this, Meet.class);
+        startActivity(intent);
+    }
 
-    public void changeTheme(View v)
-    {
+    public void changeTheme(View v) {
         //Поверка какая тема сейчас стоит
-        if(!appSettings.getBoolean(ISDARK_THEME))
-        {
+        if (!appSettings.getBoolean(ISDARK_THEME)) {
             appSettings.setBoolean(ISDARK_THEME, true);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-        else
-        {
+        } else {
             appSettings.setBoolean(ISDARK_THEME, false);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
@@ -98,8 +106,4 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
         finish();
     }
 
-    @Override
-    public void onButtonClicked(String text) {
-
-    }
 }

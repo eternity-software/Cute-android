@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +19,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import ru.etysoft.cute.R;
 
@@ -51,6 +47,7 @@ public class FloatingBottomSheet extends BottomSheetDialogFragment {
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
     }
 
+
     @Override
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
@@ -61,42 +58,58 @@ public class FloatingBottomSheet extends BottomSheetDialogFragment {
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
         // Получение поведения
-        FrameLayout bottomSheet = dialog.findViewById(R.id.design_bottom_sheet);
+        final FrameLayout bottomSheet = dialog.findViewById(R.id.design_bottom_sheet);
 
-        // Ловим COLLAPSED и не даём промежуточному положению существовать
+        // Ловим COLLAPSED и не даём промежуточному положению существовать, а так же убираем слайд при невозможности отменить
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                @Override
-                public void onStateChanged(@NonNull View view, int i) {
-                     if(i == BottomSheetBehavior.STATE_COLLAPSED) {
-                         getDialog().cancel();
-                     }
-                     else if(i == BottomSheetBehavior.STATE_HIDDEN) {
-                         getDialog().cancel();
-                     }
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetBehavior.setPeekHeight(0);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                if (i == BottomSheetBehavior.STATE_DRAGGING) {
+                    if (!isCancelable()) {
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
                 }
-
-                @Override
-                public void onSlide(@NonNull View view, float v) {
-
+                if (i == BottomSheetBehavior.STATE_COLLAPSED) {
+                    if (isCancelable()) {
+                        getDialog().cancel();
+                    } else {
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                } else if (i == BottomSheetBehavior.STATE_HIDDEN) {
+                    getDialog().cancel();
                 }
-            });
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
+
 
     }
 
 
     // Задаём контент
-    public void setContent(Drawable image, String title, String text, String button_text1, String button_text2, View.OnClickListener passiveButtonClick, View.OnClickListener activeButtonClick)
-    {
-       icon = image;
-       this.title = title;
-       this.text = text;
-       passive_button = button_text1;
-       active_button = button_text2;
+    public void setContent(Drawable image, String title, String text) {
+        icon = image;
+        this.title = title;
+        this.text = text;
+    }
 
-       this.passiveButtonClick = passiveButtonClick;
-       this.activeButtonClick = activeButtonClick;
+    // Задаём контент
+    public void setContent(Drawable image, String title, String text, String button_text1, String button_text2, View.OnClickListener passiveButtonClick, View.OnClickListener activeButtonClick) {
+        icon = image;
+        this.title = title;
+        this.text = text;
+        passive_button = button_text1;
+        active_button = button_text2;
+
+        this.passiveButtonClick = passiveButtonClick;
+        this.activeButtonClick = activeButtonClick;
     }
 
 
@@ -106,6 +119,7 @@ public class FloatingBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_floating, container, true);
         view = v;
+
 
         LinearLayout mother = v.findViewById(R.id.motherButtons);
 
@@ -144,7 +158,6 @@ public class FloatingBottomSheet extends BottomSheetDialogFragment {
     }
 
     public interface BottomSheetListener {
-        void onButtonClicked(String text);
     }
 
     @Override

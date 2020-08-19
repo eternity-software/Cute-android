@@ -13,9 +13,13 @@
     <color name="colorGoodGray">#E4E4E4</color>
 
     <color name="colorBackground">#403D49</color>
+    <color name="colorDarkBackground">#34323A</color>
     <color name="colorBackgroundElements">#707070</color>
     <color name="colorFrontElements">#A2A2A2</color>
     <color name="colorText">#FFFFFF</color>
+    <color name="colorMainText">#FFFFFF</color>
+    <color name="colorError">#EA3939</color>
+    <color name="colorSuccess">#4CAF50</color>
 
 
     <color name="colorWhite">#FFFFFF</color>

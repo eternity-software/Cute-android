@@ -6,10 +6,13 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import ru.etysoft.cute.activities.MainActivity;
+
 public class SplashScreen extends AppCompatActivity {
     private String ISDARK_THEME = "APP_THEME_NIGHT";
 
     private AppSettings appSettings;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,19 +21,17 @@ public class SplashScreen extends AppCompatActivity {
         appSettings = new AppSettings(this);
 
         // Запуск активности
-        Intent i = new Intent(this, SettingsActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
 
         // Инициализация текущей темы и её применение
-        if(appSettings.getBoolean(ISDARK_THEME))
-        {
+        if (appSettings.getBoolean(ISDARK_THEME)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-        else
-        {
+        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
     }
 }
