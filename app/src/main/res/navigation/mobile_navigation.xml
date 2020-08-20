@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="ru.etysoft.cute.fragments.dialogs.DialogsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/activity_meet">
+        tools:layout="@layout/activity_dialogs">
         <action
             android:id="@+id/action_navigation_home_to_navigation_dashboard"
             app:destination="@+id/navigation_dashboard"
@@ -26,14 +26,14 @@
         android:id="@+id/navigation_dashboard"
         android:name="ru.etysoft.cute.fragments.account.AccountFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/activity_meet">
+        tools:layout="@layout/activity_account">
         <action
             android:id="@+id/action_navigation_dashboard_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
 
     <fragment
-        android:id="@+id/search"
+        android:id="@+id/explore"
         android:name="ru.etysoft.cute.fragments.explore.ExploreFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/activity_meet">

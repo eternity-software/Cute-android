@@ -8,7 +8,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,10 +25,13 @@ import ru.etysoft.cute.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.requests.APIRunnable;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
+import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
+
+    public static final boolean isDev = true;
 
     private final NetworkStateReceiver stateReceiver = new NetworkStateReceiver();
     private BottomNavigationView bottomNavigationView;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     private AccountFragment fragmentAccount;
     private ExploreFragment fragmentExplore;
     private AppSettings appSettings;
+
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -49,19 +53,29 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                 viewPager.setCurrentItem(0);
             } else if (item.getItemId() == R.id.dialogs) {
                 viewPager.setCurrentItem(1);
+                try {
+                    fragmentDialogs.updateDialogList();
+                } catch (Exception e) {
+                }
             } else if (item.getItemId() == R.id.account) {
                 viewPager.setCurrentItem(2);
+                try {
+                    fragmentAccount.updateData();
+                } catch (Exception e) {
+                }
             }
 
             return false;
         }
     };
 
+    private boolean isbanned = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Logger.logActivity("Created Main");
         appSettings = new AppSettings(this);
 
         // Проверка сессии
@@ -80,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         // Инициализация навигации
         setupNavigation();
 
-        // Открытие настроек разработчика
-        devOptions();
 
         // Проверка интернета
         if (Methods.hasInternet(this)) {
@@ -89,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         } else {
             CustomToast.show(getString(R.string.err_no_internet), R.drawable.icon_error, MainActivity.this);
         }
+
+        // Открытие настроек разработчика
+
     }
 
     @Override
@@ -101,6 +116,12 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             @Override
             public void run() {
                 checksAPI();
+                try {
+                    fragmentAccount.updateData();
+                } catch (Exception e) {
+
+                }
+
             }
         };
     }
@@ -140,23 +161,22 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
+                                    if (!isbanned) {
+                                        final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
 
-                                    View.OnClickListener onClickListener = new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                                            startActivity(intent);
-                                            floatingBottomSheet.dismiss();
-                                        }
-                                    };
-
-                                    floatingBottomSheet.setContent(getResources().getDrawable(R.drawable.logo), "Режим разработчика", "Вы можете открыть дополнительное меню разработчика.", "ОТКРЫТЬ", null, onClickListener, null);
-                                    floatingBottomSheet.show(getSupportFragmentManager(), "blocked");
-                                    floatingBottomSheet.setCancelable(true);
-
-                                    finish();
-                                    CustomToast.show(getString(R.string.err_confirm), R.drawable.icon_error, MainActivity.this);
+                                        View.OnClickListener onClickListener = new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(MainActivity.this, Meet.class);
+                                                startActivity(intent);
+                                                floatingBottomSheet.dismiss();
+                                            }
+                                        };
+                                        floatingBottomSheet.setContent(getResources().getDrawable(R.drawable.icon_uber), getString(R.string.banned_title), getString(R.string.banned_text));
+                                        floatingBottomSheet.show(getSupportFragmentManager(), "blocked");
+                                        floatingBottomSheet.setCancelable(false);
+                                        isbanned = true;
+                                    }
                                 }
                             });
                         }
@@ -171,14 +191,16 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
                 }
             };
-            Methods.amIConfirmed(session, apiRunnable, MainActivity.this);
+            Methods.getMyAccount(session, apiRunnable, MainActivity.this);
         } else {
-            Intent intent = new Intent(MainActivity.this, Meet.class);
-            AppSettings appSettings = new AppSettings(this);
-            appSettings.clean();
-            startActivity(intent);
-            CustomToast.show("Session error", R.drawable.icon_error, MainActivity.this);
-            finish();
+            if (!isbanned) {
+                Intent intent = new Intent(MainActivity.this, Meet.class);
+                AppSettings appSettings = new AppSettings(this);
+                appSettings.clean();
+                startActivity(intent);
+                CustomToast.show("Session error", R.drawable.icon_error, MainActivity.this);
+                finish();
+            }
         }
     }
 
@@ -231,9 +253,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         setupViewPager(viewPager);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.dialogs, R.id.account)
-                .build();
         navView.setSelectedItemId(R.id.dialogs);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -249,6 +268,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         viewPagerAdapter.addFragment(fragmentExplore);
         viewPagerAdapter.addFragment(fragmentDialogs);
         viewPagerAdapter.addFragment(fragmentAccount);
+        viewPager.setSaveEnabled(true);
+        viewPager.setSaveFromParentEnabled(true);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(viewPagerAdapter);
     }
 }

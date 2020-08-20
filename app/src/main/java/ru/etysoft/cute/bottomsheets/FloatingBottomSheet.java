@@ -1,8 +1,6 @@
 package ru.etysoft.cute.bottomsheets;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -75,11 +73,13 @@ public class FloatingBottomSheet extends BottomSheetDialogFragment {
                 if (i == BottomSheetBehavior.STATE_COLLAPSED) {
                     if (isCancelable()) {
                         getDialog().cancel();
+                        getDialog().dismiss();
                     } else {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     }
                 } else if (i == BottomSheetBehavior.STATE_HIDDEN) {
                     getDialog().cancel();
+                    getDialog().dismiss();
                 }
             }
 
@@ -101,12 +101,12 @@ public class FloatingBottomSheet extends BottomSheetDialogFragment {
     }
 
     // Задаём контент
-    public void setContent(Drawable image, String title, String text, String button_text1, String button_text2, View.OnClickListener passiveButtonClick, View.OnClickListener activeButtonClick) {
+    public void setContent(Drawable image, String title, String text, String active_button_text, String passive_button_text, View.OnClickListener activeButtonClick, View.OnClickListener passiveButtonClick) {
         icon = image;
         this.title = title;
         this.text = text;
-        passive_button = button_text1;
-        active_button = button_text2;
+        passive_button = passive_button_text;
+        active_button = active_button_text;
 
         this.passiveButtonClick = passiveButtonClick;
         this.activeButtonClick = activeButtonClick;
@@ -171,23 +171,5 @@ public class FloatingBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                BottomSheetDialog d = (BottomSheetDialog) dialog;
-
-                FrameLayout bottomSheet = (FrameLayout) d.findViewById(R.id.design_bottom_sheet);
-                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
-
-        return dialog;
-    }
 
 }

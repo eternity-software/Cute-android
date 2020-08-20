@@ -35,6 +35,16 @@
     <string name="confirmation_send_another">Send another</string>
     <string name="confirmation_send">Another code has been sended</string>
 
+    // Bottom navigation
+    <string name="explore">Explore</string>
+    <string name="messages">Messages</string>
+    <string name="account">Account</string>
+
+    // Banned
+    <string name="banned_title">You are banned</string>
+    <string name="banned_text">Oops! Looks like your account is banned :(</string>
+    <string name="banned_button">Sign up</string>
+
     // Block
     <string name="bl_title">Cute is not available</string>
     <string name="bl_text">Cute is not available at the moment.</string>
@@ -91,6 +101,8 @@
     <string name="errcode_CM001_4">Unknown creating error</string>
 
     <string name="errcode_CM002_1">Can\'t find conversation</string>
+
+    <string name="errcode_CM003_1">You haven\'t conversations</string>
 
 
     <string name="title_activity_navigation">Navigation</string>

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Account"></activity>
+        <activity android:name=".activities.Dialogs"></activity>
+        <activity android:name=".activities.Account" />
 
         <receiver android:name=".utils.NetworkStateReceiver">
             <intent-filter>
@@ -23,7 +24,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.MainActivity" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Confirmation"
             android:configChanges="orientation|keyboardHidden"

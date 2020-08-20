@@ -23,6 +23,7 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="45dp"
+        android:elevation="6dp"
         android:background="@color/colorBackground"
 
         app:itemIconTint="@drawable/bottom_items"

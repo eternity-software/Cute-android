@@ -26,15 +26,33 @@ public class Methods {
         return GET.execute(finalurl);
     }
 
+    public static void getConversations(String session, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "conversation.getList?session=" + session;
+        Logger.logRequest("GET", "[GETCONVS]: " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity);
+    }
+
+    public static void getCacheConversations(String session, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "conversation.getList?session=" + session;
+        Logger.logRequest("CACHE", "[GETCONVS]: " + finalurl);
+        GetAPI.executeCache(finalurl, apiRunnable, activity);
+    }
+
     public static String sendNewConfirmationCode(String session) {
         String finalurl = domain + "account.sendConfirmMail?session=" + session;
-        Logger.logRequest("GET", "[ISCONFIRM]: " + finalurl);
+        Logger.logRequest("GET", "[SENDEMAIL]: " + finalurl);
         return GET.execute(finalurl);
     }
 
-    public static void amIConfirmed(String session, APIRunnable apiRunnable, Activity activity) {
+    public static void getMyAccount(String session, APIRunnable apiRunnable, Activity activity) {
         String finalurl = domain + "account.get?session=" + session;
-        Logger.logRequest("GET", "[ISCONFIRM]: " + finalurl);
+        Logger.logRequest("GET", "[GETMYACCOUNT]: " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity);
+    }
+
+    public static void changePassword(String session, String password, String newPassword, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "account.changePassword?session=" + session + "&password=" + password + "&new=" + newPassword;
+        Logger.logRequest("GET", "[CHANGEPASS]: " + finalurl);
         GetAPI.execute(finalurl, apiRunnable, activity);
     }
 

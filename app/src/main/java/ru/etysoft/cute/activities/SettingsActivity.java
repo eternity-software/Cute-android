@@ -16,7 +16,10 @@ import androidx.core.content.ContextCompat;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.requests.APIRunnable;
+import ru.etysoft.cute.utils.CustomToast;
 
 public class SettingsActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
 
@@ -65,6 +68,24 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
 
     }
 
+
+    public void changePassword(View v) {
+        TextView password = findViewById(R.id.password);
+        TextView newPassword = findViewById(R.id.newPassword);
+
+        APIRunnable apiRunnable = new APIRunnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CustomToast.show("Success", R.drawable.icon_success, SettingsActivity.this);
+                    }
+                });
+            }
+        };
+        Methods.changePassword(appSettings.getString("session"), password.getText().toString(), newPassword.getText().toString(), apiRunnable, SettingsActivity.this);
+    }
 
     // Показ FloatingBottomSheet
     public void showBSheet(View v) {

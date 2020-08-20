@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
     public static final String TAG = NetworkStateReceiver.class.getSimpleName();
-    private static boolean online = true;  // we expect the app being online when starting
+    private static boolean online = true;
     public Runnable runnable;
 
     public void onReceive(Context context, Intent intent) {

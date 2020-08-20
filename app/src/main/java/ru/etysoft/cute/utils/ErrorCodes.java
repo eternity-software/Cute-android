@@ -54,7 +54,7 @@ public class ErrorCodes {
         codes.put("#CM001.3", context.getString(R.string.errcode_CM001_3));
         codes.put("#CM001.4", context.getString(R.string.errcode_CM001_4));
 
-        codes.put("#CM002.1", context.getString(R.string.errcode_CM002_1));
+        codes.put("#CM003.1", context.getString(R.string.errcode_CM003_1));
     }
 
     public static String getError(String code) {

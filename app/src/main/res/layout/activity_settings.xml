@@ -85,6 +85,7 @@
                 android:background="@drawable/button_active_mini"
                 android:fontFamily="@font/montserrat"
                 android:text="ACTIVE MINI"
+                android:onClick="changePassword"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -141,7 +142,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editText3"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -150,7 +151,7 @@
                 android:ems="10"
                 android:fontFamily="@font/montserrat"
                 android:foregroundGravity="left|clip_horizontal"
-                android:hint="@string/app_name"
+                android:hint="Old password"
                 android:inputType="textPersonName"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
@@ -163,7 +164,7 @@
                 android:background="@color/colorPrimaryGray" />
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/newPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -172,7 +173,7 @@
                 android:ems="10"
                 android:fontFamily="@font/montserrat"
                 android:foregroundGravity="left|clip_horizontal"
-                android:hint="@string/app_name"
+                android:hint="New password"
                 android:inputType="textPersonName"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"

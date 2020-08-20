@@ -4,17 +4,17 @@
     <item
         android:id="@+id/explore"
         android:icon="@drawable/icon_explore"
-        android:title="Поиск" />
+        android:title="@string/explore" />
     <item
         android:id="@+id/dialogs"
         android:checked="true"
         android:icon="@drawable/icon_chat"
-        android:title="Сообщения" />
+        android:title="@string/messages" />
 
     <item
         android:id="@+id/account"
         android:icon="@drawable/icon_account"
-        android:title="Аккаунт" />
+        android:title="@string/account" />
 
 
 </menu>

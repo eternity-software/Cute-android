@@ -16,5 +16,9 @@ public class Logger {
         Log.d("[RECEIVE]", text);
     }
 
+    public static void logActivity(String text) {
+        Log.d("[ACTIVITY]", text);
+    }
+
 
 }
