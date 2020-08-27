@@ -11,8 +11,27 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginLeft="14dp"
-        android:background="@drawable/button_passive"
-        app:srcCompat="@drawable/logo"></ImageView>
+        android:background="@drawable/circle_gradiaent"
+        app:tint="@color/colorMain" />
+
+    <TextView
+        android:id="@+id/acronym"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="-60dp"
+        android:fontFamily="@font/montserratmedium"
+        android:gravity="center"
+        android:text="K"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/status"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginTop="42dp"
+        android:background="@drawable/circle_offline" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,11 +41,12 @@
 
         <TextView
             android:id="@+id/label"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
-            android:text="karlov"
+            android:singleLine="true"
             android:textColor="@color/colorText"
+            android:text="karlovkarlovkarlovkarlovkarlovkarlovkarlovkarlovkarlovkarlovkarlov"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -49,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_weight="10"
+                android:layout_weight="7"
                 android:fontFamily="@font/montserrat"
                 android:gravity="end"
                 android:text="9:41"

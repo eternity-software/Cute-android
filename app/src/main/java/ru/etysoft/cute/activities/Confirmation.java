@@ -24,7 +24,7 @@ public class Confirmation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
         // Анимация
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
         AppSettings appSettings = new AppSettings(this);
 
         TextView email = findViewById(R.id.emailto);
@@ -32,7 +32,7 @@ public class Confirmation extends AppCompatActivity {
     }
 
     public void back(View v) {
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
         Intent intent = new Intent(Confirmation.this, Meet.class);
         startActivity(intent);
     }

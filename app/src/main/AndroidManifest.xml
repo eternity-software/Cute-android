@@ -13,7 +13,14 @@
         android:roundIcon="@mipmap/launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Dialogs"></activity>
+        <activity
+            android:name=".activities.Conversation"
+            android:configChanges="keyboardHidden|orientation|screenLayout"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.CreateConv"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activities.Dialogs" />
         <activity android:name=".activities.Account" />
 
         <receiver android:name=".utils.NetworkStateReceiver">

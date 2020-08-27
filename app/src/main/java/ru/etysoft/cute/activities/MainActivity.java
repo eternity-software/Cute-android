@@ -17,12 +17,12 @@ import org.json.JSONObject;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
 import ru.etysoft.cute.fragments.explore.ExploreFragment;
-import ru.etysoft.cute.requests.APIRunnable;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
 import ru.etysoft.cute.utils.Logger;
@@ -93,17 +93,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
         // Инициализация навигации
         setupNavigation();
-
-
-        // Проверка интернета
-        if (Methods.hasInternet(this)) {
-            checksAPI();
-        } else {
-            CustomToast.show(getString(R.string.err_no_internet), R.drawable.icon_error, MainActivity.this);
-        }
-
-        // Открытие настроек разработчика
-
     }
 
     @Override
@@ -118,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                 checksAPI();
                 try {
                     fragmentAccount.updateData();
+                    fragmentDialogs.updateDialogList();
                 } catch (Exception e) {
 
                 }
@@ -144,51 +134,53 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
                 @Override
                 public void run() {
-                    try {
-                        JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        if (data.getString("confirm").equals("N")) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(MainActivity.this, Confirmation.class);
-                                    startActivity(intent);
-                                    finish();
-                                    CustomToast.show(getString(R.string.err_confirm), R.drawable.icon_error, MainActivity.this);
-                                }
-                            });
-                        } else if (data.getString("blocked").equals("Y")) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!isbanned) {
-                                        final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
-
-                                        View.OnClickListener onClickListener = new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                Intent intent = new Intent(MainActivity.this, Meet.class);
-                                                startActivity(intent);
-                                                floatingBottomSheet.dismiss();
-                                            }
-                                        };
-                                        floatingBottomSheet.setContent(getResources().getDrawable(R.drawable.icon_uber), getString(R.string.banned_title), getString(R.string.banned_text));
-                                        floatingBottomSheet.show(getSupportFragmentManager(), "blocked");
-                                        floatingBottomSheet.setCancelable(false);
-                                        isbanned = true;
+                    if (isSuccess()) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(getResponse());
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            if (data.getString("confirm").equals("N")) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(MainActivity.this, Confirmation.class);
+                                        startActivity(intent);
+                                        finish();
+                                        CustomToast.show(getString(R.string.err_confirm), R.drawable.icon_error, MainActivity.this);
                                     }
+                                });
+                            } else if (data.getString("blocked").equals("Y")) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!isbanned) {
+                                            final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
+
+                                            View.OnClickListener onClickListener = new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent intent = new Intent(MainActivity.this, Meet.class);
+                                                    startActivity(intent);
+                                                    floatingBottomSheet.dismiss();
+                                                }
+                                            };
+                                            floatingBottomSheet.setContent(getResources().getDrawable(R.drawable.icon_uber), getString(R.string.banned_title), getString(R.string.banned_text));
+                                            floatingBottomSheet.show(getSupportFragmentManager(), "blocked");
+                                            floatingBottomSheet.setCancelable(false);
+                                            isbanned = true;
+                                        }
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, MainActivity.this);
                                 }
                             });
                         }
-                    } catch (JSONException e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, MainActivity.this);
-                            }
-                        });
-                    }
 
+                    }
                 }
             };
             Methods.getMyAccount(session, apiRunnable, MainActivity.this);

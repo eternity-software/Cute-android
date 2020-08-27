@@ -14,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrInterface;
+
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
-import ru.etysoft.cute.requests.APIRunnable;
 import ru.etysoft.cute.utils.CustomToast;
 
 public class SettingsActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
@@ -35,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
         setContentView(R.layout.activity_settings);
         appSettings = new AppSettings(this);
         Switch darkSwitch = findViewById(R.id.darkSwitch);
-
+        SlidrInterface slidr = Slidr.attach(this);
         // Проверка и инициализация тёмной темы (для перехода)
         if(appSettings.getBoolean(ISDARK_THEME))
         {
@@ -79,7 +82,9 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        CustomToast.show("Success", R.drawable.icon_success, SettingsActivity.this);
+                        if (isSuccess()) {
+                            CustomToast.show("Success", R.drawable.icon_success, SettingsActivity.this);
+                        }
                     }
                 });
             }

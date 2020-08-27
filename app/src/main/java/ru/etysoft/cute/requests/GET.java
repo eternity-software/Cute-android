@@ -15,7 +15,7 @@ public class GET {
                     .build();
             try (Response response = client.newCall(request).execute()) {
                 String resp = response.body().string();
-                Logger.logResponse(resp);
+                Logger.logResponse(resp, "UNKNOWN");
                 return resp;
             }
 

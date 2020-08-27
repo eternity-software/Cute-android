@@ -1,10 +1,14 @@
 package ru.etysoft.cute.fragments.dialogs;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,10 +23,11 @@ import java.util.List;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.CreateConv;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.activities.dialogs.DialogInfo;
+import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.requests.APIRunnable;
 import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.utils.CustomToast;
 
@@ -55,22 +60,36 @@ public class DialogsFragment extends Fragment {
 
         updateDialogList();
 
+        ImageView convCreateButton = view.findViewById(R.id.convCreateButton);
+        convCreateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateConv.class);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }
+
 
     public void updateDialogList() {
         if (!Methods.hasInternet(getContext())) {
             isCached = false;
         }
+        final ProgressBar frontView = view.findViewById(R.id.loading);
+        frontView.setVisibility(View.VISIBLE);
+        final LinearLayout noMessages = view.findViewById(R.id.empty);
+        noMessages.setVisibility(View.INVISIBLE);
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
                 try {
                     final ListView listView = view.findViewById(R.id.listView);
-                    dialogInfos.clear();
-                    if (isSuccess) {
-                        CacheResponse.saveResponseToCache(url, getResponse(), appSettings);
+
+                    if (isSuccess()) {
+                        dialogInfos.clear();
+                        CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
                         JSONObject jsonObject = new JSONObject(getResponse());
                         JSONArray data = jsonObject.getJSONArray("data");
 
@@ -78,11 +97,22 @@ public class DialogsFragment extends Fragment {
                             JSONObject conv = data.getJSONObject(i);
                             final String name = conv.getString("name");
                             final String message = conv.getString("text");
-                            dialogInfos.add(new DialogInfo(name, message));
+                            final String cid = conv.getString("id");
+                            String firstLetter = name.substring(0, 1);
+                            dialogInfos.add(new DialogInfo(name, message, firstLetter, cid));
+
                         }
                     } else {
-
-                        dialogInfos.add(new DialogInfo("no", "empty"));
+                        try {
+                            if (getErrorCode().equals("timeout")) {
+                                CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
+                            }
+                            if (getErrorCode().equals("#CM003.1")) {
+                                CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
+                            }
+                            noMessages.setVisibility(View.VISIBLE);
+                        } catch (Exception e) {
+                        }
 
                     }
                     DialogAdapter adapter = new DialogAdapter(getActivity(), dialogInfos);
@@ -91,7 +121,7 @@ public class DialogsFragment extends Fragment {
                     e.printStackTrace();
                     CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
                 }
-
+                frontView.setVisibility(View.INVISIBLE);
             }
         };
         if (isCached) {

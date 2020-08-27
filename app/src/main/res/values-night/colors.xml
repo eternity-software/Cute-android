@@ -12,7 +12,7 @@
     <color name="colorEtysoft">#4A98FF</color>
     <color name="colorGoodGray">#E4E4E4</color>
 
-    <color name="colorBackground">#403D49</color>
+    <color name="colorBackground">#232D40</color>
     <color name="colorDarkBackground">#34323A</color>
     <color name="colorBackgroundElements">#707070</color>
     <color name="colorFrontElements">#A2A2A2</color>
@@ -20,7 +20,20 @@
     <color name="colorMainText">#FFFFFF</color>
     <color name="colorError">#EA3939</color>
     <color name="colorSuccess">#4CAF50</color>
+    <color name="colorDivider">#2D3B53</color>
 
+    <color name="colorOnline">#4CAF50</color>
+    <color name="colorOnlineOutLine">#232D40</color>
+
+    <color name="colorSupportText">#BCBCBC</color>
+    <color name="colorButtonTrans">#FFFFFF</color>
+    <color name="colorButtonCircle">#535353</color>
+
+    <color name="colorMessage">#526FFF</color>
+    <color name="colorMyMessage">#29364B</color>
+
+    <color name="colorOffline">#425870</color>
+    <color name="colorOfflineOutLine">#232D40</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.TypedValue;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Numbers {
 
     public static int dpToPx(float dp, Context context) {
@@ -14,6 +17,12 @@ public class Numbers {
                 r.getDisplayMetrics()
         );
         return (int) px;
+    }
+
+
+    public static String getTimeFromTimestamp(String timestamp) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        return formatter.format(new Date(Long.parseLong(timestamp)));
     }
 
 }

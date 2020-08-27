@@ -4,16 +4,30 @@ public class DialogInfo {
 
     private String name;
     private String lastmessage;
+    private String acronym;
+    private String cid;
 
-    private boolean selected;
-
-    public DialogInfo(String name, String lastmessage) {
+    public DialogInfo(String name, String lastmessage, String acronym, String cid) {
         this.name = name;
         this.lastmessage = lastmessage;
+        this.acronym = acronym.toUpperCase();
+        this.cid = cid;
+    }
+
+    public String getCid() {
+        return cid;
+    }
+
+    public String getAcronym() {
+        return acronym;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setAcronym(String acronym) {
+        this.acronym = acronym;
     }
 
     public void setName(String name) {

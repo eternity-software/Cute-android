@@ -12,8 +12,8 @@ import org.json.JSONObject;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.requests.APIRunnable;
 import ru.etysoft.cute.utils.CustomToast;
 
 public class Signup extends AppCompatActivity {
@@ -23,7 +23,7 @@ public class Signup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         // Анимация
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
 
     public void back(View v) {
@@ -60,19 +60,21 @@ public class Signup extends AppCompatActivity {
                 public void run() {
                     AppSettings appSettings = new AppSettings(getApplicationContext());
                     try {
-                        JSONObject jObject = new JSONObject(this.getResponse());
-                        JSONObject data = jObject.getJSONObject("data");
-                        String session = data.getString("session");
-                        appSettings.setString("session", session);
-                        appSettings.setString("email", email);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(Signup.this, Confirmation.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
+                        if (isSuccess()) {
+                            JSONObject jObject = new JSONObject(this.getResponse());
+                            JSONObject data = jObject.getJSONObject("data");
+                            String session = data.getString("session");
+                            appSettings.setString("session", session);
+                            appSettings.setString("email", email);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(Signup.this, Confirmation.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
                     } catch (JSONException e) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -91,7 +93,7 @@ public class Signup extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
         Intent intent = new Intent(Signup.this, Meet.class);
         startActivity(intent);
         // Анимация

@@ -18,8 +18,8 @@ import org.json.JSONObject;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.SettingsActivity;
+import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.requests.APIRunnable;
 import ru.etysoft.cute.utils.CustomToast;
 
 public class AccountFragment extends Fragment {
@@ -62,8 +62,6 @@ public class AccountFragment extends Fragment {
             }
         });
 
-
-        updateData();
         return root;
     }
 
@@ -74,22 +72,24 @@ public class AccountFragment extends Fragment {
             APIRunnable apiRunnable = new APIRunnable() {
                 @Override
                 public void run() {
-                    try {
-                        JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONObject data = jsonObject.getJSONObject("data");
+                    if (isSuccess()) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(getResponse());
+                            JSONObject data = jsonObject.getJSONObject("data");
 
-                        TextView id = view.findViewById(R.id.idview);
-                        id.setText("u" + data.getString("id"));
+                            TextView id = view.findViewById(R.id.idview);
+                            id.setText("u" + data.getString("id"));
 
-                        TextView username = view.findViewById(R.id.username);
-                        username.setText(data.getString("login"));
+                            TextView username = view.findViewById(R.id.username);
+                            username.setText(data.getString("login"));
 
-                        appSettings.setString("username", data.getString("login"));
-                        appSettings.setString("id", data.getString("id"));
+                            appSettings.setString("username", data.getString("login"));
+                            appSettings.setString("id", data.getString("id"));
 
 
-                    } catch (JSONException e) {
-                        CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
+                        } catch (JSONException e) {
+                            CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
+                        }
                     }
                 }
             };

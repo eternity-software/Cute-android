@@ -23,7 +23,7 @@ public class Meet extends AppCompatActivity implements FloatingBottomSheet.Botto
         super.onCreate(savedInstanceState);
 
         // Анимация
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
         setContentView(R.layout.activity_meet);
 

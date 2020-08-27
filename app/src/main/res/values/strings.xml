@@ -49,6 +49,21 @@
     <string name="bl_title">Cute is not available</string>
     <string name="bl_text">Cute is not available at the moment.</string>
 
+    // Dialogs
+    <string name="no_conv_title">Quite and empty...</string>
+    <string name="no_conv_text">Oops! Looks like you haven\'t any conversations...</string>
+
+    <string name="create_conv_text">Name</string>
+    <string name="create_conv_description">Description</string>
+
+    <string name="create_conv_title">Create a conversation</string>
+    <string name="create_conv_button">Create</string>
+    <string name="create_success">New conversation created</string>
+
+
+    // Conversation
+    <string name="your_message">Your message</string>
+
 
     // Errors
     <string name="err_no_internet">No internet connection!</string>
@@ -95,7 +110,7 @@
 
     <string name="errcode_CM000_1">You are already logged in</string>
 
-    <string name="errcode_CM001_1">You are already logged in</string>
+    <string name="errcode_CM001_1">Incorrect conversation name</string>
     <string name="errcode_CM001_2">Incorrect description</string>
     <string name="errcode_CM001_3">Incorrect conversation type</string>
     <string name="errcode_CM001_4">Unknown creating error</string>
@@ -103,6 +118,32 @@
     <string name="errcode_CM002_1">Can\'t find conversation</string>
 
     <string name="errcode_CM003_1">You haven\'t conversations</string>
+
+    <string name="errcode_CMS001_1">You are not a member!</string>
+    <string name="errcode_CMS001_2">Access denied</string>
+    <string name="errcode_CMS001_3">Incorrect message text</string>
+    <string name="errcode_CMS001_4">Unknown message send error</string>
+
+    <string name="errcode_CMS002_1">Message doesn\'t exists</string>
+    <string name="errcode_CMS002_2">You can\'t edit that message</string>
+    <string name="errcode_CMS002_3">You are not a member!</string>
+    <string name="errcode_CMS002_4">New message is incorrect</string>
+    <string name="errcode_CMS002_5">Unknown error editing message</string>
+
+    <string name="errcode_CMS003_1">Unknown system error</string>
+
+    <string name="errcode_CMS004_1">You are not a member</string>
+    <string name="errcode_CMS004_2">Access denied</string>
+    <string name="errcode_CMS004_3">Unknown error receiving messages</string>
+
+    <string name="errcode_CMM001_1">Conversation doesn\'t exists</string>
+    <string name="errcode_CMM001_2">Already member</string>
+    <string name="errcode_CMM001_3">Incorrect role</string>
+    <string name="errcode_CMM001_4">Unknown error</string>
+
+    <string name="errcode_CMM002_1">Conversation doesn\'t exists</string>
+    <string name="errcode_CMM002_2">Not a member</string>
+    <string name="errcode_CMM002_3">Unknown error</string>
 
 
     <string name="title_activity_navigation">Navigation</string>

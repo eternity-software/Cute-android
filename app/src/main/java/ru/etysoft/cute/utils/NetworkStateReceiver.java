@@ -21,7 +21,11 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         } else {
             if (!online)
                 Logger.logReceiver("Internet connection is available");
-            runnable.run();
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                Logger.logReceiver("Error running runnable!");
+            }
             online = true;
         }
     }
