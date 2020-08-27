@@ -2,10 +2,9 @@ package ru.etysoft.cute.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.util.TypedValue;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Numbers {
 
@@ -20,9 +19,9 @@ public class Numbers {
     }
 
 
-    public static String getTimeFromTimestamp(String timestamp) {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-        return formatter.format(new Date(Long.parseLong(timestamp)));
+    public static String getTimeFromTimestamp(String timestamp, Context context) {
+        Log.d("TIME", "t: " + timestamp);
+        return DateFormat.format("HH:mm", Long.parseLong(timestamp) * 1000).toString();
     }
 
 }

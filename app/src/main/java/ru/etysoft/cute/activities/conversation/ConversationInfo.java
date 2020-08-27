@@ -6,16 +6,32 @@ public class ConversationInfo {
     private String message;
     private String subtext;
     private String id;
+    private String aid;
+    private boolean readed;
     private boolean isMine;
     private boolean isConversation;
 
-    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isConversation, String subtext) {
+    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isConversation, String subtext, boolean readed, String aid) {
+        this.readed = readed;
         this.id = id;
+        this.aid = aid;
         this.subtext = subtext;
         this.name = name;
         this.message = message;
         this.isMine = isMine;
         this.isConversation = isConversation;
+    }
+
+    public String getAid() {
+        return aid;
+    }
+
+    public boolean isReaded() {
+        return readed;
+    }
+
+    public void setReaded(boolean readed) {
+        this.readed = readed;
     }
 
     public String getId() {

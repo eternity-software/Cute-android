@@ -6,12 +6,22 @@ public class DialogInfo {
     private String lastmessage;
     private String acronym;
     private String cid;
+    private String time;
 
-    public DialogInfo(String name, String lastmessage, String acronym, String cid) {
+    public DialogInfo(String name, String lastmessage, String acronym, String cid, String time) {
         this.name = name;
         this.lastmessage = lastmessage;
         this.acronym = acronym.toUpperCase();
         this.cid = cid;
+        this.time = time;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getCid() {

@@ -30,6 +30,7 @@ import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.utils.CustomToast;
+import ru.etysoft.cute.utils.Numbers;
 
 
 public class DialogsFragment extends Fragment {
@@ -98,9 +99,9 @@ public class DialogsFragment extends Fragment {
                             final String name = conv.getString("name");
                             final String message = conv.getString("text");
                             final String cid = conv.getString("id");
+                            final String time = conv.getString("time");
                             String firstLetter = name.substring(0, 1);
-                            dialogInfos.add(new DialogInfo(name, message, firstLetter, cid));
-
+                            dialogInfos.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext())));
                         }
                     } else {
                         try {
@@ -109,8 +110,9 @@ public class DialogsFragment extends Fragment {
                             }
                             if (getErrorCode().equals("#CM003.1")) {
                                 CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
+                                noMessages.setVisibility(View.VISIBLE);
                             }
-                            noMessages.setVisibility(View.VISIBLE);
+
                         } catch (Exception e) {
                         }
 

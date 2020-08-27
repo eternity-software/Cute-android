@@ -14,7 +14,7 @@
 
     <color name="colorBackground">#232D40</color>
     <color name="colorDarkBackground">#34323A</color>
-    <color name="colorBackgroundElements">#707070</color>
+    <color name="colorBackgroundElements">#2E3B53</color>
     <color name="colorFrontElements">#A2A2A2</color>
     <color name="colorText">#FFFFFF</color>
     <color name="colorMainText">#FFFFFF</color>
@@ -30,6 +30,7 @@
     <color name="colorButtonCircle">#535353</color>
 
     <color name="colorMessage">#526FFF</color>
+    <color name="colorNotReaded">#20293A</color>
     <color name="colorMyMessage">#29364B</color>
 
     <color name="colorOffline">#425870</color>

@@ -14,7 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
@@ -28,7 +30,7 @@ import ru.etysoft.cute.utils.Numbers;
 public class Conversation extends AppCompatActivity {
 
     private List<ConversationInfo> convInfos = new ArrayList<>();
-    private List<String> ids = new ArrayList<>();
+    private Map<String, ConversationInfo> ids = new HashMap<String, ConversationInfo>();
 
     private String cid;
 
@@ -78,22 +80,38 @@ public class Conversation extends AppCompatActivity {
                             JSONObject message = data.getJSONObject(i);
 
                             final String id = message.getString("id");
+                            final String aid = message.getString("aid");
                             final String text = message.getString("text");
-                            final String time = message.getString("time");
+                            String time = message.getString("time");
                             final String name = message.getString("name");
                             final int mine = message.getInt("my");
+                            final int read = message.getInt("readed");
                             boolean my;
+                            boolean readed;
                             if (mine == 1) {
                                 my = true;
                             } else {
                                 my = false;
                             }
 
-                            if (!ids.contains(id)) {
-                                ids.add(id);
-                                convInfos.add(new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time)));
+                            if (read == 1) {
+                                readed = true;
+
+                            } else {
+                                readed = false;
+
                             }
 
+                            if (!ids.containsKey(id)) {
+                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid);
+                                ids.put(id, conversationInfo);
+                                convInfos.add(conversationInfo);
+                            } else {
+                                ConversationInfo conversationInfo = ids.get(id);
+                                if (conversationInfo.isReaded() != readed) {
+                                    conversationInfo.setReaded(readed);
+                                }
+                            }
                         }
                         ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
                         listView.setAdapter(adapter);
@@ -111,10 +129,9 @@ public class Conversation extends AppCompatActivity {
 
     public void sendMessage(View v) {
         final TextView messageBox = findViewById(R.id.message_box);
-
         final ListView listView = findViewById(R.id.messages);
         AppSettings appSettings = new AppSettings(this);
-        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, "Sending...");
+        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, "Sending...", false, "null");
         convInfos.add(conversationInfo);
         ConversationAdapter adapter = new ConversationAdapter(this, convInfos);
         listView.setAdapter(adapter);
@@ -129,11 +146,13 @@ public class Conversation extends AppCompatActivity {
                         JSONObject infomessage = jsonObject.getJSONObject("data");
                         String id = infomessage.getString("id");
                         String time = infomessage.getString("time");
+                        String message = infomessage.getString("text");
 
-                        ids.add(id);
+                        ids.put(id, conversationInfo);
 
+                        conversationInfo.setLastmessage(message);
                         conversationInfo.setId(id);
-                        conversationInfo.setSubtext(Numbers.getTimeFromTimestamp(time));
+                        conversationInfo.setSubtext(Numbers.getTimeFromTimestamp(time, getApplicationContext()));
                         ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
                         listView.setAdapter(adapter);
                         updateList();

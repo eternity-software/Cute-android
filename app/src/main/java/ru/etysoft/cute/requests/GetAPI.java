@@ -24,58 +24,73 @@ import ru.etysoft.cute.utils.Logger;
 public class GetAPI {
 
     public static void execute(final String url, final APIRunnable afterExecute, final Activity activity, final String methodName) {
-        Thread threadExecute = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    OkHttpClient client = new OkHttpClient();
-                    final Request request = new Request.Builder()
-                            .url(url)
-                            .build();
-                    try (final Response response = client.newCall(request).execute()) {
-                        final String result = response.body().string();
-                        Logger.logResponse(result, methodName);
-                        try {
-                            final JSONObject jsonObject = new JSONObject(result);
-                            boolean isSuccess = false;
-                            String code = null;
-                            if (jsonObject.getString("type").equals("success")) {
-                                isSuccess = true;
-                            } else {
-                                code = jsonObject.getString("code");
+        try {
+            final Thread threadExecute = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        OkHttpClient client = new OkHttpClient();
+                        final Request request = new Request.Builder()
+                                .url(url)
+                                .build();
+                        try (final Response response = client.newCall(request).execute()) {
+                            final String result = response.body().string();
+                            Logger.logResponse(result, methodName);
+                            try {
+                                final JSONObject jsonObject = new JSONObject(result);
+                                boolean isSuccess = false;
+                                String code = null;
+                                if (jsonObject.getString("type").equals("success")) {
+                                    isSuccess = true;
+                                } else {
+                                    code = jsonObject.getString("code");
 
-                                final String finalCode = code;
+                                    final String finalCode = code;
+                                    activity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (finalCode.equals("#AM003.2") | finalCode.equals("#AM003.1")) {
+                                                Intent intent = new Intent(activity, Meet.class);
+                                                AppSettings appSettings = new AppSettings(activity);
+                                                appSettings.clean();
+                                                activity.startActivity(intent);
+                                                activity.finish();
+                                            }
+                                            if (!finalCode.equals("#CM003.1") && MainActivity.isDev && !finalCode.equals("#CMM004.1")) {
+                                                CustomToast.show(ErrorCodes.getError(finalCode), R.drawable.icon_error, activity);
+                                            }
+                                        }
+                                    });
+                                }
+                                final boolean finalIsSuccess = isSuccess;
+
+                                final String finalCode1 = code;
                                 activity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (finalCode.equals("#AM003.2") | finalCode.equals("#AM003.1")) {
-                                            Intent intent = new Intent(activity, Meet.class);
-                                            AppSettings appSettings = new AppSettings(activity);
-                                            appSettings.clean();
-                                            activity.startActivity(intent);
-                                            activity.finish();
-                                        }
-                                        if (!finalCode.equals("#CM003.1") && MainActivity.isDev) {
-                                            CustomToast.show(ErrorCodes.getError(finalCode), R.drawable.icon_error, activity);
-                                        }
+                                        afterExecute.setUrl(url);
+                                        afterExecute.setSuccess(finalIsSuccess);
+                                        afterExecute.setResponse(result);
+                                        afterExecute.setErrorCode(finalCode1);
+                                        afterExecute.run();
+                                    }
+                                });
+
+                            } catch (JSONException e) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        afterExecute.setUrl(url);
+                                        afterExecute.setSuccess(false);
+                                        afterExecute.setResponse(null);
+                                        afterExecute.setErrorCode(null);
+                                        afterExecute.run();
+                                        CustomToast.show(activity.getString(R.string.err_json), R.drawable.icon_error, activity);
                                     }
                                 });
                             }
-                            final boolean finalIsSuccess = isSuccess;
-
-                            final String finalCode1 = code;
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    afterExecute.setUrl(url);
-                                    afterExecute.setSuccess(finalIsSuccess);
-                                    afterExecute.setResponse(result);
-                                    afterExecute.setErrorCode(finalCode1);
-                                    afterExecute.run();
-                                }
-                            });
-
-                        } catch (JSONException e) {
+                        } catch (SocketTimeoutException e) {
+                            Logger.logRequest("TIMEOUT", "time");
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -84,12 +99,10 @@ public class GetAPI {
                                     afterExecute.setResponse(null);
                                     afterExecute.setErrorCode("timeout");
                                     afterExecute.run();
-                                    CustomToast.show(activity.getString(R.string.err_json), R.drawable.icon_error, activity);
                                 }
                             });
                         }
-                    } catch (SocketTimeoutException e) {
-                        Logger.logRequest("TIMEOUT", "time");
+                    } catch (final Exception e) {
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -98,25 +111,18 @@ public class GetAPI {
                                 afterExecute.setResponse(null);
                                 afterExecute.setErrorCode(null);
                                 afterExecute.run();
+                                e.printStackTrace();
                             }
                         });
                     }
-                } catch (final Exception e) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            afterExecute.setUrl(url);
-                            afterExecute.setSuccess(false);
-                            afterExecute.setResponse(null);
-                            afterExecute.setErrorCode(null);
-                            afterExecute.run();
-                            e.printStackTrace();
-                        }
-                    });
+                    return;
                 }
-            }
-        });
-        threadExecute.start();
+
+            });
+            threadExecute.start();
+        } catch (Exception e) {
+
+        }
     }
 
     public static void executeCache(final String url, final APIRunnable afterExecute, final Activity activity, final String methodName) {
