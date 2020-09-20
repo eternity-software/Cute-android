@@ -1,5 +1,6 @@
 package ru.etysoft.cute.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,7 +16,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import com.r0adkll.slidr.Slidr;
-import com.r0adkll.slidr.model.SlidrInterface;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrPosition;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
@@ -32,44 +34,7 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
     private static AppSettings appSettings;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        appSettings = new AppSettings(this);
-        Switch darkSwitch = findViewById(R.id.darkSwitch);
-        SlidrInterface slidr = Slidr.attach(this);
-        // Проверка и инициализация тёмной темы (для перехода)
-        if(appSettings.getBoolean(ISDARK_THEME))
-        {
-          getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-          darkSwitch.setChecked(true);
-        }
-        else
-        {
-            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-
-        // Инициализация действия при свиче тёмной темы
-        darkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                buttonView.setEnabled(false);
-                changeTheme(buttonView);
-            }
-        });
-
-        TextView verisonTextView = findViewById(R.id.versionTextView);
-        PackageInfo pInfo = null;
-        try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            verisonTextView.setText("version: " + version);
-        } catch (PackageManager.NameNotFoundException e) {
-            verisonTextView.setText("version: unknown");
-        }
-
-    }
+    private static SettingsActivity main;
 
 
     public void changePassword(View v) {
@@ -90,6 +55,12 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
             }
         };
         Methods.changePassword(appSettings.getString("session"), password.getText().toString(), newPassword.getText().toString(), apiRunnable, SettingsActivity.this);
+    }
+
+    public Activity parent;
+
+    public static SettingsActivity get() {
+        return main;
     }
 
     // Показ FloatingBottomSheet
@@ -115,6 +86,54 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
         startActivity(intent);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        main = this;
+        appSettings = new AppSettings(this);
+
+
+        setContentView(R.layout.activity_settings);
+
+        Switch darkSwitch = findViewById(R.id.darkSwitch);
+        SlidrConfig config = new SlidrConfig.Builder()
+                .position(SlidrPosition.BOTTOM)
+                .build();
+        Slidr.attach(this, config);
+        // Проверка и инициализация тёмной темы (для перехода)
+        if (appSettings.getBoolean(ISDARK_THEME)) {
+            if (getDelegate().getLocalNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+            darkSwitch.setChecked(true);
+        } else {
+
+            if (getDelegate().getLocalNightMode() != AppCompatDelegate.MODE_NIGHT_NO) {
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        }
+
+        // Инициализация действия при свиче тёмной темы
+        darkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                buttonView.setEnabled(false);
+                changeTheme(buttonView);
+            }
+        });
+
+        TextView verisonTextView = findViewById(R.id.versionTextView);
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            verisonTextView.setText("version: " + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            verisonTextView.setText("version: unknown");
+        }
+
+    }
+
     public void changeTheme(View v) {
         //Поверка какая тема сейчас стоит
         if (!appSettings.getBoolean(ISDARK_THEME)) {
@@ -126,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity implements FloatingBotto
         }
 
         // Пересоздание активности для красивой смены темы
-        Intent intent = new Intent(this, SettingsActivity.class);
+        Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();

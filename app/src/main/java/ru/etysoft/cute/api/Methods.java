@@ -39,6 +39,20 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
+    public static void deleteConversationLocaly(String session, String cid, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "conversationmessage.removeMine?session=" + session + "&cid=" + cid;
+        String methodName = "DELCONVLOCAL";
+        Logger.logRequest("GET", methodName + ": " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+    }
+
+    public static void getConversationInfo(String session, String cid, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "conversation.info?session=" + session + "&cid=" + cid;
+        String methodName = "GETCONVINFO";
+        Logger.logRequest("GET", methodName + ": " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+    }
+
 
     public static void getConversations(String session, APIRunnable apiRunnable, Activity activity) {
         String finalurl = domain + "conversation.getList?session=" + session;

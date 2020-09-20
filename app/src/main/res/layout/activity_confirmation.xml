@@ -23,7 +23,7 @@
             <LinearLayout
                 android:layout_width="409dp"
                 android:layout_height="wrap_content"
-                android:background="@color/colorDarkBackground"
+                android:background="@color/colorBackgroundElements"
                 android:orientation="vertical">
 
                 <ImageView
@@ -121,14 +121,16 @@
             <Button
                 android:id="@+id/buttonSend"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginHorizontal="135dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="120dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="0"
                 android:background="@drawable/button_passive_mini"
                 android:fontFamily="@font/montserrat"
                 android:onClick="sendAnotherConfirmationCode"
+                android:paddingHorizontal="10dp"
                 android:text="@string/confirmation_send_another"
                 android:textColor="@color/colorText"
                 android:textSize="14sp" />

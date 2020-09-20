@@ -1,6 +1,8 @@
 package ru.etysoft.cute.fragments.account;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,8 @@ import ru.etysoft.cute.activities.SettingsActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.CustomToast;
+import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.utils.Numbers;
 
 public class AccountFragment extends Fragment {
 
@@ -39,8 +43,6 @@ public class AccountFragment extends Fragment {
                 ViewModelProviders.of(this).get(AccountViewModel.class);
 
         final View root = inflater.inflate(R.layout.activity_account, container, false);
-        ImageView userIcon = root.findViewById(R.id.userimage);
-        userIcon.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.icon_uber));
 
         final AppSettings appSettings = new AppSettings(getActivity());
         TextView id = root.findViewById(R.id.idview);
@@ -53,12 +55,14 @@ public class AccountFragment extends Fragment {
 
         view = root;
 
+        updateData();
         ImageView menuButton = view.findViewById(R.id.menuButton);
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent);
+                getActivity().startActivity(intent);
             }
         });
 
@@ -67,6 +71,7 @@ public class AccountFragment extends Fragment {
 
 
     public void updateData() {
+
         if (Methods.hasInternet(getContext())) {
             final AppSettings appSettings = new AppSettings(getActivity());
             APIRunnable apiRunnable = new APIRunnable() {
@@ -85,6 +90,26 @@ public class AccountFragment extends Fragment {
 
                             appSettings.setString("username", data.getString("login"));
                             appSettings.setString("id", data.getString("id"));
+
+
+                            Thread imageThread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
+                                            R.drawable.icon_uber);
+                                    final ImageView userPicture = view.findViewById(R.id.userimage);
+                                    int px = (int) Numbers.dpToPx(80, getContext());
+                                    final Bitmap b = ImagesWorker.getCircleCroppedBitmap(icon, px, px);
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            userPicture.setImageBitmap(b);
+                                        }
+                                    });
+
+                                }
+                            });
+                            imageThread.run();
 
 
                         } catch (JSONException e) {

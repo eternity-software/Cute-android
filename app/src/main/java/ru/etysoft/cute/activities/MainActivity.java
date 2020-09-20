@@ -53,28 +53,23 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                 viewPager.setCurrentItem(0);
             } else if (item.getItemId() == R.id.dialogs) {
                 viewPager.setCurrentItem(1);
-                try {
-                    fragmentDialogs.updateDialogList();
-                } catch (Exception e) {
-                }
             } else if (item.getItemId() == R.id.account) {
                 viewPager.setCurrentItem(2);
-                try {
-                    fragmentAccount.updateData();
-                } catch (Exception e) {
-                }
             }
 
             return false;
         }
     };
 
+
     private boolean isbanned = false;
+    public static boolean amIcreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Logger.logActivity("Created Main");
         appSettings = new AppSettings(this);
 

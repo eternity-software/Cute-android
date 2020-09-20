@@ -72,6 +72,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:onClick="showInfo"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/montserrat"
         android:maxLines="1"
@@ -116,6 +117,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="15dp"
             android:background="@drawable/circle_gray"
+            android:tint="@color/colorSupportText"
             android:padding="5dp"
             app:srcCompat="@drawable/icon_image" />
 
@@ -166,13 +168,4 @@
 
     </ListView>
 
-    <Button
-        android:id="@+id/button9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:onClick="leave"
-        android:text="exit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

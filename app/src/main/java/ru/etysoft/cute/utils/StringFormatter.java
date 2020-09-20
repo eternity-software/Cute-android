@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public class StringFormatter {
 
+    // Обработка строки
     public static String format(String stirng) {
         String result;
         Pattern p = Pattern.compile("[^&]");

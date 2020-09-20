@@ -68,11 +68,15 @@ public class GetAPI {
                                 activity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        afterExecute.setUrl(url);
-                                        afterExecute.setSuccess(finalIsSuccess);
-                                        afterExecute.setResponse(result);
-                                        afterExecute.setErrorCode(finalCode1);
-                                        afterExecute.run();
+                                        try {
+                                            afterExecute.setUrl(url);
+                                            afterExecute.setSuccess(finalIsSuccess);
+                                            afterExecute.setResponse(result);
+                                            afterExecute.setErrorCode(finalCode1);
+                                            afterExecute.run();
+                                        } catch (Exception e) {
+
+                                        }
                                     }
                                 });
 

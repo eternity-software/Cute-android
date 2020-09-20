@@ -23,7 +23,6 @@ public class SplashScreen extends AppCompatActivity {
         // Запуск активности
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
 
         // Инициализация текущей темы и её применение

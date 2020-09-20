@@ -31,10 +31,7 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".activities.MainActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.Confirmation"
             android:configChanges="orientation|keyboardHidden"
@@ -58,8 +55,18 @@
             android:name=".activities.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppSlideTheme"
+            android:theme="@style/AppTheme"
             tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
+
+            android:screenOrientation="portrait">
+
+
+        </activity>
+
         <activity
             android:name=".SplashScreen"
             android:theme="@style/SplashTheme">

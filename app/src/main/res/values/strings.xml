@@ -49,6 +49,10 @@
     <string name="bl_title">Cute is not available</string>
     <string name="bl_text">Cute is not available at the moment.</string>
 
+    // Alert dialog
+    <string name="adialog_yes">OK</string>
+    <string name="adialog_no">Cancel</string>
+
     // Dialogs
     <string name="no_conv_title">Quite and empty...</string>
     <string name="no_conv_text">Oops! Looks like you haven\'t any conversations...</string>
@@ -63,6 +67,15 @@
 
     // Conversation
     <string name="your_message">Your message</string>
+
+    // INFO
+    <string name="members">members</string>
+    <string name="edit">edit</string>
+    <string name="on_notif">Enable notifications</string>
+    <string name="leave_title">Leave the conversation</string>
+    <string name="leave_text">Do you want to leave the conversation?</string>
+    <string name="clear_title">Clear all messages</string>
+    <string name="clear_text">You will clear all messages for yourself, and others will continue to see them.</string>
 
 
     // Errors

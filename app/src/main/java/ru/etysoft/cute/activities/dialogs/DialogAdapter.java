@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import ru.etysoft.cute.activities.Conversation;
 public class DialogAdapter extends ArrayAdapter<DialogInfo> {
     private final Activity context;
     private final List<DialogInfo> list;
+    public static boolean canOpen = true;
 
     public DialogAdapter(Activity context, List<DialogInfo> values) {
         super(context, R.layout.dialog_element, values);
@@ -26,40 +28,84 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
     @Override
     public View getView(final int position, final View convertView, ViewGroup parent) {
         View view = null;
+
+        // Инициализируем информацию о беседе или диалоге
         final DialogInfo info = list.get(position);
-        if (convertView == null) {
-            final LayoutInflater inflator = context.getLayoutInflater();
-            view = inflator.inflate(R.layout.dialog_element, null);
-            final ViewHolder viewHolder = new ViewHolder();
-            viewHolder.name = (TextView) view.findViewById(R.id.label);
-            viewHolder.message = (TextView) view.findViewById(R.id.message);
-            viewHolder.acronym = (TextView) view.findViewById(R.id.acronym);
-            viewHolder.time = (TextView) view.findViewById(R.id.time);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
+        final LayoutInflater inflator = context.getLayoutInflater();
+        view = inflator.inflate(R.layout.dialog_element, null);
+        final ViewHolder viewHolder = new ViewHolder();
+
+        // Инициализируем подэлементы
+        viewHolder.name = (TextView) view.findViewById(R.id.label);
+        viewHolder.message = (TextView) view.findViewById(R.id.message);
+        viewHolder.acronym = (TextView) view.findViewById(R.id.acronym);
+        viewHolder.time = (TextView) view.findViewById(R.id.time);
+        viewHolder.readstatus = (TextView) view.findViewById(R.id.readed);
+        viewHolder.read = view.findViewById(R.id.icnread);
+        viewHolder.online = view.findViewById(R.id.status);
+
+        // Задаём обработчик нажатия
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (canOpen) {
+                    canOpen = false;
                     Intent intent = new Intent(getContext(), Conversation.class);
                     intent.putExtra("cid", info.getCid());
                     getContext().startActivity(intent);
                 }
-            });
-            view.setTag(viewHolder);
+            }
+        });
+        view.setTag(viewHolder);
 
-            ViewHolder holder = (ViewHolder) view.getTag();
-            holder.name.setText(info.getName());
-            holder.message.setText(info.getLastmessage());
-            holder.acronym.setText(info.getAcronym());
-            holder.time.setText(info.getTime());
+        // Задаём персональные значения
+        ViewHolder holder = (ViewHolder) view.getTag();
+
+
+        if (info.isDialog()) {
+            if (info.isOnline()) {
+                holder.online.setBackground(context.getResources().getDrawable(R.drawable.circle_online));
+            } else {
+                holder.online.setBackground(context.getResources().getDrawable(R.drawable.circle_offline));
+            }
+
         } else {
-            view = convertView;
+            holder.online.setVisibility(View.INVISIBLE);
         }
+
+        if (!info.isReaded()) {
+
+            holder.read.setColorFilter(context.getResources().getColor(R.color.colorMain));
+        } else {
+            holder.read.setColorFilter(context.getResources().getColor(R.color.colorBackgroundElements));
+        }
+        if (info.getCountReaded() == 0) {
+
+            holder.readstatus.setVisibility(View.INVISIBLE);
+        } else {
+            holder.readstatus.setVisibility(View.VISIBLE);
+            holder.readstatus.setText(String.valueOf(info.getCountReaded()));
+        }
+
+
+        holder.name.setText(info.getName());
+        holder.message.setText(info.getLastmessage());
+        holder.acronym.setText(info.getAcronym());
+        holder.time.setText(info.getTime());
+
         return view;
     }
 
+
+    // Держим данные
     static class ViewHolder {
         protected TextView name;
         protected TextView message;
         protected TextView acronym;
         protected TextView time;
+        protected TextView readstatus;
+        protected ImageView read;
+        protected ImageView online;
     }
 }

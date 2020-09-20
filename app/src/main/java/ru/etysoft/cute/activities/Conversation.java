@@ -22,12 +22,14 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.conversation.ConversationAdapter;
 import ru.etysoft.cute.activities.conversation.ConversationInfo;
+import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.bottomsheets.ConversationBottomSheet;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.Numbers;
 
-public class Conversation extends AppCompatActivity {
+public class Conversation extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
     private List<ConversationInfo> convInfos = new ArrayList<>();
     private Map<String, ConversationInfo> ids = new HashMap<String, ConversationInfo>();
@@ -39,71 +41,77 @@ public class Conversation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         cid = getIntent().getStringExtra("cid");
+
         // Анимация
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
         updateList();
         Slidr.attach(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     public void back(View v) {
         onBackPressed();
     }
 
-    public void leave(View v) {
-        AppSettings appSettings = new AppSettings(this);
 
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                if (isSuccess()) {
-                    finish();
-                }
-            }
-        };
-
-        Methods.leaveConversation(appSettings.getString("session"), cid, apiRunnable, this);
+    public void showInfo(View v) {
+        final ConversationBottomSheet conversationBottomSheet = new ConversationBottomSheet();
+        conversationBottomSheet.setCid(cid);
+        conversationBottomSheet.show(getSupportFragmentManager(), "blocked");
+        conversationBottomSheet.setCancelable(true);
     }
 
 
+    // Обновляем список сообщений
     public void updateList() {
         final ListView listView = findViewById(R.id.messages);
         AppSettings appSettings = new AppSettings(this);
 
+        // Задаём обработчик ответа API
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
                 if (isSuccess()) {
                     try {
+
+                        // Обработка ответа JSON
                         JSONObject jsonObject = new JSONObject(getResponse());
                         JSONArray data = jsonObject.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject message = data.getJSONObject(i);
 
                             final String id = message.getString("id");
-                            final String aid = message.getString("aid");
+                            final int aid = message.getInt("aid");
                             final String text = message.getString("text");
                             String time = message.getString("time");
                             final String name = message.getString("name");
                             final int mine = message.getInt("my");
                             final int read = message.getInt("readed");
+
                             boolean my;
                             boolean readed;
-                            if (mine == 1) {
-                                my = true;
-                            } else {
-                                my = false;
+                            boolean isonline;
+
+                            my = Numbers.getBooleanFromInt(mine);
+
+                            readed = Numbers.getBooleanFromInt(read);
+
+
+                            boolean isInfo = false;
+                            if (aid == -1) {
+                                isInfo = true;
                             }
 
-                            if (read == 1) {
-                                readed = true;
 
-                            } else {
-                                readed = false;
-
-                            }
-
+                            // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
                             if (!ids.containsKey(id)) {
-                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid);
+                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo);
                                 ids.put(id, conversationInfo);
                                 convInfos.add(conversationInfo);
                             } else {
@@ -127,11 +135,12 @@ public class Conversation extends AppCompatActivity {
     }
 
 
+    // Отправляем сообщение
     public void sendMessage(View v) {
         final TextView messageBox = findViewById(R.id.message_box);
         final ListView listView = findViewById(R.id.messages);
         AppSettings appSettings = new AppSettings(this);
-        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, "Sending...", false, "null");
+        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, "Sending...", false, -10, false);
         convInfos.add(conversationInfo);
         ConversationAdapter adapter = new ConversationAdapter(this, convInfos);
         listView.setAdapter(adapter);
@@ -150,7 +159,7 @@ public class Conversation extends AppCompatActivity {
 
                         ids.put(id, conversationInfo);
 
-                        conversationInfo.setLastmessage(message);
+                        conversationInfo.setMessage(message);
                         conversationInfo.setId(id);
                         conversationInfo.setSubtext(Numbers.getTimeFromTimestamp(time, getApplicationContext()));
                         ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
@@ -170,8 +179,14 @@ public class Conversation extends AppCompatActivity {
         };
 
         Methods.sendTextMessage(appSettings.getString("session"), messageBox.getText().toString(), cid, apiRunnable, this);
+        messageBox.setText("");
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DialogAdapter.canOpen = true;
     }
 
     @Override

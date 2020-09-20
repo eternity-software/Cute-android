@@ -6,12 +6,15 @@ public class ConversationInfo {
     private String message;
     private String subtext;
     private String id;
-    private String aid;
+    private int aid;
     private boolean readed;
     private boolean isMine;
     private boolean isConversation;
+    private boolean isInfo;
 
-    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isConversation, String subtext, boolean readed, String aid) {
+
+    // Сообщение
+    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isConversation, String subtext, boolean readed, int aid, boolean isInfo) {
         this.readed = readed;
         this.id = id;
         this.aid = aid;
@@ -20,9 +23,14 @@ public class ConversationInfo {
         this.message = message;
         this.isMine = isMine;
         this.isConversation = isConversation;
+        this.isInfo = isInfo;
     }
 
-    public String getAid() {
+    public boolean isInfo() {
+        return isInfo;
+    }
+
+    public int getAid() {
         return aid;
     }
 
@@ -67,11 +75,11 @@ public class ConversationInfo {
         this.name = name;
     }
 
-    public String getLastmessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setLastmessage(String message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 }

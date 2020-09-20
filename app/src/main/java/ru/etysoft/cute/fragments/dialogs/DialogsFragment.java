@@ -40,10 +40,8 @@ public class DialogsFragment extends Fragment {
     private AppSettings appSettings;
     private View view;
 
-    public static DialogsFragment newInstance() {
-        return new DialogsFragment();
-    }
 
+    // Была ли последняя загрузка произведена из кэша
     private boolean isCached = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,11 +54,14 @@ public class DialogsFragment extends Fragment {
         appSettings = new AppSettings(getActivity());
         view = root;
         final ListView listView = view.findViewById(R.id.listView);
+
         DialogAdapter adapter = new DialogAdapter(getActivity(), dialogInfos);
         listView.setAdapter(adapter);
 
+        // Инициализируем диалоги в первый раз
         updateDialogList();
 
+        // Задаём обработчик нажатия на кнопку создания диалога
         ImageView convCreateButton = view.findViewById(R.id.convCreateButton);
         convCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,23 +75,38 @@ public class DialogsFragment extends Fragment {
     }
 
 
+    // Обновляем список диалогов и бесед
     public void updateDialogList() {
+
+        // Если нет интернета просим загрузить кэш
         if (!Methods.hasInternet(getContext())) {
             isCached = false;
         }
+
+        // Инициализируем загрузку и сообщение об отсутствии сообщений
         final ProgressBar frontView = view.findViewById(R.id.loading);
         frontView.setVisibility(View.VISIBLE);
         final LinearLayout noMessages = view.findViewById(R.id.empty);
         noMessages.setVisibility(View.INVISIBLE);
+
+        // Задаём обработчик запроса к API
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
                 try {
+
                     final ListView listView = view.findViewById(R.id.listView);
 
+                    // Проверка на успешный запрос
                     if (isSuccess()) {
+
+                        // Очищаем список
                         dialogInfos.clear();
+
+                        // Сохраняем успешный запрос в кэш
                         CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
+
+                        // Обрабатываем ответ
                         JSONObject jsonObject = new JSONObject(getResponse());
                         JSONArray data = jsonObject.getJSONArray("data");
 
@@ -100,8 +116,31 @@ public class DialogsFragment extends Fragment {
                             final String message = conv.getString("text");
                             final String cid = conv.getString("id");
                             final String time = conv.getString("time");
+                            final int readed = conv.getInt("readed");
+                            final int countReaded = conv.getInt("countReaded");
+                            final int online = conv.getInt("online");
+                            final int personal = conv.getInt("personal");
+
+                            boolean isonline;
+                            boolean isDialog;
+
+                            if (personal > 0) {
+                                isDialog = true;
+                            } else {
+                                isDialog = false;
+                            }
+
+                            isonline = Numbers.getBooleanFromInt(online);
+
                             String firstLetter = name.substring(0, 1);
-                            dialogInfos.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext())));
+
+                            boolean readst;
+
+                            readst = Numbers.getBooleanFromInt(readed);
+
+
+                            // Добавляем новый диалог в список
+                            dialogInfos.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog));
                         }
                     } else {
                         try {
@@ -109,6 +148,8 @@ public class DialogsFragment extends Fragment {
                                 CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
                             }
                             if (getErrorCode().equals("#CM003.1")) {
+
+                                // Сохраняем в кэш если ошибка указывает на отсутствие сообщений
                                 CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
                                 noMessages.setVisibility(View.VISIBLE);
                             }
@@ -117,6 +158,8 @@ public class DialogsFragment extends Fragment {
                         }
 
                     }
+
+                    // Обновляем GUI
                     DialogAdapter adapter = new DialogAdapter(getActivity(), dialogInfos);
                     listView.setAdapter(adapter);
                 } catch (JSONException e) {
@@ -126,11 +169,14 @@ public class DialogsFragment extends Fragment {
                 frontView.setVisibility(View.INVISIBLE);
             }
         };
+
+        // Если в предыдущем обращении мы загрузили из кэша, то в этот раз попробуем отправить запрос на сервер
         if (isCached) {
             Methods.getConversations(appSettings.getString("session"), apiRunnable, getActivity());
         } else {
             Methods.getCacheConversations(appSettings.getString("session"), apiRunnable, getActivity());
             if (Methods.hasInternet(getActivity())) {
+                // Если есть интернет обязательно пытаемся обновить данные, даже если уже загрузили из кэша
                 Methods.getConversations(appSettings.getString("session"), apiRunnable, getActivity());
             }
             isCached = true;
