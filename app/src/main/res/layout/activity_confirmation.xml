@@ -23,7 +23,7 @@
             <LinearLayout
                 android:layout_width="409dp"
                 android:layout_height="wrap_content"
-                android:background="@color/colorBackgroundElements"
+                android:background="@color/colorDivider"
                 android:orientation="vertical">
 
                 <ImageView

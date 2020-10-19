@@ -83,8 +83,10 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
             holder.time.setText(info.getSubtext());
             holder.message.setText(info.getMessage());
         } else {
+
+            viewHolder.message = (TextView) view.findViewById(R.id.infotext);
+            view.setTag(viewHolder);
             final ViewHolder holder = (ViewHolder) view.getTag();
-            viewHolder.message = (TextView) view.findViewById(R.id.message_body);
             holder.message.setText(info.getMessage());
         }
 

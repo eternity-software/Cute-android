@@ -1,11 +1,9 @@
 package ru.etysoft.cute.fragments.dialogs;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -23,7 +21,6 @@ import java.util.List;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.CreateConv;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.activities.dialogs.DialogInfo;
 import ru.etysoft.cute.api.APIRunnable;
@@ -62,14 +59,14 @@ public class DialogsFragment extends Fragment {
         updateDialogList();
 
         // Задаём обработчик нажатия на кнопку создания диалога
-        ImageView convCreateButton = view.findViewById(R.id.convCreateButton);
-        convCreateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CreateConv.class);
-                startActivity(intent);
-            }
-        });
+        //  ImageView convCreateButton = view.findViewById(R.id.convCreateButton);
+        //   convCreateButton.setOnClickListener(new View.OnClickListener() {
+        //      @Override
+        //       public void onClick(View v) {
+        //           Intent intent = new Intent(getActivity(), CreateConv.class);
+        //          startActivity(intent);
+        //       }
+        //   });
 
         return root;
     }

@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Logger.logActivity("Created Main");
         appSettings = new AppSettings(this);
 

@@ -43,7 +43,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         cid = getIntent().getStringExtra("cid");
 
         // Анимация
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+
         updateList();
         Slidr.attach(this);
 
@@ -192,6 +192,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        //  overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }
