@@ -76,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
             changePassword.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Intent passwordChangeIntent = new Intent(getActivity(), passwordchaange.class);
+                    Intent passwordChangeIntent = new Intent(getActivity(), PasswordChange.class);
                     getActivity().startActivity(passwordChangeIntent);
                     getActivity().overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
                     return false;

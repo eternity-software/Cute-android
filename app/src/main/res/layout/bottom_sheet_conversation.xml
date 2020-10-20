@@ -33,7 +33,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/icon"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     app:srcCompat="@drawable/circle_gradiaent" />
@@ -122,7 +122,7 @@
                         <ImageButton
                             android:id="@+id/conv_delete"
                             style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="30dp"
+                            android:layout_width="50dp"
                             android:layout_height="30dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="5dp"
@@ -140,7 +140,7 @@
                         <ImageButton
                             android:id="@+id/conv_exit"
                             style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="30dp"
+                            android:layout_width="50dp"
                             android:layout_height="30dp"
                             android:layout_marginTop="10dp"
                             android:background="@drawable/button_passive_mini"
@@ -159,10 +159,10 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/membersCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginVertical="10dp"
                 android:fontFamily="@font/montserrat"
                 android:gravity="center"
                 android:maxLines="1"
@@ -170,73 +170,11 @@
                 android:textColor="@color/colorSupportText"
                 android:textSize="12sp" />
 
-            <androidx.core.widget.NestedScrollView
+            <ListView
+                android:id="@+id/members"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1000dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/imageView6"
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            app:srcCompat="@drawable/circle_gradiaent" />
-
-                        <TextView
-                            android:id="@+id/acronym"
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            android:layout_marginLeft="-55dp"
-                            android:fontFamily="@font/montserrat"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:text="k"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="24sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/conv_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/montserrat"
-                                android:maxLines="1"
-                                android:text="karlov"
-                                android:textColor="@color/colorText"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:id="@+id/textView12"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/montserrat"
-                                android:maxLines="1"
-                                android:text="was online..."
-                                android:textColor="@color/colorSupportText"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

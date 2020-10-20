@@ -31,18 +31,19 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="40dp"
+        android:onClick="showInfo"
         android:layout_height="40dp"
         android:background="@drawable/circle_gray"
         app:layout_constraintBottom_toTopOf="@+id/divider3"
         app:layout_constraintStart_toStartOf="@+id/acronym"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/colorMain" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/acronym"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:fontFamily="@font/montserratmedium"
+        android:onClick="showInfo"
         android:gravity="center"
         android:text="K"
         android:textColor="@color/colorWhite"
@@ -84,9 +85,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/title2"
+        android:id="@+id/subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:onClick="showInfo"
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/montserrat"

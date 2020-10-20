@@ -2,6 +2,7 @@ package ru.etysoft.cute.activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,8 +26,9 @@ import ru.etysoft.cute.activities.conversation.ConversationInfo;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.bottomsheets.ConversationBottomSheet;
+import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.utils.CustomToast;
+import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 
 public class Conversation extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
@@ -35,14 +37,32 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     private Map<String, ConversationInfo> ids = new HashMap<String, ConversationInfo>();
 
     private String cid;
+    private String name;
+    private boolean isDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         cid = getIntent().getStringExtra("cid");
+        name = getIntent().getStringExtra("name");
+        isDialog = getIntent().getBooleanExtra("isd", false);
 
-        // Анимация
+        ImageView picture = findViewById(R.id.icon);
+        ImagesWorker.setGradient(picture, Integer.parseInt(cid));
+
+        TextView acronym = findViewById(R.id.acronym);
+        acronym.setVisibility(View.VISIBLE);
+        acronym.setText(String.valueOf(name.charAt(0)));
+
+        TextView subtitle = findViewById(R.id.subtitle);
+        if (!isDialog) {
+            subtitle.setText("0 members");
+        }
+
+        TextView title = findViewById(R.id.title);
+        title.setText(name);
 
         updateList();
         Slidr.attach(this);

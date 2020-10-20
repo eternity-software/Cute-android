@@ -28,6 +28,13 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
+    public static void getAccount(String id, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "account.getByCondition?cond={id=" + id + "}" + options;
+        String methodName = "GETPROFILE";
+        Logger.logRequest("GET", "[GETPROFILE]: " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+    }
+
     public static String isConfirmed(String session, String code) {
         code = StringFormatter.format(code);
 

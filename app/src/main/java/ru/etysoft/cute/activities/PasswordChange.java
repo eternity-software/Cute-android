@@ -13,7 +13,7 @@ import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
 
-public class passwordchaange extends AppCompatActivity {
+public class PasswordChange extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +33,17 @@ public class passwordchaange extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (isSuccess()) {
-                            CustomToast.show(getString(R.string.pass_success), R.drawable.icon_success, passwordchaange.this);
+                            CustomToast.show(getString(R.string.pass_success), R.drawable.icon_success, PasswordChange.this);
                             finish();
                         } else {
-                            CustomToast.show(ErrorCodes.getError(getErrorCode()), R.drawable.icon_error, passwordchaange.this);
+                            CustomToast.show(ErrorCodes.getError(getErrorCode()), R.drawable.icon_error, PasswordChange.this);
                         }
                     }
                 });
             }
         };
         if (!password.getText().toString().equals(confPassword.getText().toString())) {
-            CustomToast.show(getString(R.string.pass_dmatch), R.drawable.icon_error, passwordchaange.this);
+            CustomToast.show(getString(R.string.pass_dmatch), R.drawable.icon_error, PasswordChange.this);
         } else {
             Methods.changePassword(appSettings.getString("session"), oldpassword.getText().toString(), password.getText().toString(), apiRunnable, this);
         }

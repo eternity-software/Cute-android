@@ -1,4 +1,4 @@
-package ru.etysoft.cute.bottomsheets;
+package ru.etysoft.cute.bottomsheets.conversation;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,14 +17,19 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.utils.ImagesWorker;
 
 public class ConversationBottomSheet extends BottomSheetDialogFragment {
     private BottomSheetListener mListener;
@@ -64,6 +71,32 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
     }
 
+    private List<MemberInfo> memberInfos = new ArrayList<>();
+    private int membersCount = 0;
+
+    public void loadMembers(JSONArray members) throws JSONException {
+        final ListView listView = view.findViewById(R.id.members);
+        int creatorid = 0;
+        for (int i = 0; i < members.length(); i++) {
+            JSONObject member = members.getJSONObject(i);
+            int id = member.getInt("id");
+            String name = member.getString("nickname");
+            String role = member.getString("role");
+
+            MemberInfo memberInfo = new MemberInfo(id, name, role);
+
+            if (role.equals("creator")) {
+                memberInfos.add(0, memberInfo);
+            } else {
+                memberInfos.add(memberInfo);
+            }
+            membersCount++;
+        }
+        TextView membersCountTextView = view.findViewById(R.id.membersCount);
+        membersCountTextView.setText(membersCount + " " + getString(R.string.members));
+        MembersAdapter membersAdapter = new MembersAdapter(getActivity(), memberInfos);
+        listView.setAdapter(membersAdapter);
+    }
 
     public void setCid(String conversationId) {
         cid = conversationId;
@@ -79,15 +112,21 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         JSONObject jsonObject = new JSONObject(getResponse());
                         JSONObject data = jsonObject.getJSONObject("data");
                         String conv_name = data.getString("name");
+                        int id = data.getInt("id");
                         String conv_desc = data.getString("description");
+                        JSONArray members = data.getJSONArray("members");
 
                         TextView nameview = view.findViewById(R.id.conv_name);
                         TextView descview = view.findViewById(R.id.conv_desc);
                         TextView acronymview = view.findViewById(R.id.conv_acronym);
+                        ImageView icon = view.findViewById(R.id.icon);
+                        ImagesWorker.setGradient(icon, id);
+
 
                         nameview.setText(conv_name);
                         descview.setText(conv_desc);
-                        acronymview.setText(conv_name.substring(0, 1).toUpperCase());
+                        loadMembers(members);
+                        acronymview.setText(conv_name.substring(0, 1));
 
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -7,11 +7,23 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.GradientDrawable;
+import android.widget.ImageView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 public class ImagesWorker {
+
+
+    public static void setGradient(ImageView imageView, int cid) {
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColors(Numbers.getGradientById(cid));
+        gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        gd.setShape(GradientDrawable.OVAL);
+        gd.setSize(100, 100);
+        imageView.setImageDrawable(gd);
+    }
 
     public static Bitmap getCircleCroppedBitmap(Bitmap bitmap, int height, int width) {
         Bitmap output;

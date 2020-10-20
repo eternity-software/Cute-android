@@ -39,26 +39,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
+
         android:orientation="vertical">
 
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+
             android:baselineAligned="true"
+            android:clipChildren="true"
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <TextView
-                android:id="@+id/label"
+            <LinearLayout
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignWithParentIfMissing="true"
-                android:fontFamily="@font/montserrat"
-                android:singleLine="true"
-                android:text="333333333333333333333333333333333333333333333333"
-                android:textColor="@color/colorText"
-                android:textSize="20sp" />
+                android:paddingRight="100dp">
+
+                <TextView
+                    android:id="@+id/label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat"
+                    android:singleLine="true"
+                    android:text="333333"
+                    android:textColor="@color/colorText"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/readed"
@@ -67,20 +76,21 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="-90dp"
+
+                android:layout_toRightOf="@id/name"
                 android:background="@drawable/back_new"
                 android:fontFamily="@font/montserrat"
                 android:gravity="center"
                 android:keepScreenOn="true"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="3dp"
+                android:paddingHorizontal="8dp"
                 android:singleLine="true"
-                android:text="554"
+                android:text="1"
                 android:textColor="@color/colorWhite"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
