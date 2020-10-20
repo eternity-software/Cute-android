@@ -47,12 +47,9 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (canOpen) {
-                    canOpen = false;
                     Intent intent = new Intent(getContext(), Profile.class);
                     intent.putExtra("id", info.getId());
                     getContext().startActivity(intent);
-                }
             }
         });
         view.setTag(viewHolder);
