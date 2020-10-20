@@ -16,7 +16,7 @@ public class DialogInfo {
     public DialogInfo(String name, String lastmessage, String acronym, String cid, String time, boolean isreaded, int count, boolean isOnline, boolean isDialog) {
         this.name = name;
         this.lastmessage = lastmessage;
-        this.acronym = acronym.toUpperCase();
+        this.acronym = acronym;
         this.cid = cid;
         this.time = time;
         this.isreaded = isreaded;

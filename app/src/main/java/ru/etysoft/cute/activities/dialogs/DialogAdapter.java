@@ -2,6 +2,9 @@ package ru.etysoft.cute.activities.dialogs;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +47,7 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
         viewHolder.readstatus = (TextView) view.findViewById(R.id.readed);
         viewHolder.read = view.findViewById(R.id.icnread);
         viewHolder.online = view.findViewById(R.id.status);
+        viewHolder.picture = view.findViewById(R.id.icon);
 
         // Задаём обработчик нажатия
         view.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +92,108 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
             holder.readstatus.setText(String.valueOf(info.getCountReaded()));
         }
 
+        GradientDrawable gd = new GradientDrawable();
+
+        int color1 = Color.parseColor("#B83ADE");
+        int color2 = Color.parseColor("#B83ADE");
+        int id = Integer.parseInt(info.getCid());
+        String sid = String.valueOf(info.getCid());
+        Log.d("ID", "cur= " + id);
+
+
+        color1 = this.context.getResources().getColor(R.color.colorMain);
+        switch (String.valueOf(sid.charAt(sid.length() - 1))) {
+            case ("1"):
+                color1 = Color.parseColor("#21a2b0");
+                break;
+            case ("2"):
+                color1 = Color.parseColor("#53b053");
+                break;
+            case ("3"):
+                color1 = Color.parseColor("#53b053");
+                break;
+            case ("4"):
+                color1 = Color.parseColor("#9ca82d");
+                break;
+            case ("5"):
+                color1 = Color.parseColor("#1b7ca6");
+                break;
+            case ("6"):
+                color1 = Color.parseColor("#6e3dd1");
+                break;
+            case ("7"):
+                color1 = Color.parseColor("#3dd15d");
+                break;
+            case ("8"):
+                color1 = Color.parseColor("#d1693d");
+                break;
+            case ("9"):
+                color1 = Color.parseColor("#3d3dd1");
+                break;
+            case ("0"):
+                color1 = Color.parseColor("#B83ADE");
+                break;
+        }
+
+        if (id > 9) {
+            switch (String.valueOf(sid.charAt(sid.length() - 2))) {
+                case ("1"):
+                    color2 = Color.parseColor("#21a2b0");
+                    break;
+                case ("2"):
+                    color2 = Color.parseColor("#53b053");
+                    break;
+                case ("3"):
+                    color2 = Color.parseColor("#53b053");
+                    break;
+                case ("4"):
+                    color2 = Color.parseColor("#9ca82d");
+                    break;
+                case ("5"):
+                    color2 = Color.parseColor("#1b7ca6");
+                    break;
+                case ("6"):
+                    color2 = Color.parseColor("#6e3dd1");
+                    break;
+                case ("7"):
+                    color2 = Color.parseColor("#3dd15d");
+                    break;
+                case ("8"):
+                    color2 = Color.parseColor("#d1693d");
+                    break;
+                case ("9"):
+                    color2 = Color.parseColor("#B83ADE");
+                    break;
+                case ("0"):
+                    color2 = Color.parseColor("#9e9ed9");
+                    break;
+            }
+        }
+        if (color1 == color2) {
+            color1 = Color.parseColor("#6f299e");
+        }
+
+        // Set the color array to draw gradient
+        gd.setColors(new int[]{
+                color1,
+                color2
+        });
+
+        // Set the GradientDrawable gradient type linear gradient
+        gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+
+        // Set GradientDrawable shape is a rectangle
+        gd.setShape(GradientDrawable.OVAL);
+
+
+        // Set 3 pixels width solid blue color border
+
+
+        // Set GradientDrawable width and in pixels
+        gd.setSize(100, 100); // Width 450 pixels and height 150 pixels
+
+        // Set GradientDrawable as ImageView source image
+        holder.picture.setImageDrawable(gd);
 
         holder.name.setText(info.getName());
         holder.message.setText(info.getLastmessage());
@@ -105,6 +211,7 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
         protected TextView acronym;
         protected TextView time;
         protected TextView readstatus;
+        protected ImageView picture;
         protected ImageView read;
         protected ImageView online;
     }

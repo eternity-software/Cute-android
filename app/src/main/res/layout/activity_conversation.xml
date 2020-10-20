@@ -117,16 +117,16 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="15dp"
             android:background="@drawable/circle_gray"
-            android:tint="@color/colorSupportText"
             android:padding="5dp"
-            app:srcCompat="@drawable/icon_image" />
+            app:srcCompat="@drawable/icon_image"
+            app:tint="@color/colorSupportText" />
 
         <EditText
             android:id="@+id/message_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="7dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:background="@color/colorBackground"
             android:fontFamily="@font/montserrat"
@@ -134,7 +134,7 @@
             android:inputType="textMultiLine"
             android:maxHeight="100dp"
             android:textColorHint="@color/colorSupportText"
-            android:textSize="20dp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/sendButton"

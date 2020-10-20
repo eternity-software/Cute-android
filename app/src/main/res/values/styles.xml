@@ -9,6 +9,10 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
     <style name="CuteSwitch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
         <item name="colorControlActivated">@color/colorMain</item>

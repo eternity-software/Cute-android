@@ -14,7 +14,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="14dp"
         android:background="@drawable/circle_gradiaent"
-        app:tint="@color/colorMain" />
+        />
 
     <TextView
         android:id="@+id/acronym"

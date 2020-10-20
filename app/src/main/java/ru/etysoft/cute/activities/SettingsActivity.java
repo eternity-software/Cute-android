@@ -1,154 +1,110 @@
 package ru.etysoft.cute.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-
-import com.r0adkll.slidr.Slidr;
-import com.r0adkll.slidr.model.SlidrConfig;
-import com.r0adkll.slidr.model.SlidrPosition;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import ru.etysoft.cute.AppSettings;
+import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
-import ru.etysoft.cute.utils.CustomToast;
 
-public class SettingsActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
+public class SettingsActivity extends AppCompatActivity {
 
-    //Константы
-    private String ISDARK_THEME = "APP_THEME_NIGHT";
-
+    public static int count = 0;
+    private static String ISDARK_THEME = "APP_THEME_NIGHT";
     private static AppSettings appSettings;
-
-
-    private static SettingsActivity main;
-
-
-    public void changePassword(View v) {
-        TextView password = findViewById(R.id.password);
-        TextView newPassword = findViewById(R.id.newPassword);
-
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isSuccess()) {
-                            CustomToast.show("Success", R.drawable.icon_success, SettingsActivity.this);
-                        }
-                    }
-                });
-            }
-        };
-        Methods.changePassword(appSettings.getString("session"), password.getText().toString(), newPassword.getText().toString(), apiRunnable, SettingsActivity.this);
-    }
-
-    public Activity parent;
-
-    public static SettingsActivity get() {
-        return main;
-    }
-
-    // Показ FloatingBottomSheet
-    public void showBSheet(View v) {
-        final FloatingBottomSheet bottomSheet = new FloatingBottomSheet();
-
-        bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
-        Drawable icon = ContextCompat.getDrawable(this, R.drawable.logo);
-        bottomSheet.setCancelable(true);
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheet.getDialog().cancel();
-            }
-        };
-
-        bottomSheet.setContent(icon, "Test floating", "It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. ", "1", "2", null, onClickListener);
-    }
-
-
-    public void showMeet(View v) {
-        Intent intent = new Intent(SettingsActivity.this, Meet.class);
-        startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        main = this;
+        setContentView(R.layout.settings_activity);
         appSettings = new AppSettings(this);
-
-
-        setContentView(R.layout.activity_settings);
-
-        Switch darkSwitch = findViewById(R.id.darkSwitch);
-        SlidrConfig config = new SlidrConfig.Builder()
-                .position(SlidrPosition.BOTTOM)
-                .build();
-        Slidr.attach(this, config);
-        // Проверка и инициализация тёмной темы (для перехода)
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.settings, new SettingsFragment())
+                .commit();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         if (appSettings.getBoolean(ISDARK_THEME)) {
-            if (getDelegate().getLocalNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
-                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            }
-            darkSwitch.setChecked(true);
+
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
         } else {
 
-            if (getDelegate().getLocalNightMode() != AppCompatDelegate.MODE_NIGHT_NO) {
-                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
+
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         }
-
-        // Инициализация действия при свиче тёмной темы
-        darkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                buttonView.setEnabled(false);
-                changeTheme(buttonView);
-            }
-        });
-
-        TextView verisonTextView = findViewById(R.id.versionTextView);
-        PackageInfo pInfo = null;
-        try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            verisonTextView.setText("version: " + version);
-        } catch (PackageManager.NameNotFoundException e) {
-            verisonTextView.setText("version: unknown");
-        }
-
     }
 
     public void changeTheme(View v) {
         //Поверка какая тема сейчас стоит
-        if (!appSettings.getBoolean(ISDARK_THEME)) {
-            appSettings.setBoolean(ISDARK_THEME, true);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            appSettings.setBoolean(ISDARK_THEME, false);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
 
-        // Пересоздание активности для красивой смены темы
-        Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-        startActivity(intent);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        finish();
     }
 
+    public static class SettingsFragment extends PreferenceFragmentCompat {
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            Preference verison = findPreference("version");
+            verison.setSummary(BuildConfig.VERSION_NAME);
+            verison.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    count++;
+                    if (count > 10) {
+                        count = 0;
+                        Intent egg = new Intent(getActivity(), EasterEgg.class);
+                        getActivity().startActivity(egg);
+                    }
+                    return false;
+                }
+            });
+
+
+            Preference changePassword = findPreference("changepass");
+            changePassword.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent passwordChangeIntent = new Intent(getActivity(), passwordchaange.class);
+                    getActivity().startActivity(passwordChangeIntent);
+                    getActivity().overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+                    return false;
+                }
+            });
+
+
+            final SwitchPreferenceCompat switchPreference = (SwitchPreferenceCompat) findPreference("APP_THEME_NIGHT");
+            switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if (((boolean) newValue)) {
+                        appSettings.setBoolean(ISDARK_THEME, true);
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    } else {
+                        appSettings.setBoolean(ISDARK_THEME, false);
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+                    switchPreference.setEnabled(false);
+                    // Пересоздание активности для красивой смены темы
+                    Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    getActivity().finish();
+
+                    return true;
+                }
+            });
+        }
+    }
 }

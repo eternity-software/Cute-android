@@ -42,6 +42,7 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/montserrat"
             android:gravity="center"
+            android:paddingHorizontal="20dp"
             android:text="@string/no_conv_text"
             android:textColor="@color/colorText"
             android:textSize="18sp" />
@@ -68,22 +69,31 @@
                 android:layout_marginHorizontal="15dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView10"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/montserrat"
-                    android:gravity="center_vertical"
-                    android:text="@string/messages"
-                    android:textColor="@color/colorText"
-                    android:textSize="24sp" />
+                    android:layout_weight="1">
 
-                <View
-                    android:id="@+id/divider5"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/colorBackgroundElements" />
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat"
+                        android:gravity="center_vertical"
+                        android:text="@string/messages"
+                        android:textColor="@color/colorText"
+                        android:textSize="24sp" />
+
+                    <ImageView
+                        android:id="@+id/convCreateButton"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="5dp"
+                        app:srcCompat="@drawable/icon_convcreate" />
+                </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/loading"
@@ -93,6 +103,14 @@
                     android:layout_weight="1"
                     android:indeterminate="true"
                     android:visibility="invisible" />
+
+                <View
+                    android:id="@+id/divider5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/colorBackgroundElements" />
+
+
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>

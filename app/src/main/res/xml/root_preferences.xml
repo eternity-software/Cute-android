@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fontFamily="@font/montserrat">
+
+    <PreferenceCategory
+        android:fontFamily="@font/montserrat"
+        app:iconSpaceReserved="false"
+        app:title="@string/interfc">
+        <SwitchPreferenceCompat
+            android:fontFamily="@font/montserrat"
+            app:iconSpaceReserved="false"
+            app:key="APP_THEME_NIGHT"
+            app:title="@string/night" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/account">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="changepass"
+            app:title="@string/change_pass" />
+    </PreferenceCategory>
+
+    <Preference
+        android:summary="oh sheet"
+        android:title="@string/version"
+        app:iconSpaceReserved="false"
+        app:key="version" />
+
+
+</PreferenceScreen>

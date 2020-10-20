@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                Intent intent = new Intent(MainActivity.this, stock.class);
                 startActivity(intent);
                 floatingBottomSheet.dismiss();
             }

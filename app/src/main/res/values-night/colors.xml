@@ -12,6 +12,9 @@
     <color name="colorEtysoft">#4A98FF</color>
     <color name="colorGoodGray">#E4E4E4</color>
 
+    <color name="colorEditTextOutline">#FFFFFF</color>
+    <color name="colorEditTextIcon">#FFFFFF</color>
+
     <color name="colorBackground">#232D40</color>
     <color name="colorDarkBackground">#34323A</color>
     <color name="colorBackgroundElements">#2E3B53</color>

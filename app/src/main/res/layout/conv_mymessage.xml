@@ -25,6 +25,7 @@
             android:gravity="bottom"
             android:paddingBottom="7dp"
             android:text="00:00"
+            android:fontFamily="@font/montserrat"
             android:textColor="@color/colorSupportText"
             android:textSize="12sp" />
 
@@ -36,8 +37,9 @@
             android:background="@drawable/mymessage"
             android:padding="10dp"
             android:text="Привет!"
+            android:fontFamily="@font/montserrat"
             android:textColor="@color/colorText"
-            android:textSize="18dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 

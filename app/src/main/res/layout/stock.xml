@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".activities.stock">
+    android:theme="@style/AppTheme">
 
     <ImageView
         android:id="@+id/themeChangeView"
@@ -39,11 +37,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/montserrat"
-            android:textColor="@color/colorText"
             android:longClickable="true"
-            android:theme="@style/CuteSwitch"
             android:text="Dark mode"
-            android:textSize="18sp" />
+            android:textColor="@color/colorText"
+            android:textSize="18sp"
+            android:theme="@style/CuteSwitch" />
 
 
         <Button
@@ -71,8 +69,8 @@
                 android:layout_weight="0"
                 android:background="@drawable/button_passive_mini"
                 android:fontFamily="@font/montserrat"
-                android:text="PASSIVE MINI"
                 android:onClick="showMeet"
+                android:text="PASSIVE MINI"
                 android:textSize="14sp" />
 
             <Button
@@ -85,8 +83,8 @@
                 android:layout_weight="0"
                 android:background="@drawable/button_active_mini"
                 android:fontFamily="@font/montserrat"
-                android:text="ACTIVE MINI"
                 android:onClick="changePassword"
+                android:text="ACTIVE MINI"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -99,9 +97,9 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/button_active"
             android:fontFamily="@font/montserrat"
-            android:textColor="@color/colorWhite"
             android:onClick="showBSheet"
             android:text="ACTIVE BUTTON"
+            android:textColor="@color/colorWhite"
             android:textSize="18sp" />
 
         <CheckBox
@@ -126,6 +124,7 @@
             android:background="@drawable/edit_text_passive"
             android:drawableLeft="@drawable/icon_account"
             android:drawablePadding="10dp"
+            android:drawableTint="@color/colorEditTextIcon"
             android:ems="10"
             android:fontFamily="@font/montserrat"
             android:foregroundGravity="left|clip_horizontal"
@@ -147,13 +146,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/icon_account"
+                android:drawableLeft="@drawable/icon_pass"
                 android:drawablePadding="10dp"
+                android:drawableTint="@color/colorEditTextIcon"
                 android:ems="10"
                 android:fontFamily="@font/montserrat"
                 android:foregroundGravity="left|clip_horizontal"
-                android:hint="Old password"
-                android:inputType="textPersonName"
+                android:hint="@string/pass_new"
+                android:inputType="textVisiblePassword"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp" />
@@ -162,20 +162,21 @@
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorPrimaryGray" />
+                android:background="@color/colorEditTextOutline" />
 
             <EditText
-                android:id="@+id/newPassword"
+                android:id="@+id/passonf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/icon_account"
+                android:drawableLeft="@drawable/icon_pass"
                 android:drawablePadding="10dp"
+                android:drawableTint="@color/colorEditTextIcon"
                 android:ems="10"
                 android:fontFamily="@font/montserrat"
                 android:foregroundGravity="left|clip_horizontal"
-                android:hint="New password"
-                android:inputType="textPersonName"
+                android:hint="@string/confirmation"
+                android:inputType="textVisiblePassword"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp" />

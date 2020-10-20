@@ -22,7 +22,7 @@
     <string name="password_confirm">Password confirm</string>
 
     <string name="sign_up_subemail">Give us your e-mail</string>
-    <string name="e_mail">E-mail</string>
+    <string name="e_mail" translatable="false">E-mail</string>
 
     <string name="sign_in_success">Successfully signed in!</string>
     <string name="sign_up_success">Successfully signed up!</string>
@@ -77,6 +77,18 @@
     <string name="clear_title">Clear all messages</string>
     <string name="clear_text">You will clear all messages for yourself, and others will continue to see them.</string>
 
+    //SETTINGS
+    <string name="interfc">Interface</string>
+    <string name="night">Dark mode</string>
+    <string name="change_pass">Change password</string>
+
+    <string name="pass_old">Old password</string>
+    <string name="pass_new">New password</string>
+    <string name="pass_success">Successfully changed your password</string>
+    <string name="pass_error">Error</string>
+    <string name="pass_dmatch">Passwords don\'t match</string>
+    <string name="version">Version</string>
+
 
     // Errors
     <string name="err_no_internet">No internet connection!</string>
@@ -114,7 +126,7 @@
     <string name="errcode_AM007_1">Wrong confirmation code</string>
     <string name="errcode_AM007_2">Can\'t find an account</string>
     <string name="errcode_AM007_3">Wrong password</string>
-    <string name="errcode_AM007_4">Incorrect new password</string>
+    <string name="errcode_AM007_4">Incorrect password</string>
     <string name="errcode_AM007_5">Unknown password change error</string>
 
     <string name="errcode_AM008_1">Active session doesn\'t exists</string>
@@ -159,19 +171,36 @@
     <string name="errcode_CMM002_3">Unknown error</string>
 
 
-    <string name="title_activity_navigation">Navigation</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_account">Account</string>
+    <string name="title_activity_navigation" translatable="false">Navigation</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="title_activity_account" translatable="false">Account</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
+    <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header" translatable="false">Messages</string>
+    <string name="sync_header" translatable="false">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title" translatable="false">Your signature</string>
+    <string name="reply_title" translatable="false">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title" translatable="false">Sync email periodically</string>
+    <string name="attachment_title" translatable="false">Download incoming attachments</string>
+    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
+    <string name="password_warning">Changing the password will automatically reset all active sessions</string>
 
 </resources>

@@ -10,6 +10,9 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">Montserrat</item>
+    </style>
 
     <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
