@@ -1,7 +1,14 @@
 package ru.etysoft.cute.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,6 +37,7 @@ import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cute.utils.SendorsControl;
 
 public class Conversation extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
@@ -41,33 +49,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     private boolean isDialog;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation);
-        cid = getIntent().getStringExtra("cid");
-        name = getIntent().getStringExtra("name");
-        isDialog = getIntent().getBooleanExtra("isd", false);
-
-        ImageView picture = findViewById(R.id.icon);
-        ImagesWorker.setGradient(picture, Integer.parseInt(cid));
-
-        TextView acronym = findViewById(R.id.acronym);
-        acronym.setVisibility(View.VISIBLE);
-        acronym.setText(String.valueOf(name.charAt(0)));
-
-        TextView subtitle = findViewById(R.id.subtitle);
-        if (!isDialog) {
-            subtitle.setText("0 members");
-        }
-
-        TextView title = findViewById(R.id.title);
-        title.setText(name);
-
-        updateList();
-        Slidr.attach(this);
-
-    }
+    public boolean isVoice = true;
 
     @Override
     protected void onResume() {
@@ -207,6 +189,119 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     protected void onDestroy() {
         super.onDestroy();
         DialogAdapter.canOpen = true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_conversation);
+        cid = getIntent().getStringExtra("cid");
+        name = getIntent().getStringExtra("name");
+        isDialog = getIntent().getBooleanExtra("isd", false);
+
+        ImageView picture = findViewById(R.id.icon);
+        ImagesWorker.setGradient(picture, Integer.parseInt(cid));
+
+        TextView acronym = findViewById(R.id.acronym);
+        acronym.setVisibility(View.VISIBLE);
+        acronym.setText(String.valueOf(name.charAt(0)));
+
+        TextView subtitle = findViewById(R.id.subtitle);
+        if (!isDialog) {
+            subtitle.setText("0 members");
+        }
+
+        TextView title = findViewById(R.id.title);
+        title.setText(name);
+        setupVoiceButton();
+        updateList();
+        Slidr.attach(this);
+        setupOnTextInput();
+
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void setupVoiceButton() {
+        final ImageView microphone = findViewById(R.id.sendVoice);
+        microphone.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final float max = 2.0f;
+                final float pivotX = 0.7f;
+                final float pivotY = 0.7f;
+                final int duration = 150;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+
+                        SendorsControl.vibrate(getApplicationContext(), 100);
+                        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, max, 1.0f, max, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+                        scaleAnimation.setDuration(duration);
+
+
+                        scaleAnimation.setFillAfter(true);
+
+                        microphone.startAnimation(scaleAnimation);
+                        break;
+                    case MotionEvent.ACTION_MOVE: // движение
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        ScaleAnimation dscaleAnimation = new ScaleAnimation(max, 1.0f, max, 1.0f, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+                        dscaleAnimation.setDuration(duration);
+                        dscaleAnimation.setFillAfter(true);
+
+                        microphone.startAnimation(dscaleAnimation);// отпускание
+                    case MotionEvent.ACTION_CANCEL:
+
+                        break;
+                }
+                return true;
+
+
+            }
+        });
+
+    }
+
+    public void setupOnTextInput() {
+        final ImageView sendBtn = findViewById(R.id.sendButton);
+        final ImageView voiceBtn = findViewById(R.id.sendVoice);
+        final EditText editText = findViewById(R.id.message_box);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int duration = 150;
+                float pivotX = 0.5f;
+                float pivotY = 0.5f;
+                ScaleAnimation decreaseAnimation = new ScaleAnimation(1.0f, 0, 1.0f, 0, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+                decreaseAnimation.setDuration(duration);
+                decreaseAnimation.setFillAfter(true);
+
+                ScaleAnimation scaleAnimation = new ScaleAnimation(0, 1.0f, 0, 1.0f, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+                scaleAnimation.setDuration(duration);
+                scaleAnimation.setFillAfter(true);
+                if (String.valueOf(editText.getText()).equals("")) {
+                    isVoice = true;
+                    voiceBtn.startAnimation(scaleAnimation);
+                    sendBtn.startAnimation(decreaseAnimation);
+                } else {
+                    if (isVoice == true) {
+                        isVoice = false;
+                        voiceBtn.startAnimation(decreaseAnimation);
+                        sendBtn.startAnimation(scaleAnimation);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override

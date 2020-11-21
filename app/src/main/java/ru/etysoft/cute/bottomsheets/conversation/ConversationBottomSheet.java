@@ -1,5 +1,6 @@
 package ru.etysoft.cute.bottomsheets.conversation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -30,6 +33,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.utils.Numbers;
 
 public class ConversationBottomSheet extends BottomSheetDialogFragment {
     private BottomSheetListener mListener;
@@ -53,6 +57,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
@@ -67,6 +72,48 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
         // Ловим COLLAPSED и не даём промежуточному положению существовать, а так же убираем слайд при невозможности отменить
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                final CardView cardView = view.findViewById(R.id.appBar);
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+
+
+                    if (cardView.getRadius() != 0) {
+                        Thread animation = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int radius = 20; radius >= 0; radius = radius - 1) {
+                                    System.out.print(radius);
+                                    final int finalRadius = radius;
+                                    try {
+                                        Thread.sleep(10);
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cardView.setRadius(Numbers.dpToPx(finalRadius, getContext()));
+                                            }
+                                        });
+
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                        });
+                        animation.start();
+                    }
+                } else {
+                    cardView.setRadius(Numbers.dpToPx(20, getContext()));
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
 
 
     }
@@ -133,7 +180,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         dismiss();
                     }
                 } else {
-                    dismiss();
+                    // dismiss();
                 }
             }
         };

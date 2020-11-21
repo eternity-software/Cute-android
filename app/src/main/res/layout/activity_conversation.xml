@@ -148,8 +148,22 @@
             android:background="@drawable/circle_button"
             android:onClick="sendMessage"
             android:padding="8dp"
-            app:srcCompat="@drawable/icon_microphone" />
+            app:srcCompat="@drawable/icon_uber" />
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/sendVoice"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_marginVertical="7dp"
+        android:layout_marginEnd="7dp"
+        android:background="@drawable/circle_button"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
+        app:srcCompat="@drawable/icon_microphone" />
+
 
     <ListView
         android:id="@+id/messages"
