@@ -151,6 +151,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
     // Задаём контент
     private void setContent() {
+
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
@@ -283,6 +284,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             }
         });
         setContent();
+
         return v;
     }
 

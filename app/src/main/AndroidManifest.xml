@@ -29,6 +29,7 @@
             android:name=".activities.Conversation"
             android:configChanges="keyboardHidden|orientation|screenLayout"
             android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".activities.CreateConv"
             android:windowSoftInputMode="stateHidden" />

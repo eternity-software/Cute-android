@@ -148,7 +148,7 @@
             android:background="@drawable/circle_button"
             android:onClick="sendMessage"
             android:padding="8dp"
-            app:srcCompat="@drawable/icon_uber" />
+            app:srcCompat="@drawable/icon_send" />
 
     </LinearLayout>
 
@@ -160,6 +160,7 @@
         android:layout_marginEnd="7dp"
         android:background="@drawable/circle_button"
         android:padding="8dp"
+        android:elevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
         app:srcCompat="@drawable/icon_microphone" />

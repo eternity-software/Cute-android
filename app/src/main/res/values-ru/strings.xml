@@ -120,4 +120,6 @@
     <string name="pass_dmatch">Пароли не совпадают</string>
     <string name="errcode_CMM002_3">Неизвестная ошибка</string>
     <string name="password_warning">Смена пароля приведет к автоматическому сбросу всех активных сессий</string>
+    <string name="err_not_sended">Не отправлено</string>
+    <string name="sending">Отправка...</string>
 </resources>

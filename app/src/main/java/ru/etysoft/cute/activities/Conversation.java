@@ -44,9 +44,9 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     private List<ConversationInfo> convInfos = new ArrayList<>();
     private Map<String, ConversationInfo> ids = new HashMap<String, ConversationInfo>();
 
-    private String cid;
-    private String name;
-    private boolean isDialog;
+    private String cid = "1";
+    private String name = "42";
+    private boolean isDialog = false;
 
 
     public boolean isVoice = true;
@@ -142,7 +142,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         final TextView messageBox = findViewById(R.id.message_box);
         final ListView listView = findViewById(R.id.messages);
         AppSettings appSettings = new AppSettings(this);
-        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, "Sending...", false, -10, false);
+        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, getString(R.string.sending), false, -10, false);
         convInfos.add(conversationInfo);
         ConversationAdapter adapter = new ConversationAdapter(this, convInfos);
         listView.setAdapter(adapter);
@@ -173,7 +173,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                     }
 
                 } else {
-                    conversationInfo.setSubtext("Error");
+                    conversationInfo.setSubtext(getString(R.string.err_not_sended));
                     ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
                     listView.setAdapter(adapter);
                 }
@@ -288,9 +288,13 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                     isVoice = true;
                     voiceBtn.startAnimation(scaleAnimation);
                     sendBtn.startAnimation(decreaseAnimation);
+                    sendBtn.setEnabled(false);
+                    voiceBtn.setEnabled(true);
                 } else {
                     if (isVoice == true) {
                         isVoice = false;
+                        sendBtn.setEnabled(true);
+                        voiceBtn.setEnabled(false);
                         voiceBtn.startAnimation(decreaseAnimation);
                         sendBtn.startAnimation(scaleAnimation);
                     }

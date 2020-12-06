@@ -32,11 +32,13 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
+
                 <ImageView
                     android:id="@+id/icon"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     app:srcCompat="@drawable/circle_gradiaent" />
+
 
                 <TextView
                     android:id="@+id/conv_acronym"
@@ -46,7 +48,7 @@
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:text="П"
+                    android:text=""
                     android:textColor="@color/colorWhite"
                     android:textSize="36sp" />
 
@@ -62,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
                         android:maxLines="1"
-                        android:text="Пацаны смотрите как могу "
+                        android:text=""
                         android:textColor="@color/colorText"
                         android:textSize="20sp" />
 
@@ -72,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
                         android:maxLines="3"
-                        android:text="r7ZBTSIJDweQc0fIVFB0SWwKJ8oeWyAt5SE0D0GxR3j4s9x0Ef "
+                        android:text=""
                         android:textColor="@color/colorSupportText"
                         android:textSize="14sp" />
 

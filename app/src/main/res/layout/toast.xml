@@ -2,9 +2,9 @@
     android:id="@+id/toast_layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/edit_text_passive_double"
+    android:background="@drawable/custom_toast"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="7dp">
 
     <ImageView
         android:id="@+id/image"

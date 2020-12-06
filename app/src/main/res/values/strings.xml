@@ -92,6 +92,8 @@
 
     // Errors
     <string name="err_no_internet">No internet connection!</string>
+    <string name="err_not_sended">Not sent</string>
+    <string name="sending">Sending...</string>
     <string name="err_json">Wrong JSON answer</string>
     <string name="err_unknown">Unknown error</string>
     <string name="err_confirm">You must confirm your account</string>
