@@ -173,7 +173,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:onClick="signUpButton"
                 android:text="@string/sign_up"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorMainText"
                 android:textSize="18sp" />
 
             <Button

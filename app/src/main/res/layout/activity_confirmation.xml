@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="409dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorDivider"
                 android:orientation="vertical">
@@ -131,7 +131,7 @@
                 android:onClick="sendAnotherConfirmationCode"
                 android:paddingHorizontal="10dp"
                 android:singleLine="true"
-                android:text="ОТПРАВИТ ПОВТОРНО "
+                android:text="@string/confirmation_send_another"
                 android:textColor="@color/colorText"
                 android:textSize="14sp" />
 

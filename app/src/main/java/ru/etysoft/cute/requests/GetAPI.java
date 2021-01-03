@@ -40,7 +40,7 @@ public class GetAPI {
                                 final JSONObject jsonObject = new JSONObject(result);
                                 boolean isSuccess = false;
                                 String code = null;
-                                if (jsonObject.getString("type").equals("success")) {
+                                if (jsonObject.getString("status").equals("success")) {
                                     isSuccess = true;
                                 } else {
                                     code = jsonObject.getString("code");
@@ -140,7 +140,7 @@ public class GetAPI {
                         final JSONObject jsonObject = new JSONObject(result);
                         boolean isSuccess = false;
                         String code = null;
-                        if (jsonObject.getString("type").equals("success")) {
+                        if (jsonObject.getString("status").equals("success")) {
                             isSuccess = true;
                         } else {
                             code = jsonObject.getString("code");

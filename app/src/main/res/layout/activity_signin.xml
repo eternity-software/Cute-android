@@ -77,7 +77,7 @@
                     android:id="@+id/login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="12dp"
                     android:background="@android:color/transparent"
                     android:drawableLeft="@drawable/icon_person"
                     android:drawablePadding="10dp"
@@ -91,17 +91,13 @@
                     android:paddingBottom="10dp"
                     android:textColor="@color/colorText" />
 
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimaryGray" />
+
 
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="12dp"
                     android:background="@android:color/transparent"
                     android:drawableLeft="@drawable/icon_pass"
                     android:drawablePadding="10dp"
@@ -128,7 +124,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:onClick="signInButton"
                 android:text="@string/sign_in"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorMainText"
                 android:textSize="18sp" />
 
             <Button

@@ -12,6 +12,10 @@ public class Logger {
         Log.d("[RESPONSE]", "[" + method + "]: " + text);
     }
 
+    public static void logCache(String text) {
+        Log.d("[CACHE]", text);
+    }
+
     public static void logReceiver(String text) {
         Log.d("[RECEIVE]", text);
     }

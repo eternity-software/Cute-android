@@ -62,15 +62,13 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
 
-        // Кастомная анимация
         getDialog().getWindow()
                 .getAttributes().windowAnimations = R.style.DialogAnimation;
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
-        // Получение поведения
-        final FrameLayout bottomSheet = dialog.findViewById(R.id.design_bottom_sheet);
 
-        // Ловим COLLAPSED и не даём промежуточному положению существовать, а так же убираем слайд при невозможности отменить
+        final FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override

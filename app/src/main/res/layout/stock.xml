@@ -99,7 +99,7 @@
             android:fontFamily="@font/montserrat"
             android:onClick="showBSheet"
             android:text="ACTIVE BUTTON"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorMainText"
             android:textSize="18sp" />
 
         <CheckBox

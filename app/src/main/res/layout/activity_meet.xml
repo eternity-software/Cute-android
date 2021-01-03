@@ -84,7 +84,7 @@
             android:fontFamily="@font/montserratmedium"
             android:onClick="goSignUp"
             android:text="@string/sign_up"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorMainText"
             android:textSize="18sp" />
 
     </LinearLayout>

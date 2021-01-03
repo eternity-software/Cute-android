@@ -110,7 +110,7 @@
         android:fontFamily="@font/montserrat"
         android:onClick="createConv"
         android:text="@string/create_conv_button"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorMainText"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -27,8 +27,7 @@ public class Signup extends AppCompatActivity {
     }
 
     public void back(View v) {
-        Intent intent = new Intent(Signup.this, Meet.class);
-        startActivity(intent);
+      onBackPressed();
     }
 
     public void signUpButton(View v) {
@@ -96,7 +95,6 @@ public class Signup extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
         Intent intent = new Intent(Signup.this, Meet.class);
         startActivity(intent);
-        // Анимация
-
+        finish();
     }
 }

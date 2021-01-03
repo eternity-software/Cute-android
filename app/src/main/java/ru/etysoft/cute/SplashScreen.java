@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import ru.etysoft.cute.activities.MainActivity;
 
 public class SplashScreen extends AppCompatActivity {
-    private String ISDARK_THEME = "APP_THEME_NIGHT";
+    private final static String ISDARK_THEME = "APP_THEME_NIGHT";
 
     private AppSettings appSettings;
 
@@ -26,11 +26,12 @@ public class SplashScreen extends AppCompatActivity {
         finish();
 
         // Инициализация текущей темы и её применение
-        if (appSettings.getBoolean(ISDARK_THEME)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if (appSettings.hasKey(ISDARK_THEME)) {
+            if (appSettings.getBoolean(ISDARK_THEME)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
         }
-
     }
 }

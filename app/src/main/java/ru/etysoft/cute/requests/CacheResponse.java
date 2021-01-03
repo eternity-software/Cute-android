@@ -16,6 +16,10 @@ public class CacheResponse {
         }
     }
 
+    protected static void deleteResponseFromCache(String url, AppSettings appSettings) {
+        saveResponseToCache(url, null, appSettings);
+    }
+
     public static String getResponseFromCache(String url, AppSettings appSettings) {
         return appSettings.getString("[URL]" + url);
     }

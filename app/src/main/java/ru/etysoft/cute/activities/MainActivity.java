@@ -20,6 +20,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
 import ru.etysoft.cute.fragments.explore.ExploreFragment;
@@ -29,7 +30,7 @@ import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
+public class MainActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
     public static final boolean isDev = true;
 
@@ -67,10 +68,15 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Logger.logActivity("Created Main");
+
         appSettings = new AppSettings(this);
+
+        // Инициализация кодов ошибок
+        ErrorCodes.initialize(this);
 
         // Проверка сессии
         if (appSettings.getString("session") == null) {
@@ -82,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             return;
         }
 
-        // Инициализация кодов ошибок
-        ErrorCodes.initialize(this);
 
         // Инициализация навигации
         setupNavigation();
