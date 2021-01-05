@@ -20,7 +20,6 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
-import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
 import ru.etysoft.cute.fragments.explore.ExploreFragment;
@@ -30,7 +29,7 @@ import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
+public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
 
     public static final boolean isDev = true;
 
