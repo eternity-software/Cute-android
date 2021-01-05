@@ -2,7 +2,6 @@ package ru.etysoft.cute.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +10,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
@@ -46,18 +46,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public void changeTheme(View v) {
-        //Поверка какая тема сейчас стоит
-
-    }
-
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey);
+            setPreferencesFromResource(R.xml.settings_preferences, rootKey);
 
             Preference verison = findPreference("version");
-            verison.setSummary(BuildConfig.VERSION_NAME);
+            verison.setSummary(BuildConfig.VERSION_NAME + " (API " + getString(R.string.api_v) + ")");
             verison.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -79,6 +74,32 @@ public class SettingsActivity extends AppCompatActivity {
                     Intent passwordChangeIntent = new Intent(getActivity(), PasswordChange.class);
                     getActivity().startActivity(passwordChangeIntent);
                     getActivity().overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+                    return false;
+                }
+            });
+
+            Preference logout = findPreference("logout");
+            logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Runnable toRun = new Runnable() {
+                        @Override
+                        public void run() {
+                            AppSettings appSettings = new AppSettings(getActivity());
+                            appSettings.clean();
+                            Intent meet = new Intent(getActivity(), Meet.class);
+                            getActivity().startActivity(meet);
+                        }
+                    };
+
+                    Runnable cancel = new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    };
+                    AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.logout_text), toRun, cancel);
+                    cdd.show();
                     return false;
                 }
             });

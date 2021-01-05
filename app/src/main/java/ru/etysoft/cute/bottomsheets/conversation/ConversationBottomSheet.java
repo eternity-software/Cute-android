@@ -221,7 +221,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 };
             }
         };
-        AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.leave_title), getString(R.string.leave_text), toRun, cancel);
+        AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.logout_text), toRun, cancel);
         cdd.show();
     }
 

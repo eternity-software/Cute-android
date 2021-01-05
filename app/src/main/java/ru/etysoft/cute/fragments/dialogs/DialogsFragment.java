@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -71,6 +72,16 @@ public class DialogsFragment extends Fragment {
             }
         });
 
+        final Button error = view.findViewById(R.id.update_dialoglist);
+        error.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final LinearLayout layout = view.findViewById(R.id.error);
+                layout.setVisibility(View.INVISIBLE);
+                updateDialogList();
+            }
+        });
+
         return root;
     }
 
@@ -88,6 +99,7 @@ public class DialogsFragment extends Fragment {
         frontView.setVisibility(View.VISIBLE);
         final LinearLayout noMessages = view.findViewById(R.id.empty);
         noMessages.setVisibility(View.INVISIBLE);
+        final LinearLayout error = view.findViewById(R.id.error);
 
         // Задаём обработчик запроса к API
         APIRunnable apiRunnable = new APIRunnable() {
@@ -146,12 +158,14 @@ public class DialogsFragment extends Fragment {
                         try {
                             if (getErrorCode().equals("timeout")) {
                                 CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
-                            }
-                            if (getErrorCode().equals("#CM003.1")) {
+
+                            } else if (getErrorCode().equals("#CM003.1")) {
 
                                 // Сохраняем в кэш если ошибка указывает на отсутствие сообщений
                                 CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
                                 noMessages.setVisibility(View.VISIBLE);
+                            } else {
+                                error.setVisibility(View.VISIBLE);
                             }
 
                         } catch (Exception e) {

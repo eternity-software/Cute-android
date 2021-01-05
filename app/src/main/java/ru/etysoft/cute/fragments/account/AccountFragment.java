@@ -87,9 +87,9 @@ public class AccountFragment extends Fragment {
                             id.setText("u" + data.getString("id"));
 
                             TextView username = view.findViewById(R.id.username);
-                            username.setText(data.getString("login"));
+                            username.setText(data.getString("nickname"));
 
-                            appSettings.setString("username", data.getString("login"));
+                            appSettings.setString("username", data.getString("nickname"));
                             appSettings.setString("id", data.getString("id"));
 
 

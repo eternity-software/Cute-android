@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import ru.etysoft.cute.AppSettings;
+import ru.etysoft.cute.R;
 import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.requests.GET;
 import ru.etysoft.cute.requests.GetAPI;
@@ -19,6 +20,10 @@ public class Methods {
 
     public static String domain = "https://api.mcute.ru/";
     public static String options = "&v=V0001";
+
+    public static void initialize(Context context) {
+        options = "&v=" + context.getResources().getString(R.string.api_v);
+    }
 
     public static void login(String username, String password, Activity activity, APIRunnable apiRunnable) {
         username = StringFormatter.format(username);

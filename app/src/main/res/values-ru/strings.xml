@@ -122,4 +122,11 @@
     <string name="password_warning">Смена пароля приведет к автоматическому сбросу всех активных сессий</string>
     <string name="err_not_sended">Не отправлено</string>
     <string name="sending">Отправка...</string>
+    <string name="dialogs_error_title">Ошибка</string>
+    <string name="dialogs_error_text">Не удалось загрузить чаты</string>
+    <string name="dialogs_error_button">Повторить</string>
+    <string name="signout">Выйти</string>
+    <string name="logout">Выйти</string>
+    <string name="logout_title">Выйти</string>
+    <string name="logout_text">Вы действительно хотите выйти из аккаунта?</string>
 </resources>

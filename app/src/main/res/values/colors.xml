@@ -23,7 +23,7 @@
     <color name="colorMainText">#B83ADE</color>
     <color name="colorError">#EA3939</color>
     <color name="colorSuccess">#4CAF50</color>
-    <color name="colorDivider">#E6E6E6</color>
+    <color name="colorDivider">#F4F4F4</color>
 
     <color name="colorOnline">#4CAF50</color>
     <color name="colorOnlineOutLine">#FFFFFF</color>

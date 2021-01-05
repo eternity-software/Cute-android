@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.api.Methods;
 
 public class SplashScreen extends AppCompatActivity {
     private final static String ISDARK_THEME = "APP_THEME_NIGHT";
@@ -17,6 +18,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Methods.initialize(this);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         appSettings = new AppSettings(this);
 

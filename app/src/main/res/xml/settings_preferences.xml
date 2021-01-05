@@ -20,6 +20,10 @@
             app:iconSpaceReserved="false"
             app:key="changepass"
             app:title="@string/change_pass" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="logout"
+            app:title="@string/logout" />
     </PreferenceCategory>
 
     <Preference
