@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
@@ -42,7 +41,7 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
-    public static String isConfirmed(String session, String code) {
+    public static String sendConfirmationCode(String session, String code) {
         code = StringFormatter.format(code);
 
         String finalurl = domain + "account.confirm?session=" + session + "&code=" + code + options;
@@ -98,7 +97,7 @@ public class Methods {
     public static void sendTextMessage(String session, String message, String cid, APIRunnable apiRunnable, Activity activity) {
 
         try {
-            message = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+            message = URLEncoder.encode(message, "UTF-8");
             String finalurl = domain + "conversation.send?session=" + session + "&cid=" + cid + "&text=" + message + options;
             String methodName = "SENDTEXTMESSAGE";
             Logger.logRequest("GET", methodName + ": " + finalurl);
@@ -165,6 +164,13 @@ public class Methods {
             return response;
         }
 
+    }
+
+    public static void closeSession(String session, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "account.logout?session=" + session + options;
+        String methodName = "CLOSESESSION";
+        Logger.logRequest("GET", methodName + ": " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
     public static boolean hasInternet(Context context) {

@@ -36,6 +36,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorBackground</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="colorAccent">@color/colorMainLight</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>

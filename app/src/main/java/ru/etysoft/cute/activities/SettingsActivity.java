@@ -14,6 +14,10 @@ import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.api.APIRunnable;
+import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.utils.CustomToast;
+import ru.etysoft.cute.utils.ErrorCodes;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -82,10 +86,21 @@ public class SettingsActivity extends AppCompatActivity {
             logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Runnable toRun = new Runnable() {
+                    final Runnable toRun = new Runnable() {
                         @Override
                         public void run() {
                             AppSettings appSettings = new AppSettings(getActivity());
+
+                            APIRunnable apiRunnable = new APIRunnable() {
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    if (!isSuccess()) {
+                                        CustomToast.show(ErrorCodes.getError(getErrorCode()), R.drawable.icon_error, getActivity());
+                                    }
+                                }
+                            };
+                            Methods.closeSession(appSettings.getString("session"), apiRunnable, getActivity());
                             appSettings.clean();
                             Intent meet = new Intent(getActivity(), Meet.class);
                             getActivity().startActivity(meet);

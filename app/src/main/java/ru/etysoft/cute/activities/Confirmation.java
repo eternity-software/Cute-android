@@ -48,7 +48,7 @@ public class Confirmation extends AppCompatActivity {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final String response = Methods.isConfirmed(appSettings.getString("session"), code);
+                    final String response = Methods.sendConfirmationCode(appSettings.getString("session"), code);
                     try {
                         final JSONObject jObject = new JSONObject(response);
                         String type = jObject.getString("status");

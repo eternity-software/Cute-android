@@ -50,6 +50,7 @@
             android:layout_weight="0"
             android:background="@drawable/button_passive_mini"
             android:fontFamily="@font/montserrat"
+            android:paddingHorizontal="10dp"
             android:text="@string/dialogs_error_button"
             android:textSize="14sp" />
 

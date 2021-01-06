@@ -7,9 +7,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.r0adkll.slidr.Slidr;
-import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
-import com.r0adkll.slidr.model.SlidrPosition;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
@@ -29,10 +27,7 @@ public class CreateConv extends AppCompatActivity {
         setContentView(R.layout.activity_create_conv);
         // Анимация
 
-        SlidrConfig config = new SlidrConfig.Builder()
-                .position(SlidrPosition.LEFT)
-                .build();
-        Slidr.attach(this, config);
+        Slidr.attach(this);
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
 

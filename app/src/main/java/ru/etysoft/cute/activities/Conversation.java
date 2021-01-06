@@ -180,7 +180,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
             }
         };
 
-        Methods.sendTextMessage(appSettings.getString("session"), messageBox.getText().toString(), cid, apiRunnable, this);
+        Methods.sendTextMessage(appSettings.getString("session"), String.valueOf(messageBox.getText()), cid, apiRunnable, this);
         messageBox.setText("");
 
     }
@@ -217,7 +217,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         updateList();
         Slidr.attach(this);
         setupOnTextInput();
-
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -227,8 +227,8 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 final float max = 2.0f;
-                final float pivotX = 0.7f;
-                final float pivotY = 0.7f;
+                final float pivotX = 0.5f;
+                final float pivotY = 0.5f;
                 final int duration = 150;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:

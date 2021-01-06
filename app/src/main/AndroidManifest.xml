@@ -32,6 +32,7 @@
 
         <activity
             android:name=".activities.CreateConv"
+            android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.Dialogs" />
         <activity android:name=".activities.Account" />

@@ -60,7 +60,6 @@ public class AccountFragment extends Fragment {
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
@@ -81,36 +80,53 @@ public class AccountFragment extends Fragment {
                     if (isSuccess()) {
                         try {
                             JSONObject jsonObject = new JSONObject(getResponse());
-                            JSONObject data = jsonObject.getJSONObject("data");
+                            final JSONObject data = jsonObject.getJSONObject("data");
 
-                            TextView id = view.findViewById(R.id.idview);
+                            final TextView id = view.findViewById(R.id.idview);
                             id.setText("u" + data.getString("id"));
-
+                            boolean hasImage = false;
                             TextView username = view.findViewById(R.id.username);
                             username.setText(data.getString("nickname"));
 
                             appSettings.setString("username", data.getString("nickname"));
                             appSettings.setString("id", data.getString("id"));
 
+                            if (hasImage) {
+                                Thread imageThread = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
+                                                R.drawable.icon_uber);
+                                        final ImageView userPicture = view.findViewById(R.id.userimoage);
+                                        int px = (int) Numbers.dpToPx(80, getContext());
+                                        final Bitmap b = ImagesWorker.getCircleCroppedBitmap(icon, px, px);
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                userPicture.setImageBitmap(b);
+                                            }
+                                        });
 
-                            Thread imageThread = new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
-                                            R.drawable.icon_uber);
-                                    final ImageView userPicture = view.findViewById(R.id.userimage);
-                                    int px = (int) Numbers.dpToPx(80, getContext());
-                                    final Bitmap b = ImagesWorker.getCircleCroppedBitmap(icon, px, px);
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            userPicture.setImageBitmap(b);
+                                    }
+                                });
+                                imageThread.run();
+                            } else {
+                                Thread imageThread = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
+                                                R.drawable.icon_uber);
+                                        final ImageView userPicture = view.findViewById(R.id.userimoage);
+                                        try {
+                                            ImagesWorker.setGradient(userPicture, Integer.parseInt(data.getString("id")));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
                                         }
-                                    });
 
-                                }
-                            });
-                            imageThread.run();
+                                    }
+                                });
+                                imageThread.run();
+                            }
 
 
                         } catch (JSONException e) {

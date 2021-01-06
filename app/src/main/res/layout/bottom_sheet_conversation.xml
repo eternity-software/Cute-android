@@ -9,7 +9,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/appBar"
-        android:layout_width="395dp"
+        android:layout_width="match_parent"
         android:layout_height="19100000dp"
         android:layout_marginBottom="-20dp"
         android:paddingBottom="20dp"
