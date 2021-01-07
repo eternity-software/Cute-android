@@ -40,7 +40,7 @@ public class Profile extends AppCompatActivity {
                         String name = data.getString("nickname");
                         int id = data.getInt("id");
                         TextView idv = findViewById(R.id.idview);
-                        idv.setText(String.valueOf(id));
+                        idv.setText("u" + String.valueOf(id));
 
                         TextView username = findViewById(R.id.username);
                         username.setText(name);

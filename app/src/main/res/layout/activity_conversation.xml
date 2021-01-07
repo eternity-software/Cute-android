@@ -186,4 +186,26 @@
 
     </ListView>
 
+    <LinearLayout
+        android:id="@+id/recordPanel"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorBackground"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/sendVoice"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout3">
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center"
+            android:text="@string/wait_for_record" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

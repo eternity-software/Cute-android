@@ -27,6 +27,7 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.Conversation"
+            android:theme="@style/AppSlideTheme"
             android:configChanges="keyboardHidden|orientation|screenLayout"
             android:windowSoftInputMode="stateHidden" />
 

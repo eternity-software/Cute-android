@@ -130,7 +130,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
             MemberInfo memberInfo = new MemberInfo(id, name, role);
 
-            if (role.equals("creator")) {
+            if (role.equals("CREATOR")) {
                 memberInfos.add(0, memberInfo);
             } else {
                 memberInfos.add(memberInfo);

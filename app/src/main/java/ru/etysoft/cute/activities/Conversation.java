@@ -6,10 +6,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -70,71 +72,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     }
 
 
-    // Обновляем список сообщений
-    public void updateList() {
-        final ListView listView = findViewById(R.id.messages);
-        AppSettings appSettings = new AppSettings(this);
-
-        // Задаём обработчик ответа API
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                if (isSuccess()) {
-                    try {
-
-                        // Обработка ответа JSON
-                        JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONArray data = jsonObject.getJSONArray("data");
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject message = data.getJSONObject(i);
-
-                            final String id = message.getString("id");
-                            final int aid = message.getInt("aid");
-                            final String text = message.getString("text");
-                            String time = message.getString("time");
-                            final String name = message.getString("name");
-                            final int mine = message.getInt("my");
-                            final int read = message.getInt("readed");
-
-                            boolean my;
-                            boolean readed;
-                            boolean isonline;
-
-                            my = Numbers.getBooleanFromInt(mine);
-
-                            readed = Numbers.getBooleanFromInt(read);
-
-
-                            boolean isInfo = false;
-                            if (aid == -1) {
-                                isInfo = true;
-                            }
-
-
-                            // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
-                            if (!ids.containsKey(id)) {
-                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo);
-                                ids.put(id, conversationInfo);
-                                convInfos.add(conversationInfo);
-                            } else {
-                                ConversationInfo conversationInfo = ids.get(id);
-                                if (conversationInfo.isReaded() != readed) {
-                                    conversationInfo.setReaded(readed);
-                                }
-                            }
-                        }
-                        ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
-                        listView.setAdapter(adapter);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
-                    }
-                }
-            }
-        };
-
-        Methods.getMessages(appSettings.getString("session"), cid, apiRunnable, this);
-    }
+    public boolean isrecording = false;
 
 
     // Отправляем сообщение
@@ -220,39 +158,223 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
 
+    public boolean isRecordPanelShown = false;
+    private Thread recordWaiter;
+
+    // Обновляем список сообщений
+    public void updateList() {
+        final ListView listView = findViewById(R.id.messages);
+        AppSettings appSettings = new AppSettings(this);
+
+        // Задаём обработчик ответа API
+        APIRunnable apiRunnable = new APIRunnable() {
+            @Override
+            public void run() {
+                if (isSuccess()) {
+                    try {
+
+                        // Обработка ответа JSON
+                        JSONObject jsonObject = new JSONObject(getResponse());
+                        JSONArray data = jsonObject.getJSONArray("data");
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject message = data.getJSONObject(i);
+
+                            final String id = message.getString("id");
+                            final int aid = message.getInt("aid");
+                            final String text = message.getString("text");
+                            String time = message.getString("time");
+                            final String name = message.getString("name");
+                            final int mine = message.getInt("my");
+                            final int read = message.getInt("readed");
+
+                            boolean my;
+                            boolean readed;
+                            boolean isonline;
+
+                            my = Numbers.getBooleanFromInt(mine);
+
+                            readed = Numbers.getBooleanFromInt(read);
+
+
+                            boolean isInfo = false;
+                            if (aid == -1) {
+                                isInfo = true;
+
+                            }
+
+                            // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
+                            if (!ids.containsKey(id)) {
+                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo);
+                                ids.put(id, conversationInfo);
+                                convInfos.add(conversationInfo);
+                            } else {
+                                ConversationInfo conversationInfo = ids.get(id);
+                                if (conversationInfo.isReaded() != readed) {
+                                    conversationInfo.setReaded(readed);
+                                }
+                            }
+                        }
+                        ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
+                        listView.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
+                    }
+                }
+            }
+        };
+
+        Methods.getMessages(appSettings.getString("session"), cid, apiRunnable, this);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public void setupVoiceButton() {
         final ImageView microphone = findViewById(R.id.sendVoice);
         microphone.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, final MotionEvent event) {
                 final float max = 2.0f;
                 final float pivotX = 0.5f;
                 final float pivotY = 0.5f;
                 final int duration = 150;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        if (recordWaiter != null) {
+                            recordWaiter.interrupt();
+                        }
+                        recordWaiter = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(200);
+                                    if (event.getAction() == MotionEvent.ACTION_DOWN | event.getAction() == MotionEvent.ACTION_MOVE) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                isrecording = true;
+                                                SendorsControl.vibrate(getApplicationContext(), 100);
+                                                ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, max, 1.0f, max, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+                                                scaleAnimation.setDuration(duration);
 
-                        SendorsControl.vibrate(getApplicationContext(), 100);
-                        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, max, 1.0f, max, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
-                        scaleAnimation.setDuration(duration);
 
+                                                scaleAnimation.setFillAfter(true);
 
-                        scaleAnimation.setFillAfter(true);
+                                                microphone.startAnimation(scaleAnimation);
+                                            }
+                                        });
+                                    } else {
 
-                        microphone.startAnimation(scaleAnimation);
+                                    }
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        recordWaiter.start();
+
                         break;
                     case MotionEvent.ACTION_MOVE: // движение
                         break;
                     case MotionEvent.ACTION_UP:
-                        ScaleAnimation dscaleAnimation = new ScaleAnimation(max, 1.0f, max, 1.0f, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
-                        dscaleAnimation.setDuration(duration);
-                        dscaleAnimation.setFillAfter(true);
-
-                        microphone.startAnimation(dscaleAnimation);// отпускание
                     case MotionEvent.ACTION_CANCEL:
 
-                        break;
+                        if (isrecording) {
+                            ScaleAnimation dscaleAnimation = new ScaleAnimation(max, 1.0f, max, 1.0f, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+                            dscaleAnimation.setDuration(duration);
+                            dscaleAnimation.setFillAfter(true);
+
+
+                            microphone.startAnimation(dscaleAnimation);// отпускание
+                            isrecording = false;
+
+                        } else {
+                            if (!isRecordPanelShown) {
+                                final LinearLayout recordPanel = findViewById(R.id.recordPanel);
+                                recordPanel.setVisibility(View.VISIBLE);
+                                final Animation fadeIn = new AlphaAnimation(0, 1);
+
+                                fadeIn.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        isRecordPanelShown = true;
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+
+                                    }
+                                });
+                                fadeIn.setDuration(300);
+                                Thread panelWaiter = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Thread.sleep(1000);
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+
+                                                    Animation fadeOut = new AlphaAnimation(1, 0);
+
+                                                    fadeOut.setDuration(300);
+                                                    fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                                                        @Override
+                                                        public void onAnimationStart(Animation animation) {
+                                                            System.out.println("FADEOUT!");
+                                                        }
+
+                                                        @Override
+                                                        public void onAnimationEnd(Animation animation) {
+                                                            recordPanel.setVisibility(View.INVISIBLE);
+                                                            isRecordPanelShown = false;
+
+                                                        }
+
+                                                        @Override
+                                                        public void onAnimationRepeat(Animation animation) {
+
+                                                        }
+                                                    });
+
+                                                    if (recordPanel.getAnimation() != null) {
+                                                        if (recordPanel.getAnimation().hasEnded()) {
+                                                            if (recordPanel.getVisibility() != View.INVISIBLE) {
+                                                                recordPanel.startAnimation(fadeOut);
+                                                            }
+                                                        }
+                                                    } else {
+                                                        if (recordPanel.getVisibility() != View.INVISIBLE) {
+                                                            recordPanel.startAnimation(fadeOut);
+
+                                                        }
+                                                    }
+
+                                                }
+
+                                            });
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+
+                                if (recordPanel.getAnimation() != null) {
+                                    if (recordPanel.getAnimation().hasEnded()) {
+                                        recordPanel.startAnimation(fadeIn);
+                                        panelWaiter.start();
+                                    }
+                                } else {
+                                    recordPanel.startAnimation(fadeIn);
+                                    panelWaiter.start();
+                                }
+
+                            }
+                        }
                 }
                 return true;
 

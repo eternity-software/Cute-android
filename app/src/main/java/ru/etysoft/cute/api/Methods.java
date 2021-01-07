@@ -12,6 +12,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.requests.GET;
 import ru.etysoft.cute.requests.GetAPI;
+import ru.etysoft.cute.requests.PostAPI;
 import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.StringFormatter;
 
@@ -97,11 +98,12 @@ public class Methods {
     public static void sendTextMessage(String session, String message, String cid, APIRunnable apiRunnable, Activity activity) {
 
         try {
-            message = URLEncoder.encode(message, "UTF-8");
-            String finalurl = domain + "conversation.send?session=" + session + "&cid=" + cid + "&text=" + message + options;
+            message = StringFormatter.format(URLEncoder.encode(message, "UTF-8"));
+            String finalurl = domain + "conversation.send";
+            String params = "session=" + session + "&cid=" + cid + "&text=" + message + options;
             String methodName = "SENDTEXTMESSAGE";
-            Logger.logRequest("GET", methodName + ": " + finalurl);
-            GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+            Logger.logRequest("POST", methodName + ": " + finalurl + "?" + params);
+            PostAPI.execute(finalurl, params, apiRunnable, activity, methodName);
         } catch (Exception e) {
             e.printStackTrace();
         }

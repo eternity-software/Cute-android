@@ -129,4 +129,5 @@
     <string name="logout">Выйти</string>
     <string name="logout_title">Выйти</string>
     <string name="logout_text">Вы действительно хотите выйти из аккаунта?</string>
+    <string name="wait_for_record">Удерживайте палец во время записи голосового сообщения</string>
 </resources>
