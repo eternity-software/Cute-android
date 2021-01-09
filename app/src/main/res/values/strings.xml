@@ -53,6 +53,8 @@
     // Alert dialog
     <string name="adialog_yes">OK</string>
     <string name="adialog_no">Cancel</string>
+    <string name="developer">Developer</string>
+    <string name="debug_menu">Debug</string>
 
     // Dialogs
     <string name="no_conv_title">Quite and empty...</string>

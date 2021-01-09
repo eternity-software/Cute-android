@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".activities.stock">
+    android:theme="@style/AppTheme">
 
     <ImageView
         android:id="@+id/themeChangeView"
@@ -19,174 +17,196 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="490dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/colorBackground"
-        android:orientation="vertical"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Switch
-            android:id="@+id/darkSwitch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/montserrat"
-            android:textColor="@color/colorText"
-            android:longClickable="true"
-            android:theme="@style/CuteSwitch"
-            android:text="Dark mode"
-            android:textSize="18sp" />
-
-
-        <Button
-            android:id="@+id/button5"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_passive"
-            android:fontFamily="@font/montserrat"
-            android:text="PASSIVE BUTTON"
-            android:textSize="18sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/ButtonPassive"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="184dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0"
-                android:background="@drawable/button_passive_mini"
-                android:fontFamily="@font/montserrat"
-                android:text="PASSIVE MINI"
-                android:onClick="showMeet"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/ButtonActive"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="184dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0"
-                android:background="@drawable/button_active_mini"
-                android:fontFamily="@font/montserrat"
-                android:text="ACTIVE MINI"
-                android:onClick="changePassword"
-                android:textColor="@color/colorWhite"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button3"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_active"
-            android:fontFamily="@font/montserrat"
-            android:textColor="@color/colorWhite"
-            android:onClick="showBSheet"
-            android:text="ACTIVE BUTTON"
-            android:textSize="18sp" />
-
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:fontFamily="@font/montserrat"
-            android:text="CheckBox" />
-
-        <RadioButton
-            android:id="@+id/radioButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/montserrat"
-            android:text="RadioButton" />
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_passive"
-            android:drawableLeft="@drawable/icon_account"
-            android:drawablePadding="10dp"
-            android:ems="10"
-            android:fontFamily="@font/montserrat"
-            android:foregroundGravity="left|clip_horizontal"
-            android:hint="@string/app_name"
-            android:inputType="textPersonName"
-            android:paddingLeft="10dp"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="91dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_passive_double"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorBackground"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/password"
+
+            <Switch
+                android:id="@+id/darkSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat"
+                android:longClickable="true"
+                android:text="Dark mode"
+                android:textColor="@color/colorText"
+                android:textSize="18sp"
+                android:theme="@style/CuteSwitch" />
+
+            <Button
+                android:id="@+id/button5"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_passive"
+                android:fontFamily="@font/montserrat"
+                android:text="PASSIVE BUTTON"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/ButtonPassive"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="184dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0"
+                    android:background="@drawable/button_passive_mini"
+                    android:fontFamily="@font/montserrat"
+                    android:onClick="showMeet"
+                    android:text="PASSIVE MINI"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/ButtonActive"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="184dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0"
+                    android:background="@drawable/button_active_mini"
+                    android:fontFamily="@font/montserrat"
+                    android:onClick="changePassword"
+                    android:text="ACTIVE MINI"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button3"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_active"
+                android:fontFamily="@font/montserrat"
+                android:onClick="showBSheet"
+                android:text="ACTIVE BUTTON"
+                android:textColor="@color/colorMainText"
+                android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:fontFamily="@font/montserrat"
+                android:text="CheckBox" />
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserrat"
+                android:text="RadioButton" />
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_passive"
                 android:drawableLeft="@drawable/icon_account"
                 android:drawablePadding="10dp"
+                android:drawableTint="@color/colorEditTextIcon"
                 android:ems="10"
                 android:fontFamily="@font/montserrat"
                 android:foregroundGravity="left|clip_horizontal"
-                android:hint="Old password"
+                android:hint="@string/app_name"
                 android:inputType="textPersonName"
                 android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp" />
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp" />
 
-            <View
-                android:id="@+id/divider"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryGray" />
+                android:layout_height="91dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edit_text_passive_double"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/newPassword"
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/icon_pass"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/colorEditTextIcon"
+                    android:ems="10"
+                    android:fontFamily="@font/montserrat"
+                    android:foregroundGravity="left|clip_horizontal"
+                    android:hint="@string/pass_new"
+                    android:inputType="textVisiblePassword"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorEditTextOutline" />
+
+                <EditText
+                    android:id="@+id/newPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/icon_pass"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/colorEditTextIcon"
+                    android:ems="10"
+                    android:fontFamily="@font/montserrat"
+                    android:foregroundGravity="left|clip_horizontal"
+                    android:hint="@string/confirmation"
+                    android:inputType="textVisiblePassword"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/versionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/icon_account"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:fontFamily="@font/montserrat"
-                android:foregroundGravity="left|clip_horizontal"
-                android:hint="New password"
-                android:inputType="textPersonName"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp" />
+                android:layout_marginTop="20dp"
+                android:text="version" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Лог сервиса уведомлений"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/logNotif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soviet " />
+
         </LinearLayout>
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/versionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="version" />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

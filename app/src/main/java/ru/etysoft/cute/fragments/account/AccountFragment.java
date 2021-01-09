@@ -62,7 +62,7 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
                 getActivity().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
+               // getActivity().overridePendingTransition(R.anim.slide_to_right, R.anim.slide_to_left);
             }
         });
 

@@ -38,15 +38,17 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        if (appSettings.getBoolean(ISDARK_THEME)) {
+        if (appSettings.hasKey(ISDARK_THEME)) {
+            if (appSettings.getBoolean(ISDARK_THEME)) {
 
-            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
-        } else {
+            } else {
 
 
-            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
+            }
         }
     }
 
@@ -119,6 +121,16 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+
+            Preference debugbutton = findPreference("debug_button");
+            debugbutton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent(getActivity(), stock.class);
+                    startActivity(intent);
+                    return false;
+                }
+            });
 
             final SwitchPreferenceCompat switchPreference = (SwitchPreferenceCompat) findPreference("APP_THEME_NIGHT");
             switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

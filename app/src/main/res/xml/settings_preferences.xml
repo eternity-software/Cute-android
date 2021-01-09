@@ -32,5 +32,15 @@
         app:iconSpaceReserved="false"
         app:key="version" />
 
+    <PreferenceCategory
+        android:fontFamily="@font/montserrat"
+        app:iconSpaceReserved="false"
+        app:title="@string/developer">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="debug_button"
+            app:title="@string/debug_menu" />
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

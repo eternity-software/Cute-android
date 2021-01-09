@@ -19,7 +19,13 @@
         android:roundIcon="@mipmap/launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Profile"></activity>
+        <service
+            android:name=".services.NotificationService"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.Profile"
+            android:theme="@style/AppSlideTheme"></activity>
         <activity android:name=".activities.PasswordChange" />
         <activity android:name=".activities.EasterEgg" />
         <activity

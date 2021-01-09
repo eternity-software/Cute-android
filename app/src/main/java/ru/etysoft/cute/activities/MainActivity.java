@@ -23,6 +23,7 @@ import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
 import ru.etysoft.cute.fragments.explore.ExploreFragment;
+import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
 import ru.etysoft.cute.utils.Logger;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Logger.logActivity("Created Main");
+        startService(new Intent(this, NotificationService.class));
 
         appSettings = new AppSettings(this);
 

@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
-import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
 
@@ -24,6 +23,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.utils.CustomToast;
 
 public class stock extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
@@ -72,7 +72,14 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
             }
         };
 
-        bottomSheet.setContent(icon, "Test floating", "It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. ", "1", "2", null, onClickListener);
+        View.OnClickListener delete = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appSettings.setString(NotificationService.KEY, "Clean history");
+            }
+        };
+
+        bottomSheet.setContent(icon, "Test floating", "It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. It is an exaple of floating bottom sheet. I like it. Realy. ", "1", "2", delete, onClickListener);
     }
 
 
@@ -86,15 +93,14 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
         super.onCreate(savedInstanceState);
         main = this;
         appSettings = new AppSettings(this);
-
-
         setContentView(R.layout.activity_settings);
+
 
         Switch darkSwitch = findViewById(R.id.darkSwitch);
         SlidrConfig config = new SlidrConfig.Builder()
                 .position(SlidrPosition.BOTTOM)
                 .build();
-        Slidr.attach(this, config);
+        //Slidr.attach(this, config);
         // Проверка и инициализация тёмной темы (для перехода)
         if (appSettings.getBoolean(ISDARK_THEME)) {
             if (getDelegate().getLocalNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
@@ -126,6 +132,12 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
         } catch (PackageManager.NameNotFoundException e) {
             verisonTextView.setText("version: unknown");
         }
+
+        TextView logView = findViewById(R.id.logNotif);
+        if (appSettings.hasKey(NotificationService.KEY)) {
+            logView.setText(appSettings.getString(NotificationService.KEY));
+        }
+
 
     }
 
