@@ -172,7 +172,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         nameview.setText(conv_name);
                         descview.setText(conv_desc);
                         loadMembers(members);
-                        acronymview.setText(conv_name.substring(0, 1));
+                        acronymview.setText(conv_name.substring(0, 1).toUpperCase());
 
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -123,7 +123,7 @@ public class NotificationService extends Service {
         runnable = new Runnable() {
             public void run() {
                 log("Сервис активен.");
-                notifyBanner(getApplicationContext(), "хуйхуйхуй");
+             //   notifyBanner(getApplicationContext(), "хуйхуйхуй");
                 handler.postDelayed(runnable, 5000);
             }
         };

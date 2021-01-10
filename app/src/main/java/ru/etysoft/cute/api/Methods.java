@@ -43,7 +43,7 @@ public class Methods {
     }
 
     public static String longpoolMessages(String session, int ts, Activity activity) {
-        String finalurl = domain + "longpoll.getMessages?session=" + session + "ts" + ts + options;
+        String finalurl = domain + "longpoll.getMessages?session=" + session + "&ts=" + ts + options;
         String methodName = "LONGPOLLMESSAGES";
         Logger.logRequest("GET", "[LONGPOLLMESSAGES]: " + finalurl);
         return GET.executeNoTimeout(finalurl);

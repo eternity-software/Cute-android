@@ -91,7 +91,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                             JSONArray data = predata.getJSONArray("events");
 
                             for (int i = 0; i < data.length(); i++) {
-                                JSONObject message = data.getJSONObject(i);
+                                JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
                                 String nickname = message.getString("nickname");
                                 String aid = message.getString("aid");
                                 String cid = message.getString("cid");
@@ -113,12 +113,22 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 }
                             });
                         } catch (JSONException e) {
+                            e.printStackTrace();
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
                                 }
                             });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CustomToast.show("Critical error!", R.drawable.icon_error, Conversation.this);
+                                }
+                            });
+
                         }
 
 
@@ -164,7 +174,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                         conversationInfo.setSubtext(Numbers.getTimeFromTimestamp(time, getApplicationContext()));
                         ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
                         listView.setAdapter(adapter);
-                        updateList();
                     } catch (JSONException e) {
                         e.printStackTrace();
                         CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
@@ -214,7 +223,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
         TextView acronym = findViewById(R.id.acronym);
         acronym.setVisibility(View.VISIBLE);
-        acronym.setText(String.valueOf(name.charAt(0)));
+        acronym.setText(String.valueOf(name.charAt(0)).toUpperCase());
 
         TextView subtitle = findViewById(R.id.subtitle);
         if (!isDialog) {
@@ -511,7 +520,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     public void onBackPressed() {
         super.onBackPressed();
 
-        waiter.stop();
+
         //  overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }
