@@ -3,6 +3,7 @@ package ru.etysoft.cute.requests;
 import android.app.Activity;
 import android.content.Intent;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +24,7 @@ import ru.etysoft.cute.utils.Logger;
 
 public class GetAPI {
 
-    public static void execute(final String url, final APIRunnable afterExecute, final Activity activity, final String methodName) {
+    public static void execute(final String url, final APIRunnable afterExecute, final @NotNull Activity activity, final String methodName) {
         try {
             final Thread threadExecute = new Thread(new Runnable() {
                 @Override

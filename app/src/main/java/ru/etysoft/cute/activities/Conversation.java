@@ -49,6 +49,9 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     private String cid = "1";
     private String name = "42";
     private boolean isDialog = false;
+    private int ts = 0;
+    private Thread waiter;
+    private boolean closed = false;
 
 
     public boolean isVoice = true;
@@ -69,6 +72,63 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         conversationBottomSheet.setCid(cid);
         conversationBottomSheet.show(getSupportFragmentManager(), "blocked");
         conversationBottomSheet.setCancelable(true);
+    }
+
+
+    public void longpoll() {
+        final ListView listView = findViewById(R.id.messages);
+        waiter = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (!closed) {
+                        try {
+                            AppSettings appSettings = new AppSettings(getApplicationContext());
+                            String responseString = Methods.longpoolMessages(appSettings.getString("session"), ts, Conversation.this);
+                            JSONObject response = new JSONObject(responseString);
+                            JSONObject predata = response.getJSONObject("data");
+                            ts = Integer.parseInt(predata.getString("ts"));
+                            JSONArray data = predata.getJSONArray("events");
+
+                            for (int i = 0; i < data.length(); i++) {
+                                JSONObject message = data.getJSONObject(i);
+                                String nickname = message.getString("nickname");
+                                String aid = message.getString("aid");
+                                String cid = message.getString("cid");
+                                String id = message.getString("id");
+                                String text = message.getString("text");
+                                String time = message.getString("time");
+
+                                ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false);
+
+                                ids.put(id, conversationInfo);
+                                convInfos.add(conversationInfo);
+
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
+                                    listView.setAdapter(adapter);
+                                }
+                            });
+                        } catch (JSONException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
+                                }
+                            });
+                        }
+
+
+                    } else {
+                        break;
+                    }
+                }
+            }
+        });
+        waiter.start();
     }
 
 
@@ -124,8 +184,20 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        closed = true;
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        try {
+            waiter.join();
+            closed = true;
+        } catch (Exception e) {
+
+        }
         DialogAdapter.canOpen = true;
     }
 
@@ -175,7 +247,10 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
                         // Обработка ответа JSON
                         JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONArray data = jsonObject.getJSONArray("data");
+                        JSONObject predata = jsonObject.getJSONObject("data");
+                        JSONArray data = predata.getJSONArray("messages");
+                        ts = predata.getInt("ts");
+
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject message = data.getJSONObject(i);
 
@@ -216,6 +291,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                         }
                         ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
                         listView.setAdapter(adapter);
+                        longpoll();
                     } catch (JSONException e) {
                         e.printStackTrace();
                         CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
@@ -430,9 +506,12 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         });
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
+        waiter.stop();
         //  overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }

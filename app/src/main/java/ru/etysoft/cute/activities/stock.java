@@ -69,6 +69,7 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
             @Override
             public void onClick(View v) {
                 bottomSheet.getDialog().cancel();
+               // notifyBanner(getApplicationContext(), "fuck");
             }
         };
 

@@ -42,6 +42,13 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
+    public static String longpoolMessages(String session, int ts, Activity activity) {
+        String finalurl = domain + "longpoll.getMessages?session=" + session + "ts" + ts + options;
+        String methodName = "LONGPOLLMESSAGES";
+        Logger.logRequest("GET", "[LONGPOLLMESSAGES]: " + finalurl);
+        return GET.executeNoTimeout(finalurl);
+    }
+
     public static String sendConfirmationCode(String session, String code) {
         code = StringFormatter.format(code);
 
