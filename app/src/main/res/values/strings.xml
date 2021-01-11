@@ -75,6 +75,8 @@
     <string name="your_message">Your message</string>
     <string name="wait_for_record">Hold your finger to record a voice message</string>
 
+    <string name="chat_search">Search for chats</string>
+
     // INFO
     <string name="members">members</string>
     <string name="edit">edit</string>

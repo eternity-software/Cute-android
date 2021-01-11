@@ -115,7 +115,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="15dp"
+                android:layout_marginLeft="15dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -136,12 +136,22 @@
 
                     <ImageView
                         android:id="@+id/convCreateButton"
-                        android:layout_width="40dp"
+                        android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
                         android:background="?attr/selectableItemBackground"
-                        android:paddingHorizontal="5dp"
+                        android:paddingHorizontal="10dp"
                         app:srcCompat="@drawable/icon_convcreate" />
+
+                    <ImageView
+                        android:id="@+id/convSearchButton"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="10dp"
+                        app:srcCompat="@drawable/icon_search"
+                        app:tint="@color/colorMainText" />
                 </LinearLayout>
 
                 <ProgressBar

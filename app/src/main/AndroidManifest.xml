@@ -21,13 +21,17 @@
         android:roundIcon="@mipmap/launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.ChatsSearch"
+            android:theme="@style/AppSlideTheme"></activity>
+
         <service
             android:name=".services.NotificationService"
             android:exported="false" />
 
         <activity
             android:name=".activities.Profile"
-            android:theme="@style/AppSlideTheme"></activity>
+            android:theme="@style/AppSlideTheme" />
         <activity android:name=".activities.PasswordChange" />
         <activity android:name=".activities.EasterEgg" />
         <activity
@@ -35,10 +39,9 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.Conversation"
-            android:theme="@style/AppSlideTheme"
             android:configChanges="keyboardHidden|orientation|screenLayout"
+            android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".activities.CreateConv"
             android:theme="@style/AppSlideTheme"

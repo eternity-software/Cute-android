@@ -201,12 +201,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            waiter.join();
             closed = true;
-        } catch (Exception e) {
-
-        }
         DialogAdapter.canOpen = true;
     }
 

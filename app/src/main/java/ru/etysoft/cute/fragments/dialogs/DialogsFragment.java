@@ -24,6 +24,7 @@ import java.util.List;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.ChatsSearch;
 import ru.etysoft.cute.activities.CreateConv;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.activities.dialogs.DialogInfo;
@@ -68,6 +69,15 @@ public class DialogsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CreateConv.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView convSearchButton = view.findViewById(R.id.convSearchButton);
+        convSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChatsSearch.class);
                 startActivity(intent);
             }
         });

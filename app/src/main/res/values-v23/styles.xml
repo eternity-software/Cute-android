@@ -4,7 +4,7 @@
         <item name="colorPrimary">@color/colorBackground</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorMainLight</item>
-
+        <item name="android:windowLightStatusBar">true</item>
 
     </style>
 
@@ -34,7 +34,7 @@
         <item name="colorPrimary">@color/colorBackground</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorMainLight</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
