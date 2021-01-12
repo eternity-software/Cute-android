@@ -23,7 +23,7 @@ public class ExploreFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
                 ViewModelProviders.of(this).get(ExploreViewModel.class);
-        View root = inflater.inflate(R.layout.activity_meet, container, false);
+        View root = inflater.inflate(R.layout.activity_explore, container, false);
 
         return root;
     }

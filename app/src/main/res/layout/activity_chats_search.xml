@@ -7,15 +7,30 @@
     android:background="@color/colorBackground"
     tools:context=".activities.ChatsSearch">
 
+    <ImageView
+        android:id="@+id/menuButton2"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="back"
+        android:paddingHorizontal="9dp"
+        android:paddingVertical="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/results"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_back"
+        app:tint="@color/colorBackButton" />
+
     <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
+        android:id="@+id/searchBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/edit_text_passive"
-        android:drawableLeft="@drawable/icon_search"
+        android:drawableRight="@drawable/icon_search"
         android:drawablePadding="10dp"
         android:drawableTint="@color/colorEditTextIcon"
         android:ems="10"
@@ -23,11 +38,22 @@
         android:foregroundGravity="left|clip_horizontal"
         android:hint="@string/chat_search"
         android:inputType="textPersonName"
-        android:paddingLeft="10dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="10dp"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.967"
+        app:layout_constraintStart_toEndOf="@+id/menuButton2"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:divider="@color/colorBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

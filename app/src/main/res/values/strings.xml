@@ -76,6 +76,8 @@
     <string name="wait_for_record">Hold your finger to record a voice message</string>
 
     <string name="chat_search">Search for chats</string>
+    <string name="chat_join_title">Join %s%</string>
+    <string name="chat_join_text">Are you sure you want to join this chat?</string>
 
     // INFO
     <string name="members">members</string>

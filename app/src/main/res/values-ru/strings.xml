@@ -132,4 +132,7 @@
     <string name="wait_for_record">Удерживайте палец во время записи голосового сообщения</string>
     <string name="developer">Разработчик</string>
     <string name="debug_menu">Меню дебага</string>
+    <string name="chat_search">Поиск чатов</string>
+    <string name="chat_join_title">Вступить в %s%</string>
+    <string name="chat_join_text">Вы уверены, что хотите вступить в этот чат?</string>
 </resources>

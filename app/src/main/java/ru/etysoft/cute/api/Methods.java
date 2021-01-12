@@ -42,6 +42,20 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
+    public static void joinChat(String session, String cid, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "conversation.join?session=" + session + "&cid=" + cid + options;
+        String methodName = "JOINCONV";
+        Logger.logRequest("GET", "[JOINCONV]: " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+    }
+
+    public static void searchChat(String session, String query, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "conversation.search?session=" + session + "&query=" + query + options;
+        String methodName = "SEARCHCONV";
+        Logger.logRequest("GET", "[SEARCHCONV]: " + finalurl);
+        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+    }
+
     public static String longpoolMessages(String session, int ts, Activity activity) {
         String finalurl = domain + "longpoll.getMessages?session=" + session + "&ts=" + ts + options;
         String methodName = "LONGPOLLMESSAGES";

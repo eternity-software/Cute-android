@@ -72,7 +72,7 @@
 
     <ImageView
         android:id="@+id/menuButton"
-        android:layout_width="50dp"
+        android:layout_width="40dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
@@ -82,7 +82,8 @@
         app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_back" />
+        app:srcCompat="@drawable/icon_back"
+        app:tint="@color/colorMainText" />
 
     <TextView
         android:id="@+id/idview"

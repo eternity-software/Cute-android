@@ -132,6 +132,7 @@ public class DialogsFragment extends Fragment {
                         JSONObject jsonObject = new JSONObject(getResponse());
                         JSONArray data = jsonObject.getJSONArray("data");
 
+                        boolean hasMessages = false;
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject conv = data.getJSONObject(i);
                             final String name = conv.getString("name");
@@ -159,21 +160,20 @@ public class DialogsFragment extends Fragment {
                             boolean readst;
 
                             readst = Numbers.getBooleanFromInt(readed);
+                            hasMessages = true;
 
 
                             // Добавляем новый диалог в список
                             dialogInfos.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog));
                         }
+                        if (!hasMessages) {
+                            CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
+                            noMessages.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         try {
                             if (getErrorCode().equals("timeout")) {
                                 CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
-
-                            } else if (getErrorCode().equals("#CM003.1")) {
-
-                                // Сохраняем в кэш если ошибка указывает на отсутствие сообщений
-                                CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
-                                noMessages.setVisibility(View.VISIBLE);
                             } else {
                                 error.setVisibility(View.VISIBLE);
                             }
