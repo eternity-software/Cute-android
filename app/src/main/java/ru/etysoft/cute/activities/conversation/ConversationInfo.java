@@ -9,12 +9,12 @@ public class ConversationInfo {
     private int aid;
     private boolean readed;
     private boolean isMine;
-    private boolean isConversation;
+    private boolean isDialog;
     private boolean isInfo;
 
 
     // Сообщение
-    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isConversation, String subtext, boolean readed, int aid, boolean isInfo) {
+    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isDialog, String subtext, boolean readed, int aid, boolean isInfo) {
         this.readed = readed;
         this.id = id;
         this.aid = aid;
@@ -22,7 +22,7 @@ public class ConversationInfo {
         this.name = name;
         this.message = message;
         this.isMine = isMine;
-        this.isConversation = isConversation;
+        this.isDialog = isDialog;
         this.isInfo = isInfo;
     }
 
@@ -62,8 +62,8 @@ public class ConversationInfo {
         return isMine;
     }
 
-    public boolean isConversation() {
-        return isConversation;
+    public boolean isDialog() {
+        return isDialog;
     }
 
     public String getName() {

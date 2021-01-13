@@ -74,6 +74,16 @@
                     android:scaleType="fitXY"
                     tools:srcCompat="@drawable/icon_person" />
 
+                <ImageView
+                    android:id="@+id/changephoto"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="-80dp"
+                    android:layout_marginTop="15dp"
+                    android:padding="20dp"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/icon_camera" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

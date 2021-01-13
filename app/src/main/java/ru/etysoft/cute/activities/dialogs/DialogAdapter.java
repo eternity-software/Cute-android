@@ -34,7 +34,10 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
         final DialogInfo info = list.get(position);
 
         final LayoutInflater inflator = context.getLayoutInflater();
+
         view = inflator.inflate(R.layout.dialog_element, null);
+
+
         final ViewHolder viewHolder = new ViewHolder();
 
         // Инициализируем подэлементы

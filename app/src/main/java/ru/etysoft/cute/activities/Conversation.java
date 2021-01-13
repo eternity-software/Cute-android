@@ -45,6 +45,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
     private List<ConversationInfo> convInfos = new ArrayList<>();
     private Map<String, ConversationInfo> ids = new HashMap<String, ConversationInfo>();
+    private ConversationAdapter adapter;
 
     private String cid = "1";
     private String name = "42";
@@ -77,6 +78,8 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
     public void longpoll() {
         final ListView listView = findViewById(R.id.messages);
+        final ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
+        listView.setAdapter(adapter);
         waiter = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +87,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                     if (!closed) {
                         try {
                             AppSettings appSettings = new AppSettings(getApplicationContext());
-                            String responseString = Methods.longpoolMessages(appSettings.getString("session"), ts, Conversation.this);
+                            String responseString = Methods.longpoolMessages(appSettings.getString("session"), ts, cid, Conversation.this);
                             JSONObject response = new JSONObject(responseString);
                             JSONObject predata = response.getJSONObject("data");
                             ts = Integer.parseInt(predata.getString("ts"));
@@ -94,24 +97,18 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
                                 String nickname = message.getString("nickname");
                                 String aid = message.getString("aid");
-                                String cid = message.getString("cid");
                                 String id = message.getString("id");
                                 String text = message.getString("text");
                                 String time = message.getString("time");
 
                                 ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false);
 
+
                                 ids.put(id, conversationInfo);
                                 convInfos.add(conversationInfo);
+                                adapter.add(conversationInfo);
 
                             }
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
-                                    listView.setAdapter(adapter);
-                                }
-                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                             runOnUiThread(new Runnable() {
@@ -148,12 +145,13 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     // Отправляем сообщение
     public void sendMessage(View v) {
         final TextView messageBox = findViewById(R.id.message_box);
-        final ListView listView = findViewById(R.id.messages);
+
         AppSettings appSettings = new AppSettings(this);
         final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, getString(R.string.sending), false, -10, false);
         convInfos.add(conversationInfo);
-        ConversationAdapter adapter = new ConversationAdapter(this, convInfos);
-        listView.setAdapter(adapter);
+        adapter.add(conversationInfo);
+        final ListView listView = findViewById(R.id.messages);
+
 
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
@@ -172,8 +170,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                         conversationInfo.setMessage(message);
                         conversationInfo.setId(id);
                         conversationInfo.setSubtext(Numbers.getTimeFromTimestamp(time, getApplicationContext()));
-                        ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
-                        listView.setAdapter(adapter);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                         CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
@@ -220,9 +217,13 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         acronym.setVisibility(View.VISIBLE);
         acronym.setText(String.valueOf(name.charAt(0)).toUpperCase());
 
+        final ListView listView = findViewById(R.id.messages);
+        adapter = new ConversationAdapter(this, convInfos);
+        listView.setAdapter(adapter);
+
         TextView subtitle = findViewById(R.id.subtitle);
         if (!isDialog) {
-            subtitle.setText("0 members");
+            subtitle.setText("..");
         }
 
         TextView title = findViewById(R.id.title);
@@ -286,6 +287,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo);
                                 ids.put(id, conversationInfo);
                                 convInfos.add(conversationInfo);
+                                adapter.add(conversationInfo);
                             } else {
                                 ConversationInfo conversationInfo = ids.get(id);
                                 if (conversationInfo.isReaded() != readed) {
@@ -293,8 +295,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 }
                             }
                         }
-                        ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
-                        listView.setAdapter(adapter);
+
                         longpoll();
                     } catch (JSONException e) {
                         e.printStackTrace();

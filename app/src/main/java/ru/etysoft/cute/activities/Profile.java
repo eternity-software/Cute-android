@@ -10,6 +10,7 @@ import com.r0adkll.slidr.Slidr;
 
 import org.json.JSONObject;
 
+import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
@@ -29,6 +30,7 @@ public class Profile extends AppCompatActivity {
     }
 
     public void loadInfo() {
+        AppSettings appSettings = new AppSettings(this);
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
@@ -57,7 +59,7 @@ public class Profile extends AppCompatActivity {
                 }
             }
         };
-        Methods.getAccount(String.valueOf(id), apiRunnable, this);
+        Methods.getAccount(String.valueOf(id), appSettings.getString("session"), apiRunnable, this);
     }
 
 

@@ -1,16 +1,20 @@
 package ru.etysoft.cute.activities.conversation;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Profile;
+import ru.etysoft.cute.utils.ImagesWorker;
 
 public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
     private final Activity context;
@@ -31,18 +35,30 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
 
 
         final LayoutInflater inflator = context.getLayoutInflater();
+        boolean isFirstAid = false;
 
         // Проверка на беседу
-        if (!info.isConversation()) {
-
+        if (!info.isDialog()) {
             // Проверка на своё сообщение
             if (info.isMine() && !info.isInfo()) {
                 view = inflator.inflate(R.layout.conv_mymessage, null);
             } else if (info.isInfo()) {
                 view = inflator.inflate(R.layout.info_message, null);
             } else {
-                view = inflator.inflate(R.layout.dialog_message, null);
+                if (position == 0) {
+                    isFirstAid = true;
+                    view = inflator.inflate(R.layout.chat_message, null);
+                } else {
+                    if (list.get(position - 1).getAid() != info.getAid()) {
+                        isFirstAid = true;
+                        view = inflator.inflate(R.layout.chat_message, null);
+                    } else {
+                        view = inflator.inflate(R.layout.chat_messagenoinfo, null);
+                    }
+                }
             }
+
+        } else {
 
         }
 
@@ -56,6 +72,10 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
             viewHolder.time = (TextView) view.findViewById(R.id.timeview);
             viewHolder.message = (TextView) view.findViewById(R.id.message_body);
             viewHolder.back = view.findViewById(R.id.messageback);
+            if (isFirstAid) {
+                viewHolder.name = view.findViewById(R.id.nickname);
+                viewHolder.userpic = view.findViewById(R.id.userpic);
+            }
 
             view.setTag(viewHolder);
 
@@ -67,6 +87,19 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
                 holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
             }
 
+            if (isFirstAid) {
+                holder.name.setText(info.getName());
+                ImagesWorker.setGradient(holder.userpic, info.getAid());
+                holder.userpic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), Profile.class);
+                        intent.putExtra("id", info.getAid());
+                        getContext().startActivity(intent);
+                    }
+                });
+            }
+
             view.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -75,6 +108,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
                             "ID: " + info.getId() + "\n"
                             + "READED: " + info.isReaded() + "\n"
                             + "MY: " + info.isMine() + "\n"
+                            + "NAME: " + info.getName() + "\n"
                             + "AID: " + info.getAid()
                     );
                 }
@@ -99,5 +133,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
         protected TextView time;
         protected TextView message;
         protected RelativeLayout back;
+        protected TextView name;
+        protected ImageView userpic;
     }
 }

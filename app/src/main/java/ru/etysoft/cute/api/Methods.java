@@ -35,8 +35,8 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
-    public static void getAccount(String id, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "users.get?id=" + id + options;
+    public static void getAccount(String id, String session, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "users.get?id=" + id + "&session=" + session + options;
         String methodName = "GETPROFILE";
         Logger.logRequest("GET", "[GETPROFILE]: " + finalurl);
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
@@ -56,8 +56,8 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
-    public static String longpoolMessages(String session, int ts, Activity activity) {
-        String finalurl = domain + "longpoll.getMessages?session=" + session + "&ts=" + ts + options;
+    public static String longpoolMessages(String session, int ts, String cid, Activity activity) {
+        String finalurl = domain + "longpoll.getMessages?session=" + session + "&ts=" + ts + "&cid=" + cid + options;
         String methodName = "LONGPOLLMESSAGES";
         Logger.logRequest("GET", "[LONGPOLLMESSAGES]: " + finalurl);
         return GET.executeNoTimeout(finalurl);

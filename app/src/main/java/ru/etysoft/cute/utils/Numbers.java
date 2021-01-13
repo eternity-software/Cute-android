@@ -22,41 +22,41 @@ public class Numbers {
 
     public static int[] getGradientById(int id) {
         int color1 = Color.parseColor("#B83ADE");
-        int color2 = Color.parseColor("#B83ADE");
+        int color2 = Color.parseColor("#3a8fde");
         String sid = String.valueOf(id);
 
 
-        color1 = Color.parseColor("#B83ADE");
+        color1 = Color.parseColor("#3a8fde");
         switch (String.valueOf(sid.charAt(sid.length() - 1))) {
             case ("1"):
                 color1 = Color.parseColor("#21a2b0");
                 break;
             case ("2"):
-                color1 = Color.parseColor("#53b053");
+                color1 = Color.parseColor("#537eb0");
                 break;
             case ("3"):
-                color1 = Color.parseColor("#53b053");
+                color1 = Color.parseColor("#a853b0");
                 break;
             case ("4"):
-                color1 = Color.parseColor("#9ca82d");
+                color1 = Color.parseColor("#2d8ca8");
                 break;
             case ("5"):
-                color1 = Color.parseColor("#1b7ca6");
+                color1 = Color.parseColor("#701ba6");
                 break;
             case ("6"):
                 color1 = Color.parseColor("#6e3dd1");
                 break;
             case ("7"):
-                color1 = Color.parseColor("#3dd15d");
+                color1 = Color.parseColor("#3d4bd1");
                 break;
             case ("8"):
-                color1 = Color.parseColor("#d1693d");
+                color1 = Color.parseColor("#913dd1");
                 break;
             case ("9"):
-                color1 = Color.parseColor("#3d3dd1");
+                color1 = Color.parseColor("#3dd1c0");
                 break;
             case ("0"):
-                color1 = Color.parseColor("#B83ADE");
+                color1 = Color.parseColor("#3a4ade");
                 break;
         }
 
@@ -66,13 +66,13 @@ public class Numbers {
                     color2 = Color.parseColor("#21a2b0");
                     break;
                 case ("2"):
-                    color2 = Color.parseColor("#53b053");
+                    color2 = Color.parseColor("#53b0a5");
                     break;
                 case ("3"):
-                    color2 = Color.parseColor("#53b053");
+                    color2 = Color.parseColor("#60016D");
                     break;
                 case ("4"):
-                    color2 = Color.parseColor("#9ca82d");
+                    color2 = Color.parseColor("#a82d9c");
                     break;
                 case ("5"):
                     color2 = Color.parseColor("#1b7ca6");
@@ -81,16 +81,16 @@ public class Numbers {
                     color2 = Color.parseColor("#6e3dd1");
                     break;
                 case ("7"):
-                    color2 = Color.parseColor("#3dd15d");
+                    color2 = Color.parseColor("#3d82d1");
                     break;
                 case ("8"):
-                    color2 = Color.parseColor("#d1693d");
+                    color2 = Color.parseColor("#d13d7a");
                     break;
                 case ("9"):
                     color2 = Color.parseColor("#B83ADE");
                     break;
                 case ("0"):
-                    color2 = Color.parseColor("#9e9ed9");
+                    color2 = Color.parseColor("#7474d6");
                     break;
             }
         }

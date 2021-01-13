@@ -20,7 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
@@ -38,8 +38,9 @@ import ru.etysoft.cute.utils.Numbers;
 public class DialogsFragment extends Fragment {
 
     private DialogsViewModel dialogsViewModel;
-    private List<DialogInfo> dialogInfos = new ArrayList<>();
+    private final HashMap<String, DialogInfo> dialogInfos = new HashMap<>();
     private AppSettings appSettings;
+    private DialogAdapter adapter;
     private View view;
 
 
@@ -57,7 +58,7 @@ public class DialogsFragment extends Fragment {
         view = root;
         final ListView listView = view.findViewById(R.id.listView);
 
-        DialogAdapter adapter = new DialogAdapter(getActivity(), dialogInfos);
+        adapter = new DialogAdapter(getActivity(), new ArrayList<DialogInfo>());
         listView.setAdapter(adapter);
 
         // Инициализируем диалоги в первый раз
@@ -91,7 +92,6 @@ public class DialogsFragment extends Fragment {
                 updateDialogList();
             }
         });
-
         return root;
     }
 
@@ -103,6 +103,7 @@ public class DialogsFragment extends Fragment {
         if (!Methods.hasInternet(getContext())) {
             isCached = false;
         }
+
 
         // Инициализируем загрузку и сообщение об отсутствии сообщений
         final ProgressBar frontView = view.findViewById(R.id.loading);
@@ -117,13 +118,16 @@ public class DialogsFragment extends Fragment {
             public void run() {
                 try {
 
-                    final ListView listView = view.findViewById(R.id.listView);
+
 
                     // Проверка на успешный запрос
                     if (isSuccess()) {
 
+                        //TODO: УБРАТЬ
                         // Очищаем список
                         dialogInfos.clear();
+                        adapter.clear();
+
 
                         // Сохраняем успешный запрос в кэш
                         CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
@@ -164,11 +168,12 @@ public class DialogsFragment extends Fragment {
 
 
                             // Добавляем новый диалог в список
-                            dialogInfos.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog));
+                            adapter.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog));
                         }
                         if (!hasMessages) {
-                            CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
                             noMessages.setVisibility(View.VISIBLE);
+                        } else {
+                            CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
                         }
                     } else {
                         try {
@@ -184,8 +189,7 @@ public class DialogsFragment extends Fragment {
                     }
 
                     // Обновляем GUI
-                    DialogAdapter adapter = new DialogAdapter(getActivity(), dialogInfos);
-                    listView.setAdapter(adapter);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
