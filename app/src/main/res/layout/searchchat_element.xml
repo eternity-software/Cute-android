@@ -21,6 +21,7 @@
         android:fontFamily="@font/montserratmedium"
         android:gravity="center"
         android:text=""
+        android:textAllCaps="true"
         android:textColor="@color/colorWhite"
         android:textSize="20sp" />
 

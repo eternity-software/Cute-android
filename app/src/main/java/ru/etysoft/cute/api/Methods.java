@@ -50,11 +50,31 @@ public class Methods {
     }
 
     public static void searchChat(String session, String query, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "conversation.search?session=" + session + "&query=" + query + options;
-        String methodName = "SEARCHCONV";
-        Logger.logRequest("GET", "[SEARCHCONV]: " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        try {
+            query = StringFormatter.format(URLEncoder.encode(query, "UTF-8"));
+            String finalurl = domain + "conversation.search?session=" + session + "&query=" + query + options;
+            String methodName = "SEARCHCONV";
+            Logger.logRequest("GET", "[SEARCHCONV]: " + finalurl);
+            GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    public static String longpoolNotifications(String session, int ts) {
+        String finalurl = domain + "longpoll.getNotifications?session=" + session + "&ts=" + ts + options;
+        String methodName = "LONGPOLLNOTIFICATIONS";
+        Logger.logRequest("GET", "[LONGPOLLNOTIFICATIONS]: " + finalurl);
+        return GET.executeNoTimeout(finalurl);
+    }
+
+    public static String longpoolNotifications(String session) {
+        String finalurl = domain + "longpoll.getNotifications?session=" + session + options;
+        String methodName = "LONGPOLLNOTIFICATIONSGETTS";
+        Logger.logRequest("GET", "[" + methodName + "]: " + finalurl);
+        return GET.executeNoTimeout(finalurl);
+    }
+
 
     public static String longpoolMessages(String session, int ts, String cid, Activity activity) {
         String finalurl = domain + "longpoll.getMessages?session=" + session + "&ts=" + ts + "&cid=" + cid + options;

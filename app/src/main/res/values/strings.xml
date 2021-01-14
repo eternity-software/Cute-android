@@ -92,6 +92,8 @@
     <string name="logout_title">Logout</string>
     <string name="logout_text">Do you want to logout?</string>
 
+    // NOTIFICATIONS
+
     //SETTINGS
     <string name="interfc">Interface</string>
     <string name="night">Dark mode</string>

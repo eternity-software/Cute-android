@@ -168,7 +168,7 @@
                 android:fontFamily="@font/montserrat"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="12 members"
+                android:text=".."
                 android:textColor="@color/colorSupportText"
                 android:textSize="12sp" />
 

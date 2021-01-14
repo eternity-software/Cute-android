@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="50"
-            android:background="@drawable/dialog_message"
+
             android:orientation="vertical">
 
             <TextView
@@ -37,10 +37,10 @@
                 android:layout_weight="0"
 
                 android:fontFamily="@font/montserratmedium"
-                android:paddingHorizontal="10dp"
-                android:paddingTop="5dp"
+                android:paddingHorizontal="3dp"
+                android:paddingVertical="5dp"
                 android:text="Author"
-                android:textColor="#fff" />
+                android:textColor="@color/colorMainText" />
 
             <TextView
                 android:id="@+id/message_body"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
 
                 android:autoLink="all"
-
+                android:background="@drawable/dialog_message"
 
                 android:fontFamily="@font/montserrat"
                 android:paddingHorizontal="16dp"

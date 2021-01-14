@@ -78,8 +78,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
     public void longpoll() {
         final ListView listView = findViewById(R.id.messages);
-        final ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
-        listView.setAdapter(adapter);
         waiter = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -97,16 +95,21 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
                                 String nickname = message.getString("nickname");
                                 String aid = message.getString("aid");
-                                String id = message.getString("id");
+                                final String id = message.getString("id");
                                 String text = message.getString("text");
                                 String time = message.getString("time");
 
-                                ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false);
+                                final ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false);
 
 
-                                ids.put(id, conversationInfo);
-                                convInfos.add(conversationInfo);
-                                adapter.add(conversationInfo);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ids.put(id, conversationInfo);
+                                        adapter.add(conversationInfo);
+                                    }
+                                });
+
 
                             }
                         } catch (JSONException e) {
@@ -148,7 +151,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
         AppSettings appSettings = new AppSettings(this);
         final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, getString(R.string.sending), false, -10, false);
-        convInfos.add(conversationInfo);
+
         adapter.add(conversationInfo);
         final ListView listView = findViewById(R.id.messages);
 
@@ -173,16 +176,17 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        conversationInfo.setSubtext(getString(R.string.err_not_sended));
                         CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
                     }
 
                 } else {
                     conversationInfo.setSubtext(getString(R.string.err_not_sended));
-                    ConversationAdapter adapter = new ConversationAdapter(Conversation.this, convInfos);
-                    listView.setAdapter(adapter);
                 }
+                adapter.notifyDataSetChanged();
             }
         };
+
 
         Methods.sendTextMessage(appSettings.getString("session"), String.valueOf(messageBox.getText()), cid, apiRunnable, this);
         messageBox.setText("");
@@ -286,7 +290,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                             if (!ids.containsKey(id)) {
                                 ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo);
                                 ids.put(id, conversationInfo);
-                                convInfos.add(conversationInfo);
+
                                 adapter.add(conversationInfo);
                             } else {
                                 ConversationInfo conversationInfo = ids.get(id);

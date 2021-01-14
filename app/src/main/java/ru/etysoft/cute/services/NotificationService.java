@@ -1,10 +1,12 @@
 package ru.etysoft.cute.services;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,12 +17,18 @@ import android.os.Vibrator;
 
 import androidx.core.app.NotificationCompat;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.api.Methods;
 
 public class NotificationService extends Service {
 
@@ -29,6 +37,7 @@ public class NotificationService extends Service {
     public Context context = this;
     public Handler handler = null;
     private AppSettings appSettings;
+    public static boolean isLastError = false;
     public static int notifid = 42;
 
     @Override
@@ -45,6 +54,72 @@ public class NotificationService extends Service {
         }
 
     }
+
+    int ts = 0;
+
+    public void longPoll() {
+        Thread waiter = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+
+                    try {
+                        log("Лонгпулл-чек.");
+                        AppSettings appSettings = new AppSettings(getApplicationContext());
+                        String responseString;
+                        if (ts == 0) {
+                            responseString = Methods.longpoolNotifications(appSettings.getString("session"));
+                        } else {
+                            responseString = Methods.longpoolNotifications(appSettings.getString("session"), ts);
+                        }
+                        JSONObject response = new JSONObject(responseString);
+                        JSONObject predata = response.getJSONObject("data");
+                        ts = Integer.parseInt(predata.getString("ts"));
+                        JSONArray data = predata.getJSONArray("events");
+
+                        ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+                        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+                        ActivityManager.RunningTaskInfo task = tasks.get(0); // current task
+                        ComponentName rootActivity = task.baseActivity;
+                        String currentPackageName = rootActivity.getPackageName();
+
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
+                            String chatname = data.getJSONObject(i).getString("chatname");
+                            String nickname = message.getString("nickname");
+                            String aid = message.getString("aid");
+                            final String id = message.getString("id");
+                            String text = message.getString("text");
+                            String time = message.getString("time");
+
+                            if (!currentPackageName.equals("ru.etysoft.cute")) {
+                                notifyBanner(context, chatname, nickname + ": " + text);
+                            }
+
+                        }
+
+
+                        isLastError = false;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        if (!isLastError) {
+                            isLastError = true;
+                            notifyBanner(context, "Error", context.getResources().getString(R.string.err_json));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (!isLastError) {
+                            isLastError = true;
+                            notifyBanner(context, "Error", "Critical error getting notifications!");
+                        }
+                    }
+                }
+            }
+        });
+
+        waiter.start();
+    }
+
 
     private static String CHANNEL_ID = "Changes";
 
@@ -70,7 +145,7 @@ public class NotificationService extends Service {
         }
     }
 
-    public void notifyBanner(Context context, String text) {
+    public void notifyBanner(Context context, String title, String text) {
         // до версии Android 8.0 API 26
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         long[] vibrate = new long[]{1000, 1000, 1000, 1000, 1000};
@@ -78,15 +153,16 @@ public class NotificationService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 0, notificationIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
+
+
         builder.setContentIntent(contentIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                 .setSmallIcon(R.drawable.logo_notification)
-                .setContentTitle("Notification")
+                .setContentTitle(title)
                 .setContentText(text)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVibrate(vibrate)
-                .setTicker("New event") // текст в строке состояния
                 .setContentIntent(contentIntent)
                 .setTicker("Cute")
 
@@ -117,6 +193,7 @@ public class NotificationService extends Service {
     public void onCreate() {
         appSettings = new AppSettings(this);
         createNotificationChannel();
+        longPoll();
         log("Сервис создан.");
 
         handler = new Handler();

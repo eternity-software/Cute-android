@@ -22,6 +22,7 @@
         android:fontFamily="@font/montserratmedium"
         android:gravity="center"
         android:text="K"
+        android:textAllCaps="true"
         android:textColor="@color/colorWhite"
         android:textSize="20sp" />
 
@@ -64,8 +65,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:padding="3dp"
-                    android:tint="@color/colorMainText"
-                    app:srcCompat="@drawable/icon_star" />
+                    app:srcCompat="@drawable/icon_star"
+                    app:tint="@color/colorMainText" />
             </LinearLayout>
 
 
