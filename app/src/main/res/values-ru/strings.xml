@@ -135,4 +135,6 @@
     <string name="chat_search">Поиск чатов</string>
     <string name="chat_join_title">Вступить в %s%</string>
     <string name="chat_join_text">Вы уверены, что хотите вступить в этот чат?</string>
+    <string name="err_messages_title">Ошибка</string>
+    <string name="err_messages_text">Произошла ошибка при загрузке сообщений.</string>
 </resources>

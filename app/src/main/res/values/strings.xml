@@ -115,6 +115,8 @@
     <string name="err_json">Wrong JSON answer</string>
     <string name="err_unknown">Unknown error</string>
     <string name="err_confirm">You must confirm your account</string>
+    <string name="err_messages_title">Error loading messages</string>
+    <string name="err_messages_text">An error occured while loading chat messages</string>
 
     // Error codes
     <string name="errcode_AM000_1">Already authorized!</string>

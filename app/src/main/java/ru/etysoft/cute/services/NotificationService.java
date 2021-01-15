@@ -27,7 +27,7 @@ import java.util.List;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.activities.Conversation;
 import ru.etysoft.cute.api.Methods;
 
 public class NotificationService extends Service {
@@ -89,11 +89,12 @@ public class NotificationService extends Service {
                             String nickname = message.getString("nickname");
                             String aid = message.getString("aid");
                             final String id = message.getString("id");
+                            String cid = data.getJSONObject(i).getString("cid");
                             String text = message.getString("text");
                             String time = message.getString("time");
 
                             if (!currentPackageName.equals("ru.etysoft.cute")) {
-                                notifyBanner(context, chatname, nickname + ": " + text);
+                                notifyBannerNewMessage(context, chatname, nickname + ": " + text, cid, chatname);
                             }
 
                         }
@@ -145,15 +146,22 @@ public class NotificationService extends Service {
         }
     }
 
-    public void notifyBanner(Context context, String title, String text) {
+    public void notifyBannerNewMessage(Context context, String title, String text, String cid, String name) {
         // до версии Android 8.0 API 26
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         long[] vibrate = new long[]{1000, 1000, 1000, 1000, 1000};
-        Intent notificationIntent = new Intent(context, MainActivity.class);
+        Intent notificationIntent = new Intent(context, Conversation.class);
+        notificationIntent.putExtra("cid", cid);
+        notificationIntent.putExtra("isd", false);
+        notificationIntent.putExtra("name", name);
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 0, notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_ONE_SHOT);
 
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         builder.setContentIntent(contentIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
@@ -163,9 +171,60 @@ public class NotificationService extends Service {
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVibrate(vibrate)
+                .setContentIntent(pendingIntent)
+                .setStyle(new NotificationCompat.InboxStyle()
+                        .addLine(text))
+                .setTicker("Cute")
+                .setLights(Color.RED, 3000, 3000)
+                .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Альтернативный вариант
+        // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        createChannelIfNeeded(notificationManager);
+
+
+        //LED
+
+        builder.getNotification().ledARGB = Color.RED;
+        builder.getNotification().ledOffMS = 0;
+        builder.getNotification().ledOnMS = 1;
+        builder.getNotification().flags = builder.getNotification().flags | Notification.FLAG_SHOW_LIGHTS;
+        builder.setLights(Color.RED, 3000, 3000);
+        Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        notifid++;
+        notificationManager.notify(notifid, builder.build());
+    }
+
+    public void notifyBanner(Context context, String title, String text) {
+        // до версии Android 8.0 API 26
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+        long[] vibrate = new long[]{1000, 1000, 1000, 1000, 1000};
+        Intent notificationIntent = new Intent(context, Conversation.class);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(context,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+        builder.setContentIntent(contentIntent)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                .setSmallIcon(R.drawable.logo_notification)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVibrate(vibrate)
+                .setStyle(new NotificationCompat.InboxStyle()
+                        .addLine(text))
                 .setContentIntent(contentIntent)
                 .setTicker("Cute")
-
                 .setLights(Color.RED, 3000, 3000)
                 .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
 

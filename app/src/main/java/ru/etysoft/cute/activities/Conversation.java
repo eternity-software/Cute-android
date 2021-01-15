@@ -105,6 +105,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+
                                         ids.put(id, conversationInfo);
                                         adapter.add(conversationInfo);
                                     }
@@ -298,18 +299,31 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                     conversationInfo.setReaded(readed);
                                 }
                             }
+                            LinearLayout loadingLayot = findViewById(R.id.loadingLayout);
+                            loadingLayot.setVisibility(View.INVISIBLE);
                         }
 
                         longpoll();
                     } catch (JSONException e) {
+                        LinearLayout loadingLayot = findViewById(R.id.error);
+                        loadingLayot.setVisibility(View.VISIBLE);
                         e.printStackTrace();
-                        CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
+
                     }
+                } else {
+                    LinearLayout loadingLayot = findViewById(R.id.error);
+                    loadingLayot.setVisibility(View.VISIBLE);
                 }
             }
         };
 
         Methods.getMessages(appSettings.getString("session"), cid, apiRunnable, this);
+    }
+
+    public void update(View v) {
+        LinearLayout loadingLayot = findViewById(R.id.error);
+        loadingLayot.setVisibility(View.INVISIBLE);
+        updateList();
     }
 
     @SuppressLint("ClickableViewAccessibility")

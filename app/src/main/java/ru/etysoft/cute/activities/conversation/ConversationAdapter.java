@@ -42,7 +42,8 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
             // Проверка на своё сообщение
             if (info.isMine() && !info.isInfo()) {
                 view = inflator.inflate(R.layout.conv_mymessage, null);
-            } else if (info.isInfo()) {
+            } else if (info.getAid() == -1) {
+                isFirstAid = false;
                 view = inflator.inflate(R.layout.info_message, null);
             } else {
                 if (position == 0) {
@@ -66,7 +67,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
         // Инициализируем элементы
         final ConversationAdapter.ViewHolder viewHolder = new ConversationAdapter.ViewHolder();
 
-        if (!info.isInfo()) {
+        if (info.getAid() != -1) {
             // Не информационное сообщение
 
             viewHolder.time = (TextView) view.findViewById(R.id.timeview);
