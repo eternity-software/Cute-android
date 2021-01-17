@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -92,7 +93,21 @@ public class DialogsFragment extends Fragment {
                 updateDialogList();
             }
         });
+
+        if (!Methods.hasInternet(getContext())) {
+            setStatusMessage(getResources().getString(R.string.no_internet));
+        }
         return root;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        if (view != null) {
+            TextView status = view.findViewById(R.id.status);
+            if (status != null) {
+                status.setText(statusMessage);
+            }
+        }
+
     }
 
 

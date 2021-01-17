@@ -4,7 +4,6 @@
         <item name="colorPrimary">@color/colorBackground</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorMainLight</item>
-
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">

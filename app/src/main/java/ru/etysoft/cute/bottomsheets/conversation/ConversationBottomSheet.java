@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,7 +31,6 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 
 public class ConversationBottomSheet extends BottomSheetDialogFragment {
@@ -128,7 +126,8 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             String name = member.getString("nickname");
             String role = member.getString("role");
 
-            MemberInfo memberInfo = new MemberInfo(id, name, role);
+            String photo = member.getString("photo");
+            MemberInfo memberInfo = new MemberInfo(id, name, role, photo);
 
             if (role.equals("CREATOR")) {
                 memberInfos.add(0, memberInfo);
@@ -160,13 +159,12 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         String conv_name = data.getString("name");
                         int id = data.getInt("id");
                         String conv_desc = data.getString("description");
+
                         JSONArray members = data.getJSONArray("members");
 
                         TextView nameview = view.findViewById(R.id.conv_name);
                         TextView descview = view.findViewById(R.id.conv_desc);
                         TextView acronymview = view.findViewById(R.id.conv_acronym);
-                        ImageView icon = view.findViewById(R.id.icon);
-                        ImagesWorker.setGradient(icon, id);
 
 
                         nameview.setText(conv_name);

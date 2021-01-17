@@ -6,6 +6,7 @@ public class ConversationInfo {
     private String message;
     private String subtext;
     private String id;
+    private String photo;
     private int aid;
     private boolean readed;
     private boolean isMine;
@@ -14,7 +15,7 @@ public class ConversationInfo {
 
 
     // Сообщение
-    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isDialog, String subtext, boolean readed, int aid, boolean isInfo) {
+    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isDialog, String subtext, boolean readed, int aid, boolean isInfo, String photo) {
         this.readed = readed;
         this.id = id;
         this.aid = aid;
@@ -24,6 +25,11 @@ public class ConversationInfo {
         this.isMine = isMine;
         this.isDialog = isDialog;
         this.isInfo = isInfo;
+        this.photo = photo;
+    }
+
+    public String getPhoto() {
+        return photo;
     }
 
     public boolean isInfo() {

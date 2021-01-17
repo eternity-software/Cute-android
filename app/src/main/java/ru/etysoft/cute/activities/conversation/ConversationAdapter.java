@@ -10,10 +10,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Profile;
+import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
@@ -25,6 +29,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
         this.context = context;
         this.list = values;
     }
+
 
     @Override
     public View getView(int position, final View convertView, ViewGroup parent) {
@@ -90,7 +95,11 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
 
             if (isFirstAid) {
                 holder.name.setText(info.getName());
-                ImagesWorker.setGradient(holder.userpic, info.getAid());
+                if (info.getPhoto().equals("null")) {
+                    ImagesWorker.setGradient(holder.userpic, info.getAid());
+                } else {
+                    Picasso.get().load(Methods.getPhotoUrl(info.getPhoto())).placeholder(context.getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(holder.userpic);
+                }
                 holder.userpic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -99,7 +108,9 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
                         getContext().startActivity(intent);
                     }
                 });
+
             }
+
 
             view.setOnClickListener(new View.OnClickListener() {
 

@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
@@ -19,11 +20,15 @@ import ru.etysoft.cute.utils.StringFormatter;
 public class Methods {
 
     public static String domain = "https://api.mcute.ru/";
-    public static String options = "&v=V0001";
+    public static String mainDomain = "https://mcute.ru/";
+    public static String options = "^";
+    public static Context context;
 
     public static void initialize(Context context) {
+        Methods.context = context;
         options = "&v=" + context.getResources().getString(R.string.api_v);
     }
+
 
     public static void login(String username, String password, Activity activity, APIRunnable apiRunnable) {
         username = StringFormatter.format(username);
@@ -33,6 +38,14 @@ public class Methods {
         String methodName = "LOGIN";
         Logger.logRequest("GET", methodName + ": " + finalurl);
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+    }
+
+    public static void editProfile(HashMap<String, Object> params, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "account.edit";
+        String methodName = "EDITPROFILE";
+        params.put("v", context.getResources().getString(R.string.api_v));
+
+        PostAPI.execute(finalurl, params, apiRunnable, activity, methodName);
     }
 
     public static void getAccount(String id, String session, APIRunnable apiRunnable, Activity activity) {
@@ -47,6 +60,10 @@ public class Methods {
         String methodName = "JOINCONV";
         Logger.logRequest("GET", "[JOINCONV]: " + finalurl);
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+    }
+
+    public static String getPhotoUrl(String resp) {
+        return mainDomain + resp;
     }
 
     public static void searchChat(String session, String query, APIRunnable apiRunnable, Activity activity) {
@@ -82,6 +99,7 @@ public class Methods {
         Logger.logRequest("GET", "[LONGPOLLMESSAGES]: " + finalurl);
         return GET.executeNoTimeout(finalurl);
     }
+
 
     public static String sendConfirmationCode(String session, String code) {
         code = StringFormatter.format(code);
@@ -144,7 +162,7 @@ public class Methods {
             String params = "session=" + session + "&cid=" + cid + "&text=" + message + options;
             String methodName = "SENDTEXTMESSAGE";
             Logger.logRequest("POST", methodName + ": " + finalurl + "?" + params);
-            PostAPI.execute(finalurl, params, apiRunnable, activity, methodName);
+            PostAPI.executeGET(finalurl, params, apiRunnable, activity, methodName);
         } catch (Exception e) {
             e.printStackTrace();
         }

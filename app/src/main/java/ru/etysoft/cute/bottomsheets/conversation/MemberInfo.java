@@ -6,11 +6,17 @@ public class MemberInfo {
     private int id;
     private String name;
     private String role;
+    private String photo;
 
-    public MemberInfo(int id, String name, String role) {
+    public MemberInfo(int id, String name, String role, String photo) {
         this.id = id;
         this.name = name;
         this.role = role;
+        this.photo = photo;
+    }
+
+    public String getPhoto() {
+        return photo;
     }
 
     public String getName() {

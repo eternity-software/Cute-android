@@ -62,56 +62,61 @@ public class NotificationService extends Service {
             @Override
             public void run() {
                 while (true) {
+                    if (appSettings.getString("session") != null) {
+                        if (Methods.hasInternet(context)) {
+                            try {
+                                log("Лонгпулл-чек.");
+                                AppSettings appSettings = new AppSettings(getApplicationContext());
+                                String responseString;
+                                if (ts == 0) {
+                                    responseString = Methods.longpoolNotifications(appSettings.getString("session"));
+                                } else {
+                                    responseString = Methods.longpoolNotifications(appSettings.getString("session"), ts);
+                                }
+                                JSONObject response = new JSONObject(responseString);
+                                if (response.getString("status").equals("success")) {
+                                    JSONObject predata = response.getJSONObject("data");
+                                    ts = Integer.parseInt(predata.getString("ts"));
+                                    JSONArray data = predata.getJSONArray("events");
 
-                    try {
-                        log("Лонгпулл-чек.");
-                        AppSettings appSettings = new AppSettings(getApplicationContext());
-                        String responseString;
-                        if (ts == 0) {
-                            responseString = Methods.longpoolNotifications(appSettings.getString("session"));
-                        } else {
-                            responseString = Methods.longpoolNotifications(appSettings.getString("session"), ts);
-                        }
-                        JSONObject response = new JSONObject(responseString);
-                        JSONObject predata = response.getJSONObject("data");
-                        ts = Integer.parseInt(predata.getString("ts"));
-                        JSONArray data = predata.getJSONArray("events");
+                                    ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+                                    List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+                                    ActivityManager.RunningTaskInfo task = tasks.get(0); // current task
+                                    ComponentName rootActivity = task.baseActivity;
+                                    String currentPackageName = rootActivity.getPackageName();
 
-                        ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-                        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
-                        ActivityManager.RunningTaskInfo task = tasks.get(0); // current task
-                        ComponentName rootActivity = task.baseActivity;
-                        String currentPackageName = rootActivity.getPackageName();
+                                    for (int i = 0; i < data.length(); i++) {
+                                        JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
+                                        String chatname = data.getJSONObject(i).getString("chatname");
+                                        String nickname = message.getString("nickname");
+                                        String aid = message.getString("aid");
+                                        final String id = message.getString("id");
+                                        String cid = data.getJSONObject(i).getString("cid");
+                                        String text = message.getString("text");
+                                        String time = message.getString("time");
 
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
-                            String chatname = data.getJSONObject(i).getString("chatname");
-                            String nickname = message.getString("nickname");
-                            String aid = message.getString("aid");
-                            final String id = message.getString("id");
-                            String cid = data.getJSONObject(i).getString("cid");
-                            String text = message.getString("text");
-                            String time = message.getString("time");
+                                        if (!currentPackageName.equals("ru.etysoft.cute")) {
+                                            notifyBannerNewMessage(context, chatname, nickname + ": " + text, cid, chatname);
+                                        }
 
-                            if (!currentPackageName.equals("ru.etysoft.cute")) {
-                                notifyBannerNewMessage(context, chatname, nickname + ": " + text, cid, chatname);
+                                    }
+
+
+                                    isLastError = false;
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
-                        }
-
-
-                        isLastError = false;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        if (!isLastError) {
-                            isLastError = true;
-                            notifyBanner(context, "Error", context.getResources().getString(R.string.err_json));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (!isLastError) {
-                            isLastError = true;
-                            notifyBanner(context, "Error", "Critical error getting notifications!");
+                        } else {
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }

@@ -90,8 +90,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         }
 
 
+
         // Инициализация навигации
         setupNavigation();
+
+
     }
 
     @Override
@@ -103,12 +106,18 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         stateReceiver.runnable = new Runnable() {
             @Override
             public void run() {
-                checksAPI();
-                try {
-                    fragmentAccount.updateData();
-                    fragmentDialogs.updateDialogList();
-                } catch (Exception e) {
 
+                if (Methods.hasInternet(getApplicationContext())) {
+                    checksAPI();
+                    try {
+                        fragmentAccount.updateData();
+                        fragmentDialogs.updateDialogList();
+                    } catch (Exception e) {
+
+                    }
+                    fragmentDialogs.setStatusMessage(getResources().getString(R.string.messages));
+                } else {
+                    fragmentDialogs.setStatusMessage(getResources().getString(R.string.no_internet));
                 }
 
             }

@@ -98,8 +98,9 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 final String id = message.getString("id");
                                 String text = message.getString("text");
                                 String time = message.getString("time");
+                                String photo = data.getJSONObject(i).getString("photo");
 
-                                final ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false);
+                                final ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false, photo);
 
 
                                 runOnUiThread(new Runnable() {
@@ -151,7 +152,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         final TextView messageBox = findViewById(R.id.message_box);
 
         AppSettings appSettings = new AppSettings(this);
-        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, getString(R.string.sending), false, -10, false);
+        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, getString(R.string.sending), false, -10, false, null);
 
         adapter.add(conversationInfo);
         final ListView listView = findViewById(R.id.messages);
@@ -271,6 +272,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                             final String name = message.getString("name");
                             final int mine = message.getInt("my");
                             final int read = message.getInt("readed");
+                            final String photo = message.getString("photo");
 
                             boolean my;
                             boolean readed;
@@ -289,7 +291,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
                             // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
                             if (!ids.containsKey(id)) {
-                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo);
+                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo, photo);
                                 ids.put(id, conversationInfo);
 
                                 adapter.add(conversationInfo);

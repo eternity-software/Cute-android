@@ -41,35 +41,44 @@
                 android:text="Author"
                 android:textColor="@color/colorMainText" />
 
-            <TextView
-                android:id="@+id/message_body"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content">
 
-                android:autoLink="all"
-                android:background="@drawable/dialog_message"
+                <TextView
+                    android:id="@+id/message_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                android:fontFamily="@font/montserrat"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="12dp"
-                android:text="напиши мне что-нибудь чтобы я проверил"
-                android:textColor="#fff"
-                android:textSize="16sp" />
+                    android:layout_weight="1"
+                    android:autoLink="all"
+                    android:background="@drawable/dialog_message"
+
+                    android:fontFamily="@font/montserrat"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:text="н"
+                    android:textColor="#fff"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/timeview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="bottom"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="00:00"
+                    android:textColor="@color/colorSupportText"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/timeview"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
 
-            android:fontFamily="@font/montserrat"
-            android:gravity="bottom"
-            android:paddingLeft="5dp"
-            android:paddingBottom="5dp"
-            android:text="00:00"
-            android:textColor="@color/colorSupportText"
-            android:textSize="12sp" />
     </LinearLayout>
 
 </RelativeLayout>

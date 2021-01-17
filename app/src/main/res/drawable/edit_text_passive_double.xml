@@ -4,7 +4,7 @@
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <stroke android:width="1dp" android:color="@color/colorEditTextOutline" />
-            <solid android:color="@color/colorBackground" />
+            <solid android:color="@color/colorEditText" />
             <padding
                 android:left="1dp"
                 android:right="1dp"
@@ -17,7 +17,7 @@
         android:state_enabled="false">
         <shape android:shape="rectangle">
             <stroke android:width="1dp" android:color="@color/colorEditTextOutline" />
-            <solid android:color="@color/colorBackground" />
+            <solid android:color="@color/colorEditText" />
 
             <padding
                 android:left="1dp"

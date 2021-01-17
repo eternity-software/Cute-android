@@ -39,6 +39,8 @@
     // Bottom navigation
     <string name="explore">Explore</string>
     <string name="messages">Messages</string>
+    <string name="no_internet">Waiting for network...</string>
+
     <string name="account">Account</string>
 
     // Banned
@@ -92,6 +94,12 @@
     <string name="logout_title">Logout</string>
     <string name="logout_text">Do you want to logout?</string>
 
+    // Account
+    <string name="edit_profile">Edit profile</string>
+    <string name="status">Status</string>
+    <string name="no_status">i like pineapples</string>
+    <string name="save_profile">Save</string>
+
     // NOTIFICATIONS
 
     //SETTINGS
@@ -109,7 +117,7 @@
 
 
     // Errors
-    <string name="err_no_internet">No internet connection!</string>
+    <string name="err_no_internet">No internet connection</string>
     <string name="err_not_sended">Not sent</string>
     <string name="sending">Sending...</string>
     <string name="err_json">Wrong JSON answer</string>

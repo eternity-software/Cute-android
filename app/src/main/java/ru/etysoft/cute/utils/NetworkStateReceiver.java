@@ -16,6 +16,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         NetworkInfo ni = manager.getActiveNetworkInfo();
         if (ni == null || ni.getState() != NetworkInfo.State.CONNECTED) {
             if (online)
+                runnable.run();
                 Logger.logReceiver("No internet connection");
             online = false;
         } else {
