@@ -29,6 +29,7 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Conversation;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.utils.SendorsControl;
 
 public class NotificationService extends Service {
 
@@ -127,7 +128,7 @@ public class NotificationService extends Service {
     }
 
 
-    private static String CHANNEL_ID = "Changes";
+    private static String CHANNEL_ID = "Messages";
 
     public static void createChannelIfNeeded(NotificationManager manager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -140,12 +141,15 @@ public class NotificationService extends Service {
     public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = CHANNEL_ID;
+            long[] vibrate = new long[]{200, 200, 200, 200, 200};
             String description = "SSS";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             channel.enableLights(true);
             channel.enableVibration(true);
+            channel.setVibrationPattern(vibrate);
+            channel.setLightColor(Color.CYAN);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
@@ -154,7 +158,7 @@ public class NotificationService extends Service {
     public void notifyBannerNewMessage(Context context, String title, String text, String cid, String name) {
         // до версии Android 8.0 API 26
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-        long[] vibrate = new long[]{1000, 1000, 1000, 1000, 1000};
+        long[] vibrate = new long[]{200, 200, 200, 200, 200};
         Intent notificationIntent = new Intent(context, Conversation.class);
         notificationIntent.putExtra("cid", cid);
         notificationIntent.putExtra("isd", false);
@@ -183,6 +187,7 @@ public class NotificationService extends Service {
                 .setLights(Color.RED, 3000, 3000)
                 .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
 
+        SendorsControl.vibrate(getApplicationContext(), 100);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Альтернативный вариант
