@@ -40,7 +40,7 @@
             android:layout_marginLeft="15dp"
             android:fontFamily="@font/montserrat"
             android:gravity="center"
-            android:text="unknown"
+            android:text=".."
             android:textColor="@color/colorMainText"
             android:textSize="28sp" />
 
@@ -75,7 +75,7 @@
                     android:layout_marginTop="15dp"
                     android:background="@color/colorBackground"
                     android:scaleType="fitXY"
-                    tools:srcCompat="@drawable/circle_gray" />
+                    app:srcCompat="@drawable/circle_gray" />
 
                 <TextView
                     android:id="@+id/acronym"
@@ -85,7 +85,7 @@
 
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
-                    android:text="U"
+                    android:text=""
                     android:textAllCaps="true"
                     android:textColor="@color/colorWhite"
                     android:textSize="75sp" />
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserratmedium"
                         android:gravity="center"
-                        android:text="Unknown"
+                        android:text=".."
                         android:textColor="@color/colorText"
                         android:textSize="22sp" />
 
@@ -115,7 +115,7 @@
                         android:layout_marginTop="5dp"
                         android:gravity="center"
                         android:fontFamily="@font/montserrat"
-                        android:text="умные мысли часто преследуют его, но он быстрее"
+                        android:text=".."
                         android:textColor="@color/colorText"
                         android:textSize="13sp" />
 

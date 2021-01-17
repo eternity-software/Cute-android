@@ -116,7 +116,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/applybtn"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -131,4 +131,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/applybtn"
+        app:layout_constraintEnd_toEndOf="@+id/applybtn"
+        app:layout_constraintStart_toStartOf="@+id/applybtn"
+        app:layout_constraintTop_toTopOf="@+id/applybtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

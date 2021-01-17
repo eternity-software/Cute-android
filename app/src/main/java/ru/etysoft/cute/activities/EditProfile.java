@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -106,6 +108,11 @@ public class EditProfile extends AppCompatActivity {
         TextView nameView = findViewById(R.id.name);
         TextView statusView = findViewById(R.id.status);
 
+        final Button applyButton = findViewById(R.id.applybtn);
+        final ProgressBar wait = findViewById(R.id.loading);
+        applyButton.setVisibility(View.INVISIBLE);
+        wait.setVisibility(View.VISIBLE);
+
 
         final AppSettings appSettings = new AppSettings(this);
 
@@ -129,6 +136,8 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
+                applyButton.setVisibility(View.VISIBLE);
+                wait.setVisibility(View.INVISIBLE);
                 if (isSuccess()) {
                     finish();
                 } else {
