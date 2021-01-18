@@ -21,7 +21,7 @@ public class Methods {
 
     public static String domain = "https://api.mcute.ru/";
     public static String mainDomain = "https://mcute.ru/";
-    public static String options = "^";
+    public static String options = "&v=V0001";
     public static Context context;
 
     public static void initialize(Context context) {

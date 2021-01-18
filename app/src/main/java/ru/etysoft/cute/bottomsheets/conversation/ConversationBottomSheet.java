@@ -2,18 +2,22 @@ package ru.etysoft.cute.bottomsheets.conversation;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -28,6 +32,7 @@ import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
+import ru.etysoft.cute.EditChat;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
@@ -280,6 +285,29 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             }
         });
         setContent();
+
+        ImageButton edit = v.findViewById(R.id.buttonEdit);
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), EditChat.class);
+
+                ImageView imageView = view.findViewById(R.id.icon);
+                ImageButton deleteBtn = view.findViewById(R.id.conv_delete);
+                ImageButton exitBtn = view.findViewById(R.id.conv_exit);
+                TextView acr = view.findViewById(R.id.conv_acronym);
+
+
+                Pair<View, String> p1 = Pair.create((View) imageView, "editchat");
+                Pair<View, String> p2 = Pair.create((View) deleteBtn, "delbtn");
+                Pair<View, String> p3 = Pair.create((View) exitBtn, "exitbtn");
+                Pair<View, String> p4 = Pair.create((View) acr, "acronym");
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(getActivity(), p1, p2, p3, p4);
+                startActivity(intent, options.toBundle());
+            }
+        });
 
         return v;
     }

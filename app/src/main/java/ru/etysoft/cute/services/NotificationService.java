@@ -6,7 +6,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -56,6 +55,34 @@ public class NotificationService extends Service {
 
     }
 
+    public boolean isAppRunning(final Context context, final String packageName) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        if (procInfos != null) {
+            for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                if (processInfo.processName.equals(packageName)) {
+
+                    return true;
+
+                }
+            }
+        }
+        notifyBanner(context, "Status", "InBackground");
+        return false;
+    }
+
+    private boolean isApplicationBroughtToBackground() {
+        ActivityManager.RunningAppProcessInfo myProcess = new ActivityManager.RunningAppProcessInfo();
+        ActivityManager.getMyMemoryState(myProcess);
+        boolean isBack = myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
+        if (!isBack) {
+            //   notifyBanner(context, "Status", "OnTop");
+        } else {
+            //    notifyBanner(context, "Status", "InBackground");
+        }
+        return isBack;
+    }
+
     int ts = 0;
 
     public void longPoll() {
@@ -66,7 +93,10 @@ public class NotificationService extends Service {
                     if (appSettings.getString("session") != null) {
                         if (Methods.hasInternet(context)) {
                             try {
-                                log("Лонгпулл-чек.");
+                                // log("Лонгпулл-чек.");
+                                Thread.sleep(3000);
+                                boolean isBackround = isApplicationBroughtToBackground();
+
                                 AppSettings appSettings = new AppSettings(getApplicationContext());
                                 String responseString;
                                 if (ts == 0) {
@@ -74,17 +104,13 @@ public class NotificationService extends Service {
                                 } else {
                                     responseString = Methods.longpoolNotifications(appSettings.getString("session"), ts);
                                 }
+
+
                                 JSONObject response = new JSONObject(responseString);
                                 if (response.getString("status").equals("success")) {
                                     JSONObject predata = response.getJSONObject("data");
                                     ts = Integer.parseInt(predata.getString("ts"));
                                     JSONArray data = predata.getJSONArray("events");
-
-                                    ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-                                    List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
-                                    ActivityManager.RunningTaskInfo task = tasks.get(0); // current task
-                                    ComponentName rootActivity = task.baseActivity;
-                                    String currentPackageName = rootActivity.getPackageName();
 
                                     for (int i = 0; i < data.length(); i++) {
                                         JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
@@ -96,14 +122,13 @@ public class NotificationService extends Service {
                                         String text = message.getString("text");
                                         String time = message.getString("time");
 
-                                        if (!currentPackageName.equals("ru.etysoft.cute")) {
+
+                                        if (isBackround) {
                                             notifyBannerNewMessage(context, chatname, nickname + ": " + text, cid, chatname);
                                         }
 
+
                                     }
-
-
-                                    isLastError = false;
                                 }
 
                             } catch (JSONException e) {
@@ -111,6 +136,7 @@ public class NotificationService extends Service {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                log("ошибка");
                             }
                         } else {
                             try {
