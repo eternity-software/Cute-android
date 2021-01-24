@@ -5,8 +5,10 @@
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorMainLight</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:forceDarkAllowed">false</item>
-
+        <item name="android:windowSharedElementsUseOverlay">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
@@ -15,6 +17,10 @@
 
     <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+        <item name="android:windowSharedElementsUseOverlay">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
     <style name="DialogAnimation">
@@ -24,10 +30,12 @@
 
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowSharedElementsUseOverlay">true</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat">
         <item name="android:windowBackground">@drawable/splash</item>
+
     </style>
 
 
@@ -39,6 +47,9 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowSharedElementsUseOverlay">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
 

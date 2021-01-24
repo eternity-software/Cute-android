@@ -61,7 +61,7 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
 
         // Задаём персональные значения
         MembersAdapter.ViewHolder holder = (MembersAdapter.ViewHolder) view.getTag();
-        if (!info.getRole().equals("creator")) {
+        if (!info.getRole().equals("CREATOR")) {
             holder.role.setVisibility(View.INVISIBLE);
         }
         ImagesWorker.setGradient(holder.picture, info.getId());

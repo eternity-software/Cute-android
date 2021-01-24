@@ -158,10 +158,12 @@ public class DialogsFragment extends Fragment {
                             final String message = conv.getString("text");
                             final String cid = conv.getString("id");
                             final String time = conv.getString("time");
+                            final String countMembers = conv.getString("countMembers");
                             final int readed = conv.getInt("readed");
                             final int countReaded = conv.getInt("countReaded");
                             final int online = conv.getInt("online");
                             final int personal = conv.getInt("personal");
+                            final String cover = conv.getString("cover");
 
                             boolean isonline;
                             boolean isDialog;
@@ -183,7 +185,7 @@ public class DialogsFragment extends Fragment {
 
 
                             // Добавляем новый диалог в список
-                            adapter.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog));
+                            adapter.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog, countMembers, cover));
                         }
                         if (!hasMessages) {
                             noMessages.setVisibility(View.VISIBLE);

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.r0adkll.slidr.Slidr;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +37,7 @@ import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
@@ -49,6 +51,8 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
     private String cid = "1";
     private String name = "42";
+    private String cover = "null";
+    private String countMembers = "42";
     private boolean isDialog = false;
     private int ts = 0;
     private Thread waiter;
@@ -57,9 +61,55 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
 
     public boolean isVoice = true;
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_conversation);
+        cid = getIntent().getStringExtra("cid");
+        name = getIntent().getStringExtra("name");
+        cover = getIntent().getStringExtra("cover");
+        countMembers = getIntent().getStringExtra("countMembers");
+        isDialog = getIntent().getBooleanExtra("isd", false);
+
+        ImageView picture = findViewById(R.id.icon);
+        ImagesWorker.setGradient(picture, Integer.parseInt(cid));
+
+        TextView acronym = findViewById(R.id.acronym);
+        acronym.setVisibility(View.VISIBLE);
+        acronym.setText(String.valueOf(name.charAt(0)).toUpperCase());
+
+        final ListView listView = findViewById(R.id.messages);
+        adapter = new ConversationAdapter(this, convInfos);
+        listView.setAdapter(adapter);
+
+        TextView subtitle = findViewById(R.id.subtitle);
+        if (!isDialog) {
+            subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
+        }
+
+        TextView title = findViewById(R.id.title);
+        title.setText(name);
+        setupVoiceButton();
+
+
+        Slidr.attach(this);
+        setupOnTextInput();
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+
+        updateList();
+        if (!cover.equals("null")) {
+            String photoUrl = Methods.getPhotoUrl(cover) + "?size=80";
+            Picasso.get().load(photoUrl).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(picture);
+            acronym.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+
 
     }
 
@@ -208,38 +258,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         DialogAdapter.canOpen = true;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation);
-        cid = getIntent().getStringExtra("cid");
-        name = getIntent().getStringExtra("name");
-        isDialog = getIntent().getBooleanExtra("isd", false);
 
-        ImageView picture = findViewById(R.id.icon);
-        ImagesWorker.setGradient(picture, Integer.parseInt(cid));
-
-        TextView acronym = findViewById(R.id.acronym);
-        acronym.setVisibility(View.VISIBLE);
-        acronym.setText(String.valueOf(name.charAt(0)).toUpperCase());
-
-        final ListView listView = findViewById(R.id.messages);
-        adapter = new ConversationAdapter(this, convInfos);
-        listView.setAdapter(adapter);
-
-        TextView subtitle = findViewById(R.id.subtitle);
-        if (!isDialog) {
-            subtitle.setText("..");
-        }
-
-        TextView title = findViewById(R.id.title);
-        title.setText(name);
-        setupVoiceButton();
-        updateList();
-        Slidr.attach(this);
-        setupOnTextInput();
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
-    }
 
     public boolean isRecordPanelShown = false;
     private Thread recordWaiter;
@@ -247,7 +266,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     // Обновляем список сообщений
     public void updateList() {
         final ListView listView = findViewById(R.id.messages);
-        AppSettings appSettings = new AppSettings(this);
+        final AppSettings appSettings = new AppSettings(this);
 
         // Задаём обработчик ответа API
         APIRunnable apiRunnable = new APIRunnable() {
@@ -273,6 +292,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                             final int mine = message.getInt("my");
                             final int read = message.getInt("readed");
                             final String photo = message.getString("photo");
+
 
                             boolean my;
                             boolean readed;
@@ -305,7 +325,9 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                             loadingLayot.setVisibility(View.INVISIBLE);
                         }
 
+
                         longpoll();
+
                     } catch (JSONException e) {
                         LinearLayout loadingLayot = findViewById(R.id.error);
                         loadingLayot.setVisibility(View.VISIBLE);

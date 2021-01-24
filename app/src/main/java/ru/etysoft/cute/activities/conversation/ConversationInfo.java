@@ -25,7 +25,7 @@ public class ConversationInfo {
         this.isMine = isMine;
         this.isDialog = isDialog;
         this.isInfo = isInfo;
-        this.photo = photo;
+        this.photo = photo + "?size=50";
     }
 
     public String getPhoto() {

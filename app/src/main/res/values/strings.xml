@@ -115,6 +115,8 @@
     <string name="logout">Logout</string>
     <string name="version">Version</string>
 
+    <string name="edit_conv">Edit chat</string>
+
 
     // Errors
     <string name="err_no_internet">No internet connection</string>

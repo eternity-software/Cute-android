@@ -58,7 +58,7 @@ public class Profile extends AppCompatActivity {
                             ImagesWorker.setGradient(icon, id);
                         } else {
                             acronym.setVisibility(View.INVISIBLE);
-                            Picasso.get().load(Methods.getPhotoUrl(photo)).transform(new CircleTransform()).into(icon);
+                            Picasso.get().load(Methods.getPhotoUrl(photo + "?size=350")).transform(new CircleTransform()).into(icon);
                         }
 
                         TextView statusView = findViewById(R.id.status);

@@ -76,7 +76,7 @@ public class GetAPI {
                                             afterExecute.setErrorCode(finalCode1);
                                             afterExecute.run();
                                         } catch (Exception e) {
-
+                                           e.printStackTrace();
                                         }
                                     }
                                 });
@@ -126,7 +126,7 @@ public class GetAPI {
             });
             threadExecute.start();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

@@ -9,10 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Conversation;
+import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class DialogAdapter extends ArrayAdapter<DialogInfo> {
@@ -60,6 +64,8 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
                     intent.putExtra("cid", info.getCid());
                     intent.putExtra("isd", info.isDialog());
                     intent.putExtra("name", info.getName());
+                    intent.putExtra("cover", info.getCover());
+                    intent.putExtra("countMembers", info.getCountMembers());
                     getContext().startActivity(intent);
                 }
             }
@@ -95,7 +101,13 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
             holder.readstatus.setText(String.valueOf(info.getCountReaded()));
         }
 
-        ImagesWorker.setGradient(holder.picture, Integer.parseInt(info.getCid()));
+        if (info.getCover().equals("null")) {
+            ImagesWorker.setGradient(holder.picture, Integer.parseInt(info.getCid()));
+        } else {
+            String photoUrl = Methods.getPhotoUrl(info.getCover()) + "?size=150";
+            Picasso.get().load(photoUrl).placeholder(context.getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(holder.picture);
+            holder.acronym.setVisibility(View.INVISIBLE);
+        }
 
         holder.name.setText(info.getName());
         holder.message.setText(info.getLastmessage());

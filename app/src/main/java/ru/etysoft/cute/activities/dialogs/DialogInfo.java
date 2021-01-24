@@ -7,13 +7,16 @@ public class DialogInfo {
     private String acronym;
     private String cid;
     private String time;
+    private String countMembers;
+    private String cover;
     private boolean isreaded;
     private int countReaded;
     private boolean isOnline;
     private boolean isDialog;
 
+
     // Диалог или беседа (превью)
-    public DialogInfo(String name, String lastmessage, String acronym, String cid, String time, boolean isreaded, int count, boolean isOnline, boolean isDialog) {
+    public DialogInfo(String name, String lastmessage, String acronym, String cid, String time, boolean isreaded, int count, boolean isOnline, boolean isDialog, String countMembers, String cover) {
         this.name = name;
         this.lastmessage = lastmessage;
         this.acronym = acronym.toUpperCase();
@@ -23,8 +26,17 @@ public class DialogInfo {
         this.countReaded = count;
         this.isOnline = isOnline;
         this.isDialog = isDialog;
+        this.countMembers = countMembers;
+        this.cover = cover;
     }
 
+    public String getCover() {
+        return cover;
+    }
+
+    public String getCountMembers() {
+        return countMembers;
+    }
 
     public boolean isDialog() {
         return isDialog;

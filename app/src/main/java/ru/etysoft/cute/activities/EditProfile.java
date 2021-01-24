@@ -50,13 +50,6 @@ public class EditProfile extends AppCompatActivity {
 
     private boolean isImageUpdated = false;
 
-    public static void copyStream(InputStream input, OutputStream output) throws IOException {
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = input.read(buffer)) != -1) {
-            output.write(buffer, 0, bytesRead);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +72,17 @@ public class EditProfile extends AppCompatActivity {
         nameView.setText(name);
         statusView.setText(status);
     }
+
+    //TODO: переместить методы
+
+    public static void copyStream(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+    }
+
 
     private ImageFile createImageFile() throws IOException {
         // Create an image file name

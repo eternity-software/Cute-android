@@ -40,6 +40,14 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
+    public static void editChat(HashMap<String, Object> params, APIRunnable apiRunnable, Activity activity) {
+        String finalurl = domain + "conversation.edit";
+        String methodName = "EDITCHAT";
+        params.put("v", context.getResources().getString(R.string.api_v));
+
+        PostAPI.execute(finalurl, params, apiRunnable, activity, methodName);
+    }
+
     public static void editProfile(HashMap<String, Object> params, APIRunnable apiRunnable, Activity activity) {
         String finalurl = domain + "account.edit";
         String methodName = "EDITPROFILE";

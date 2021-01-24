@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
     android:layout_gravity="bottom"
+    android:theme="@style/AppTheme"
     android:background="@android:color/transparent">
 
 
@@ -16,16 +18,19 @@
         app:behavior_skipCollapsed="true"
         app:cardBackgroundColor="@color/colorBackground"
         app:cardCornerRadius="20dp"
-        app:cardElevation="3dp">
+        app:cardElevation="3dp"
+        app:cardPreventCornerOverlap="true">
 
         <LinearLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="12dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="20dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,17 +40,16 @@
 
                 <ImageView
                     android:id="@+id/icon"
-                    android:transitionName="editchat"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    app:srcCompat="@drawable/circle_gradiaent" />
+                    android:transitionName="editchat"
+                    app:srcCompat="@drawable/circle_gray" />
 
 
                 <TextView
                     android:id="@+id/conv_acronym"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:transitionName="acronym"
                     android:layout_marginLeft="-75dp"
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
@@ -132,13 +136,13 @@
                             android:layout_marginRight="5dp"
                             android:background="@drawable/button_passive_mini"
                             android:fontFamily="@font/montserrat"
-                            android:transitionName="delbtn"
                             android:gravity="center"
                             android:maxLines="1"
                             android:scaleType="centerInside"
                             android:textColor="@color/colorWhite"
                             android:textSize="14sp"
                             android:tint="@color/colorFrontElements"
+                            android:transitionName="delbtn"
                             app:srcCompat="@drawable/icon_delete" />
 
                         <ImageButton
@@ -150,12 +154,12 @@
                             android:background="@drawable/button_passive_mini"
                             android:fontFamily="@font/montserrat"
                             android:gravity="center"
-                            android:transitionName="exitbtn"
                             android:maxLines="1"
                             android:scaleType="centerInside"
                             android:textColor="@color/colorWhite"
                             android:textSize="14sp"
                             android:tint="@color/colorFrontElements"
+                            android:transitionName="exitbtn"
                             app:srcCompat="@drawable/icon_exit" />
                     </LinearLayout>
                 </LinearLayout>
@@ -170,17 +174,162 @@
                 android:fontFamily="@font/montserrat"
                 android:gravity="center"
                 android:maxLines="1"
+
                 android:text=".."
                 android:textColor="@color/colorSupportText"
                 android:textSize="12sp" />
+
+
+            <LinearLayout
+                android:id="@+id/loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <ProgressBar
+                    android:id="@+id/progressBar2"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:theme="@style/progressBarBlue" />
+            </LinearLayout>
 
             <ListView
                 android:id="@+id/members"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20dp" />
+                android:divider="@color/colorBackground"
+                android:paddingBottom="20dp">
+
+            </ListView>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="15dp"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackground"
+
+                    android:paddingHorizontal="14dp"
+                    app:srcCompat="@drawable/icon_back"
+                    app:tint="@color/colorMainText" />
+
+                <TextView
+                    android:id="@+id/idview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:text="@string/edit_conv"
+                    android:textColor="@color/colorText"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="7dp"
+
+                android:background="@color/colorDivider" />
+
+            <ImageView
+                android:id="@+id/icon_edit"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                app:srcCompat="@drawable/circle_gray" />
+
+            <TextView
+                android:id="@+id/acronym_edit"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="-150dp"
+                android:fontFamily="@font/montserrat"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/colorWhite"
+                android:textSize="56sp" />
+
+            <EditText
+                android:id="@+id/nameview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/edit_text_passive"
+                android:drawableLeft="@drawable/icon_account"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorEditTextIcon"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:foregroundGravity="left|clip_horizontal"
+                android:hint="@string/create_conv_text"
+                android:inputType="textPersonName"
+                android:paddingLeft="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp" />
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edit_text_passive"
+                android:drawableLeft="@drawable/icon_account"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorEditTextIcon"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:foregroundGravity="left|clip_horizontal"
+                android:hint="@string/create_conv_description"
+                android:inputType="textPersonName"
+                android:paddingLeft="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp" />
+
+            <Button
+                android:id="@+id/applybtn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_active"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/save_profile"
+                android:textColor="@color/colorMainText"
+                android:textSize="18sp" />
+
+            <ProgressBar
+                android:id="@+id/loadingApply"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="-35dp"
+                android:paddingVertical="7dp"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

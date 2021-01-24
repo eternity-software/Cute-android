@@ -105,7 +105,7 @@ public class AccountFragment extends Fragment {
                         try {
                             JSONObject jsonObject = new JSONObject(getResponse());
                             final JSONObject data = jsonObject.getJSONObject("data");
-                            String link = Methods.mainDomain + data.getString("photo");
+                            String link = Methods.mainDomain + data.getString("photo") + "?size=250";
                             appSettings.setString("profilePhoto", link);
                             final TextView id = view.findViewById(R.id.idview);
                             id.setText("u" + data.getString("id"));
