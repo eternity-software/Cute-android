@@ -1,11 +1,13 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="12.496dp"
-    android:height="20.503dp"
-    android:viewportWidth="12.496"
-    android:viewportHeight="20.503">
-    <group android:translateY="-2.1">
+    android:width="15dp"
+    android:height="20dp"
+    android:viewportWidth="15"
+    android:viewportHeight="20">
+    <group
+        android:rotation="-90"
+        android:translateY="20">
         <path
-            android:fillColor="@color/colorButtonTrans"
-            android:pathData="M12.5 3.933L10.6 2.1 0 12.351 10.6 22.6l1.9 -1.833L3.791 12.351Z" />
+            android:fillColor="@color/colorBackButton"
+            android:pathData="M7.5 3.744a3 3 0 0 1 4.992 0l4.394 6.592A3 3 0 0 1 14.394 15H5.606a3 3 0 0 1 -2.5 -4.664Z" />
     </group>
 </vector>

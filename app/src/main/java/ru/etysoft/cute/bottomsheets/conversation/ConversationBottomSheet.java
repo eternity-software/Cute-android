@@ -121,7 +121,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 final CardView cardView = view.findViewById(R.id.appBar);
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     if (!isEditing) {
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                      //  bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
 
                     if (cardView.getRadius() != 0) {
@@ -229,6 +229,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 };
             }
         };
+        dismiss();
         AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.leave_text), toRun, cancel);
         cdd.show();
     }
@@ -265,6 +266,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 };
             }
         };
+        dismiss();
         AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.clear_title), getString(R.string.clear_text), toRun, cancel);
         cdd.show();
     }

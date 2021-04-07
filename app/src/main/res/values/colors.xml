@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="colorAccent">#B83ADE</color>
+    <color name="colorAccentNegative">#7F568C</color>
     <color name="colorPrimaryDark">#707070</color>
     <color name="colorPrimaryGray">#C1C1C1</color>
     <color name="colorLightGray">#D9D9D9</color>
     <color name="colorUnderWhite">#F9F9F9</color>
     <color name="colorMain">#B83ADE</color>
-    <color name="colorMainSupport">#AA3ADE</color>
+    <color name="colorMainSupport">#A426DF</color>
     <color name="colorMainLight">#E365EC</color>
     <color name="colorOrange">#FF4F00</color>
     <color name="colorLightLGray">#F5F5F5</color>
     <color name="colorEtysoft">#4A98FF</color>
     <color name="colorGoodGray">#E4E4E4</color>
+    <color name="colorTransBlack">#88000000</color>
+
 
     <color name="colorEditText">#F1F1F1</color>
     <color name="colorEditTextOutline">#F1F1F1</color>
     <color name="colorEditTextIcon">#ACACAC</color>
 
-    <color name="colorBackButton">#B83ADE</color>
+
+    <color name="colorBackButton">#D8D8D8</color>
+    <color name="colorButtonText">#FFFFFF</color>
+    <color name="colorButtonMain">#B83ADE</color>
+    <color name="colorButtonMainSupport">#A426DF</color>
+
 
     <color name="colorPassiveMini">#ECECEC</color>
     <color name="colorPassiveMiniOutline">#ECECEC</color>
@@ -39,6 +49,8 @@
     <color name="colorButtonCircle">#B83ADE</color>
 
     <color name="colorMessage">#B83ADE</color>
+    <color name="colorAlt">#526FFF</color>
+    <color name="colorAltSupport">#3F57CD</color>
     <color name="colorNotReaded">#F4F4F4</color>
     <color name="colorMyMessage">#E6E6E6</color>
 

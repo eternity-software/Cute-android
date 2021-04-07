@@ -1,5 +1,6 @@
 package ru.etysoft.cute.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import ru.etysoft.cute.utils.ImagesWorker;
 public class Profile extends AppCompatActivity {
 
     private int id;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,12 @@ public class Profile extends AppCompatActivity {
         id = getIntent().getIntExtra("id", -1);
         loadInfo();
         Slidr.attach(this);
+    }
+
+    public void openImage(View v) {
+        Intent intent = new Intent(Profile.this, ImagePreview.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 
     public void loadInfo() {
@@ -58,6 +66,7 @@ public class Profile extends AppCompatActivity {
                             ImagesWorker.setGradient(icon, id);
                         } else {
                             acronym.setVisibility(View.INVISIBLE);
+                            url = photo;
                             Picasso.get().load(Methods.getPhotoUrl(photo + "?size=350")).transform(new CircleTransform()).into(icon);
                         }
 

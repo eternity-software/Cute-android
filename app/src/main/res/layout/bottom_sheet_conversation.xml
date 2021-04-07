@@ -225,9 +225,8 @@
                     android:layout_height="40dp"
                     android:background="?attr/selectableItemBackground"
 
-                    android:paddingHorizontal="14dp"
-                    app:srcCompat="@drawable/icon_back"
-                    app:tint="@color/colorMainText" />
+                    android:paddingHorizontal="12dp"
+                    app:srcCompat="@drawable/icon_back" />
 
                 <TextView
                     android:id="@+id/idview"
@@ -314,9 +313,10 @@
                 android:layout_height="35dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_active"
-                android:fontFamily="@font/montserrat"
+                android:fontFamily="@font/montserratmedium"
+                android:textAllCaps="false"
                 android:text="@string/save_profile"
-                android:textColor="@color/colorMainText"
+                android:textColor="@color/colorButtonText"
                 android:textSize="18sp" />
 
             <ProgressBar

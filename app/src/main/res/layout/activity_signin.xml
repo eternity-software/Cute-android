@@ -124,7 +124,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:onClick="signInButton"
                 android:text="@string/sign_in"
-                android:textColor="@color/colorMainText"
+                android:textColor="@color/colorButtonText"
                 android:textSize="18sp" />
 
             <Button
@@ -138,6 +138,7 @@
                 android:background="@drawable/button_passive"
                 android:fontFamily="@font/montserrat"
                 android:onClick="back"
+                android:textAllCaps="false"
                 android:text="@string/back"
                 android:textColor="@color/colorText"
                 android:textSize="18sp" />

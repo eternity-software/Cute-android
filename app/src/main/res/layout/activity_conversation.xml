@@ -58,17 +58,17 @@
     <ImageView
         android:id="@+id/menuButton2"
         android:layout_width="30dp"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="14dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:onClick="back"
-        android:paddingHorizontal="6dp"
-        android:paddingVertical="14dp"
+
         app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_back"
-        app:tint="@color/colorMainText" />
+        app:srcCompat="@drawable/icon_back" />
 
     <TextView
         android:id="@+id/title"

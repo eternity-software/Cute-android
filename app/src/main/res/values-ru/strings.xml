@@ -142,4 +142,9 @@
     <string name="save_profile">Сохранить</string>
     <string name="status">Статус</string>
     <string name="no_internet">Ожидание сети...</string>
+    <string name="saved_to_gallery">Сохранено в галерею</string>
+    <string name="edit_conv">Редактировать</string>
+    <string name="perms_btn">Выдать разрешения</string>
+    <string name="perms_title">Разрешения</string>
+    <string name="perms_text">Для работы Cute на Вашем устройстве, ему требуются несколько обычных разрешений.</string>
 </resources>

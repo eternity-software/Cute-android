@@ -141,9 +141,10 @@
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_active"
-                android:fontFamily="@font/montserrat"
+                android:fontFamily="@font/montserratmedium"
+                android:textAllCaps="false"
                 android:text="@string/edit_profile"
-                android:textColor="@color/colorMainText"
+                android:textColor="@color/colorButtonText"
                 android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>

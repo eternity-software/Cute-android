@@ -122,6 +122,7 @@
 
                     android:layout_marginHorizontal="3dp"
                     android:layout_weight="1"
+
                     app:srcCompat="@drawable/icon_read" />
 
                 <TextView

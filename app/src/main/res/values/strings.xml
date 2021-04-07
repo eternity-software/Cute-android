@@ -93,6 +93,7 @@
 
     <string name="logout_title">Logout</string>
     <string name="logout_text">Do you want to logout?</string>
+    <string name="saved_to_gallery">Saved to gallery</string>
 
     // Account
     <string name="edit_profile">Edit profile</string>
@@ -234,5 +235,9 @@
     </string>
     <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
     <string name="password_warning">Changing the password will automatically reset all active sessions</string>
+    <string name="signout">Sign out</string>
+    <string name="perms_title">Permissions</string>
+    <string name="perms_text">For Cute to work on your device, it requires several normal permissions.</string>
+    <string name="perms_btn">Grant permissions</string>
 
 </resources>

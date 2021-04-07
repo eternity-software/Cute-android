@@ -28,6 +28,7 @@ import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
 import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
+import ru.etysoft.cute.utils.Permissions;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
@@ -67,6 +68,12 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     public static boolean amIcreated = false;
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Permissions.checkAvailble(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -90,10 +97,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         }
 
 
-
         // Инициализация навигации
         setupNavigation();
-
+        Permissions.checkAvailble(this);
 
     }
 
@@ -173,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                                             };
                                             floatingBottomSheet.setContent(getResources().getDrawable(R.drawable.icon_uber), getString(R.string.banned_title), getString(R.string.banned_text));
                                             floatingBottomSheet.show(getSupportFragmentManager(), "blocked");
+
                                             floatingBottomSheet.setCancelable(false);
                                             isbanned = true;
                                         }

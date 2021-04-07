@@ -64,6 +64,7 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
                             intent.putExtra("cid", String.valueOf(info.getCid()));
                             intent.putExtra("isd", false);
                             intent.putExtra("name", info.getName());
+                            intent.putExtra("cover", "null");
                             getContext().startActivity(intent);
                         } else {
 
@@ -76,6 +77,7 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
                                         intent.putExtra("cid", String.valueOf(info.getCid()));
                                         intent.putExtra("isd", false);
                                         intent.putExtra("name", info.getName());
+                                        intent.putExtra("cover", "null");
                                         getContext().startActivity(intent);
                                     }
                                 }

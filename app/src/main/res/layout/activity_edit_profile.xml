@@ -22,7 +22,8 @@
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/applybtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,31 +75,33 @@
                 android:foregroundGravity="left|clip_horizontal"
                 android:gravity="top|left"
                 android:hint="@string/status"
-                android:inputType="textAutoCorrect"
+                android:inputType="textMultiLine"
+                android:lines="5"
                 android:paddingLeft="10dp"
-
-
                 android:paddingTop="7dp"
+
+
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:singleLine="false"
+                android:textColor="@color/colorText"
+                android:textSize="16sp" />
 
         </LinearLayout>
     </ScrollView>
 
     <ImageView
         android:id="@+id/menuButton"
-        android:layout_width="40dp"
+        android:layout_width="30dp"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="14dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:onClick="back"
-        android:paddingHorizontal="6dp"
-        android:paddingVertical="14dp"
         app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_back"
-        app:tint="@color/colorMainText" />
+        app:srcCompat="@drawable/icon_back" />
 
     <TextView
         android:id="@+id/idview"
@@ -121,12 +124,13 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/button_active"
-        android:fontFamily="@font/montserrat"
+        android:fontFamily="@font/montserratmedium"
         android:onClick="apply"
         android:text="@string/save_profile"
-        android:textColor="@color/colorMainText"
+        android:textAllCaps="false"
+        android:textColor="@color/colorButtonText"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

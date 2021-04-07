@@ -89,7 +89,7 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
 
         if (!info.isReaded()) {
 
-            holder.read.setColorFilter(context.getResources().getColor(R.color.colorMain));
+            holder.read.setColorFilter(context.getResources().getColor(R.color.colorAccent));
         } else {
             holder.read.setColorFilter(context.getResources().getColor(R.color.colorBackgroundElements));
         }

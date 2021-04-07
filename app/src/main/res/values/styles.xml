@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorBackground</item>
         <item name="colorPrimaryDark">@color/colorBlack</item>
-        <item name="colorAccent">@color/colorMainLight</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
 
     </style>
@@ -11,10 +11,10 @@
 
     <style name="CuteSwitch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">@color/colorMain</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
 
         <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">#f1f1f1
+        <item name="colorSwitchThumbNormal">@color/colorAccentNegative
         </item>
 
         <!-- inactive track color (30% transparency) -->
@@ -22,7 +22,7 @@
     </style>
 
     <style name="progressBarBlue" parent="@style/Theme.AppCompat">
-        <item name="colorAccent">@color/colorMainText</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 
@@ -47,6 +47,11 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
+    <style name="PhotoViewTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 
     <style name="AppSlideTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->

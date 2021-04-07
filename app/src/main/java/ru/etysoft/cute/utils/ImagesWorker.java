@@ -1,5 +1,6 @@
 package ru.etysoft.cute.utils;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import java.io.ByteArrayInputStream;
@@ -23,6 +25,15 @@ public class ImagesWorker {
         gd.setShape(GradientDrawable.OVAL);
         gd.setSize(100, 100);
         imageView.setImageDrawable(gd);
+    }
+
+    public static void saveBitmapToGallery(Bitmap finalBitmap, Activity activity) {
+
+
+        String fname = "CuteSaved-" + System.currentTimeMillis() + ".jpg";
+        MediaStore.Images.Media.insertImage(activity.getContentResolver(), finalBitmap, fname, "Cute Social Network");
+
+
     }
 
     public static Bitmap getCircleCroppedBitmap(Bitmap bitmap, int height, int width) {
