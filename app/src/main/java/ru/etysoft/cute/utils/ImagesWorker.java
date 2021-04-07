@@ -28,12 +28,8 @@ public class ImagesWorker {
     }
 
     public static void saveBitmapToGallery(Bitmap finalBitmap, Activity activity) {
-
-
         String fname = "CuteSaved-" + System.currentTimeMillis() + ".jpg";
         MediaStore.Images.Media.insertImage(activity.getContentResolver(), finalBitmap, fname, "Cute Social Network");
-
-
     }
 
     public static Bitmap getCircleCroppedBitmap(Bitmap bitmap, int height, int width) {

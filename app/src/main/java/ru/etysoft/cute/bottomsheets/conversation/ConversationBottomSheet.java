@@ -52,6 +52,7 @@ import java.util.List;
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.requests.attachements.ImageFile;
@@ -305,6 +306,16 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         acronymview2.setText(name.substring(0, 1).toUpperCase());
 
                         if (!cover.equals("null")) {
+                            final String finalCover = cover;
+                            icon.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    Intent intent = new Intent(getActivity(), ImagePreview.class);
+                                    intent.putExtra("url", finalCover);
+                                    startActivity(intent);
+                                }
+                            });
                             cover = cover + "?size=300";
                             acronymview.setVisibility(View.INVISIBLE);
                             acronymview2.setText("");
