@@ -3,6 +3,7 @@ package ru.etysoft.cute.bottomsheets.conversation;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -59,6 +60,7 @@ import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.Numbers;
 
 import static android.app.Activity.RESULT_OK;
@@ -97,6 +99,37 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
         // Пустой фон
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
+    }
+
+    private final NetworkStateReceiver stateReceiver = new NetworkStateReceiver();
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(stateReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        getActivity().registerReceiver(stateReceiver, filter);
+        stateReceiver.runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if (Methods.hasInternet(getActivity())) {
+                    membersCount = 0;
+                    setContent();
+                } else {
+                    TextView membersCountTextView = view.findViewById(R.id.membersCount);
+                    membersCountTextView.setText(getResources().getString(R.string.conv_nocon));
+                }
+
+
+            }
+        };
     }
 
     private List<MemberInfo> memberInfos = new ArrayList<>();
@@ -171,6 +204,9 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
     public void loadMembers(JSONArray members) throws JSONException {
         final ListView listView = view.findViewById(R.id.members);
+        memberInfos.clear();
+        membersCount = 0;
+
         int creatorid = 0;
         for (int i = 0; i < members.length(); i++) {
             JSONObject member = members.getJSONObject(i);

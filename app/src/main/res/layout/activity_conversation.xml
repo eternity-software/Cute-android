@@ -122,6 +122,7 @@
             android:layout_marginRight="15dp"
             android:background="@drawable/circle_gray"
             android:padding="5dp"
+            android:onClick="pickFiles"
             app:srcCompat="@drawable/icon_image"
             app:tint="@color/colorSupportText" />
 

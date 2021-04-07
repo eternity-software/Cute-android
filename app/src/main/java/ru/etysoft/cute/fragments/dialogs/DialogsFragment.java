@@ -102,7 +102,7 @@ public class DialogsFragment extends Fragment {
 
     public void setStatusMessage(String statusMessage) {
         if (view != null) {
-            TextView status = view.findViewById(R.id.status);
+            TextView status = view.findViewById(R.id.statusv);
             if (status != null) {
                 status.setText(statusMessage);
             }

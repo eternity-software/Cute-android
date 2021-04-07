@@ -37,6 +37,7 @@
             android:background="@drawable/button_passive_mini"
             android:fontFamily="@font/montserrat"
             android:gravity="center"
+            android:alpha="0.7"
             android:maxLines="1"
             android:onClick="save"
             android:paddingVertical="7dp"

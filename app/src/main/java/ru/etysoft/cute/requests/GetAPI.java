@@ -36,6 +36,7 @@ public class GetAPI {
                                 .build();
                         try (final Response response = client.newCall(request).execute()) {
                             final String result = response.body().string();
+                            CacheResponse.saveResponseToCache(url, result, new AppSettings(activity));
                             Logger.logResponse(result, methodName);
                             try {
                                 final JSONObject jsonObject = new JSONObject(result);
@@ -184,7 +185,11 @@ public class GetAPI {
                         });
                     }
 
+                    if (Methods.hasInternet(activity)) {
+                        execute(url, afterExecute, activity, methodName);
+                    }
                 } else {
+
                     Logger.logActivity("Hasn't cache");
                     if (Methods.hasInternet(activity)) {
                         execute(url, afterExecute, activity, methodName);

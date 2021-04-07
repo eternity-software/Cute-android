@@ -1,6 +1,7 @@
 package ru.etysoft.cute.activities;
 
 import android.annotation.SuppressLint;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,9 +38,11 @@ import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
+import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
 
@@ -58,8 +61,11 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     private Thread waiter;
     private boolean closed = false;
 
+    private final NetworkStateReceiver stateReceiver = new NetworkStateReceiver();
 
     public boolean isVoice = true;
+
+    private boolean isEmpty = true;
 
 
     @Override
@@ -88,6 +94,10 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
             subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
         }
 
+        if (!Methods.hasInternet(getApplicationContext())) {
+            subtitle.setText(getResources().getString(R.string.conv_nocon));
+        }
+
         TextView title = findViewById(R.id.title);
         title.setText(name);
         setupVoiceButton();
@@ -109,12 +119,41 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     @Override
     protected void onResume() {
         super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(stateReceiver, filter);
+        stateReceiver.runnable = new Runnable() {
+            @Override
+            public void run() {
+                TextView subtitle = findViewById(R.id.subtitle);
+                if (Methods.hasInternet(getApplicationContext())) {
+                    updateList();
+                    subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
+                } else {
 
+                    subtitle.setText(getResources().getString(R.string.conv_nocon));
+                }
 
+            }
+        };
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(stateReceiver);
     }
 
     public void back(View v) {
         onBackPressed();
+    }
+
+
+    public void pickFiles(View v) {
+        final FilePickerBottomSheet filePickerBottomSheet = new FilePickerBottomSheet();
+        filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
+        // filePickerBottomSheet.setCancelable(true);
     }
 
 
@@ -134,35 +173,38 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                 while (true) {
                     if (!closed) {
                         try {
-                            AppSettings appSettings = new AppSettings(getApplicationContext());
-                            String responseString = Methods.longpoolMessages(appSettings.getString("session"), ts, cid, Conversation.this);
-                            JSONObject response = new JSONObject(responseString);
-                            JSONObject predata = response.getJSONObject("data");
-                            ts = Integer.parseInt(predata.getString("ts"));
-                            JSONArray data = predata.getJSONArray("events");
+                            if (Methods.hasInternet(getApplicationContext())) {
 
-                            for (int i = 0; i < data.length(); i++) {
-                                JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
-                                String nickname = message.getString("nickname");
-                                String aid = message.getString("aid");
-                                final String id = message.getString("id");
-                                String text = message.getString("text");
-                                String time = message.getString("time");
-                                String photo = data.getJSONObject(i).getString("photo");
+                                AppSettings appSettings = new AppSettings(getApplicationContext());
+                                String responseString = Methods.longpoolMessages(appSettings.getString("session"), ts, cid, Conversation.this);
+                                JSONObject response = new JSONObject(responseString);
+                                JSONObject predata = response.getJSONObject("data");
+                                ts = Integer.parseInt(predata.getString("ts"));
+                                JSONArray data = predata.getJSONArray("events");
 
-                                final ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false, photo);
+                                for (int i = 0; i < data.length(); i++) {
+                                    JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
+                                    String nickname = message.getString("nickname");
+                                    String aid = message.getString("aid");
+                                    final String id = message.getString("id");
+                                    String text = message.getString("text");
+                                    String time = message.getString("time");
+                                    String photo = data.getJSONObject(i).getString("photo");
 
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        ids.put(id, conversationInfo);
-                                        adapter.add(conversationInfo);
-                                    }
-                                });
+                                    final ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false, photo);
 
 
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            ids.put(id, conversationInfo);
+                                            adapter.add(conversationInfo);
+                                        }
+                                    });
+
+
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -173,13 +215,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                                 }
                             });
                         } catch (Exception e) {
-                            e.printStackTrace();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CustomToast.show("Critical error!", R.drawable.icon_error, Conversation.this);
-                                }
-                            });
+                            //  e.printStackTrace();
 
                         }
 
@@ -187,6 +223,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                     } else {
                         break;
                     }
+
                 }
             }
         });
@@ -268,80 +305,92 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         final ListView listView = findViewById(R.id.messages);
         final AppSettings appSettings = new AppSettings(this);
 
+
         // Задаём обработчик ответа API
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
+                LinearLayout loadingLayot = findViewById(R.id.error);
                 if (isSuccess()) {
-                    try {
-
-                        // Обработка ответа JSON
-                        JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONObject predata = jsonObject.getJSONObject("data");
-                        JSONArray data = predata.getJSONArray("messages");
-                        ts = predata.getInt("ts");
-
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject message = data.getJSONObject(i);
-
-                            final String id = message.getString("id");
-                            final int aid = message.getInt("aid");
-                            final String text = message.getString("text");
-                            String time = message.getString("time");
-                            final String name = message.getString("name");
-                            final int mine = message.getInt("my");
-                            final int read = message.getInt("readed");
-                            final String photo = message.getString("photo");
-
-
-                            boolean my;
-                            boolean readed;
-                            boolean isonline;
-
-                            my = Numbers.getBooleanFromInt(mine);
-
-                            readed = Numbers.getBooleanFromInt(read);
-
-
-                            boolean isInfo = false;
-                            if (aid == -1) {
-                                isInfo = true;
-
-                            }
-
-                            // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
-                            if (!ids.containsKey(id)) {
-                                ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo, photo);
-                                ids.put(id, conversationInfo);
-
-                                adapter.add(conversationInfo);
-                            } else {
-                                ConversationInfo conversationInfo = ids.get(id);
-                                if (conversationInfo.isReaded() != readed) {
-                                    conversationInfo.setReaded(readed);
-                                }
-                            }
-                            LinearLayout loadingLayot = findViewById(R.id.loadingLayout);
-                            loadingLayot.setVisibility(View.INVISIBLE);
-                        }
-
-
-                        longpoll();
-
-                    } catch (JSONException e) {
-                        LinearLayout loadingLayot = findViewById(R.id.error);
-                        loadingLayot.setVisibility(View.VISIBLE);
-                        e.printStackTrace();
-
-                    }
+                    processListUpdate(getResponse());
+                    loadingLayot.setVisibility(View.INVISIBLE);
                 } else {
-                    LinearLayout loadingLayot = findViewById(R.id.error);
-                    loadingLayot.setVisibility(View.VISIBLE);
+
+                    if (isEmpty) {
+                        loadingLayot.setVisibility(View.VISIBLE);
+                    }
+                    Methods.getMessages(appSettings.getString("session"), cid, this, Conversation.this);
                 }
             }
         };
 
         Methods.getMessages(appSettings.getString("session"), cid, apiRunnable, this);
+    }
+
+    private void processListUpdate(String response) {
+        try {
+
+            // Обработка ответа JSON
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject predata = jsonObject.getJSONObject("data");
+            JSONArray data = predata.getJSONArray("messages");
+            ts = predata.getInt("ts");
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject message = data.getJSONObject(i);
+
+                final String id = message.getString("id");
+                final int aid = message.getInt("aid");
+                final String text = message.getString("text");
+                String time = message.getString("time");
+                final String name = message.getString("name");
+                final int mine = message.getInt("my");
+                final int read = message.getInt("readed");
+                final String photo = message.getString("photo");
+
+
+                boolean my;
+                boolean readed;
+                boolean isonline;
+
+                my = Numbers.getBooleanFromInt(mine);
+
+                readed = Numbers.getBooleanFromInt(read);
+
+
+                boolean isInfo = false;
+                if (aid == -1) {
+                    isInfo = true;
+
+                }
+                isEmpty = false;
+                // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
+                if (!ids.containsKey(id)) {
+                    ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo, photo);
+                    ids.put(id, conversationInfo);
+
+                    adapter.add(conversationInfo);
+                } else {
+                    ConversationInfo conversationInfo = ids.get(id);
+                    if (conversationInfo.isReaded() != readed) {
+                        conversationInfo.setReaded(readed);
+                    }
+                }
+                LinearLayout loadingLayot = findViewById(R.id.loadingLayout);
+                loadingLayot.setVisibility(View.INVISIBLE);
+            }
+
+
+            longpoll();
+
+        } catch (JSONException e) {
+            if (isEmpty) {
+                LinearLayout loadingLayot = findViewById(R.id.error);
+                loadingLayot.setVisibility(View.VISIBLE);
+            }
+            e.printStackTrace();
+
+        }
     }
 
     public void update(View v) {

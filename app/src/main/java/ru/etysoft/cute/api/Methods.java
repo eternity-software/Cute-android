@@ -135,7 +135,7 @@ public class Methods {
         String finalurl = domain + "conversation.info?session=" + session + "&cid=" + cid + options;
         String methodName = "GETCONVINFO";
         Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        GetAPI.executeCache(finalurl, apiRunnable, activity, methodName);
     }
 
 
@@ -154,12 +154,10 @@ public class Methods {
     }
 
     public static void getMessages(String session, String cid, APIRunnable apiRunnable, Activity activity) {
-
-
         String finalurl = domain + "conversation.getMessages?session=" + session + "&cid=" + cid + options;
         String methodName = "GETMESSAGES";
         Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        GetAPI.executeCache(finalurl, apiRunnable, activity, methodName);
     }
 
     public static void sendTextMessage(String session, String message, String cid, APIRunnable apiRunnable, Activity activity) {

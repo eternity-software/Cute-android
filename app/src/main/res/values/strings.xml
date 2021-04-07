@@ -239,5 +239,6 @@
     <string name="perms_title">Permissions</string>
     <string name="perms_text">For Cute to work on your device, it requires several normal permissions.</string>
     <string name="perms_btn">Grant permissions</string>
+    <string name="conv_nocon">waiting for network</string>
 
 </resources>

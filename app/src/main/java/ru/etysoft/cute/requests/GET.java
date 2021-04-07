@@ -45,7 +45,7 @@ public class GET {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
             return null;
         }
 
