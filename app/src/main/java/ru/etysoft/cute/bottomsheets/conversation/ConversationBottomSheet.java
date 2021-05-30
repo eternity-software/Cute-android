@@ -288,7 +288,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                     }
                 };
 
-                Methods.deleteConversationLocaly(appSettings.getString("session"), cid, apiRunnable, getActivity());
+                Methods.deleteConversationLocally(appSettings.getString("session"), cid, apiRunnable, getActivity());
             }
         };
         Runnable cancel = new Runnable() {

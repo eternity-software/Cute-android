@@ -124,7 +124,7 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
-    public static void deleteConversationLocaly(String session, String cid, APIRunnable apiRunnable, Activity activity) {
+    public static void deleteConversationLocally(String session, String cid, APIRunnable apiRunnable, Activity activity) {
         String finalurl = domain + "conversation.clear?session=" + session + "&cid=" + cid + options;
         String methodName = "DELCONVLOCAL";
         Logger.logRequest("GET", methodName + ": " + finalurl);
