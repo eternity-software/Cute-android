@@ -9,9 +9,9 @@ public class ConversationInfo {
     private String photo;
     private int aid;
     private boolean readed;
-    private boolean isMine;
-    private boolean isDialog;
-    private boolean isInfo;
+    private final boolean isMine;
+    private final boolean isDialog;
+    private final boolean isInfo;
 
 
     // Сообщение

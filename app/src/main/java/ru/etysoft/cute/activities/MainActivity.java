@@ -101,7 +101,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         setupNavigation();
         Permissions.checkAvailble(this);
 
+        //
+
+
     }
+
 
     @Override
     protected void onResume() {

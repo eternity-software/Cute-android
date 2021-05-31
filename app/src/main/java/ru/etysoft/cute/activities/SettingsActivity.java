@@ -40,14 +40,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
         if (appSettings.hasKey(ISDARK_THEME)) {
             if (appSettings.getBoolean(ISDARK_THEME)) {
-
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
             } else {
-
-
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
             }
         }
     }

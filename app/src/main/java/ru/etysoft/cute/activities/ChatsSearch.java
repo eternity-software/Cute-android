@@ -67,7 +67,7 @@ public class ChatsSearch extends AppCompatActivity {
                         ChatSearchAdapter chatSearchAdapter = new ChatSearchAdapter(ChatsSearch.this, values);
                         listView.setAdapter(chatSearchAdapter);
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
                 }
             }

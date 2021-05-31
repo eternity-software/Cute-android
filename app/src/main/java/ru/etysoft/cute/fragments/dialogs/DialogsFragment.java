@@ -34,6 +34,8 @@ import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cute.utils.Tooltip;
+import ru.etysoft.cute.utils.TooltipScript;
 
 
 public class DialogsFragment extends Fragment {
@@ -83,6 +85,21 @@ public class DialogsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        TooltipScript tooltipScript = new TooltipScript();
+
+        final Tooltip createChatTooltip = new Tooltip(getContext());
+        createChatTooltip.setText("Here you can start a new chat!");
+
+
+        final Tooltip searchChatTooltip = new Tooltip(getContext());
+        searchChatTooltip.setText("Search millions of chats");
+
+        tooltipScript.addTooltip(createChatTooltip, convCreateButton);
+        tooltipScript.addTooltip(searchChatTooltip, convSearchButton);
+
+        tooltipScript.start();
+
 
         final Button error = view.findViewById(R.id.update_dialoglist);
         error.setOnClickListener(new View.OnClickListener() {
@@ -179,10 +196,8 @@ public class DialogsFragment extends Fragment {
                             String firstLetter = name.substring(0, 1);
 
                             boolean readst;
-
                             readst = Numbers.getBooleanFromInt(readed);
                             hasMessages = true;
-
 
                             // Добавляем новый диалог в список
                             adapter.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog, countMembers, cover));
@@ -199,10 +214,8 @@ public class DialogsFragment extends Fragment {
                             } else {
                                 error.setVisibility(View.VISIBLE);
                             }
-
                         } catch (Exception e) {
                         }
-
                     }
 
                     // Обновляем GUI
