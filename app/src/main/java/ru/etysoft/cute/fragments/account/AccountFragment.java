@@ -28,7 +28,6 @@ import ru.etysoft.cute.activities.SettingsActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class AccountFragment extends Fragment {
@@ -104,21 +103,22 @@ public class AccountFragment extends Fragment {
                     if (isSuccess()) {
                         try {
                             JSONObject jsonObject = new JSONObject(getResponse());
-                            final JSONObject data = jsonObject.getJSONObject("data");
-                            String link = Methods.mainDomain + data.getString("photo") + "?size=250";
-                            appSettings.setString("profilePhoto", link);
+                            final JSONObject data = jsonObject.getJSONObject("data").getJSONObject("account");
+                            // String link = Methods.mainDomain + data.getString("photo") + "?size=250";
+                            // appSettings.setString("profilePhoto", link);
                             final TextView id = view.findViewById(R.id.idview);
                             id.setText("u" + data.getString("id"));
                             boolean hasImage = false;
+
+                            String name = data.getString("display_name") + " " + ((data.isNull("display_surname")) ? "" : data.get("display_surname"));
+                            String statusText = data.getString("display_status_text");
+
                             TextView username = view.findViewById(R.id.username);
-                            username.setText(data.getString("nickname"));
-
-                            String statusText = data.getString("status");
-
+                            username.setText(name);
 
                             TextView status = view.findViewById(R.id.status);
 
-                            if (statusText.equals("null")) {
+                            if (data.isNull("display_status_text")) {
                                 status.setText(getResources().getString(R.string.no_status));
 
                             } else {
@@ -127,14 +127,14 @@ public class AccountFragment extends Fragment {
                             }
 
 
-                            hasImage = (!link.equals("null"));
+                            // hasImage = (!link.equals("null"));
 
 
-                            appSettings.setString("username", data.getString("nickname"));
+                            appSettings.setString("username", name);
                             appSettings.setString("id", data.getString("id"));
 
                             if (hasImage) {
-                                Picasso.get().load(link).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(profileImage);
+                                //   Picasso.get().load(link).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(profileImage);
                             } else {
                                 Thread imageThread = new Thread(new Runnable() {
                                     @Override
@@ -142,20 +142,27 @@ public class AccountFragment extends Fragment {
                                         Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
                                                 R.drawable.icon_uber);
                                         final ImageView userPicture = view.findViewById(R.id.userimage);
-                                        try {
-                                            ImagesWorker.setGradient(userPicture, Integer.parseInt(data.getString("id")));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    ImagesWorker.setGradient(userPicture, Integer.parseInt(data.getString("id")));
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
 
                                     }
                                 });
-                                imageThread.run();
+                                imageThread.start();
                             }
 
 
                         } catch (JSONException e) {
-                            CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
+                            //TODO: Сделай здесь красивое отображение ошибки
+                            e.printStackTrace();
+                            // CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
                         }
                     }
                 }

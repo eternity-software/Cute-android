@@ -156,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                         try {
                             JSONObject jsonObject = new JSONObject(getResponse());
                             JSONObject data = jsonObject.getJSONObject("data");
-                            if (data.getString("confirm").equals("N")) {
+                            JSONObject account = data.getJSONObject("account");
+                            if (account.getString("active").equals("n")) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                                         CustomToast.show(getString(R.string.err_confirm), R.drawable.icon_error, MainActivity.this);
                                     }
                                 });
-                            } else if (data.getString("blocked").equals("Y")) {
+                            } else if (account.getString("active").equals("b")) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -191,12 +192,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                                 });
                             }
                         } catch (JSONException e) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, MainActivity.this);
-                                }
-                            });
+                            e.printStackTrace();
+
                         }
 
                     }

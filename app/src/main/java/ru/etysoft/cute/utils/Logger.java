@@ -20,6 +20,10 @@ public class Logger {
         Log.d("[RECEIVE]", text);
     }
 
+    public static void logError(String text) {
+        Log.e("[ERROR]", text);
+    }
+
     public static void logActivity(String text) {
         Log.d("[ACTIVITY]", text);
     }

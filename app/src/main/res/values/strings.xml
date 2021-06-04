@@ -61,8 +61,8 @@
     // Dialogs
     <string name="no_conv_title">Quite and empty...</string>
     <string name="no_conv_text">Oops! Looks like you haven\'t any conversations...</string>
-    <string name="dialogs_error_title">Error</string>
-    <string name="dialogs_error_text">Can\'t load chats</string>
+    <string name="dialogs_error_title">Error loading chats</string>
+    <string name="dialogs_error_text">Can\'t load chats. Try to check your internet connection.</string>
     <string name="dialogs_error_button">Retry</string>
 
     <string name="create_conv_text">Name</string>
@@ -97,7 +97,9 @@
 
     // Account
     <string name="edit_profile">Edit profile</string>
+    <string name="bio">Bio</string>
     <string name="status">Status</string>
+    <string name="surname">Surname</string>
     <string name="no_status">i like pineapples</string>
     <string name="save_profile">Save</string>
 

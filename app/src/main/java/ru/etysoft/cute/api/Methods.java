@@ -14,6 +14,7 @@ import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.requests.GET;
 import ru.etysoft.cute.requests.GetAPI;
 import ru.etysoft.cute.requests.PostAPI;
+import ru.etysoft.cute.requests.Request;
 import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.StringFormatter;
 
@@ -192,24 +193,26 @@ public class Methods {
     }
 
     public static void getMyAccount(String session, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "account.get?session=" + session + options;
-        String methodName = "GETMYACC";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        Request request = new Request("account.get", params, apiRunnable, activity);
+        request.process();
     }
 
     public static void changePassword(String session, String password, String newPassword, APIRunnable apiRunnable, Activity activity) {
         password = StringFormatter.format(password);
         newPassword = StringFormatter.format(newPassword);
 
-        String finalurl = domain + "account.changePassword?session=" + session + "&password=" + password + "&new=" + newPassword + options;
-        String methodName = "CHANGEPASS";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("password", password);
+        params.put("new", newPassword);
+        Request request = new Request("account.changePassword", params, apiRunnable, activity);
+        request.process();
     }
 
     public static void createAccount(String username, String password, String email, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "account.create?nickname=" + username + "&email=" + email + "&password=" + password + options;
+        String finalurl = domain + "account.create?login=" + username + "&email=" + email + "&password=" + password + options;
         String methodName = "CREATEACC";
         Logger.logRequest("GET", methodName + ": " + finalurl);
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);

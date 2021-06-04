@@ -42,7 +42,7 @@ public class GetAPI {
                                 final JSONObject jsonObject = new JSONObject(result);
                                 boolean isSuccess = false;
                                 String code = null;
-                                if (jsonObject.getString("status").equals("success")) {
+                                if (jsonObject.getString("type").equals("success")) {
                                     isSuccess = true;
                                 } else {
                                     code = jsonObject.getString("code");
@@ -59,6 +59,7 @@ public class GetAPI {
                                                 activity.finish();
                                             }
                                             if (!finalCode.equals("#CM003.1") && MainActivity.isDev && !finalCode.equals("#CMM004.1")) {
+                                                CustomToast.show(ErrorCodes.getError(finalCode), R.drawable.icon_error, activity);
                                                 CustomToast.show(ErrorCodes.getError(finalCode), R.drawable.icon_error, activity);
                                             }
                                         }
@@ -83,6 +84,8 @@ public class GetAPI {
                                 });
 
                             } catch (JSONException e) {
+                                e.printStackTrace();
+                                final String finalResult = result;
                                 activity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -91,7 +94,7 @@ public class GetAPI {
                                         afterExecute.setResponse(null);
                                         afterExecute.setErrorCode(null);
                                         afterExecute.run();
-                                        CustomToast.show(activity.getString(R.string.err_json), R.drawable.icon_error, activity);
+                                        Logger.logError("JSON error. Error: " + finalResult);
                                     }
                                 });
                             }
@@ -142,7 +145,7 @@ public class GetAPI {
                         final JSONObject jsonObject = new JSONObject(result);
                         boolean isSuccess = false;
                         String code = null;
-                        if (jsonObject.getString("status").equals("success")) {
+                        if (jsonObject.getString("type").equals("success")) {
                             isSuccess = true;
                         } else {
                             code = jsonObject.getString("code");
@@ -180,7 +183,8 @@ public class GetAPI {
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                CustomToast.show(activity.getString(R.string.err_json), R.drawable.icon_error, activity);
+                                final String finalResult = result;
+                                Logger.logError("JSON error. Error: " + finalResult);
                             }
                         });
                     }

@@ -122,8 +122,8 @@
     <string name="password_warning">Смена пароля приведет к автоматическому сбросу всех активных сессий</string>
     <string name="err_not_sended">Не отправлено</string>
     <string name="sending">Отправка...</string>
-    <string name="dialogs_error_title">Ошибка</string>
-    <string name="dialogs_error_text">Не удалось загрузить чаты</string>
+    <string name="dialogs_error_title">Ошибка загрузки чатов</string>
+    <string name="dialogs_error_text">Не удалось загрузить чаты. Попробуйте проверить подключение к интернету.</string>
     <string name="dialogs_error_button">Повторить</string>
     <string name="signout">Выйти</string>
     <string name="logout">Выйти</string>
@@ -148,4 +148,6 @@
     <string name="perms_title">Разрешения</string>
     <string name="perms_text">Для работы Cute на Вашем устройстве, ему требуются несколько обычных разрешений.</string>
     <string name="conv_nocon">ожидание сети</string>
+    <string name="bio">О себе</string>
+    <string name="surname">Фамилия</string>
 </resources>

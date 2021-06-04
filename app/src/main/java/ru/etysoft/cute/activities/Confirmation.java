@@ -51,7 +51,7 @@ public class Confirmation extends AppCompatActivity {
                     final String response = Methods.sendConfirmationCode(appSettings.getString("session"), code);
                     try {
                         final JSONObject jObject = new JSONObject(response);
-                        String type = jObject.getString("status");
+                        String type = jObject.getString("type");
                         if (type.equals("success")) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -101,7 +101,7 @@ public class Confirmation extends AppCompatActivity {
                         String response = Methods.sendNewConfirmationCode(session);
                         try {
                             final JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("status").equals("success")) {
+                            if (jsonObject.getString("type").equals("success")) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

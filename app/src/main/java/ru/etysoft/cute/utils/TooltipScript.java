@@ -24,7 +24,11 @@ public class TooltipScript {
     }
 
     public void start() {
-        nextTooltip();
+        try {
+            nextTooltip();
+        } catch (Exception e) {
+
+        }
     }
 
     public void nextTooltip() {

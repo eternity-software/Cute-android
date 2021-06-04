@@ -107,7 +107,7 @@ public class NotificationService extends Service {
 
 
                                 JSONObject response = new JSONObject(responseString);
-                                if (response.getString("status").equals("success")) {
+                                if (response.getString("type").equals("success")) {
                                     JSONObject predata = response.getJSONObject("data");
                                     ts = Integer.parseInt(predata.getString("ts"));
                                     JSONArray data = predata.getJSONArray("events");

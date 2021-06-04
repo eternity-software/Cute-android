@@ -15,10 +15,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.requests.attachements.ImageFile;
-import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.Logger;
 
 public class PostAPI {
@@ -74,7 +72,7 @@ public class PostAPI {
                             final JSONObject jsonObject = new JSONObject(result);
                             boolean isSuccess = false;
                             String code = null;
-                            if (jsonObject.getString("status").equals("success")) {
+                            if (jsonObject.getString("type").equals("success")) {
                                 isSuccess = true;
                             } else {
                                 code = jsonObject.getString("code");
@@ -102,6 +100,8 @@ public class PostAPI {
                             });
 
                         } catch (JSONException e) {
+
+                            final String finalResult = result;
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -110,7 +110,7 @@ public class PostAPI {
                                     afterExecute.setResponse(null);
                                     afterExecute.setErrorCode(null);
                                     afterExecute.run();
-                                    CustomToast.show(activity.getString(R.string.err_json), R.drawable.icon_error, activity);
+                                    Logger.logError("JSON error. Error: " + finalResult);
                                 }
                             });
                         }
@@ -152,7 +152,7 @@ public class PostAPI {
                             final JSONObject jsonObject = new JSONObject(result);
                             boolean isSuccess = false;
                             String code = null;
-                            if (jsonObject.getString("status").equals("success")) {
+                            if (jsonObject.getString("type").equals("success")) {
                                 isSuccess = true;
                             } else {
                                 code = jsonObject.getString("code");
@@ -179,6 +179,7 @@ public class PostAPI {
                             });
 
                         } catch (JSONException e) {
+                            final String finalResult = result;
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -187,7 +188,7 @@ public class PostAPI {
                                     afterExecute.setResponse(null);
                                     afterExecute.setErrorCode(null);
                                     afterExecute.run();
-                                    CustomToast.show(activity.getString(R.string.err_json), R.drawable.icon_error, activity);
+                                    Logger.logError("JSON error. Error: " + finalResult);
                                 }
                             });
                         }

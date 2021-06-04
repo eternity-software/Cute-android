@@ -209,12 +209,17 @@ public class DialogsFragment extends Fragment {
                         }
                     } else {
                         try {
-                            if (getErrorCode().equals("timeout")) {
-                                CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
+                            if (getErrorCode() != null) {
+                                if (getErrorCode().equals("timeout")) {
+                                    CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
+                                } else {
+                                    error.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 error.setVisibility(View.VISIBLE);
                             }
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -222,7 +227,8 @@ public class DialogsFragment extends Fragment {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
+                    error.setVisibility(View.VISIBLE);
+                    // CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
                 }
                 frontView.setVisibility(View.INVISIBLE);
             }

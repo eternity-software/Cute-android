@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +62,7 @@ public class Tooltip extends PopupWindow {
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
         Rect location = locateView(parent);
-        Log.d("Fuck", "par" + parent.getY());
+
         super.showAtLocation(parent, Gravity.TOP | Gravity.LEFT, 0, 0);
         int ypos = 0;
         if (parent.getY() < getContentView().getHeight()) {
@@ -71,7 +70,6 @@ public class Tooltip extends PopupWindow {
         } else {
             ypos = (int) parent.getY() - parent.getHeight() - getContentView().getHeight();
         }
-        Log.d("Fuck", "ypos" + ypos);
 
         Animation aniFade2 = AnimationUtils.loadAnimation(context, R.anim.zoom_in);
         getContentView().startAnimation(aniFade2);

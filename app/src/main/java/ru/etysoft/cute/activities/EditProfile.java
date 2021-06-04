@@ -110,7 +110,9 @@ public class EditProfile extends AppCompatActivity {
         HashMap<String, Object> params = new HashMap<String, Object>();
 
         TextView nameView = findViewById(R.id.name);
+        TextView surnameView = findViewById(R.id.surname);
         TextView statusView = findViewById(R.id.status);
+        TextView bioView = findViewById(R.id.bio);
 
         final Button applyButton = findViewById(R.id.applybtn);
         final ProgressBar wait = findViewById(R.id.loading);
@@ -129,11 +131,20 @@ public class EditProfile extends AppCompatActivity {
 
 
         if (!nameView.getText().equals(name)) {
-            params.put("nickname", String.valueOf(nameView.getText()));
+            params.put("display_name", String.valueOf(nameView.getText()));
         }
 
+        if (!surnameView.getText().equals(name)) {
+            params.put("display_surname", String.valueOf(surnameView.getText()));
+        }
+
+        if (!bioView.getText().equals(name)) {
+            params.put("bio", String.valueOf(bioView.getText()));
+        }
+
+
         if (!String.valueOf(statusView.getText()).equals(status)) {
-            params.put("status", String.valueOf(statusView.getText()));
+            params.put("display_status_text", String.valueOf(statusView.getText()));
         }
 
         APIRunnable apiRunnable = new APIRunnable() {

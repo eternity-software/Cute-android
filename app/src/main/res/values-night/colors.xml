@@ -52,6 +52,7 @@
 
     <color name="colorOffline">#425870</color>
     <color name="colorOfflineOutLine">#232D40</color>
+    <color name="colorTooltip">#B0656565</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>

@@ -7,7 +7,7 @@
         android:id="@+id/toolipcontainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_active_mini"
+        android:background="@drawable/tooltip"
         android:orientation="vertical">
 
         <TextView

@@ -62,7 +62,7 @@ public class Signup extends AppCompatActivity {
                         if (isSuccess()) {
                             JSONObject jObject = new JSONObject(this.getResponse());
                             JSONObject data = jObject.getJSONObject("data");
-                            String session = data.getString("session");
+                            String session = data.getString("session_key");
                             appSettings.setString("session", session);
                             appSettings.setString("email", email);
                             runOnUiThread(new Runnable() {

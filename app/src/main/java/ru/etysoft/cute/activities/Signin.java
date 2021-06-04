@@ -50,7 +50,7 @@ public class Signin extends AppCompatActivity {
                             JSONObject jObject = new JSONObject(this.getResponse());
                             AppSettings appSettings = new AppSettings(getApplicationContext());
                             JSONObject data = jObject.getJSONObject("data");
-                            String session = data.getString("session");
+                            String session = data.getString("session_key");
                             appSettings.setString("session", session);
                             runOnUiThread(new Runnable() {
                                 @Override
