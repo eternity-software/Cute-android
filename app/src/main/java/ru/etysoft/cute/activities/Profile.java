@@ -17,6 +17,7 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 
@@ -46,8 +47,9 @@ public class Profile extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                if (isSuccess()) {
-                    try {
+                try {
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
                         JSONObject jsonObject = new JSONObject(getResponse());
                         JSONObject data = jsonObject.getJSONObject("data");
                         String name = data.getString("nickname");
@@ -80,11 +82,11 @@ public class Profile extends AppCompatActivity {
                         TextView username = findViewById(R.id.username);
                         username.setText(name);
 
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
         };
         Methods.getAccount(String.valueOf(id), appSettings.getString("session"), apiRunnable, this);

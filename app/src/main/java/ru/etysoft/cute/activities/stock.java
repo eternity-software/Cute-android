@@ -22,6 +22,7 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.utils.CustomToast;
@@ -48,8 +49,13 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isSuccess()) {
-                            CustomToast.show("Success", R.drawable.icon_success, stock.this);
+                        try {
+                            ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                            if (responseHandler.isSuccess()) {
+                                CustomToast.show("Success", R.drawable.icon_success, stock.this);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 });

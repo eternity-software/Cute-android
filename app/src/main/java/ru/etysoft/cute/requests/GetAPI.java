@@ -73,9 +73,7 @@ public class GetAPI {
                                     public void run() {
                                         try {
                                             afterExecute.setUrl(url);
-                                            afterExecute.setSuccess(finalIsSuccess);
                                             afterExecute.setResponse(result);
-                                            afterExecute.setErrorCode(finalCode1);
                                             afterExecute.run();
                                         } catch (Exception e) {
                                            e.printStackTrace();
@@ -90,9 +88,7 @@ public class GetAPI {
                                     @Override
                                     public void run() {
                                         afterExecute.setUrl(url);
-                                        afterExecute.setSuccess(false);
                                         afterExecute.setResponse(null);
-                                        afterExecute.setErrorCode(null);
                                         afterExecute.run();
                                         Logger.logError("JSON error. Error: " + finalResult);
                                     }
@@ -104,9 +100,7 @@ public class GetAPI {
                                 @Override
                                 public void run() {
                                     afterExecute.setUrl(url);
-                                    afterExecute.setSuccess(false);
                                     afterExecute.setResponse(null);
-                                    afterExecute.setErrorCode("timeout");
                                     afterExecute.run();
                                 }
                             });
@@ -116,9 +110,7 @@ public class GetAPI {
                             @Override
                             public void run() {
                                 afterExecute.setUrl(url);
-                                afterExecute.setSuccess(false);
                                 afterExecute.setResponse(null);
-                                afterExecute.setErrorCode(null);
                                 afterExecute.run();
                                 e.printStackTrace();
                             }
@@ -172,9 +164,7 @@ public class GetAPI {
                             @Override
                             public void run() {
                                 afterExecute.setUrl(url);
-                                afterExecute.setSuccess(finalIsSuccess);
                                 afterExecute.setResponse(result);
-                                afterExecute.setErrorCode(finalCode1);
                                 afterExecute.run();
                             }
                         });

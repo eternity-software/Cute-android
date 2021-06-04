@@ -89,9 +89,7 @@ public class PostAPI {
                                 public void run() {
                                     try {
                                         afterExecute.setUrl(url);
-                                        afterExecute.setSuccess(finalIsSuccess);
                                         afterExecute.setResponse(finalResult);
-                                        afterExecute.setErrorCode(finalCode1);
                                         afterExecute.run();
                                     } catch (Exception e) {
 
@@ -106,9 +104,7 @@ public class PostAPI {
                                 @Override
                                 public void run() {
                                     afterExecute.setUrl(url);
-                                    afterExecute.setSuccess(false);
                                     afterExecute.setResponse(null);
-                                    afterExecute.setErrorCode(null);
                                     afterExecute.run();
                                     Logger.logError("JSON error. Error: " + finalResult);
                                 }
@@ -119,9 +115,7 @@ public class PostAPI {
                             @Override
                             public void run() {
                                 afterExecute.setUrl(url);
-                                afterExecute.setSuccess(false);
                                 afterExecute.setResponse(null);
-                                afterExecute.setErrorCode(null);
                                 afterExecute.run();
                                 e.printStackTrace();
                             }
@@ -168,9 +162,7 @@ public class PostAPI {
                                 public void run() {
                                     try {
                                         afterExecute.setUrl(url);
-                                        afterExecute.setSuccess(finalIsSuccess);
                                         afterExecute.setResponse(result);
-                                        afterExecute.setErrorCode(finalCode1);
                                         afterExecute.run();
                                     } catch (Exception e) {
 
@@ -184,9 +176,7 @@ public class PostAPI {
                                 @Override
                                 public void run() {
                                     afterExecute.setUrl(url);
-                                    afterExecute.setSuccess(false);
                                     afterExecute.setResponse(null);
-                                    afterExecute.setErrorCode(null);
                                     afterExecute.run();
                                     Logger.logError("JSON error. Error: " + finalResult);
                                 }
@@ -197,9 +187,7 @@ public class PostAPI {
                             @Override
                             public void run() {
                                 afterExecute.setUrl(url);
-                                afterExecute.setSuccess(false);
                                 afterExecute.setResponse(null);
-                                afterExecute.setErrorCode(null);
                                 afterExecute.run();
                                 e.printStackTrace();
                             }

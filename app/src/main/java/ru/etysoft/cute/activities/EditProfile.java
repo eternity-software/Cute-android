@@ -32,6 +32,7 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.CustomToast;
@@ -107,7 +108,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     public void apply(View v) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, String> params = new HashMap<String, String>();
 
         TextView nameView = findViewById(R.id.name);
         TextView surnameView = findViewById(R.id.surname);
@@ -126,7 +127,7 @@ public class EditProfile extends AppCompatActivity {
 
         if (image != null) {
 
-            params.put("photo", image);
+            //params.put("photo", image);
         }
 
 
@@ -153,14 +154,20 @@ public class EditProfile extends AppCompatActivity {
                 super.run();
                 applyButton.setVisibility(View.VISIBLE);
                 wait.setVisibility(View.INVISIBLE);
-                if (isSuccess()) {
-                    finish();
-                } else {
-                    if (Methods.hasInternet(getApplicationContext())) {
-                        CustomToast.show(getResources().getString(R.string.err_unknown), R.drawable.icon_error, EditProfile.this);
+
+                try {
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
+                        finish();
                     } else {
-                        CustomToast.show(getResources().getString(R.string.err_no_internet), R.drawable.icon_error, EditProfile.this);
+                        if (Methods.hasInternet(getApplicationContext())) {
+                            CustomToast.show(getResources().getString(R.string.err_unknown), R.drawable.icon_error, EditProfile.this);
+                        } else {
+                            CustomToast.show(getResources().getString(R.string.err_no_internet), R.drawable.icon_error, EditProfile.this);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };

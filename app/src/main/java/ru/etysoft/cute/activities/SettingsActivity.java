@@ -16,6 +16,7 @@ import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
 
@@ -92,8 +93,13 @@ public class SettingsActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     super.run();
-                                    if (!isSuccess()) {
-                                        CustomToast.show(ErrorCodes.getError(getErrorCode()), R.drawable.icon_error, getActivity());
+                                    try {
+                                        ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                                        if (!responseHandler.isSuccess()) {
+                                            CustomToast.show(ErrorCodes.getError(responseHandler.getErrorHandler().getErrorCode()), R.drawable.icon_error, getActivity());
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
                             };

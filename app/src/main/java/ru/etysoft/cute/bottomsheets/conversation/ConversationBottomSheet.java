@@ -56,6 +56,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.CustomToast;
@@ -244,10 +245,16 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 APIRunnable apiRunnable = new APIRunnable() {
                     @Override
                     public void run() {
-                        if (isSuccess()) {
-                            dismiss();
-                            getActivity().finish();
+                        try {
+                            ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                            if (responseHandler.isSuccess()) {
+                                dismiss();
+                                getActivity().finish();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                     }
                 };
 
@@ -281,10 +288,16 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 APIRunnable apiRunnable = new APIRunnable() {
                     @Override
                     public void run() {
-                        if (isSuccess()) {
-                            dismiss();
-                            getActivity().finish();
+                        try {
+                            ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                            if (responseHandler.isSuccess()) {
+                                dismiss();
+                                getActivity().finish();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                     }
                 };
 
@@ -314,8 +327,10 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
-                if (isSuccess()) {
-                    try {
+                try {
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
+
                         JSONObject jsonObject = new JSONObject(getResponse());
                         JSONObject data = jsonObject.getJSONObject("data");
                         name = data.getString("name");
@@ -369,13 +384,12 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         loadMembers(members);
 
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        dismiss();
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     dismiss();
                 }
+
             }
         };
         AppSettings appSettings = new AppSettings(getContext());
@@ -543,7 +557,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     }
 
     public void apply(View v) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, String> params = new HashMap<String, String>();
 
         TextView nameView = view.findViewById(R.id.nameview);
         TextView descriptionView = view.findViewById(R.id.description);
@@ -559,7 +573,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         params.put("cid", cid);
 
         if (image != null) {
-            params.put("photo", image);
+            // params.put("photo", image);
         }
 
         if (!String.valueOf(nameView.getText()).equals(name)) {
@@ -576,15 +590,22 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 super.run();
                 applyButton.setVisibility(View.VISIBLE);
                 wait.setVisibility(View.INVISIBLE);
-                if (isSuccess()) {
-                    dismiss();
-                } else {
-                    if (Methods.hasInternet(getContext())) {
-                        CustomToast.show(getResources().getString(R.string.err_unknown), R.drawable.icon_error, getActivity());
+                try {
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
+                        dismiss();
                     } else {
-                        CustomToast.show(getResources().getString(R.string.err_no_internet), R.drawable.icon_error, getActivity());
+                        if (Methods.hasInternet(getContext())) {
+                            CustomToast.show(getResources().getString(R.string.err_unknown), R.drawable.icon_error, getActivity());
+                        } else {
+                            CustomToast.show(getResources().getString(R.string.err_no_internet), R.drawable.icon_error, getActivity());
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
             }
         };
 

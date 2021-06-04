@@ -22,7 +22,7 @@ public class Request {
         this.apiRunnable = apiRunnable;
     }
 
-    public void process() {
+    public static String getArgsAsString(HashMap params) {
         String args = "?";
 
         for (int i = 0; i < params.keySet().size(); i++) {
@@ -35,9 +35,21 @@ public class Request {
             }
         }
 
-        String finalURL = Methods.domain + method + args + "&" + Methods.options;
+        return args;
+    }
+
+    public void process() {
+        String args = getArgsAsString(params);
+        String finalURL = Methods.domain + method + args + Methods.options;
         Logger.logRequest("GET", "[" + method + "]: " + finalURL);
         GetAPI.execute(finalURL, apiRunnable, activity, method);
+    }
+
+    public void processCache() {
+        String args = getArgsAsString(params);
+        String finalURL = Methods.domain + method + args + Methods.options;
+        Logger.logRequest("CACHEGET", "[" + method + "]: " + finalURL);
+        GetAPI.executeCache(finalURL, apiRunnable, activity, method);
     }
 
 }

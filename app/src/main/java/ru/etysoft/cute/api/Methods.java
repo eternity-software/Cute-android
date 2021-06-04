@@ -8,9 +8,7 @@ import android.net.NetworkInfo;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.requests.GET;
 import ru.etysoft.cute.requests.GetAPI;
 import ru.etysoft.cute.requests.PostAPI;
@@ -41,34 +39,31 @@ public class Methods {
         GetAPI.execute(finalurl, apiRunnable, activity, methodName);
     }
 
-    public static void editChat(HashMap<String, Object> params, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "conversation.edit";
-        String methodName = "EDITCHAT";
-        params.put("v", context.getResources().getString(R.string.api_v));
+    public static void editChat(HashMap<String, String> params, APIRunnable apiRunnable, Activity activity) {
 
-        PostAPI.execute(finalurl, params, apiRunnable, activity, methodName);
+        Request request = new Request("conversation.edit", params, apiRunnable, activity);
+        request.processCache();
     }
 
-    public static void editProfile(HashMap<String, Object> params, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "account.edit";
-        String methodName = "EDITPROFILE";
-        params.put("v", context.getResources().getString(R.string.api_v));
-
-        PostAPI.execute(finalurl, params, apiRunnable, activity, methodName);
+    public static void editProfile(HashMap<String, String> params, APIRunnable apiRunnable, Activity activity) {
+        Request request = new Request("account.edit", params, apiRunnable, activity);
+        request.processCache();
     }
 
     public static void getAccount(String id, String session, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "users.get?id=" + id + "&session=" + session + options;
-        String methodName = "GETPROFILE";
-        Logger.logRequest("GET", "[GETPROFILE]: " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("id", id);
+        Request request = new Request("users.get", params, apiRunnable, activity);
+        request.processCache();
     }
 
     public static void joinChat(String session, String cid, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "conversation.join?session=" + session + "&cid=" + cid + options;
-        String methodName = "JOINCONV";
-        Logger.logRequest("GET", "[JOINCONV]: " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("cid", cid);
+        Request request = new Request("conversation.join", params, apiRunnable, activity);
+        request.processCache();
     }
 
     public static String getPhotoUrl(String resp) {
@@ -78,10 +73,12 @@ public class Methods {
     public static void searchChat(String session, String query, APIRunnable apiRunnable, Activity activity) {
         try {
             query = StringFormatter.format(URLEncoder.encode(query, "UTF-8"));
-            String finalurl = domain + "conversation.search?session=" + session + "&query=" + query + options;
-            String methodName = "SEARCHCONV";
-            Logger.logRequest("GET", "[SEARCHCONV]: " + finalurl);
-            GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("session", session);
+            params.put("query", query);
+            Request request = new Request("conversation.search", params, apiRunnable, activity);
+            request.processCache();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,46 +116,50 @@ public class Methods {
     }
 
     public static void leaveConversation(String session, String cid, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "conversation.leave?session=" + session + "&cid=" + cid + options;
-        String methodName = "LEAVECONV";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("cid", cid);
+        Request request = new Request("conversation.leave", params, apiRunnable, activity);
+        request.process();
     }
 
     public static void deleteConversationLocally(String session, String cid, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "conversation.clear?session=" + session + "&cid=" + cid + options;
-        String methodName = "DELCONVLOCAL";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("cid", cid);
+        Request request = new Request("conversation.clear", params, apiRunnable, activity);
+        request.process();
     }
 
     public static void getConversationInfo(String session, String cid, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "conversation.info?session=" + session + "&cid=" + cid + options;
-        String methodName = "GETCONVINFO";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.executeCache(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("cid", cid);
+        Request request = new Request("conversation.info", params, apiRunnable, activity);
+        request.process();
     }
 
 
     public static void getConversations(String session, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "account.getConversations?session=" + session + options;
-        String methodName = "GETCONVS";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        Request request = new Request("account.getConversations", params, apiRunnable, activity);
+        request.process();
     }
 
     public static void getCacheConversations(String session, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "account.getConversations?session=" + session + options;
-        String methodName = "GETCONVS(cache)";
-        Logger.logRequest("CACHE", methodName + ": " + finalurl);
-        GetAPI.executeCache(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        Request request = new Request("account.getConversations", params, apiRunnable, activity);
+        request.processCache();
     }
 
     public static void getMessages(String session, String cid, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "conversation.getMessages?session=" + session + "&cid=" + cid + options;
-        String methodName = "GETMESSAGES";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.executeCache(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("cid", cid);
+        Request request = new Request("conversation.getMessages", params, apiRunnable, activity);
+        request.process();
     }
 
     public static void sendTextMessage(String session, String message, String cid, APIRunnable apiRunnable, Activity activity) {
@@ -176,14 +177,16 @@ public class Methods {
     }
 
     public static void createConversations(String session, String type, String name, String description, APIRunnable apiRunnable, Activity activity) {
-
         name = StringFormatter.format(name);
         description = StringFormatter.format(description);
 
-        String finalurl = domain + "conversation.create?session=" + session + "&type=" + type + "&name=" + name + "&description=" + description + options;
-        String methodName = "CREATECONV";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        params.put("type", type);
+        params.put("name", name);
+        params.put("description", description);
+        Request request = new Request("conversation.create", params, apiRunnable, activity);
+        request.process();
     }
 
     public static String sendNewConfirmationCode(String session) {
@@ -212,35 +215,37 @@ public class Methods {
     }
 
     public static void createAccount(String username, String password, String email, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "account.create?login=" + username + "&email=" + email + "&password=" + password + options;
-        String methodName = "CREATEACC";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("login", username);
+        params.put("email", email);
+        params.put("password", password);
+        Request request = new Request("account.create", params, apiRunnable, activity);
+        request.process();
     }
 
     public static String getErrorCodes(Context context) {
-        AppSettings appSettings = new AppSettings(context);
-        String finalurl = domain + "system.getErrors?" + options;
-        String methodName = "GETERRCODES";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-
-        if (CacheResponse.hasCache(finalurl, appSettings) && false) {
-            String cachedResponse = CacheResponse.getResponseFromCache(finalurl, appSettings);
-            Logger.logCache(methodName + ": " + cachedResponse);
-            return cachedResponse;
-        } else {
-            String response = GET.execute(finalurl);
-            CacheResponse.saveResponseToCache(finalurl, response, appSettings);
-            return response;
-        }
-
+//        AppSettings appSettings = new AppSettings(context);
+//        String finalurl = domain + "system.getErrors?" + options;
+//        String methodName = "GETERRCODES";
+//        Logger.logRequest("GET", methodName + ": " + finalurl);
+//
+//        if (CacheResponse.hasCache(finalurl, appSettings) && false) {
+//            String cachedResponse = CacheResponse.getResponseFromCache(finalurl, appSettings);
+//            Logger.logCache(methodName + ": " + cachedResponse);
+//            return cachedResponse;
+//        } else {
+//            String response = GET.execute(finalurl);
+//            CacheResponse.saveResponseToCache(finalurl, response, appSettings);
+//            return response;
+//        }
+        return null;
     }
 
     public static void closeSession(String session, APIRunnable apiRunnable, Activity activity) {
-        String finalurl = domain + "account.logout?session=" + session + options;
-        String methodName = "CLOSESESSION";
-        Logger.logRequest("GET", methodName + ": " + finalurl);
-        GetAPI.execute(finalurl, apiRunnable, activity, methodName);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("session", session);
+        Request request = new Request("account.logout", params, apiRunnable, activity);
+        request.process();
     }
 
     public static boolean hasInternet(Context context) {

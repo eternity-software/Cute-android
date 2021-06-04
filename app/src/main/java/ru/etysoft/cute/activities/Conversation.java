@@ -37,6 +37,7 @@ import ru.etysoft.cute.activities.conversation.ConversationInfo;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.utils.CircleTransform;
@@ -248,8 +249,10 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
-                if (isSuccess()) {
-                    try {
+                try {
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
+
                         JSONObject jsonObject = new JSONObject(getResponse());
 
                         JSONObject infomessage = jsonObject.getJSONObject("data");
@@ -262,16 +265,15 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
                         conversationInfo.setMessage(message);
                         conversationInfo.setId(id);
                         conversationInfo.setSubtext(Numbers.getTimeFromTimestamp(time, getApplicationContext()));
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } else {
                         conversationInfo.setSubtext(getString(R.string.err_not_sended));
-                        CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
                     }
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     conversationInfo.setSubtext(getString(R.string.err_not_sended));
+                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
                 }
+
                 adapter.notifyDataSetChanged();
             }
         };
@@ -311,16 +313,22 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
             @Override
             public void run() {
                 LinearLayout loadingLayot = findViewById(R.id.error);
-                if (isSuccess()) {
-                    processListUpdate(getResponse());
-                    loadingLayot.setVisibility(View.INVISIBLE);
-                } else {
+                try {
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
+                        processListUpdate(getResponse());
+                        loadingLayot.setVisibility(View.INVISIBLE);
+                    } else {
 
-                    if (isEmpty) {
-                        loadingLayot.setVisibility(View.VISIBLE);
+                        if (isEmpty) {
+                            loadingLayot.setVisibility(View.VISIBLE);
+                        }
+                        Methods.getMessages(appSettings.getString("session"), cid, this, Conversation.this);
                     }
-                    Methods.getMessages(appSettings.getString("session"), cid, this, Conversation.this);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
         };
 

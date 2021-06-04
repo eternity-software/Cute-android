@@ -12,13 +12,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
@@ -152,8 +152,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
                 @Override
                 public void run() {
-                    if (isSuccess()) {
-                        try {
+                    try {
+                        ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                        if (responseHandler.isSuccess()) {
                             JSONObject jsonObject = new JSONObject(getResponse());
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONObject account = data.getJSONObject("account");
@@ -191,11 +192,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                                     }
                                 });
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-
                         }
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             };

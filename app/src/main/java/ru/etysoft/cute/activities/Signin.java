@@ -7,13 +7,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.utils.CustomToast;
 
 public class Signin extends AppCompatActivity {
@@ -45,8 +45,10 @@ public class Signin extends AppCompatActivity {
                 @Override
                 public void run() {
 
+
                     try {
-                        if (isSuccess()) {
+                        ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                        if (responseHandler.isSuccess()) {
                             JSONObject jObject = new JSONObject(this.getResponse());
                             AppSettings appSettings = new AppSettings(getApplicationContext());
                             JSONObject data = jObject.getJSONObject("data");
@@ -61,14 +63,17 @@ public class Signin extends AppCompatActivity {
                                 }
                             });
                         }
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Signin.this);
                             }
                         });
+                        e.printStackTrace();
                     }
+
+
                 }
 
             };

@@ -10,6 +10,7 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
 
@@ -32,11 +33,16 @@ public class PasswordChange extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isSuccess()) {
-                            CustomToast.show(getString(R.string.pass_success), R.drawable.icon_success, PasswordChange.this);
-                            finish();
-                        } else {
-                            CustomToast.show(ErrorCodes.getError(getErrorCode()), R.drawable.icon_error, PasswordChange.this);
+                        try {
+                            ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                            if (responseHandler.isSuccess()) {
+                                CustomToast.show(getString(R.string.pass_success), R.drawable.icon_success, PasswordChange.this);
+                                finish();
+                            } else {
+                                CustomToast.show(ErrorCodes.getError(responseHandler.getErrorHandler().getErrorCode()), R.drawable.icon_error, PasswordChange.this);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 });

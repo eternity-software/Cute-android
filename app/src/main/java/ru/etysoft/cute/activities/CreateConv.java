@@ -13,6 +13,7 @@ import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.StringFormatter;
 
@@ -38,10 +39,17 @@ public class CreateConv extends AppCompatActivity {
         APIRunnable apiRunnable = new APIRunnable() {
             @Override
             public void run() {
-                if (isSuccess()) {
-                    CustomToast.show(getString(R.string.create_success), R.drawable.icon_success, CreateConv.this);
-                    onBackPressed();
+
+                try {
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
+                        CustomToast.show(getString(R.string.create_success), R.drawable.icon_success, CreateConv.this);
+                        onBackPressed();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
         };
         String formattedName = StringFormatter.format(nameView.getText().toString());

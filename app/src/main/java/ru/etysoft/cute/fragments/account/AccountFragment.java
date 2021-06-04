@@ -27,6 +27,7 @@ import ru.etysoft.cute.activities.EditProfile;
 import ru.etysoft.cute.activities.SettingsActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 
@@ -100,8 +101,9 @@ public class AccountFragment extends Fragment {
             APIRunnable apiRunnable = new APIRunnable() {
                 @Override
                 public void run() {
-                    if (isSuccess()) {
-                        try {
+                    try {
+                        ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                        if (responseHandler.isSuccess()) {
                             JSONObject jsonObject = new JSONObject(getResponse());
                             final JSONObject data = jsonObject.getJSONObject("data").getJSONObject("account");
                             // String link = Methods.mainDomain + data.getString("photo") + "?size=250";
@@ -157,13 +159,11 @@ public class AccountFragment extends Fragment {
                                 });
                                 imageThread.start();
                             }
-
-
-                        } catch (JSONException e) {
-                            //TODO: Сделай здесь красивое отображение ошибки
-                            e.printStackTrace();
-                            // CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
                         }
+                    } catch (Exception e) {
+                        //TODO: Сделай здесь красивое отображение ошибки
+                        e.printStackTrace();
+                        // CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
                     }
                 }
             };

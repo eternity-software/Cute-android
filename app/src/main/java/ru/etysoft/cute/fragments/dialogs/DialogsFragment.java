@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,6 +30,7 @@ import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.activities.dialogs.DialogInfo;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.Numbers;
@@ -151,12 +151,8 @@ public class DialogsFragment extends Fragment {
                 try {
 
 
-
-                    // Проверка на успешный запрос
-                    if (isSuccess()) {
-
-                        //TODO: УБРАТЬ
-                        // Очищаем список
+                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
+                    if (responseHandler.isSuccess()) {
                         dialogInfos.clear();
                         adapter.clear();
 
@@ -208,28 +204,22 @@ public class DialogsFragment extends Fragment {
                             CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
                         }
                     } else {
-                        try {
-                            if (getErrorCode() != null) {
-                                if (getErrorCode().equals("timeout")) {
-                                    CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
-                                } else {
-                                    error.setVisibility(View.VISIBLE);
-                                }
+                        if (responseHandler.getErrorHandler().getErrorCode() != null) {
+                            if (responseHandler.getErrorHandler().getErrorCode().equals("timeout")) {
+                                CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
                             } else {
                                 error.setVisibility(View.VISIBLE);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } else {
+                            error.setVisibility(View.VISIBLE);
                         }
                     }
-
-                    // Обновляем GUI
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
                     error.setVisibility(View.VISIBLE);
-                    // CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, getActivity());
+                    e.printStackTrace();
                 }
+
+
                 frontView.setVisibility(View.INVISIBLE);
             }
         };
