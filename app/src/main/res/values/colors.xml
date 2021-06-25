@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorAccent">#B83ADE</color>
+    <color name="colorAccent">#526FFF</color>
     <color name="colorAccentNegative">#7F568C</color>
     <color name="colorPrimaryDark">#707070</color>
     <color name="colorPrimaryGray">#C1C1C1</color>
     <color name="colorLightGray">#D9D9D9</color>
     <color name="colorUnderWhite">#F9F9F9</color>
-    <color name="colorMain">#B83ADE</color>
-    <color name="colorMainSupport">#A426DF</color>
-    <color name="colorMainLight">#E365EC</color>
+    <color name="colorMain">#526FFF</color>
+    <color name="colorMainSupport">#526FFF</color>
+    <color name="colorMainLight">#526FFF</color>
     <color name="colorOrange">#FF4F00</color>
     <color name="colorLightLGray">#F5F5F5</color>
     <color name="colorEtysoft">#4A98FF</color>
@@ -24,8 +24,8 @@
 
     <color name="colorBackButton">#D8D8D8</color>
     <color name="colorButtonText">#FFFFFF</color>
-    <color name="colorButtonMain">#B83ADE</color>
-    <color name="colorButtonMainSupport">#A426DF</color>
+    <color name="colorButtonMain">#526FFF</color>
+    <color name="colorButtonMainSupport">#526FFF</color>
 
 
     <color name="colorPassiveMini">#ECECEC</color>
@@ -36,7 +36,7 @@
     <color name="colorBackgroundElements">#D6D6D6</color>
     <color name="colorFrontElements">#A2A2A2</color>
     <color name="colorText">#252525</color>
-    <color name="colorMainText">#B83ADE</color>
+    <color name="colorMainText">#526FFF</color>
     <color name="colorError">#EA3939</color>
     <color name="colorSuccess">#4CAF50</color>
     <color name="colorDivider">#F4F4F4</color>
@@ -46,9 +46,9 @@
 
     <color name="colorSupportText">#616161</color>
     <color name="colorButtonTrans">#707070</color>
-    <color name="colorButtonCircle">#B83ADE</color>
+    <color name="colorButtonCircle">#526FFF</color>
 
-    <color name="colorMessage">#B83ADE</color>
+    <color name="colorMessage">#526FFF</color>
     <color name="colorAlt">#526FFF</color>
     <color name="colorAltSupport">#3F57CD</color>
     <color name="colorNotReaded">#F4F4F4</color>

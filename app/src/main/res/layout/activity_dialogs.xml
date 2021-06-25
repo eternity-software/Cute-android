@@ -85,14 +85,14 @@
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
             android:layout_height="118dp"
             app:srcCompat="@drawable/icon_nomessages"
-            app:tint="@color/colorMainText" />
+            app:tint="@color/colorBackgroundElements" />
 
         <TextView
             android:id="@+id/textView6"

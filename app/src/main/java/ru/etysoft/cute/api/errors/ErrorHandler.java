@@ -13,7 +13,7 @@ public class ErrorHandler {
     }
 
     public boolean isSessionExpired() {
-        return errorCodes.has("This session is fuu..!");
+        return errorCodes.has("Authorization unsuccessful");
     }
 
     public String getErrorCode() {

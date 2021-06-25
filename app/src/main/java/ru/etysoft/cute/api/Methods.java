@@ -20,7 +20,7 @@ public class Methods {
 
     public static String domain = "https://api.mcute.ru/";
     public static String mainDomain = "https://mcute.ru/";
-    public static String options = "&v=V0001";
+    public static String options = "&v=b001";
     public static Context context;
 
     public static void initialize(Context context) {
@@ -118,24 +118,24 @@ public class Methods {
     public static void leaveConversation(String session, String cid, APIRunnable apiRunnable, Activity activity) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("session", session);
-        params.put("cid", cid);
-        Request request = new Request("conversation.leave", params, apiRunnable, activity);
+        params.put("id", cid);
+        Request request = new Request("message.leaveConversation", params, apiRunnable, activity);
         request.process();
     }
 
     public static void deleteConversationLocally(String session, String cid, APIRunnable apiRunnable, Activity activity) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("session", session);
-        params.put("cid", cid);
-        Request request = new Request("conversation.clear", params, apiRunnable, activity);
+        params.put("id", cid);
+        Request request = new Request("message.removeHistory", params, apiRunnable, activity);
         request.process();
     }
 
     public static void getConversationInfo(String session, String cid, APIRunnable apiRunnable, Activity activity) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("session", session);
-        params.put("cid", cid);
-        Request request = new Request("conversation.info", params, apiRunnable, activity);
+        params.put("id", cid);
+        Request request = new Request("message.getConversation", params, apiRunnable, activity);
         request.process();
     }
 
@@ -166,8 +166,8 @@ public class Methods {
 
         try {
             message = StringFormatter.format(URLEncoder.encode(message, "UTF-8"));
-            String finalurl = domain + "conversation.send";
-            String params = "session=" + session + "&cid=" + cid + "&text=" + message + options;
+            String finalurl = domain + "message.send";
+            String params = "session=" + session + "&id=" + cid + "&text=" + message + options;
             String methodName = "SENDTEXTMESSAGE";
             Logger.logRequest("POST", methodName + ": " + finalurl + "?" + params);
             PostAPI.executeGET(finalurl, params, apiRunnable, activity, methodName);
@@ -183,9 +183,9 @@ public class Methods {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("session", session);
         params.put("type", type);
-        params.put("name", name);
+        params.put("title", name);
         params.put("description", description);
-        Request request = new Request("conversation.create", params, apiRunnable, activity);
+        Request request = new Request("message.createConversation", params, apiRunnable, activity);
         request.process();
     }
 

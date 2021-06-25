@@ -162,21 +162,21 @@ public class DialogsFragment extends Fragment {
 
                         // Обрабатываем ответ
                         JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONArray data = jsonObject.getJSONArray("data");
+                        JSONArray data = jsonObject.getJSONObject("data").getJSONArray("conversations");
 
                         boolean hasMessages = false;
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject conv = data.getJSONObject(i);
-                            final String name = conv.getString("name");
+                            final String name = conv.getString("title");
                             final String message = conv.getString("text");
                             final String cid = conv.getString("id");
                             final String time = conv.getString("time");
-                            final String countMembers = conv.getString("countMembers");
-                            final int readed = conv.getInt("readed");
-                            final int countReaded = conv.getInt("countReaded");
-                            final int online = conv.getInt("online");
-                            final int personal = conv.getInt("personal");
-                            final String cover = conv.getString("cover");
+                            final String countMembers = "1";
+                            final int readed = 1;
+                            final int countReaded = 1;
+                            final int online = 1;
+                            final int personal = 0;
+                            final String cover = "null";
 
                             boolean isonline;
                             boolean isDialog;
