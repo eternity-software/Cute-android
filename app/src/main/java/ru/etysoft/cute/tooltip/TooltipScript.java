@@ -1,10 +1,12 @@
-package ru.etysoft.cute.utils;
+package ru.etysoft.cute.tooltip;
 
 import android.view.View;
 import android.widget.PopupWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import ru.etysoft.cute.utils.Numbers;
 
 public class TooltipScript {
 

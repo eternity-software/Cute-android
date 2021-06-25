@@ -1,4 +1,4 @@
-package ru.etysoft.cute.utils;
+package ru.etysoft.cute.tooltip;
 
 import android.content.Context;
 import android.graphics.Rect;

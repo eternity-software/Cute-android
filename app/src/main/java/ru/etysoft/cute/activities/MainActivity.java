@@ -100,10 +100,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         // Инициализация навигации
         setupNavigation();
         Permissions.checkAvailble(this);
-
-        //
-
-
     }
 
 

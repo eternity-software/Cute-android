@@ -32,10 +32,10 @@ import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.requests.CacheResponse;
+import ru.etysoft.cute.tooltip.Tooltip;
+import ru.etysoft.cute.tooltip.TooltipScript;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.Numbers;
-import ru.etysoft.cute.utils.Tooltip;
-import ru.etysoft.cute.utils.TooltipScript;
 
 
 public class DialogsFragment extends Fragment {
