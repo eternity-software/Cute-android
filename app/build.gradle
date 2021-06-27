@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.r0adkll:slidableactivity:2.1.0'
+
     implementation 'com.squareup.okhttp3:okhttp:4.8.1'
     //noinspection GradleCompatible
     implementation 'com.android.support:design:26.1.0'

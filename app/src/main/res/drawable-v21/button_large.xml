@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/colorBackgroundElements">
+    android:color="@color/colorLightGray">
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-
-        <solid android:color="@color/colorBackground" />
+            <solid android:color="@color/colorLightLGray" />
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
                 android:right="1dp"
                 android:top="1dp" />
-            <corners android:radius="100dp" />
+            <corners android:radius="15dp" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorBackground" />
+
+            <solid android:color="@color/colorLightLGray" />
 
             <padding
                 android:bottom="1dp"
@@ -23,7 +23,7 @@
                 android:right="1dp"
                 android:top="1dp" />
 
-            <corners android:radius="100dp" />
+            <corners android:radius="15dp" />
 
         </shape>
 

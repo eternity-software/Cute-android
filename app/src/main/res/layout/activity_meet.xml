@@ -4,14 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:theme="@style/AppSlideTheme"
+    android:background="@color/colorMain"
+    android:theme="@style/MeetTheme"
+
     tools:context=".activities.Meet">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="80dp"
+        android:paddingTop="50dp"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_ety" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/icon_cloud" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
+
+        android:scaleX="-1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:srcCompat="@drawable/icon_cloud" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
@@ -25,18 +58,11 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/logo_outlined" />
+            android:layout_height="100dp"
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textColor="@color/colorText"
-            android:textSize="55sp" />
+            android:layout_marginHorizontal="80dp"
+            app:srcCompat="@drawable/logo_texted" />
+
 
         <TextView
             android:id="@+id/subTextView"
@@ -44,8 +70,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
             android:gravity="center"
+            android:layout_marginTop="10dp"
             android:text="@string/app_subtext"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorWhite"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -55,37 +82,70 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="14dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
 
-        <Button
-            android:id="@+id/button2"
-            style="?android:attr/borderlessButtonStyle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_passive"
-            android:fontFamily="@font/montserrat"
+            android:layout_height="60dp"
             android:onClick="goSignIn"
-            android:text="@string/sign_in"
-            android:textSize="18sp" />
+            android:background="@drawable/button_large"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button"
-            style="?android:attr/borderlessButtonStyle"
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:srcCompat="@drawable/icon_signin"
+                app:tint="@color/colorPrimaryDark" />
+
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratmedium"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:text="@string/sign_in"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_active"
-            android:fontFamily="@font/montserratmedium"
+            android:layout_height="60dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/button_large_active"
+            android:gravity="center"
             android:onClick="goSignUp"
-            android:text="@string/sign_up"
-            android:textColor="@color/colorButtonText"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:srcCompat="@drawable/icon_signup"
+                app:tint="@color/colorWhite" />
+
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratmedium"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:text="@string/sign_up"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

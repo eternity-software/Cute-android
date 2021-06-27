@@ -13,8 +13,10 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,11 +88,11 @@
                     android:foregroundGravity="left|clip_horizontal"
                     android:hint="@string/login"
                     android:inputType="textPersonName"
+                    android:textColorHint="@color/colorHint"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColor="@color/colorText" />
-
 
 
                 <EditText
@@ -106,10 +108,58 @@
                     android:foregroundGravity="left|clip_horizontal"
                     android:hint="@string/password"
                     android:inputType="textPassword"
+                    android:textColorHint="@color/colorHint"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColor="@color/colorText" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/square_rounded_top"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingVertical="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="5dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@drawable/button_passive"
+                android:gravity="center_vertical"
+                android:onClick="back"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/button7"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:fontFamily="@font/montserrat"
+
+                    android:padding="10dp"
+
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorText"
+                    android:textSize="18sp"
+                    app:srcCompat="@drawable/icon_back_arrow" />
+
+
             </LinearLayout>
 
             <Button
@@ -117,67 +167,40 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="40dp"
-                android:background="@drawable/button_active"
-                android:fontFamily="@font/montserratmedium"
-                android:onClick="signInButton"
-                android:text="@string/sign_in"
-                android:textColor="@color/colorButtonText"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/button7"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/button_passive"
                 android:fontFamily="@font/montserrat"
-                android:onClick="back"
+                android:onClick="signInButton"
+                android:text="@string/next"
                 android:textAllCaps="false"
-                android:text="@string/back"
-                android:textColor="@color/colorText"
+                android:textColor="@color/colorPassiveButtonText"
                 android:textSize="18sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="40dp"
-                    android:fontFamily="@font/montserrat"
-                    android:gravity="center"
-                    android:text="@string/sign_in_sub_privacy_policy"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
-                    android:fontFamily="@font/montserratmedium"
-                    android:gravity="center"
-                    android:text="@string/privacy_policy"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="14sp" />
-
-
-            </LinearLayout>
-
-
         </LinearLayout>
-    </ScrollView>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center"
+            android:text="@string/sign_in_sub_privacy_policy"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:fontFamily="@font/montserratmedium"
+            android:gravity="center"
+            android:text="@string/privacy_policy"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
