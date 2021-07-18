@@ -91,7 +91,7 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".activities.Meet"
+            android:name=".activities.Meet.MeetActivity"
             android:theme="@style/MeetTheme" />
         <activity
             android:name=".activities.stock"

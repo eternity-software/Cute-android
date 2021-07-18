@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Meet.MeetActivity;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
@@ -33,7 +34,7 @@ public class Confirmation extends AppCompatActivity {
 
     public void back(View v) {
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
-        Intent intent = new Intent(Confirmation.this, Meet.class);
+        Intent intent = new Intent(Confirmation.this, MeetActivity.class);
         startActivity(intent);
     }
 

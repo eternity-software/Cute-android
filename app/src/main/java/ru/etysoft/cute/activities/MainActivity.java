@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Meet.MeetActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.api.response.ResponseHandler;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
         // Проверка сессии
         if (appSettings.getString("session") == null) {
-            Intent intent = new Intent(MainActivity.this, Meet.class);
+            Intent intent = new Intent(MainActivity.this, MeetActivity.class);
             AppSettings appSettings = new AppSettings(this);
             appSettings.clean();
             startActivity(intent);
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                                             View.OnClickListener onClickListener = new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    Intent intent = new Intent(MainActivity.this, Meet.class);
+                                                    Intent intent = new Intent(MainActivity.this, MeetActivity.class);
                                                     startActivity(intent);
                                                     floatingBottomSheet.dismiss();
                                                 }
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             Methods.getMyAccount(session, apiRunnable, MainActivity.this);
         } else {
             if (!isbanned) {
-                Intent intent = new Intent(MainActivity.this, Meet.class);
+                Intent intent = new Intent(MainActivity.this, MeetActivity.class);
                 AppSettings appSettings = new AppSettings(this);
                 appSettings.clean();
                 startActivity(intent);

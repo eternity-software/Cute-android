@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Meet.MeetActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.api.response.ResponseHandler;
@@ -89,7 +90,7 @@ public class Signin extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
-        Intent intent = new Intent(Signin.this, Meet.class);
+        Intent intent = new Intent(Signin.this, MeetActivity.class);
         startActivity(intent);
         finish();
     }

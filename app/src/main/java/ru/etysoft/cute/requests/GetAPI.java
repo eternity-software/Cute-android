@@ -15,7 +15,7 @@ import okhttp3.Response;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.MainActivity;
-import ru.etysoft.cute.activities.Meet;
+import ru.etysoft.cute.activities.Meet.MeetActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.CustomToast;
@@ -52,7 +52,7 @@ public class GetAPI {
                                         @Override
                                         public void run() {
                                             if (finalCode.equals("#AM003.2") | finalCode.equals("#AM003.1")) {
-                                                Intent intent = new Intent(activity, Meet.class);
+                                                Intent intent = new Intent(activity, MeetActivity.class);
                                                 AppSettings appSettings = new AppSettings(activity);
                                                 appSettings.clean();
                                                 activity.startActivity(intent);
@@ -146,7 +146,7 @@ public class GetAPI {
                                 @Override
                                 public void run() {
                                     if (finalCode.equals("#AM003.2") | finalCode.equals("#AM003.1")) {
-                                        Intent intent = new Intent(activity, Meet.class);
+                                        Intent intent = new Intent(activity, MeetActivity.class);
                                         AppSettings appSettings = new AppSettings(activity);
                                         appSettings.clean();
                                         activity.startActivity(intent);

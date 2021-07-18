@@ -14,6 +14,7 @@ import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Meet.MeetActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.api.response.ResponseHandler;
@@ -105,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
                             };
                             Methods.closeSession(appSettings.getString("session"), apiRunnable, getActivity());
                             appSettings.clean();
-                            Intent meet = new Intent(getActivity(), Meet.class);
+                            Intent meet = new Intent(getActivity(), MeetActivity.class);
                             getActivity().startActivity(meet);
                         }
                     };

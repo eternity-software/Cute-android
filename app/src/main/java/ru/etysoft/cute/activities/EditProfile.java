@@ -30,9 +30,6 @@ import java.util.HashMap;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.CustomToast;
@@ -64,6 +61,7 @@ public class EditProfile extends AppCompatActivity {
         TextView nameView = findViewById(R.id.name);
         TextView statusView = findViewById(R.id.status);
         ImageView imageView = findViewById(R.id.progileImage);
+
 
         if (urlPhoto != null) {
             Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).memoryPolicy(MemoryPolicy.NO_CACHE).transform(new CircleTransform()).into(imageView);

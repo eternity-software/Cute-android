@@ -20,6 +20,7 @@ import com.r0adkll.slidr.model.SlidrPosition;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Meet.MeetActivity;
 import ru.etysoft.cute.api.APIRunnable;
 import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.api.response.ResponseHandler;
@@ -91,7 +92,7 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
 
 
     public void showMeet(View v) {
-        Intent intent = new Intent(stock.this, Meet.class);
+        Intent intent = new Intent(stock.this, MeetActivity.class);
         startActivity(intent);
     }
 
