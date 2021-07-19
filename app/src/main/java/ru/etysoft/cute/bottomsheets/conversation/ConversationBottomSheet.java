@@ -3,7 +3,6 @@ package ru.etysoft.cute.bottomsheets.conversation;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -32,8 +31,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.r0adkll.slidr.Slidr;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,15 +50,8 @@ import java.util.List;
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.ImagePreview;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.requests.attachements.ImageFile;
-import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
-import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.Numbers;
 
 import static android.app.Activity.RESULT_OK;
@@ -102,35 +92,16 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
     }
 
-    private final NetworkStateReceiver stateReceiver = new NetworkStateReceiver();
+
 
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().unregisterReceiver(stateReceiver);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        getActivity().registerReceiver(stateReceiver, filter);
-        stateReceiver.runnable = new Runnable() {
-            @Override
-            public void run() {
-
-                if (Methods.hasInternet(getActivity())) {
-                    membersCount = 0;
-                    setContent();
-                } else {
-                    TextView membersCountTextView = view.findViewById(R.id.membersCount);
-                    membersCountTextView.setText(getResources().getString(R.string.conv_nocon));
-                }
-
-
-            }
-        };
     }
 
     private List<MemberInfo> memberInfos = new ArrayList<>();
@@ -236,29 +207,13 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
 
     public void exit() {
-
+        // TODO: logout
         Runnable toRun = new Runnable() {
             @Override
             public void run() {
                 AppSettings appSettings = new AppSettings(getContext());
 
-                APIRunnable apiRunnable = new APIRunnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                            if (responseHandler.isSuccess()) {
-                                dismiss();
-                                getActivity().finish();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
-                    }
-                };
-
-                Methods.leaveConversation(appSettings.getString("session"), cid, apiRunnable, getActivity());
             }
         };
         Runnable cancel = new Runnable() {
@@ -266,11 +221,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             public void run() {
                 AppSettings appSettings = new AppSettings(getContext());
 
-                APIRunnable apiRunnable = new APIRunnable() {
-                    @Override
-                    public void run() {
-                    }
-                };
+
             }
         };
         dismiss();
@@ -280,28 +231,14 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
     public void delete() {
 
+        // TODO: clear API
+
         Runnable toRun = new Runnable() {
             @Override
             public void run() {
                 AppSettings appSettings = new AppSettings(getContext());
 
-                APIRunnable apiRunnable = new APIRunnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                            if (responseHandler.isSuccess()) {
-                                dismiss();
-                                getActivity().finish();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
-                    }
-                };
-
-                Methods.deleteConversationLocally(appSettings.getString("session"), cid, apiRunnable, getActivity());
             }
         };
         Runnable cancel = new Runnable() {
@@ -309,11 +246,6 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             public void run() {
                 AppSettings appSettings = new AppSettings(getContext());
 
-                APIRunnable apiRunnable = new APIRunnable() {
-                    @Override
-                    public void run() {
-                    }
-                };
             }
         };
         dismiss();
@@ -324,98 +256,6 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     // Задаём контент
     private void setContent() {
 
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                try {
-                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                    if (responseHandler.isSuccess()) {
-
-                        JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        name = data.getString("name");
-                        int id = data.getInt("id");
-                        descriptionText = data.getString("description");
-
-                        String cover = data.getString("cover");
-
-                        JSONArray members = data.getJSONArray("members");
-
-                        TextView nameview = view.findViewById(R.id.conv_name);
-                        TextView descview = view.findViewById(R.id.conv_desc);
-
-                        TextView nameview2 = view.findViewById(R.id.nameview);
-                        TextView descview2 = view.findViewById(R.id.description);
-
-                        TextView acronymview = view.findViewById(R.id.conv_acronym);
-                        TextView acronymview2 = view.findViewById(R.id.acronym_edit);
-
-                        ImageView icon = view.findViewById(R.id.icon);
-                        ImageView icon2 = view.findViewById(R.id.icon_edit);
-
-                        acronymview.setText(name.substring(0, 1).toUpperCase());
-                        acronymview2.setText(name.substring(0, 1).toUpperCase());
-
-                        if (!cover.equals("null")) {
-                            final String finalCover = cover;
-                            icon.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    Intent intent = new Intent(getActivity(), ImagePreview.class);
-                                    intent.putExtra("url", finalCover);
-                                    startActivity(intent);
-                                }
-                            });
-                            cover = cover + "?size=300";
-                            acronymview.setVisibility(View.INVISIBLE);
-                            acronymview2.setText("");
-                            Picasso.get().load(Methods.getPhotoUrl(cover)).placeholder(getResources().getDrawable(R.drawable.circle_gray)).memoryPolicy(MemoryPolicy.NO_CACHE).transform(new CircleTransform()).into(icon);
-                            Picasso.get().load(Methods.getPhotoUrl(cover)).placeholder(getResources().getDrawable(R.drawable.circle_gray)).memoryPolicy(MemoryPolicy.NO_CACHE).transform(new CircleTransform()).into(icon2);
-                        }
-
-
-                        nameview.setText(name);
-                        descview.setText(descriptionText);
-
-                        nameview2.setText(name);
-                        descview2.setText(descriptionText);
-
-                        loadMembers(members);
-
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    dismiss();
-                }
-
-            }
-        };
-        AppSettings appSettings = new AppSettings(getContext());
-
-        view.findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-
-        view.findViewById(R.id.acronym_edit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectPhoto();
-            }
-        });
-
-        view.findViewById(R.id.applybtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                apply(v);
-            }
-        });
-
-        Methods.getConversationInfo(appSettings.getString("session"), cid, apiRunnable, getActivity());
     }
 
     @Override
@@ -584,33 +424,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             params.put("description", String.valueOf(descriptionView.getText()));
         }
 
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                super.run();
-                applyButton.setVisibility(View.VISIBLE);
-                wait.setVisibility(View.INVISIBLE);
-                try {
-                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                    if (responseHandler.isSuccess()) {
-                        dismiss();
-                    } else {
-                        if (Methods.hasInternet(getContext())) {
-                            CustomToast.show(getResources().getString(R.string.err_unknown), R.drawable.icon_error, getActivity());
-                        } else {
-                            CustomToast.show(getResources().getString(R.string.err_no_internet), R.drawable.icon_error, getActivity());
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        };
-
-
-        Methods.editChat(params, apiRunnable, getActivity());
+        // TODO: edit
 
 
     }

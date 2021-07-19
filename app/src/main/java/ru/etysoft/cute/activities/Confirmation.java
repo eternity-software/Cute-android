@@ -8,15 +8,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Meet.MeetActivity;
-import ru.etysoft.cute.api.Methods;
+import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.utils.CustomToast;
-import ru.etysoft.cute.utils.ErrorCodes;
 
 public class Confirmation extends AppCompatActivity {
 
@@ -45,105 +40,10 @@ public class Confirmation extends AppCompatActivity {
         final String code = codeView.getText().toString();
 
 
-        if (Methods.hasInternet(this)) {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final String response = Methods.sendConfirmationCode(appSettings.getString("session"), code);
-                    try {
-                        final JSONObject jObject = new JSONObject(response);
-                        String type = jObject.getString("type");
-                        if (type.equals("success")) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(Confirmation.this, MainActivity.class);
-                                    startActivity(intent);
-                                    CustomToast.show(getString(R.string.sign_up_success), R.drawable.icon_success, Confirmation.this);
-                                }
-                            });
-                        } else if (type.equals("error")) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        CustomToast.show(ErrorCodes.getError(jObject.getString("code")), R.drawable.icon_error, Confirmation.this);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
-                    } catch (JSONException e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Confirmation.this);
-                            }
-                        });
-                    }
-                }
-            });
-            thread.start();
-        } else {
-            CustomToast.show(getString(R.string.err_no_internet), R.drawable.icon_error, Confirmation.this);
-        }
-
     }
 
     public void sendAnotherConfirmationCode(View v) {
-        if (Methods.hasInternet(this)) {
-            final Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    AppSettings appSettings = new AppSettings(getApplicationContext());
-                    String session = appSettings.getString("session");
-                    if (session != null) {
-                        String response = Methods.sendNewConfirmationCode(session);
-                        try {
-                            final JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("type").equals("success")) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CustomToast.show(getString(R.string.confirmation_send), R.drawable.icon_success, Confirmation.this);
-                                    }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            CustomToast.show(ErrorCodes.getError(jsonObject.getString("code")), R.drawable.icon_error, Confirmation.this);
-                                        } catch (JSONException e) {
-                                            CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Confirmation.this);
-                                        }
-                                    }
-                                });
-                            }
-                        } catch (JSONException e) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Confirmation.this);
-                                }
-                            });
-                        }
 
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                CustomToast.show(getString(R.string.errcode_AM003_1), R.drawable.icon_error, Confirmation.this);
-                            }
-                        });
-                    }
-                }
-            });
-            thread.start();
-        } else {
-            CustomToast.show(getString(R.string.err_no_internet), R.drawable.icon_error, Confirmation.this);
-        }
     }
 
 

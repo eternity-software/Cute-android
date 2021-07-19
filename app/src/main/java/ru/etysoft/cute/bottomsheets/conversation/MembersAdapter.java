@@ -9,14 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Profile;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class MembersAdapter extends ArrayAdapter<MemberInfo> {
@@ -70,7 +66,7 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
             ImagesWorker.setGradient(holder.picture, info.getId());
         } else {
             holder.acronym.setVisibility(View.INVISIBLE);
-            Picasso.get().load(Methods.getPhotoUrl(info.getPhoto())).transform(new CircleTransform()).into(holder.picture);
+
         }
         holder.acronym.setText(String.valueOf(info.getName().charAt(0)));
 

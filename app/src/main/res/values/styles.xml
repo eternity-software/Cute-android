@@ -8,6 +8,7 @@
 
     </style>
 
+    <style name="AppTheme.TransparentTheme"></style>
 
     <style name="MaterialElements" parent="Theme.MaterialComponents.Light.Bridge">
 

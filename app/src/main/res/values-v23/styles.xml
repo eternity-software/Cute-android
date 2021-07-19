@@ -11,6 +11,11 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
+    <style name="AppTheme.TransparentTheme">
+        <item name="android:statusBarColor">@color/colorAccent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
     <style name="TextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">Montserrat</item>
     </style>

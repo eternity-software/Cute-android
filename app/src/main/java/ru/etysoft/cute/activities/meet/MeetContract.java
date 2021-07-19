@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities.Meet;
+package ru.etysoft.cute.activities.meet;
 
 import android.app.Activity;
 
@@ -6,6 +6,8 @@ public interface MeetContract {
 
     interface View {
         void setEasterText();
+
+        void initializeComponents();
     }
 
     interface Presenter {
@@ -15,8 +17,5 @@ public interface MeetContract {
     }
 
     interface Model {
-        void openSignInActivity(Activity contextActivity);
-
-        void openSignUpActivity(Activity contextActivity);
     }
 }

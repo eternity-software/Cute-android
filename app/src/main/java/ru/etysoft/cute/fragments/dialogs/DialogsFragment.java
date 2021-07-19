@@ -16,9 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,14 +25,8 @@ import ru.etysoft.cute.activities.ChatsSearch;
 import ru.etysoft.cute.activities.CreateConv;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.activities.dialogs.DialogInfo;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
-import ru.etysoft.cute.requests.CacheResponse;
 import ru.etysoft.cute.tooltip.Tooltip;
 import ru.etysoft.cute.tooltip.TooltipScript;
-import ru.etysoft.cute.utils.CustomToast;
-import ru.etysoft.cute.utils.Numbers;
 
 
 public class DialogsFragment extends Fragment {
@@ -111,9 +102,7 @@ public class DialogsFragment extends Fragment {
             }
         });
 
-        if (!Methods.hasInternet(getContext())) {
-            setStatusMessage(getResources().getString(R.string.no_internet));
-        }
+
         return root;
     }
 
@@ -132,9 +121,6 @@ public class DialogsFragment extends Fragment {
     public void updateDialogList() {
 
         // Если нет интернета просим загрузить кэш
-        if (!Methods.hasInternet(getContext())) {
-            isCached = false;
-        }
 
 
         // Инициализируем загрузку и сообщение об отсутствии сообщений
@@ -145,96 +131,10 @@ public class DialogsFragment extends Fragment {
         final LinearLayout error = view.findViewById(R.id.error);
 
         // Задаём обработчик запроса к API
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                try {
 
-
-                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                    if (responseHandler.isSuccess()) {
-                        dialogInfos.clear();
-                        adapter.clear();
-
-
-                        // Сохраняем успешный запрос в кэш
-                        CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
-
-                        // Обрабатываем ответ
-                        JSONObject jsonObject = new JSONObject(getResponse());
-                        JSONArray data = jsonObject.getJSONObject("data").getJSONArray("conversations");
-
-                        boolean hasMessages = false;
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject conv = data.getJSONObject(i);
-                            final String name = conv.getString("title");
-                            final String message = conv.getString("text");
-                            final String cid = conv.getString("id");
-                            final String time = conv.getString("time");
-                            final String countMembers = "1";
-                            final int readed = 1;
-                            final int countReaded = 1;
-                            final int online = 1;
-                            final int personal = 0;
-                            final String cover = "null";
-
-                            boolean isonline;
-                            boolean isDialog;
-
-                            if (personal > 0) {
-                                isDialog = true;
-                            } else {
-                                isDialog = false;
-                            }
-
-                            isonline = Numbers.getBooleanFromInt(online);
-
-                            String firstLetter = name.substring(0, 1);
-
-                            boolean readst;
-                            readst = Numbers.getBooleanFromInt(readed);
-                            hasMessages = true;
-
-                            // Добавляем новый диалог в список
-                            adapter.add(new DialogInfo(name, message, firstLetter, cid, Numbers.getTimeFromTimestamp(time, getContext()), readst, countReaded, isonline, isDialog, countMembers, cover));
-                        }
-                        if (!hasMessages) {
-                            noMessages.setVisibility(View.VISIBLE);
-                        } else {
-                            CacheResponse.saveResponseToCache(getUrl(), getResponse(), appSettings);
-                        }
-                    } else {
-                        if (responseHandler.getErrorHandler().getErrorCode() != null) {
-                            if (responseHandler.getErrorHandler().getErrorCode().equals("timeout")) {
-                                CustomToast.show("Timeout", R.drawable.icon_error, getActivity());
-                            } else {
-                                error.setVisibility(View.VISIBLE);
-                            }
-                        } else {
-                            error.setVisibility(View.VISIBLE);
-                        }
-                    }
-                } catch (Exception e) {
-                    error.setVisibility(View.VISIBLE);
-                    e.printStackTrace();
-                }
-
-
-                frontView.setVisibility(View.INVISIBLE);
-            }
-        };
 
         // Если в предыдущем обращении мы загрузили из кэша, то в этот раз попробуем отправить запрос на сервер
-        if (isCached) {
-            Methods.getConversations(appSettings.getString("session"), apiRunnable, getActivity());
-        } else {
-            Methods.getCacheConversations(appSettings.getString("session"), apiRunnable, getActivity());
-            if (Methods.hasInternet(getActivity())) {
-                // Если есть интернет обязательно пытаемся обновить данные, даже если уже загрузили из кэша
-                Methods.getConversations(appSettings.getString("session"), apiRunnable, getActivity());
-            }
-            isCached = true;
-        }
+
 
     }
 

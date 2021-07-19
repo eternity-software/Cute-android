@@ -16,10 +16,6 @@ import android.os.Vibrator;
 
 import androidx.core.app.NotificationCompat;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -27,7 +23,6 @@ import java.util.List;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Conversation;
-import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.SendorsControl;
 
 public class NotificationService extends Service {
@@ -91,60 +86,7 @@ public class NotificationService extends Service {
             public void run() {
                 while (true) {
                     if (appSettings.getString("session") != null) {
-                        if (Methods.hasInternet(context)) {
-                            try {
-                                // log("Лонгпулл-чек.");
-                                Thread.sleep(3000);
-                                boolean isBackround = isApplicationBroughtToBackground();
 
-                                AppSettings appSettings = new AppSettings(getApplicationContext());
-                                String responseString;
-                                if (ts == 0) {
-                                    responseString = Methods.longpoolNotifications(appSettings.getString("session"));
-                                } else {
-                                    responseString = Methods.longpoolNotifications(appSettings.getString("session"), ts);
-                                }
-
-
-                                JSONObject response = new JSONObject(responseString);
-                                if (response.getString("type").equals("success")) {
-                                    JSONObject predata = response.getJSONObject("data");
-                                    ts = Integer.parseInt(predata.getString("ts"));
-                                    JSONArray data = predata.getJSONArray("events");
-
-                                    for (int i = 0; i < data.length(); i++) {
-                                        JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
-                                        String chatname = data.getJSONObject(i).getString("chatname");
-                                        String nickname = message.getString("nickname");
-                                        String aid = message.getString("aid");
-                                        final String id = message.getString("id");
-                                        String cid = data.getJSONObject(i).getString("cid");
-                                        String text = message.getString("text");
-                                        String time = message.getString("time");
-
-
-                                        if (isBackround) {
-                                            notifyBannerNewMessage(context, chatname, nickname + ": " + text, cid, chatname);
-                                        }
-
-
-                                    }
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                log("ошибка");
-                            }
-                        } else {
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
                     }
                 }
             }

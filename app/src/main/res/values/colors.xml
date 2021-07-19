@@ -39,7 +39,7 @@
     <color name="colorFrontElements">#A2A2A2</color>
     <color name="colorText">#252525</color>
     <color name="colorMainText">#526FFF</color>
-    <color name="colorError">#EA3939</color>
+    <color name="colorError">#FF4F00</color>
     <color name="colorSuccess">#4CAF50</color>
     <color name="colorDivider">#F4F4F4</color>
 

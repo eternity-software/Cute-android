@@ -20,13 +20,9 @@ import com.r0adkll.slidr.model.SlidrPosition;
 
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Meet.MeetActivity;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
+import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.services.NotificationService;
-import ru.etysoft.cute.utils.CustomToast;
 
 public class stock extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
 
@@ -44,25 +40,6 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
         TextView password = findViewById(R.id.password);
         TextView newPassword = findViewById(R.id.newPassword);
 
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                            if (responseHandler.isSuccess()) {
-                                CustomToast.show("Success", R.drawable.icon_success, stock.this);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        };
-        Methods.changePassword(appSettings.getString("session"), password.getText().toString(), newPassword.getText().toString(), apiRunnable, stock.this);
     }
 
     // Показ FloatingBottomSheet

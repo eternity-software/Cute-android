@@ -121,6 +121,10 @@
     <string name="edit_conv">Edit chat</string>
 
 
+    // Success
+    <string name="internet_availible">Internet connection is available</string>
+
+
     // Errors
     <string name="err_no_internet">No internet connection</string>
     <string name="err_not_sended">Not sent</string>
@@ -130,80 +134,6 @@
     <string name="err_confirm">You must confirm your account</string>
     <string name="err_messages_title">Error loading messages</string>
     <string name="err_messages_text">An error occured while loading chat messages</string>
-
-    // Error codes
-    <string name="errcode_AM000_1">Already authorized!</string>
-
-    <string name="errcode_AM001_1">Invalid login</string>
-    <string name="errcode_AM001_2">Invalid e-mail</string>
-    <string name="errcode_AM001_3">Invalid password</string>
-    <string name="errcode_AM001_3_1">Passwords don\'t match</string>
-    <string name="errcode_AM001_4">Already registered</string>
-    <string name="errcode_AM001_5">Unknown database error</string>
-
-    <string name="errcode_AM002_1">Incorrect login</string>
-    <string name="errcode_AM002_2">Incorrect password</string>
-    <string name="errcode_AM002_2_3">Incorrect login or password</string>
-    <string name="errcode_AM002_4">Invalid password</string>
-    <string name="errcode_AM002_5">Error oppening session</string>
-
-    <string name="errcode_AM003_1">Active session doesn\'t exist</string>
-    <string name="errcode_AM003_2">Matched account doesn\'t exist</string>
-
-    <string name="errcode_AM004_1">Can\'t find accounts</string>
-
-    <string name="errcode_AM005_1">Invalid active account</string>
-    <string name="errcode_AM005_2">Unknown error whith data writing</string>
-
-    <string name="errcode_AM006_1">Wrong confirmation code</string>
-    <string name="errcode_AM006_2">Unknown confirmation error</string>
-
-    <string name="errcode_AM007_1">Wrong confirmation code</string>
-    <string name="errcode_AM007_2">Can\'t find an account</string>
-    <string name="errcode_AM007_3">Wrong password</string>
-    <string name="errcode_AM007_4">Incorrect password</string>
-    <string name="errcode_AM007_5">Unknown password change error</string>
-
-    <string name="errcode_AM008_1">Active session doesn\'t exists</string>
-    <string name="errcode_AM008_2">Account is already confirmed</string>
-    <string name="errcode_AM008_3">Unknown send error</string>
-
-    <string name="errcode_CM000_1">You are already logged in</string>
-
-    <string name="errcode_CM001_1">Incorrect conversation name</string>
-    <string name="errcode_CM001_2">Incorrect description</string>
-    <string name="errcode_CM001_3">Incorrect conversation type</string>
-    <string name="errcode_CM001_4">Unknown creating error</string>
-
-    <string name="errcode_CM002_1">Can\'t find conversation</string>
-
-    <string name="errcode_CM003_1">You haven\'t conversations</string>
-
-    <string name="errcode_CMS001_1">You are not a member!</string>
-    <string name="errcode_CMS001_2">Access denied</string>
-    <string name="errcode_CMS001_3">Incorrect message text</string>
-    <string name="errcode_CMS001_4">Unknown message send error</string>
-
-    <string name="errcode_CMS002_1">Message doesn\'t exists</string>
-    <string name="errcode_CMS002_2">You can\'t edit that message</string>
-    <string name="errcode_CMS002_3">You are not a member!</string>
-    <string name="errcode_CMS002_4">New message is incorrect</string>
-    <string name="errcode_CMS002_5">Unknown error editing message</string>
-
-    <string name="errcode_CMS003_1">Unknown system error</string>
-
-    <string name="errcode_CMS004_1">You are not a member</string>
-    <string name="errcode_CMS004_2">Access denied</string>
-    <string name="errcode_CMS004_3">Unknown error receiving messages</string>
-
-    <string name="errcode_CMM001_1">Conversation doesn\'t exists</string>
-    <string name="errcode_CMM001_2">Already member</string>
-    <string name="errcode_CMM001_3">Incorrect role</string>
-    <string name="errcode_CMM001_4">Unknown error</string>
-
-    <string name="errcode_CMM002_1">Conversation doesn\'t exists</string>
-    <string name="errcode_CMM002_2">Not a member</string>
-    <string name="errcode_CMM002_3">Unknown error</string>
 
 
     <string name="title_activity_navigation" translatable="false">Navigation</string>

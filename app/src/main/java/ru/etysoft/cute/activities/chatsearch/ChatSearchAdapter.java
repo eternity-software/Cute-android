@@ -9,17 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Conversation;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
@@ -71,28 +65,7 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
                             getContext().startActivity(intent);
                         } else {
 
-                            APIRunnable apiRunnable = new APIRunnable() {
-                                @Override
-                                public void run() {
-                                    super.run();
-                                    try {
-                                        ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                                        if (responseHandler.isSuccess()) {
-                                            Intent intent = new Intent(getContext(), Conversation.class);
-                                            intent.putExtra("cid", String.valueOf(info.getCid()));
-                                            intent.putExtra("isd", false);
-                                            intent.putExtra("name", info.getName());
-                                            intent.putExtra("cover", "null");
-                                            getContext().startActivity(intent);
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
 
-                                }
-                            };
-                            AppSettings appSettings = new AppSettings(getContext());
-                            Methods.joinChat(appSettings.getString("session"), String.valueOf(info.getCid()), apiRunnable, context);
                         }
                     }
                 };

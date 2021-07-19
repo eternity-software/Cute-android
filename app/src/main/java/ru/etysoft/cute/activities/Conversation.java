@@ -1,7 +1,6 @@
 package ru.etysoft.cute.activities;
 
 import android.annotation.SuppressLint;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.r0adkll.slidr.Slidr;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,20 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.conversation.ConversationAdapter;
 import ru.etysoft.cute.activities.conversation.ConversationInfo;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
-import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
-import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
 
@@ -61,8 +52,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     private int ts = 0;
     private Thread waiter;
     private boolean closed = false;
-
-    private final NetworkStateReceiver stateReceiver = new NetworkStateReceiver();
 
     public boolean isVoice = true;
 
@@ -95,9 +84,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
             subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
         }
 
-        if (!Methods.hasInternet(getApplicationContext())) {
-            subtitle.setText(getResources().getString(R.string.conv_nocon));
-        }
 
         TextView title = findViewById(R.id.title);
         title.setText(name);
@@ -108,43 +94,9 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         setupOnTextInput();
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
-        updateList();
-        if (!cover.equals("null")) {
-            String photoUrl = Methods.getPhotoUrl(cover) + "?size=80";
-            Picasso.get().load(photoUrl).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(picture);
-            acronym.setVisibility(View.INVISIBLE);
-        }
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(stateReceiver, filter);
-        stateReceiver.runnable = new Runnable() {
-            @Override
-            public void run() {
-                TextView subtitle = findViewById(R.id.subtitle);
-                if (Methods.hasInternet(getApplicationContext())) {
-                    updateList();
-                    subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
-                } else {
-
-                    subtitle.setText(getResources().getString(R.string.conv_nocon));
-                }
-
-            }
-        };
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(stateReceiver);
-    }
 
     public void back(View v) {
         onBackPressed();
@@ -166,123 +118,14 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     }
 
 
-    public void longpoll() {
-        final ListView listView = findViewById(R.id.messages);
-        waiter = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (!closed) {
-                        try {
-                            if (Methods.hasInternet(getApplicationContext())) {
-
-                                AppSettings appSettings = new AppSettings(getApplicationContext());
-                                String responseString = Methods.longpoolMessages(appSettings.getString("session"), ts, cid, Conversation.this);
-                                JSONObject response = new JSONObject(responseString);
-                                JSONObject predata = response.getJSONObject("data");
-                                ts = Integer.parseInt(predata.getString("ts"));
-                                JSONArray data = predata.getJSONArray("events");
-
-                                for (int i = 0; i < data.length(); i++) {
-                                    JSONObject message = new JSONObject(data.getJSONObject(i).getString("details"));
-                                    String nickname = message.getString("nickname");
-                                    String aid = message.getString("aid");
-                                    final String id = message.getString("id");
-                                    String text = message.getString("text");
-                                    String time = message.getString("time");
-                                    String photo = data.getJSONObject(i).getString("photo");
-
-                                    final ConversationInfo conversationInfo = new ConversationInfo(id, nickname, text, false, isDialog, Numbers.getTimeFromTimestamp(time, getApplicationContext()), false, Integer.parseInt(aid), false, photo);
 
 
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            ids.put(id, conversationInfo);
-                                            adapter.add(conversationInfo);
-                                        }
-                                    });
-
-
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
-                                }
-                            });
-                        } catch (Exception e) {
-                            //  e.printStackTrace();
-
-                        }
-
-
-                    } else {
-                        break;
-                    }
-
-                }
-            }
-        });
-        waiter.start();
-    }
 
 
     public boolean isrecording = false;
 
 
-    // Отправляем сообщение
-    public void sendMessage(View v) {
-        final TextView messageBox = findViewById(R.id.message_box);
 
-        AppSettings appSettings = new AppSettings(this);
-        final ConversationInfo conversationInfo = new ConversationInfo("null", "s", messageBox.getText().toString(), true, false, getString(R.string.sending), false, -10, false, null);
-
-        adapter.add(conversationInfo);
-        final ListView listView = findViewById(R.id.messages);
-
-
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                try {
-                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                    if (responseHandler.isSuccess()) {
-
-                        JSONObject jsonObject = new JSONObject(getResponse());
-
-                        JSONObject infomessage = jsonObject.getJSONObject("data");
-                        String id = infomessage.getString("id");
-                        String time = infomessage.getString("time");
-                        String message = infomessage.getString("text");
-
-                        ids.put(id, conversationInfo);
-
-                        conversationInfo.setMessage(message);
-                        conversationInfo.setId(id);
-                        conversationInfo.setSubtext(Numbers.getTimeFromTimestamp(time, getApplicationContext()));
-                    } else {
-                        conversationInfo.setSubtext(getString(R.string.err_not_sended));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    conversationInfo.setSubtext(getString(R.string.err_not_sended));
-                    CustomToast.show(getString(R.string.err_json), R.drawable.icon_error, Conversation.this);
-                }
-
-                adapter.notifyDataSetChanged();
-            }
-        };
-
-
-        Methods.sendTextMessage(appSettings.getString("session"), String.valueOf(messageBox.getText()), cid, apiRunnable, this);
-        messageBox.setText("");
-
-    }
 
     @Override
     protected void onStop() {
@@ -302,38 +145,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     public boolean isRecordPanelShown = false;
     private Thread recordWaiter;
 
-    // Обновляем список сообщений
-    public void updateList() {
-        final ListView listView = findViewById(R.id.messages);
-        final AppSettings appSettings = new AppSettings(this);
-
-
-        // Задаём обработчик ответа API
-        APIRunnable apiRunnable = new APIRunnable() {
-            @Override
-            public void run() {
-                LinearLayout loadingLayot = findViewById(R.id.error);
-                try {
-                    ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                    if (responseHandler.isSuccess()) {
-                        processListUpdate(getResponse());
-                        loadingLayot.setVisibility(View.INVISIBLE);
-                    } else {
-
-                        if (isEmpty) {
-                            loadingLayot.setVisibility(View.VISIBLE);
-                        }
-                        Methods.getMessages(appSettings.getString("session"), cid, this, Conversation.this);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        };
-
-        Methods.getMessages(appSettings.getString("session"), cid, apiRunnable, this);
-    }
 
     private void processListUpdate(String response) {
         try {
@@ -389,7 +200,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
             }
 
 
-            longpoll();
 
         } catch (JSONException e) {
             if (isEmpty) {
@@ -401,11 +211,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         }
     }
 
-    public void update(View v) {
-        LinearLayout loadingLayot = findViewById(R.id.error);
-        loadingLayot.setVisibility(View.INVISIBLE);
-        updateList();
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     public void setupVoiceButton() {

@@ -14,12 +14,7 @@ import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Meet.MeetActivity;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
-import ru.etysoft.cute.utils.CustomToast;
-import ru.etysoft.cute.utils.ErrorCodes;
+import ru.etysoft.cute.activities.meet.MeetActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -90,21 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
                         public void run() {
                             AppSettings appSettings = new AppSettings(getActivity());
 
-                            APIRunnable apiRunnable = new APIRunnable() {
-                                @Override
-                                public void run() {
-                                    super.run();
-                                    try {
-                                        ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                                        if (!responseHandler.isSuccess()) {
-                                            CustomToast.show(ErrorCodes.getError(responseHandler.getErrorHandler().getErrorCode()), R.drawable.icon_error, getActivity());
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            };
-                            Methods.closeSession(appSettings.getString("session"), apiRunnable, getActivity());
+                            // TODO: logout API
                             appSettings.clean();
                             Intent meet = new Intent(getActivity(), MeetActivity.class);
                             getActivity().startActivity(meet);

@@ -12,14 +12,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONObject;
-
 import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Meet.MeetActivity;
-import ru.etysoft.cute.api.APIRunnable;
-import ru.etysoft.cute.api.Methods;
-import ru.etysoft.cute.api.response.ResponseHandler;
+import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
@@ -28,7 +23,6 @@ import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ErrorCodes;
 import ru.etysoft.cute.utils.Logger;
-import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.Permissions;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
 
@@ -36,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
     public static final boolean isDev = true;
 
-    private final NetworkStateReceiver stateReceiver = new NetworkStateReceiver();
+
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
     private MenuItem menuItem;
@@ -109,32 +103,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(stateReceiver, filter);
-        stateReceiver.runnable = new Runnable() {
-            @Override
-            public void run() {
-
-                if (Methods.hasInternet(getApplicationContext())) {
-                    checksAPI();
-                    try {
-                        fragmentAccount.updateData();
-                        fragmentDialogs.updateDialogList();
-                    } catch (Exception e) {
-
-                    }
-                    fragmentDialogs.setStatusMessage(getResources().getString(R.string.messages));
-                } else {
-                    fragmentDialogs.setStatusMessage(getResources().getString(R.string.no_internet));
-                }
-
-            }
-        };
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(stateReceiver);
     }
 
     public void checksAPI() {
@@ -144,58 +117,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     public void checkAccount() {
         final String session = appSettings.getString("session");
         if (session != null) {
-            final APIRunnable apiRunnable = new APIRunnable() {
-
-
-                @Override
-                public void run() {
-                    try {
-                        ResponseHandler responseHandler = new ResponseHandler(getResponse());
-                        if (responseHandler.isSuccess()) {
-                            JSONObject jsonObject = new JSONObject(getResponse());
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            JSONObject account = data.getJSONObject("account");
-                            if (account.getString("active").equals("n")) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Intent intent = new Intent(MainActivity.this, Confirmation.class);
-                                        startActivity(intent);
-                                        finish();
-                                        CustomToast.show(getString(R.string.err_confirm), R.drawable.icon_error, MainActivity.this);
-                                    }
-                                });
-                            } else if (account.getString("active").equals("b")) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (!isbanned) {
-                                            final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
-
-                                            View.OnClickListener onClickListener = new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    Intent intent = new Intent(MainActivity.this, MeetActivity.class);
-                                                    startActivity(intent);
-                                                    floatingBottomSheet.dismiss();
-                                                }
-                                            };
-                                            floatingBottomSheet.setContent(getResources().getDrawable(R.drawable.icon_uber), getString(R.string.banned_title), getString(R.string.banned_text));
-                                            floatingBottomSheet.show(getSupportFragmentManager(), "blocked");
-
-                                            floatingBottomSheet.setCancelable(false);
-                                            isbanned = true;
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            Methods.getMyAccount(session, apiRunnable, MainActivity.this);
         } else {
             if (!isbanned) {
                 Intent intent = new Intent(MainActivity.this, MeetActivity.class);

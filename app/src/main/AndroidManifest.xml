@@ -85,14 +85,14 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".activities.Signin"
+            android:name=".activities.signin.SignInActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".activities.Meet.MeetActivity"
-            android:theme="@style/MeetTheme" />
+            android:name=".activities.meet.MeetActivity"
+            android:theme="@style/AppTheme.TransparentTheme" />
         <activity
             android:name=".activities.stock"
             android:configChanges="orientation|keyboardHidden"

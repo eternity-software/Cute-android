@@ -10,10 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.squareup.picasso.Picasso;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.api.Methods;
 import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cute.utils.ImagesWorker;
 
@@ -32,9 +30,7 @@ public class ImagePreview extends AppCompatActivity {
             }
         });
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        if (photo != null) {
-            Picasso.get().load(Methods.getPhotoUrl(photo + "?size=2000")).into(photoView);
-        }
+
     }
 
     public void save(View v) {

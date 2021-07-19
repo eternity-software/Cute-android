@@ -8,26 +8,39 @@ import android.net.NetworkInfo;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
     public static final String TAG = NetworkStateReceiver.class.getSimpleName();
-    private static boolean online = true;
-    public Runnable runnable;
+    private boolean online = true;
 
+    private Runnable onlineRunnable;
+    private Runnable offlineRunnable;
+
+
+    public NetworkStateReceiver(Runnable onlineRunnable, Runnable offlineRunnable) {
+        this.offlineRunnable = offlineRunnable;
+        this.onlineRunnable = onlineRunnable;
+    }
+
+    @Override
     public void onReceive(Context context, Intent intent) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = manager.getActiveNetworkInfo();
         if (ni == null || ni.getState() != NetworkInfo.State.CONNECTED) {
-            if (online)
-                runnable.run();
-                Logger.logReceiver("No internet connection");
-            online = false;
-        } else {
-            if (!online)
-                Logger.logReceiver("Internet connection is available");
-            try {
-                runnable.run();
-            } catch (Exception e) {
-                Logger.logReceiver("Error running runnable!");
+            if (online) {
+                try {
+                    offlineRunnable.run();
+                } catch (Exception e) {
+                    Logger.logReceiver("Error running runnable!");
+                }
+                online = false;
             }
-            online = true;
+        } else {
+            if (!online) {
+                try {
+                    onlineRunnable.run();
+                } catch (Exception e) {
+                    Logger.logReceiver("Error running runnable!");
+                }
+                online = true;
+            }
         }
     }
 
