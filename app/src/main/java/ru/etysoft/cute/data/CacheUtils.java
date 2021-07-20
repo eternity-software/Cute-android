@@ -1,53 +1,57 @@
-package ru.etysoft.cute;
+package ru.etysoft.cute.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class AppSettings {
+public class CacheUtils {
 
     private final static String IDENTIFIER = "APP_SETTINGS";
+    private static CacheUtils instance;
+
 
     // Инициализация контекста
-    public AppSettings(Context contexta) {
-        context = contexta;
+    public static CacheUtils getInstance() {
+        if (instance == null) {
+            instance = new CacheUtils();
+        }
+        return instance;
     }
 
     // Запись строки по ключу
-    public void setString(String key, String text) {
+    public void setString(String key, String text, Context context) {
         SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
         editor.putString(key, text);
 
         editor.apply();
     }
 
-    public boolean hasKey(String key) {
+    public boolean hasKey(String key, Context context) {
         SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
         return pref.contains(key);
     }
 
     // Получение boolean по ключу
-    public boolean getBoolean(String name) {
+    public boolean getBoolean(String name, Context context) {
         SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
         return pref.getBoolean(name, false);
     }
 
     // Получение строки по ключу
-    public String getString(String name) {
+    public String getString(String name, Context context) {
         SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
         return pref.getString(name, null);
     }
 
     // Запись boolean по ключу
-    public void setBoolean(String key, Boolean bool) {
+    public void setBoolean(String key, Boolean bool, Context context) {
         SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, bool);
         editor.apply();
     }
 
-    private Context context;
 
     // Стереть все сохранённые данные
-    public void clean() {
+    public void clean(Context context) {
         SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
         editor.clear();
         editor.apply();

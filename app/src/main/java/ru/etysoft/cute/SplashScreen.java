@@ -7,18 +7,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.data.CacheUtils;
 
 public class SplashScreen extends AppCompatActivity {
     private final static String ISDARK_THEME = "APP_THEME_NIGHT";
 
-    private AppSettings appSettings;
+    private CacheUtils cacheUtils;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        appSettings = new AppSettings(this);
+        cacheUtils = CacheUtils.getInstance();
 
         // Запуск активности
         Intent i = new Intent(this, MainActivity.class);
@@ -26,8 +27,8 @@ public class SplashScreen extends AppCompatActivity {
         finish();
 
         // Инициализация текущей темы и её применение
-        if (appSettings.hasKey(ISDARK_THEME)) {
-            if (appSettings.getBoolean(ISDARK_THEME)) {
+        if (cacheUtils.hasKey(ISDARK_THEME, this)) {
+            if (cacheUtils.getBoolean(ISDARK_THEME, this)) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

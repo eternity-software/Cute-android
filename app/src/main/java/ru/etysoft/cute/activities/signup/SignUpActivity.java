@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities.signin;
+package ru.etysoft.cute.activities.signup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,25 +17,28 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.MainActivity;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 
-public class SignInActivity extends AppCompatActivity implements SignInContract.View {
+public class SignUpActivity extends AppCompatActivity implements SignUpContract.View {
 
     private LinearLayout errorView;
     private TextView errorText;
     private Button nextButton;
     private LinearLayout backButton;
     private EditText loginInput;
+    private EditText emailInput;
     private EditText passwordInput;
-    private SignInPresenter signInPresenter;
+    private EditText passwordConfirmInput;
+    private SignUpPresenter signUpPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin);
-        overridePendingTransition(R.anim.side_from_top, R.anim.slide_down);
+        setContentView(R.layout.activity_signup);
+        // Анимация
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
         initializeViews();
 
-        signInPresenter = new SignInPresenter(this, this);
+        signUpPresenter = new SignUpPresenter(this, this);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,11 +50,11 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInPresenter.onSignInButtonClick(String.valueOf(loginInput.getText()),
+                signUpPresenter.onSignUpButtonClick(String.valueOf(loginInput.getText()),
+                        String.valueOf(emailInput.getText()),
                         String.valueOf(passwordInput.getText()));
             }
         });
-
     }
 
     @Override
@@ -61,18 +64,25 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
         backButton = findViewById(R.id.button_back);
         nextButton = findViewById(R.id.button_next);
         loginInput = findViewById(R.id.edittext_login);
+        emailInput = findViewById(R.id.edittext_email);
         passwordInput = findViewById(R.id.edittext_password);
+        passwordConfirmInput = findViewById(R.id.edittext_password_confirm);
     }
 
     @Override
-    public void setEnabledActionButton(boolean isEnabled) {
-        nextButton.setEnabled(isEnabled);
+    public boolean isPasswordsCorrect() {
+        String passwordFieldContent = String.valueOf(passwordInput.getText());
+        String passwordConfirmFieldContent = String.valueOf(passwordConfirmInput.getText());
+        if (passwordConfirmFieldContent.equals(passwordFieldContent) && passwordFieldContent.length() > 4) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void onBackPressed() {
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
-        Intent intent = new Intent(SignInActivity.this, MeetActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, MeetActivity.class);
         startActivity(intent);
         finish();
     }
@@ -114,13 +124,19 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     @Override
     public void showMainActivity() {
-        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        signInPresenter.onDestroy();
+        signUpPresenter.onDestroy();
+    }
+
+
+    @Override
+    public void setEnabledActionButton(boolean isEnabled) {
+        nextButton.setEnabled(isEnabled);
     }
 }

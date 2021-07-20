@@ -3,8 +3,8 @@ package ru.etysoft.cute.activities.meet;
 import android.app.Activity;
 import android.content.Intent;
 
-import ru.etysoft.cute.activities.Signup;
 import ru.etysoft.cute.activities.signin.SignInActivity;
+import ru.etysoft.cute.activities.signup.SignUpActivity;
 
 public class MeetPresenter implements MeetContract.Presenter {
 
@@ -25,7 +25,7 @@ public class MeetPresenter implements MeetContract.Presenter {
 
     @Override
     public void onSignUpButtonClick(Activity contextActivity) {
-        Intent intent = new Intent(contextActivity, Signup.class);
+        Intent intent = new Intent(contextActivity, SignUpActivity.class);
         contextActivity.startActivity(intent);
         contextActivity.finish();
     }

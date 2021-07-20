@@ -19,12 +19,12 @@ import androidx.lifecycle.ViewModelProviders;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ChatsSearch;
 import ru.etysoft.cute.activities.CreateConv;
 import ru.etysoft.cute.activities.dialogs.DialogAdapter;
 import ru.etysoft.cute.activities.dialogs.DialogInfo;
+import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.tooltip.Tooltip;
 import ru.etysoft.cute.tooltip.TooltipScript;
 
@@ -33,7 +33,7 @@ public class DialogsFragment extends Fragment {
 
     private DialogsViewModel dialogsViewModel;
     private final HashMap<String, DialogInfo> dialogInfos = new HashMap<>();
-    private AppSettings appSettings;
+    private CacheUtils cacheUtils;
     private DialogAdapter adapter;
     private View view;
 
@@ -48,7 +48,7 @@ public class DialogsFragment extends Fragment {
                 ViewModelProviders.of(this).get(DialogsViewModel.class);
         View root = inflater.inflate(R.layout.activity_dialogs, container, false);
 
-        appSettings = new AppSettings(getActivity());
+        cacheUtils = CacheUtils.getInstance();
         view = root;
         final ListView listView = view.findViewById(R.id.listView);
 

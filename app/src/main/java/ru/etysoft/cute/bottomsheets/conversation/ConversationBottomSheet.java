@@ -48,7 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.ImagesWorker;
@@ -211,7 +210,6 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         Runnable toRun = new Runnable() {
             @Override
             public void run() {
-                AppSettings appSettings = new AppSettings(getContext());
 
 
             }
@@ -219,7 +217,6 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         Runnable cancel = new Runnable() {
             @Override
             public void run() {
-                AppSettings appSettings = new AppSettings(getContext());
 
 
             }
@@ -236,7 +233,6 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         Runnable toRun = new Runnable() {
             @Override
             public void run() {
-                AppSettings appSettings = new AppSettings(getContext());
 
 
             }
@@ -244,7 +240,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         Runnable cancel = new Runnable() {
             @Override
             public void run() {
-                AppSettings appSettings = new AppSettings(getContext());
+
 
             }
         };
@@ -407,9 +403,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         applyButton.setVisibility(View.INVISIBLE);
         wait.setVisibility(View.VISIBLE);
 
-        final AppSettings appSettings = new AppSettings(getActivity());
 
-        params.put("session", appSettings.getString("session"));
         params.put("cid", cid);
 
         if (image != null) {

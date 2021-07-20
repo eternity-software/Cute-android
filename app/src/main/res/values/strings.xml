@@ -12,8 +12,7 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
 
-    <string name="sign_in_sub_privacy_policy">By clicking \"Sign In\" button you agree our</string>
-    <string name="sign_up_sub_privacy_policy">By clicking \"Sign Up\" button you agree our</string>
+    <string name="next_button_privacy_policy">By clicking \"Next\" button you agree our</string>
     <string name="privacy_policy">Privacy Policy</string>
 
     <string name="sign_up_subnickname">Create an amazing nickname</string>
@@ -114,7 +113,7 @@
     <string name="pass_new">New password</string>
     <string name="pass_success">Successfully changed your password</string>
     <string name="pass_error">Error</string>
-    <string name="pass_dmatch">Passwords don\'t match</string>
+    <string name="password_incorrect">Passwords are incorrect</string>
     <string name="logout">Logout</string>
     <string name="version">Version</string>
 
@@ -129,7 +128,7 @@
     <string name="err_no_internet">No internet connection</string>
     <string name="err_not_sended">Not sent</string>
     <string name="sending">Sending...</string>
-    <string name="err_json">Wrong JSON answer</string>
+    <string name="err_json">Unexpected server answer</string>
     <string name="err_unknown">Unknown error</string>
     <string name="err_confirm">You must confirm your account</string>
     <string name="err_messages_title">Error loading messages</string>

@@ -18,15 +18,15 @@ import androidx.core.content.ContextCompat;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.services.NotificationService;
 
 public class stock extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
 
-    private static AppSettings appSettings;
+    private static CacheUtils cacheUtils;
     private static stock main;
     public Activity parent;
     //Константы
@@ -60,7 +60,7 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
         View.OnClickListener delete = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                appSettings.setString(NotificationService.KEY, "Clean history");
+                cacheUtils.setString(NotificationService.KEY, "Clean history", getApplicationContext());
             }
         };
 
@@ -77,7 +77,7 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         main = this;
-        appSettings = new AppSettings(this);
+        cacheUtils = CacheUtils.getInstance();
         setContentView(R.layout.activity_settings);
 
 
@@ -87,7 +87,7 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
                 .build();
         //Slidr.attach(this, config);
         // Проверка и инициализация тёмной темы (для перехода)
-        if (appSettings.getBoolean(ISDARK_THEME)) {
+        if (cacheUtils.getBoolean(ISDARK_THEME, this)) {
             if (getDelegate().getLocalNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             }
@@ -119,8 +119,8 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
         }
 
         TextView logView = findViewById(R.id.logNotif);
-        if (appSettings.hasKey(NotificationService.KEY)) {
-            logView.setText(appSettings.getString(NotificationService.KEY));
+        if (cacheUtils.hasKey(NotificationService.KEY, this)) {
+            logView.setText(cacheUtils.getString(NotificationService.KEY, this));
         }
 
 
@@ -129,11 +129,11 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
 
     public void changeTheme(View v) {
         //Поверка какая тема сейчас стоит
-        if (!appSettings.getBoolean(ISDARK_THEME)) {
-            appSettings.setBoolean(ISDARK_THEME, true);
+        if (!cacheUtils.getBoolean(ISDARK_THEME, this)) {
+            cacheUtils.setBoolean(ISDARK_THEME, true, this);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
-            appSettings.setBoolean(ISDARK_THEME, false);
+            cacheUtils.setBoolean(ISDARK_THEME, false, this);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 

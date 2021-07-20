@@ -19,6 +19,9 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         this.onlineRunnable = onlineRunnable;
     }
 
+    public NetworkStateReceiver() {
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

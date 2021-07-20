@@ -1,10 +1,9 @@
-package ru.etysoft.cute.activities.signin;
+package ru.etysoft.cute.activities.signup;
 
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.Authorization.AuthorizationResponse;
+import ru.etysoft.cuteframework.methods.Registration.RegistrationResponse;
 
-public interface SignInContract {
-
+public interface SignUpContract {
     interface View {
         void showError(String text);
 
@@ -14,11 +13,13 @@ public interface SignInContract {
 
         void initializeViews();
 
+        boolean isPasswordsCorrect();
+
         void setEnabledActionButton(boolean isEnabled);
     }
 
     interface Presenter {
-        void onSignInButtonClick(final String login, final String password);
+        void onSignUpButtonClick(final String login, final String email, final String password);
 
         void initializeNetworkStateHolder();
 
@@ -26,9 +27,6 @@ public interface SignInContract {
     }
 
     interface Model {
-        AuthorizationResponse signIn(String login, String password) throws ResponseException;
+        RegistrationResponse signUp(String login, String email, String password) throws ResponseException;
     }
-
-
 }
-

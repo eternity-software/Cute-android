@@ -12,10 +12,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.data.CacheUtils;
+import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
 import ru.etysoft.cute.fragments.explore.ExploreFragment;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     private DialogsFragment fragmentDialogs;
     private AccountFragment fragmentAccount;
     private ExploreFragment fragmentExplore;
-    private AppSettings appSettings;
+    private CacheUtils cacheUtils;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -76,19 +78,23 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         Logger.logActivity("Created Main");
         startService(new Intent(this, NotificationService.class));
 
-        appSettings = new AppSettings(this);
+        cacheUtils = CacheUtils.getInstance();
 
         // Инициализация кодов ошибок
         ErrorCodes.initialize(this);
 
         // Проверка сессии
-        if (appSettings.getString("session") == null) {
-            Intent intent = new Intent(MainActivity.this, MeetActivity.class);
-            AppSettings appSettings = new AppSettings(this);
-            appSettings.clean();
-            startActivity(intent);
-            finish();
-            return;
+        try {
+            if (CachedValues.getSessionKey(this) == null) {
+                Intent intent = new Intent(MainActivity.this, MeetActivity.class);
+                CacheUtils cacheUtils = CacheUtils.getInstance();
+                cacheUtils.clean(this);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        } catch (NotCachedException e) {
+            e.printStackTrace();
         }
 
 
@@ -115,17 +121,23 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     }
 
     public void checkAccount() {
-        final String session = appSettings.getString("session");
-        if (session != null) {
-        } else {
-            if (!isbanned) {
-                Intent intent = new Intent(MainActivity.this, MeetActivity.class);
-                AppSettings appSettings = new AppSettings(this);
-                appSettings.clean();
-                startActivity(intent);
-                CustomToast.show("Session error", R.drawable.icon_error, MainActivity.this);
-                finish();
+        final String session;
+        try {
+            session = CachedValues.getSessionKey(this);
+
+            if (session != null) {
+            } else {
+                if (!isbanned) {
+                    Intent intent = new Intent(MainActivity.this, MeetActivity.class);
+                    CacheUtils cacheUtils = CacheUtils.getInstance();
+                    cacheUtils.clean(this);
+                    startActivity(intent);
+                    CustomToast.show("Session error", R.drawable.icon_error, MainActivity.this);
+                    finish();
+                }
             }
+        } catch (NotCachedException e) {
+            e.printStackTrace();
         }
     }
 

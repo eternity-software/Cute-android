@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/button_passive"
+                android:background="@drawable/button_passive_selector"
                 android:fontFamily="@font/montserrat"
                 android:text="PASSIVE BUTTON"
                 android:textSize="18sp" />

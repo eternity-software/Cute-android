@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities.signin;
+package ru.etysoft.cute.activities.signup;
 
 import android.app.Activity;
 import android.content.IntentFilter;
@@ -6,46 +6,51 @@ import android.content.IntentFilter;
 import org.json.JSONException;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.Authorization.AuthorizationResponse;
+import ru.etysoft.cuteframework.methods.Registration.RegistrationResponse;
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
-public class SignInPresenter implements SignInContract.Presenter {
-
-    private SignInContract.View signInView;
-    private SignInContract.Model signInModel;
+public class SignUpPresenter implements SignUpContract.Presenter {
+    private SignUpContract.View signUpView;
+    private SignUpContract.Model signUpModel;
     private Activity context;
     private NetworkStateReceiver networkStateReceiver;
 
-    public SignInPresenter(SignInContract.View signInView, Activity context) {
-        signInModel = new SignInModel();
-        this.signInView = signInView;
+    public SignUpPresenter(SignUpContract.View signInView, Activity context) {
+        signUpModel = new SignUpModel();
+        this.signUpView = signInView;
         this.context = context;
         initializeNetworkStateHolder();
     }
 
     @Override
-    public void onSignInButtonClick(final String login, final String password) {
-        signInView.setEnabledActionButton(false);
+    public void onSignUpButtonClick(final String login, final String email, final String password) {
+        if (signUpView.isPasswordsCorrect()) {
+            signUpView.showError(context.getResources().getString(R.string.password_incorrect));
+            return;
+        }
+        signUpView.setEnabledActionButton(false);
         Thread requestThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    AuthorizationResponse authorizationResponse = signInModel.signIn(login, password);
+                    RegistrationResponse registrationResponse = signUpModel.signUp(login, email, password);
 
-                    if (authorizationResponse.isSuccess()) {
-                        String sessionKey = authorizationResponse.getSessionKey();
+                    if (registrationResponse.isSuccess()) {
+                        String sessionKey = registrationResponse.getSessionKey();
+                        CachedValues.setSessionKey(context, sessionKey);
 
                     } else {
-                        ErrorHandler errorHandler = authorizationResponse.getErrorHandler();
-                        signInView.showError(context.getResources().getString(R.string.err_unknown));
+                        ErrorHandler errorHandler = registrationResponse.getErrorHandler();
+                        signUpView.showError(context.getResources().getString(R.string.err_unknown));
                     }
                 } catch (ResponseException e) {
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            signInView.showError(context.getResources().getString(R.string.err_unknown));
+                            signUpView.showError(context.getResources().getString(R.string.err_unknown));
                         }
                     });
                 } catch (JSONException e) {
@@ -53,7 +58,7 @@ public class SignInPresenter implements SignInContract.Presenter {
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            signInView.showError(context.getResources().getString(R.string.err_json));
+                            signUpView.showError(context.getResources().getString(R.string.err_json));
                         }
                     });
 
@@ -61,7 +66,7 @@ public class SignInPresenter implements SignInContract.Presenter {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        signInView.setEnabledActionButton(true);
+                        signUpView.setEnabledActionButton(true);
                     }
                 });
             }
@@ -74,14 +79,14 @@ public class SignInPresenter implements SignInContract.Presenter {
         Runnable onlineRunnable = new Runnable() {
             @Override
             public void run() {
-                signInView.hideError();
+                signUpView.hideError();
             }
         };
 
         Runnable offlineRunnable = new Runnable() {
             @Override
             public void run() {
-                signInView.showError(context.getResources().getString(R.string.err_no_internet));
+                signUpView.showError(context.getResources().getString(R.string.err_no_internet));
             }
         };
 
@@ -96,5 +101,4 @@ public class SignInPresenter implements SignInContract.Presenter {
     public void onDestroy() {
         context.unregisterReceiver(networkStateReceiver);
     }
-
 }

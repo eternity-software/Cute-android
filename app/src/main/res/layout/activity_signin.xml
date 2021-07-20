@@ -88,6 +88,7 @@
                     android:foregroundGravity="left|clip_horizontal"
                     android:hint="@string/login"
                     android:inputType="textPersonName"
+                    android:maxLength="255"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
@@ -170,7 +171,7 @@
                 android:id="@+id/button_back"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@drawable/button_passive"
+                android:background="@drawable/button_passive_selector"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -194,7 +195,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/button_passive"
+                android:background="@drawable/button_passive_selector"
                 android:fontFamily="@font/montserrat"
                 android:text="@string/next"
                 android:textAllCaps="false"
@@ -208,7 +209,7 @@
             android:layout_marginHorizontal="10dp"
             android:fontFamily="@font/montserrat"
             android:gravity="center"
-            android:text="@string/sign_in_sub_privacy_policy"
+            android:text="@string/next_button_privacy_policy"
             android:textColor="@color/colorWhite"
             android:textSize="14sp" />
 

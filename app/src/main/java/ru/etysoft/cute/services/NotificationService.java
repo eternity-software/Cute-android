@@ -20,9 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Conversation;
+import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.utils.SendorsControl;
 
 public class NotificationService extends Service {
@@ -31,7 +31,7 @@ public class NotificationService extends Service {
     public static String KEY = "nservice";
     public Context context = this;
     public Handler handler = null;
-    private AppSettings appSettings;
+    private CacheUtils cacheUtils;
     public static boolean isLastError = false;
     public static int notifid = 42;
 
@@ -42,10 +42,10 @@ public class NotificationService extends Service {
 
     private void log(String info) {
         String timeStamp = "[" + new SimpleDateFormat("dd.MM HH:mm:ss").format(Calendar.getInstance().getTime()) + "]";
-        if (appSettings.hasKey(KEY)) {
-            appSettings.setString(KEY, appSettings.getString(KEY) + "\n" + timeStamp + ": " + info);
+        if (cacheUtils.hasKey(KEY, this)) {
+            cacheUtils.setString(KEY, cacheUtils.getString(KEY, this) + "\n" + timeStamp + ": " + info, this);
         } else {
-            appSettings.setString(KEY, timeStamp + ": " + info);
+            cacheUtils.setString(KEY, timeStamp + ": " + info, this);
         }
 
     }
@@ -85,7 +85,7 @@ public class NotificationService extends Service {
             @Override
             public void run() {
                 while (true) {
-                    if (appSettings.getString("session") != null) {
+                    if (cacheUtils.getString("session", getApplicationContext()) != null) {
 
                     }
                 }
@@ -228,7 +228,7 @@ public class NotificationService extends Service {
 
     @Override
     public void onCreate() {
-        appSettings = new AppSettings(this);
+        cacheUtils = CacheUtils.getInstance();
         createNotificationChannel();
         longPoll();
         log("Сервис создан.");

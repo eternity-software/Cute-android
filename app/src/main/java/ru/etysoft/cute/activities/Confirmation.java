@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.utils.CustomToast;
@@ -21,10 +20,7 @@ public class Confirmation extends AppCompatActivity {
         setContentView(R.layout.activity_confirmation);
         // Анимация
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
-        AppSettings appSettings = new AppSettings(this);
 
-        TextView email = findViewById(R.id.emailto);
-        email.setText(appSettings.getString("email"));
     }
 
     public void back(View v) {
@@ -36,8 +32,6 @@ public class Confirmation extends AppCompatActivity {
     public void confirmButton(View v) {
         TextView codeView = findViewById(R.id.confirmationCode);
 
-        final AppSettings appSettings = new AppSettings(getApplicationContext());
-        final String code = codeView.getText().toString();
 
 
     }

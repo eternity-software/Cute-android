@@ -11,22 +11,22 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import ru.etysoft.cute.AlertDialog;
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
+import ru.etysoft.cute.data.CacheUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
     public static int count = 0;
     private static String ISDARK_THEME = "APP_THEME_NIGHT";
-    private static AppSettings appSettings;
+    private static CacheUtils cacheUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
-        appSettings = new AppSettings(this);
+        cacheUtils = CacheUtils.getInstance();
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.settings, new SettingsFragment())
@@ -35,8 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        if (appSettings.hasKey(ISDARK_THEME)) {
-            if (appSettings.getBoolean(ISDARK_THEME)) {
+        if (cacheUtils.hasKey(ISDARK_THEME, this)) {
+            if (cacheUtils.getBoolean(ISDARK_THEME, this)) {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -83,10 +83,10 @@ public class SettingsActivity extends AppCompatActivity {
                     final Runnable toRun = new Runnable() {
                         @Override
                         public void run() {
-                            AppSettings appSettings = new AppSettings(getActivity());
+                            CacheUtils cacheUtils = CacheUtils.getInstance();
 
                             // TODO: logout API
-                            appSettings.clean();
+                            cacheUtils.clean(getContext());
                             Intent meet = new Intent(getActivity(), MeetActivity.class);
                             getActivity().startActivity(meet);
                         }
@@ -120,10 +120,10 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     if (((boolean) newValue)) {
-                        appSettings.setBoolean(ISDARK_THEME, true);
+                        cacheUtils.setBoolean(ISDARK_THEME, true, getContext());
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     } else {
-                        appSettings.setBoolean(ISDARK_THEME, false);
+                        cacheUtils.setBoolean(ISDARK_THEME, false, getContext());
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     }
                     switchPreference.setEnabled(false);

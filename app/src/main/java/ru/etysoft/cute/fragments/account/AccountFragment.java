@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.EditProfile;
 import ru.etysoft.cute.activities.SettingsActivity;
+import ru.etysoft.cute.data.CacheUtils;
 
 public class AccountFragment extends Fragment {
 
@@ -40,16 +40,11 @@ public class AccountFragment extends Fragment {
 
         final View root = inflater.inflate(R.layout.activity_account, container, false);
 
-        final AppSettings appSettings = new AppSettings(getActivity());
+        final CacheUtils cacheUtils = CacheUtils.getInstance();
         TextView id = root.findViewById(R.id.idview);
         final TextView username = root.findViewById(R.id.username);
-        if (appSettings.getString("username") != null) {
-            name = appSettings.getString("username");
-            id.setText("u" + appSettings.getString("id"));
-            username.setText(name);
-        }
 
-        urlPhoto = appSettings.getString("profilePhoto");
+
         view = root;
 
         updateData();
@@ -81,7 +76,7 @@ public class AccountFragment extends Fragment {
 
 
     public void updateData() {
-        final AppSettings appSettings = new AppSettings(getActivity());
+        final CacheUtils cacheUtils = CacheUtils.getInstance();
         final ImageView profileImage = view.findViewById(R.id.userimage);
 
     }

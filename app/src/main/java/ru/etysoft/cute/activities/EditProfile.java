@@ -25,8 +25,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import ru.etysoft.cute.AppSettings;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
@@ -51,8 +51,9 @@ public class EditProfile extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         name = getIntent().getExtras().getString("name");
         status = getIntent().getExtras().getString("status");
-        String urlPhoto = (new AppSettings(this)).getString("profilePhoto");
+        String urlPhoto = (CacheUtils.getInstance()).getString("profilePhoto", this);
         Slidr.attach(this);
+
 
         TextView nameView = findViewById(R.id.name);
         TextView statusView = findViewById(R.id.status);

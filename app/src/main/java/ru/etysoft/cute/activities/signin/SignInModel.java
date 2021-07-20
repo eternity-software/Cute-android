@@ -6,7 +6,7 @@ import ru.etysoft.cuteframework.methods.Authorization.AuthorizationResponse;
 
 public class SignInModel implements SignInContract.Model {
     @Override
-    public AuthorizationResponse sign(String login, String password) throws ResponseException {
+    public AuthorizationResponse signIn(String login, String password) throws ResponseException {
         return Methods.authorize(login, password);
     }
 }
