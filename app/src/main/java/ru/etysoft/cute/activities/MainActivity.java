@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             } else if (item.getItemId() == R.id.account) {
                 viewPager.setCurrentItem(2);
             }
-
             return false;
         }
     };
