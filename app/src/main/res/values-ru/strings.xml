@@ -18,7 +18,7 @@
     <string name="sign_in_success">Вы успешно вошли</string>
     <string name="sign_up_success">Вы успешно зарегистрировались</string>
     <string name="confirmation">Проверка</string>
-    <string name="confirmation_sub">Мы отправили код подтвержения на</string>
+    <string name="confirmation_sub">Мы отправили код подтвержения</string>
     <string name="confirmation_edit">Введите код сюда</string>
     <string name="confirmation_button">Впустите!</string>
     <string name="confirmation_bottom">Не пришло?</string>
@@ -96,4 +96,8 @@
     <string name="surname">Фамилия</string>
     <string name="internet_availible">Подключение восстановлено</string>
     <string name="password_incorrect">Пароли неверны</string>
+    <string name="to_mail">на</string>
+    <string name="err_email">Электронная почта не найдена</string>
+    <string name="err_confirm_code_length">Длина кода неверна!</string>
+    <string name="err_lang">Невозможно установить язык!</string>
 </resources>

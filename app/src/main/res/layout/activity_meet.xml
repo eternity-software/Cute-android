@@ -64,7 +64,7 @@
             app:srcCompat="@drawable/logo_texted" />
 
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:id="@+id/subTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +73,8 @@
             android:layout_marginTop="10dp"
             android:text="@string/app_subtext"
             android:textColor="@color/colorWhite"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:localizableKey="app_subtext" />
     </LinearLayout>
 
     <LinearLayout
@@ -104,7 +105,7 @@
                 app:tint="@color/colorPrimaryDark" />
 
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,7 +114,8 @@
                 android:paddingLeft="20dp"
                 android:text="@string/sign_in"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:localizableKey="sign_in" />
 
         </LinearLayout>
 
@@ -134,7 +136,7 @@
                 app:tint="@color/colorWhite" />
 
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,7 +145,8 @@
                 android:paddingLeft="20dp"
                 android:text="@string/sign_up"
                 android:textColor="@color/colorWhite"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:localizableKey="sign_up" />
 
         </LinearLayout>
 

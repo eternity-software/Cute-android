@@ -42,7 +42,6 @@ public class TooltipScript {
             tooltip.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-
                     nextTooltip();
                 }
             });

@@ -167,7 +167,7 @@
         android:layout_height="40dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/button_active"
+        android:background="@drawable/button_active_enabled"
         android:fontFamily="@font/montserratmedium"
         android:onClick="apply"
         android:text="@string/save_profile"

@@ -41,18 +41,19 @@
                     android:foregroundGravity="center_horizontal"
                     app:srcCompat="@drawable/icon_signin" />
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="0"
-                    android:fontFamily="@font/montserrat"
+                    android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="center"
                     android:text="@string/sign_in"
                     android:textColor="@color/colorMainText"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    app:localizableKey="sign_in" />
             </LinearLayout>
 
             <TextView
@@ -64,7 +65,8 @@
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/montserrat"
                 android:gravity="center"
-                android:text="@string/sub_passwords" />
+                android:text="@string/sub_passwords"
+                app:localizableKey="sub_passwords" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -203,7 +205,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -211,9 +213,10 @@
             android:gravity="center"
             android:text="@string/next_button_privacy_policy"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:localizableKey="next_button_privacy_policy" />
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -223,7 +226,8 @@
             android:gravity="center"
             android:text="@string/privacy_policy"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:localizableKey="privacy_policy" />
 
 
     </LinearLayout>

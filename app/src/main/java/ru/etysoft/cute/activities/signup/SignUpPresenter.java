@@ -31,7 +31,13 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             signUpView.showError(context.getResources().getString(R.string.password_incorrect));
             return;
         }
+
+        if (!email.equals("")) {
+            CachedValues.setEmail(context.getApplication(), email);
+        }
+
         signUpView.setEnabledActionButton(false);
+        signUpView.showConfirmationActivity();
         Thread requestThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -41,6 +47,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                     if (registrationResponse.isSuccess()) {
                         String sessionKey = registrationResponse.getSessionKey();
                         CachedValues.setSessionKey(context, sessionKey);
+
 
                     } else {
                         ErrorHandler errorHandler = registrationResponse.getErrorHandler();
@@ -94,7 +101,6 @@ public class SignUpPresenter implements SignUpContract.Presenter {
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         networkStateReceiver = new NetworkStateReceiver(onlineRunnable, offlineRunnable);
         context.registerReceiver(networkStateReceiver, filter);
-
     }
 
     @Override

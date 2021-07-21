@@ -4,12 +4,13 @@ import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.Registration.RegistrationResponse;
 
 public interface SignUpContract {
+
     interface View {
         void showError(String text);
 
         void hideError();
 
-        void showMainActivity();
+        void showConfirmationActivity();
 
         void initializeViews();
 

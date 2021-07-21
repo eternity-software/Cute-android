@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="LocalizableTextView">
+        <attr name="localizableKey" format="string" />
+    </declare-styleable>
+</resources>

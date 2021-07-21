@@ -86,7 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
                             CacheUtils cacheUtils = CacheUtils.getInstance();
 
                             // TODO: logout API
-                            cacheUtils.clean(getContext());
+                            //cacheUtils.clean(getContext());
                             Intent meet = new Intent(getActivity(), MeetActivity.class);
                             getActivity().startActivity(meet);
                         }

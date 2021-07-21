@@ -25,6 +25,14 @@ public class CacheUtils {
         editor.apply();
     }
 
+    public void removeString(String key, Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
+        editor.remove(key);
+
+        editor.apply();
+    }
+
+
     public boolean hasKey(String key, Context context) {
         SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
         return pref.contains(key);

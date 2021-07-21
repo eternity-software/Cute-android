@@ -113,7 +113,6 @@ public class Tooltip extends PopupWindow {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     canDismiss = true;
-
                     dismiss();
                 }
 

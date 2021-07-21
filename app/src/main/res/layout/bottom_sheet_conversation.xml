@@ -312,7 +312,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/button_active"
+                android:background="@drawable/button_active_enabled"
                 android:fontFamily="@font/montserratmedium"
                 android:textAllCaps="false"
                 android:text="@string/save_profile"

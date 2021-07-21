@@ -79,8 +79,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
         cacheUtils = CacheUtils.getInstance();
 
+        LocaleChanger.setRString(R.class, "messages_header", R.string.pass_new);
+
         // Инициализация кодов ошибок
         ErrorCodes.initialize(this);
+
 
         // Проверка сессии
         try {

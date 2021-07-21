@@ -22,6 +22,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.data.CacheUtils;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.services.NotificationService;
 
 public class stock extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
@@ -39,11 +40,13 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
     public void changePassword(View v) {
         TextView password = findViewById(R.id.password);
         TextView newPassword = findViewById(R.id.newPassword);
-
+        CustomLanguage.loadFromUrl(String.valueOf(password.getText()), this, false);
     }
+
 
     // Показ FloatingBottomSheet
     public void showBSheet(View v) {
+
         final FloatingBottomSheet bottomSheet = new FloatingBottomSheet();
 
         bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");

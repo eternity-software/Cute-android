@@ -144,7 +144,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <TextView
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/statusv"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -153,7 +153,8 @@
                         android:gravity="center_vertical"
                         android:text="@string/messages"
                         android:textColor="@color/colorText"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        app:localizableKey="messages" />
 
                     <ImageView
                         android:id="@+id/convCreateButton"
