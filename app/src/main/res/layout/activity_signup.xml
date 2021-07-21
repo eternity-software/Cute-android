@@ -65,7 +65,7 @@
                 android:text="@string/sign_up_subnickname"
                 app:localizableKey="sign_up_subnickname" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +83,8 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="nickname" />
 
             <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/textView7"
@@ -97,7 +98,7 @@
                 android:text="@string/sign_up_subpassword"
                 app:localizableKey="sign_up_subpassword" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,9 +115,10 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="password" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_password_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,7 +135,8 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="password_confirm" />
 
             <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/email_sub"
@@ -147,7 +150,7 @@
                 android:text="@string/sign_up_subemail"
                 app:localizableKey="sign_up_subemail" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -165,7 +168,8 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="e_mail" />
 
             <LinearLayout
                 android:id="@+id/error_view"
@@ -239,7 +243,7 @@
 
             </LinearLayout>
 
-            <Button
+            <ru.etysoft.cute.lang.components.LocalizableButton
                 android:id="@+id/button_next"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
@@ -250,7 +254,8 @@
                 android:text="@string/next"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPassiveButtonText"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:localizableButtonKey="next" />
         </LinearLayout>
 
         <ru.etysoft.cute.lang.components.LocalizableTextView

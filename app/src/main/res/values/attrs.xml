@@ -2,4 +2,10 @@
     <declare-styleable name="LocalizableTextView">
         <attr name="localizableKey" format="string" />
     </declare-styleable>
+    <declare-styleable name="LocalizableButton">
+        <attr name="localizableButtonKey" format="string" />
+    </declare-styleable>
+    <declare-styleable name="LocalizableEditText">
+        <attr name="localizableHint" format="string" />
+    </declare-styleable>
 </resources>

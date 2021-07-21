@@ -92,7 +92,7 @@
             </LinearLayout>
 
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,7 +108,8 @@
                 android:paddingTop="7dp"
                 android:maxLength="6"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="confirmation_edit" />
 
             <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/cant"
@@ -173,7 +174,6 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/button_back"
                 android:layout_width="100dp"
                 android:layout_height="35dp"
                 android:fontFamily="@font/montserrat"
@@ -186,7 +186,7 @@
 
         </LinearLayout>
 
-        <Button
+        <ru.etysoft.cute.lang.components.LocalizableButton
             android:id="@+id/button_next"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
@@ -194,11 +194,11 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/button_active_selector"
             android:fontFamily="@font/montserrat"
-            android:onClick="confirmButton"
             android:text="@string/next"
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:localizableButtonKey="next" />
 
     </LinearLayout>
 
