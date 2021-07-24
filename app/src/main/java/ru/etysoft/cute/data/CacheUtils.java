@@ -21,7 +21,6 @@ public class CacheUtils {
     public void setString(String key, String text, Context context) {
         SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
         editor.putString(key, text);
-
         editor.apply();
     }
 
