@@ -89,7 +89,7 @@ public class DialogsFragment extends Fragment {
         tooltipScript.addTooltip(createChatTooltip, convCreateButton);
         tooltipScript.addTooltip(searchChatTooltip, convSearchButton);
 
-        tooltipScript.start();
+       // tooltipScript.start();
 
 
         final Button error = view.findViewById(R.id.update_dialoglist);

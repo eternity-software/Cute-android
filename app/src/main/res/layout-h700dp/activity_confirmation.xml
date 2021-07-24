@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/divider_56"
-                android:layout_marginBottom="@dimen/divider_28"
+                android:layout_marginBottom="@dimen/divider_56"
                 android:layout_weight="0"
                 android:fontFamily="@font/montserratalternates_medium"
                 android:gravity="center"
@@ -62,8 +62,8 @@
                 android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
                 android:text="@string/confirmation_sub"
-                app:localizableKey="confirmation_sub"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                app:localizableKey="confirmation_sub" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,8 +79,8 @@
                     android:fontFamily="@font/montserratmedium"
                     android:gravity="center"
                     android:text="@string/to_mail"
-                    app:localizableKey="@string/to_mail"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    app:localizableKey="@string/to_mail" />
 
                 <TextView
                     android:id="@+id/email"
@@ -107,8 +107,8 @@
                 android:gravity="center"
                 android:hint="@string/confirmation_edit"
                 android:inputType="number"
-                android:paddingTop="7dp"
                 android:maxLength="6"
+                android:paddingTop="7dp"
                 android:paddingBottom="7dp"
                 android:textColor="@color/colorText"
                 app:localizableHint="confirmation_edit" />
@@ -118,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="@dimen/divider_14"
+                android:layout_marginTop="@dimen/divider_28"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
@@ -132,8 +132,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="45dp"
-                android:gravity="center"
                 android:layout_marginTop="@dimen/divider_14"
+                android:gravity="center"
                 android:visibility="gone">
 
                 <ImageView
