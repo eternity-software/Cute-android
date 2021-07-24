@@ -29,7 +29,7 @@ public class TooltipScript {
         try {
             nextTooltip();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.PopupWindow;
@@ -32,10 +33,11 @@ public class Tooltip extends PopupWindow {
                 context.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = inflater.inflate(R.layout.tooltip, null);
         tooltipText = popupView.findViewById(R.id.tooltiptext);
-        this.setBackgroundDrawable(new ColorDrawable(
+        setBackgroundDrawable(new ColorDrawable(
                 android.graphics.Color.TRANSPARENT));
         setClippingEnabled(true);
         setFocusable(true);
+        setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setContentView(popupView);
     }
 
@@ -61,8 +63,6 @@ public class Tooltip extends PopupWindow {
 
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
-        Rect location = locateView(parent);
-
         super.showAtLocation(parent, Gravity.TOP | Gravity.LEFT, 0, 0);
         int ypos = 0;
         if (parent.getY() < getContentView().getHeight()) {
