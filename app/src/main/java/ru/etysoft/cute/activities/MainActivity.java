@@ -17,6 +17,7 @@ import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.CrashExceptionHandler;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.fragments.account.AccountFragment;
 import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
@@ -83,6 +84,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
         // Инициализация кодов ошибок
         ErrorCodes.initialize(this);
+
+
+        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof CrashExceptionHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(new CrashExceptionHandler(this));
+        }
 
 
         // Проверка сессии

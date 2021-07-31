@@ -178,7 +178,7 @@
                 android:layout_marginTop="@dimen/divider_14"
                 android:gravity="center"
                 android:layout_marginBottom="@dimen/divider_28"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
                 <ImageView

@@ -27,9 +27,10 @@
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.CrashReportActivity"></activity>
         <activity
             android:name=".activities.ImagePreview"
-            android:theme="@style/AppSlideTheme"></activity>
+            android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".EditChat"
             android:theme="@style/AppSlideTheme" />
@@ -108,7 +109,6 @@
             android:name=".SplashScreen"
             android:theme="@style/SplashTheme">
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />

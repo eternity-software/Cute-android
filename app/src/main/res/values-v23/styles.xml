@@ -9,6 +9,7 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/test_transition</item>
     </style>
 
     <style name="AppTheme.TransparentTheme">
