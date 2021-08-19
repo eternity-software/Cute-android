@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/colorButtonMainSupport">
+    android:color="@color/colorLightLGray">
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/colorBackground" />
@@ -11,13 +11,13 @@
                 android:top="1dp" />
             <stroke
                 android:width="1dp"
-                android:color="@color/colorMain" />
+                android:color="@color/accent_support" />
             <corners android:radius="100dp" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorButtonMain" />
+            <solid android:color="@color/accent_support" />
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
@@ -25,7 +25,7 @@
                 android:top="1dp" />
             <stroke
                 android:width="1dp"
-                android:color="@color/colorPrimaryDark" />
+                android:color="@color/gray" />
             <corners android:radius="100dp" />
 
         </shape>
@@ -36,7 +36,7 @@
         <shape android:shape="rectangle">
 
 
-            <solid android:color="@color/colorButtonMain" />
+            <solid android:color="@color/accent_support" />
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
@@ -44,7 +44,7 @@
                 android:top="1dp" />
             <stroke
                 android:width="1dp"
-                android:color="@color/colorButtonMain" />
+                android:color="@color/accent_support" />
             <corners android:radius="100dp" />
 
         </shape>

@@ -39,7 +39,7 @@
                 android:paddingHorizontal="3dp"
                 android:paddingVertical="5dp"
                 android:text="Author"
-                android:textColor="@color/colorMainText" />
+                android:textColor="@color/accent_support" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

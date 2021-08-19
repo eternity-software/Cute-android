@@ -14,12 +14,9 @@ import ru.etysoft.cute.R;
 public class CustomToast {
 
 
-    public static String lastmess = "";
-
     public static void show(String message, int icon, Activity context) {
-        if (!lastmess.equals(message)) {
-            lastmess = message;
-            LayoutInflater inflater = context.getLayoutInflater();
+
+        LayoutInflater inflater = context.getLayoutInflater();
             View layout = inflater.inflate(R.layout.toast,
                     (ViewGroup) context.findViewById(R.id.toast_layout_root));
 
@@ -32,6 +29,6 @@ public class CustomToast {
             toast.setDuration(Toast.LENGTH_SHORT);
             toast.setView(layout);
             toast.show();
-        }
+
     }
 }

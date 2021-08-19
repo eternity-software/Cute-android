@@ -4,5 +4,6 @@
     <dimen name="divider_56">56dp</dimen>
     <dimen name="divider_28">28dp</dimen>
     <dimen name="divider_14">14dp</dimen>
+    <dimen name="divider_7">7dp</dimen>
     <dimen name="corners">16dp</dimen>
 </resources>

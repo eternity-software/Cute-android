@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.exceptions.NotCachedException;
@@ -25,8 +25,7 @@ public class SplashScreen extends AppCompatActivity {
 
         try {
             CustomLanguage.loadExisting(this);
-        } catch (NotCachedException e) {
-            e.printStackTrace();
+        } catch (NotCachedException ignored) {
         } catch (LanguageParsingException e) {
             CustomToast.show(getResources().getString(R.string.err_lang), R.drawable.icon_error, this);
         }

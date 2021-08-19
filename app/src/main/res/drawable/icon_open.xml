@@ -7,7 +7,7 @@
         android:translateX="16.993"
         android:translateY="4.248">
         <path
-            android:fillColor="@color/colorMainText"
+            android:fillColor="@color/accent_support"
             android:pathData="M45.987 84.974a10.5 10.5 0 1 0 -10.5 -10.5A10.528 10.528 0 0 0 45.987 84.974Zm31.49 -47.235H72.229v-10.5a26.242 26.242 0 1 0 -52.484 0h9.972a16.27 16.27 0 0 1 32.54 0v10.5H14.5A10.528 10.528 0 0 0 4 48.235v52.484a10.528 10.528 0 0 0 10.5 10.5h62.98a10.528 10.528 0 0 0 10.5 -10.5V48.235A10.528 10.528 0 0 0 77.477 37.739Zm0 62.98H14.5V48.235h62.98Z" />
     </group>
 </vector>

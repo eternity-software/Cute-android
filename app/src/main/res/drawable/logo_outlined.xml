@@ -14,7 +14,7 @@
                 android:translateX="0.382"
                 android:translateY="0.382">
                 <path
-                    android:fillColor="@color/colorMain"
+                    android:fillColor="@color/accent_support"
                     android:pathData="M140 70A70 70 0 0 1 0 70A70 70 0 0 1 140 70Z" />
             </group>
             <group

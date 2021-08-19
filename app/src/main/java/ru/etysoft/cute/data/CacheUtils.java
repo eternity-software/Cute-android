@@ -32,7 +32,6 @@ public class CacheUtils {
         editor.apply();
     }
 
-
     public boolean hasKey(String key, Context context) {
         SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
         return pref.contains(key);

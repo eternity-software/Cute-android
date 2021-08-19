@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities;
+package ru.etysoft.cute.activities.main;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,26 +13,20 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.meet.MeetActivity;
+import ru.etysoft.cute.activities.fragments.account.AccountFragment;
+import ru.etysoft.cute.activities.fragments.dialogs.DialogsFragment;
+import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
+import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
-import ru.etysoft.cute.data.CacheUtils;
-import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.CrashExceptionHandler;
-import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cute.fragments.account.AccountFragment;
-import ru.etysoft.cute.fragments.dialogs.DialogsFragment;
-import ru.etysoft.cute.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.services.NotificationService;
-import ru.etysoft.cute.utils.CustomToast;
-import ru.etysoft.cute.utils.ErrorCodes;
-import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.Permissions;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener {
+public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener, MainContract.View {
 
     public static final boolean isDev = true;
 
+    private MainPresenter mainPresenter;
 
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
@@ -40,9 +34,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     private DialogsFragment fragmentDialogs;
     private AccountFragment fragmentAccount;
     private ExploreFragment fragmentExplore;
-    private CacheUtils cacheUtils;
-
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -56,59 +47,31 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             } else if (item.getItemId() == R.id.account) {
                 viewPager.setCurrentItem(2);
             }
+
+
             return false;
         }
     };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    private boolean isbanned = false;
-    public static boolean amIcreated = false;
+        mainPresenter = new MainPresenter(this, this);
+
+        startService(new Intent(this, NotificationService.class));
+
+        devOptions();
+
+        setupNavigation();
+        Permissions.requestAll(this);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Permissions.checkAvailble(this);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Logger.logActivity("Created Main");
-        startService(new Intent(this, NotificationService.class));
-
-        cacheUtils = CacheUtils.getInstance();
-
-        LocaleChanger.setRString(R.class, "messages_header", R.string.pass_new);
-
-        // Инициализация кодов ошибок
-        ErrorCodes.initialize(this);
-
-
-        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof CrashExceptionHandler)) {
-            Thread.setDefaultUncaughtExceptionHandler(new CrashExceptionHandler(this));
-        }
-
-
-        // Проверка сессии
-        try {
-            if (CachedValues.getSessionKey(this) == null) {
-                Intent intent = new Intent(MainActivity.this, MeetActivity.class);
-                CacheUtils cacheUtils = CacheUtils.getInstance();
-                cacheUtils.clean(this);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        } catch (NotCachedException e) {
-            e.printStackTrace();
-        }
-
-
-        // Инициализация навигации
-        setupNavigation();
-        Permissions.checkAvailble(this);
+        Permissions.requestAll(this);
     }
 
 
@@ -124,31 +87,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         super.onPause();
     }
 
-    public void checksAPI() {
-        checkAccount();
-    }
-
-    public void checkAccount() {
-        final String session;
-        try {
-            session = CachedValues.getSessionKey(this);
-
-            if (session != null) {
-            } else {
-                if (!isbanned) {
-                    Intent intent = new Intent(MainActivity.this, MeetActivity.class);
-                    CacheUtils cacheUtils = CacheUtils.getInstance();
-                    cacheUtils.clean(this);
-                    startActivity(intent);
-                    CustomToast.show("Session error", R.drawable.icon_error, MainActivity.this);
-                    finish();
-                }
-            }
-        } catch (NotCachedException e) {
-            e.printStackTrace();
-        }
-    }
-
+    @Deprecated
     public void devOptions() {
         final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
 
@@ -167,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
     }
 
-
+    @Override
     public void setupNavigation() {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view);
         viewPager = (ViewPager) findViewById(R.id.view);
@@ -183,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                     menuItem.setChecked(false);
                 } else {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                if (position == 2) {
+                    fragmentAccount.updateData();
                 }
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 menuItem = bottomNavigationView.getMenu().getItem(position);
@@ -201,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         navView.setSelectedItemId(R.id.dialogs);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Выбрать диалоги
+        // Выбрать раздел сообщений
         viewPager.setCurrentItem(1);
     }
 
@@ -218,4 +160,5 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(viewPagerAdapter);
     }
+
 }

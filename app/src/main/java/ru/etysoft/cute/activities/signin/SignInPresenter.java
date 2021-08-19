@@ -1,14 +1,17 @@
 package ru.etysoft.cute.activities.signin;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.IntentFilter;
 
 import org.json.JSONException;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.main.MainActivity;
+import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.Authorization.AuthorizationResponse;
+import ru.etysoft.cuteframework.methods.account.Login.LoginResponse;
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class SignInPresenter implements SignInContract.Presenter {
@@ -32,13 +35,15 @@ public class SignInPresenter implements SignInContract.Presenter {
             @Override
             public void run() {
                 try {
-                    AuthorizationResponse authorizationResponse = signInModel.signIn(login, password);
+                    LoginResponse loginResponse = signInModel.signIn(login, password);
 
-                    if (authorizationResponse.isSuccess()) {
-                        String sessionKey = authorizationResponse.getSessionKey();
+                    if (loginResponse.isSuccess()) {
 
+                        CachedValues.setLogin(context, login);
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
                     } else {
-                        ErrorHandler errorHandler = authorizationResponse.getErrorHandler();
+                        ErrorHandler errorHandler = loginResponse.getErrorHandler();
                         signInView.showError(context.getResources().getString(R.string.err_unknown));
                     }
                 } catch (ResponseException e) {

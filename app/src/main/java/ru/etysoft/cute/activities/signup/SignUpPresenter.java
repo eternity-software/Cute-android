@@ -9,7 +9,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.Registration.RegistrationResponse;
+import ru.etysoft.cuteframework.methods.account.Registration.RegistrationResponse;
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class SignUpPresenter implements SignUpContract.Presenter {
@@ -26,8 +26,8 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     @Override
-    public void onSignUpButtonClick(final String login, final String email, final String password) {
-        if (signUpView.isPasswordsCorrect()) {
+    public void onSignUpButtonClick(final String login, final String displayName, final String email, final String password) {
+        if (!signUpView.isPasswordsCorrect()) {
             signUpView.showError(context.getResources().getString(R.string.password_incorrect));
             return;
         }
@@ -37,18 +37,20 @@ public class SignUpPresenter implements SignUpContract.Presenter {
         }
 
         signUpView.setEnabledActionButton(false);
-        signUpView.showConfirmationActivity();
+
         Thread requestThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    RegistrationResponse registrationResponse = signUpModel.signUp(login, email, password);
+                    RegistrationResponse registrationResponse = signUpModel.signUp(login, displayName, email, password);
 
                     if (registrationResponse.isSuccess()) {
                         String sessionKey = registrationResponse.getSessionKey();
+                        CachedValues.setLogin(context, login);
+                        CachedValues.setDisplayName(context, displayName);
+                        CachedValues.setEmail(context, email);
                         CachedValues.setSessionKey(context, sessionKey);
-
-
+                        signUpView.showConfirmationActivity();
                     } else {
                         ErrorHandler errorHandler = registrationResponse.getErrorHandler();
                         signUpView.showError(context.getResources().getString(R.string.err_unknown));

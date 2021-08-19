@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ErrorViewUtils;
-import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.activities.main.MainActivity;
 
 public class ConfirmationActivity extends AppCompatActivity implements ConfirmationContract.View {
 

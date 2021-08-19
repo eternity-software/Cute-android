@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ErrorViewUtils;
-import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 
 public class SignInActivity extends AppCompatActivity implements SignInContract.View {
@@ -29,7 +29,8 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
-        overridePendingTransition(R.anim.side_from_top, R.anim.slide_down);
+        // Анимация
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
         initializeViews();
 

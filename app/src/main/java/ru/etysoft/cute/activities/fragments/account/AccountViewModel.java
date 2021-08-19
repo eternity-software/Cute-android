@@ -1,4 +1,4 @@
-package ru.etysoft.cute.fragments.account;
+package ru.etysoft.cute.activities.fragments.account;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

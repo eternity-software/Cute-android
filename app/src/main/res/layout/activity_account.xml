@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/idview"
+            android:id="@+id/login_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -41,7 +41,7 @@
             android:fontFamily="@font/montserrat"
             android:gravity="center"
             android:text="unknown"
-            android:textColor="@color/colorMainText"
+            android:textColor="@color/accent_support"
             android:textSize="28sp" />
 
     </LinearLayout>
@@ -85,7 +85,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/username"
+                        android:id="@+id/display_name_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
@@ -115,7 +115,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             app:srcCompat="@drawable/icon_friend"
-                            app:tint="@color/colorMainText" />
+                            app:tint="@color/accent_support" />
 
                         <TextView
                             android:id="@+id/status2"
@@ -126,7 +126,7 @@
                             android:fontFamily="@font/montserratmedium"
                             android:gravity="center_vertical"
                             android:text="0 Friends"
-                            android:textColor="@color/colorMainText"
+                            android:textColor="@color/accent_support"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>

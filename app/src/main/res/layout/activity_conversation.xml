@@ -149,7 +149,7 @@
             android:layout_marginVertical="7dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="7dp"
-            android:background="@drawable/circle_button"
+            android:background="@drawable/circle_button_accent"
             android:onClick="sendMessage"
             android:padding="8dp"
             app:srcCompat="@drawable/icon_send" />
@@ -162,7 +162,7 @@
         android:layout_height="37dp"
         android:layout_marginVertical="7dp"
         android:layout_marginEnd="7dp"
-        android:background="@drawable/circle_button"
+        android:background="@drawable/circle_button_accent"
         android:padding="8dp"
         android:elevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"

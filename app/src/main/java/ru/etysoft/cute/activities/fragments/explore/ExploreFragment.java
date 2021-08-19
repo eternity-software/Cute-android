@@ -1,4 +1,4 @@
-package ru.etysoft.cute.fragments.explore;
+package ru.etysoft.cute.activities.fragments.explore;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

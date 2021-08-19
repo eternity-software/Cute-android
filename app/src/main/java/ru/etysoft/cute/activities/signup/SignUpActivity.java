@@ -22,6 +22,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     private Button nextButton;
     private LinearLayout backButton;
     private EditText loginInput;
+    private EditText displayNameInput;
     private EditText emailInput;
     private EditText passwordInput;
     private EditText passwordConfirmInput;
@@ -49,10 +50,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
             @Override
             public void onClick(View v) {
                 signUpPresenter.onSignUpButtonClick(String.valueOf(loginInput.getText()),
+                        String.valueOf(displayNameInput.getText()),
                         String.valueOf(emailInput.getText()),
                         String.valueOf(passwordInput.getText()));
             }
         });
+
     }
 
     @Override
@@ -62,6 +65,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         backButton = findViewById(R.id.button_back);
         nextButton = findViewById(R.id.button_next);
         loginInput = findViewById(R.id.edittext_login);
+        displayNameInput = findViewById(R.id.edittext_displayname);
         emailInput = findViewById(R.id.edittext_email);
         passwordInput = findViewById(R.id.edittext_password);
         passwordConfirmInput = findViewById(R.id.edittext_password_confirm);

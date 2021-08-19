@@ -120,5 +120,8 @@
     <string name="perms_text">For Cute to work on your device, it requires several normal permissions.</string>
     <string name="perms_btn">Grant permissions</string>
     <string name="conv_nocon">waiting for network</string>
+    <string name="sign_up_display_name">All your friends will see it</string>
+    <string name="sign_up_display_name_hint">Display name</string>
+    <string name="chats">Chats</string>
 
 </resources>

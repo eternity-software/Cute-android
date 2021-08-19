@@ -49,7 +49,7 @@
                 android:fontFamily="@font/montserratalternates_medium"
                 android:gravity="center"
                 android:text="@string/confirmation"
-                android:textColor="@color/colorMainText"
+                android:textColor="@color/accent_support"
                 android:textSize="36sp"
                 app:localizableKey="confirmation" />
 
@@ -90,7 +90,7 @@
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
                     android:text="unknownmail@mail.com"
-                    android:textColor="@color/colorMainText"
+                    android:textColor="@color/accent_support"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -123,7 +123,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
                 android:text="@string/confirmation_bottom"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/accent_blue"
                 android:textSize="14sp"
                 app:localizableKey="confirmation_bottom" />
 

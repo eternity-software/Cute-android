@@ -1,4 +1,4 @@
-package ru.etysoft.cute.fragments.dialogs;
+package ru.etysoft.cute.activities.fragments.dialogs;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

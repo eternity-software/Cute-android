@@ -50,7 +50,7 @@
                     android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="center"
                     android:text="@string/sign_in"
-                    android:textColor="@color/colorMainText"
+                    android:textColor="@color/accent_support"
                     android:textSize="40sp"
                     app:localizableKey="sign_in" />
             </LinearLayout>

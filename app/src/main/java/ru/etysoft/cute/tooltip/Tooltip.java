@@ -1,5 +1,7 @@
 package ru.etysoft.cute.tooltip;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -14,8 +16,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import ru.etysoft.cute.R;
-
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class Tooltip extends PopupWindow {
 
@@ -45,7 +45,7 @@ public class Tooltip extends PopupWindow {
     public void showAsDropDown(View anchor, int xoff, int yoff) {
         oldDrawable = anchor.getBackground();
         this.anchor = anchor;
-        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.colorAccent));
+        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.accent_blue));
         super.showAsDropDown(anchor, xoff, yoff);
     }
 
@@ -53,7 +53,7 @@ public class Tooltip extends PopupWindow {
     public void showAsDropDown(View anchor) {
         oldDrawable = anchor.getBackground();
         this.anchor = anchor;
-        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.colorAccent));
+        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.accent_blue));
         super.showAsDropDown(anchor);
     }
 

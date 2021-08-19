@@ -15,7 +15,7 @@
                 android:translateX="50"
                 android:translateY="53">
                 <path
-                    android:fillColor="@color/colorMain"
+                    android:fillColor="@color/accent_support"
                     android:pathData="M81.5,149h-7A74.52,74.52,0,0,1,45.5,5.855,74.034,74.034,0,0,1,74.5,0h62.875A18.625,18.625,0,0,1,156,18.625V74.5A74.438,74.438,0,0,1,81.5,149ZM78,32a42,42,0,1,0,42,42A42.047,42.047,0,0,0,78,32Z" />
             </group>
         </group>
