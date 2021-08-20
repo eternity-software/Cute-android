@@ -22,6 +22,7 @@ import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Conversation;
+import ru.etysoft.cute.activities.CrashReportActivity;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.utils.SendorsControl;
 
@@ -176,7 +177,7 @@ public class NotificationService extends Service {
         notificationManager.notify(notifid, builder.build());
     }
 
-    public void notifyBanner(Context context, String title, String text) {
+    public static void notifyBanner(Context context, String title, String text) {
         // до версии Android 8.0 API 26
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         long[] vibrate = new long[]{1000, 1000, 1000, 1000, 1000};
@@ -187,27 +188,33 @@ public class NotificationService extends Service {
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
 
+        Intent snoozeIntent = new Intent(context, CrashReportActivity.class);
+        snoozeIntent.putExtra("stacktrace", text);
+
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context,
                 0, notificationIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         builder.setContentIntent(contentIntent)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                 .setSmallIcon(R.drawable.logo_notification)
                 .setContentTitle(title)
-                .setContentText(text)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVibrate(vibrate)
-                .setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(text))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                .setContentText(text)
                 .setContentIntent(contentIntent)
                 .setTicker("Cute")
+                .setContentIntent(pIntent)
+                .addAction(R.drawable.icon_error, "VIEW REPORT",
+                        pIntent)
                 .setLights(Color.RED, 3000, 3000)
                 .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
 
         NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // Альтернативный вариант
         // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         createChannelIfNeeded(notificationManager);
@@ -220,7 +227,7 @@ public class NotificationService extends Service {
         builder.getNotification().ledOnMS = 1;
         builder.getNotification().flags = builder.getNotification().flags | Notification.FLAG_SHOW_LIGHTS;
         builder.setLights(Color.RED, 3000, 3000);
-        Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
         notifid++;
         notificationManager.notify(notifid, builder.build());

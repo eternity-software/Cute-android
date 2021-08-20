@@ -1,5 +1,7 @@
 package ru.etysoft.cute.tooltip;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -7,14 +9,13 @@ import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import ru.etysoft.cute.R;
-
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class Tooltip extends PopupWindow {
 
@@ -32,10 +33,11 @@ public class Tooltip extends PopupWindow {
                 context.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = inflater.inflate(R.layout.tooltip, null);
         tooltipText = popupView.findViewById(R.id.tooltiptext);
-        this.setBackgroundDrawable(new ColorDrawable(
+        setBackgroundDrawable(new ColorDrawable(
                 android.graphics.Color.TRANSPARENT));
         setClippingEnabled(true);
         setFocusable(true);
+        setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setContentView(popupView);
     }
 
@@ -43,7 +45,7 @@ public class Tooltip extends PopupWindow {
     public void showAsDropDown(View anchor, int xoff, int yoff) {
         oldDrawable = anchor.getBackground();
         this.anchor = anchor;
-        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.colorAccent));
+        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.accent_blue));
         super.showAsDropDown(anchor, xoff, yoff);
     }
 
@@ -51,7 +53,7 @@ public class Tooltip extends PopupWindow {
     public void showAsDropDown(View anchor) {
         oldDrawable = anchor.getBackground();
         this.anchor = anchor;
-        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.colorAccent));
+        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.accent_blue));
         super.showAsDropDown(anchor);
     }
 
@@ -61,8 +63,6 @@ public class Tooltip extends PopupWindow {
 
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
-        Rect location = locateView(parent);
-
         super.showAtLocation(parent, Gravity.TOP | Gravity.LEFT, 0, 0);
         int ypos = 0;
         if (parent.getY() < getContentView().getHeight()) {
@@ -113,7 +113,6 @@ public class Tooltip extends PopupWindow {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     canDismiss = true;
-
                     dismiss();
                 }
 

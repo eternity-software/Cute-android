@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorAccent">#526FFF</color>
-    <color name="colorAccentNegative">#7F568C</color>
-    <color name="colorPrimaryDark">#707070</color>
-    <color name="colorPrimaryGray">#C1C1C1</color>
+    <!-- Static values -->
+
+    <color name="black">#1B1B1B</color>
+    <color name="white">#FFFFFF</color>
+    <color name="achromatic_20">#232D40</color>
+    <color name="achromatic_30">#4D4D4D</color>
+    <color name="achromatic_40">#8E93A3</color>
+    <color name="achromatic_50">#666666</color>
+    <color name="achromatic_60">#808080</color>
+    <color name="achromatic_75">#BFBFBF</color>
+    <color name="black_opacity_50">#803F414D</color>
+    <color name="white_opacity_50">#80FFFFFF</color>
+    <color name="accent_blue">#3456FF</color>
+    <color name="accent_support">#3752DB</color>
+    <color name="orange">#FF8800</color>
+    <color name="light_accent">#66BFFF</color>
+    <color name="state_green">#22A64D</color>
+    <color name="state_red">#E62333</color>
+    <color name="state_gray">#EBEEFF</color>
+    <color name="light_green">#7AE097</color>
+    <color name="light_red">#F08294</color>
+    <color name="light_yellow">#FFD685</color>
+    <color name="light_blue">#9AA9F4</color>
+    <color name="light_sky_blue">#9AA9F4</color>
+    <color name="background_red">#FFEFF5</color>
+    <color name="text_black">#000000</color>
+    <color name="text_soft_gray">#999999</color>
+    <color name="text_gray">#4E596E</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="gray">#4E596E</color>
+    <color name="soft_gray">#999999</color>
+
     <color name="colorLightGray">#D9D9D9</color>
     <color name="colorUnderWhite">#F9F9F9</color>
-    <color name="colorMain">#526FFF</color>
-    <color name="colorMainSupport">#3456FF</color>
     <color name="colorMainLight">#7D93FF</color>
     <color name="colorOrange">#FF4F00</color>
     <color name="colorLightLGray">#F5F5F5</color>
@@ -26,8 +52,6 @@
     <color name="colorButtonText">#FFFFFF</color>
     <color name="colorHint">#757575</color>
     <color name="colorPassiveButtonText">#505050</color>
-    <color name="colorButtonMain">#526FFF</color>
-    <color name="colorButtonMainSupport">#526FFF</color>
 
 
     <color name="colorPassiveMini">#ECECEC</color>
@@ -38,21 +62,19 @@
     <color name="colorBackgroundElements">#D6D6D6</color>
     <color name="colorFrontElements">#A2A2A2</color>
     <color name="colorText">#252525</color>
-    <color name="colorMainText">#526FFF</color>
-    <color name="colorError">#FF4F00</color>
-    <color name="colorSuccess">#4CAF50</color>
+    <color name="colorTextAccent">@color/accent_blue</color>
+    <color name="colorError">@color/colorOrange</color>
+    <color name="colorSuccess">@color/state_green</color>
     <color name="colorDivider">#F4F4F4</color>
 
-    <color name="colorOnline">#4CAF50</color>
-    <color name="colorOnlineOutLine">#FFFFFF</color>
+    <color name="colorOnline">@color/state_green</color>
+    <color name="colorOnlineOutLine">@color/white</color>
 
-    <color name="colorSupportText">#616161</color>
-    <color name="colorButtonTrans">#707070</color>
-    <color name="colorButtonCircle">#526FFF</color>
+    <color name="colorSupportText">@color/text_soft_gray</color>
+    <color name="colorButtonTrans">@color/text_soft_gray</color>
 
-    <color name="colorMessage">#526FFF</color>
-    <color name="colorAlt">#526FFF</color>
-    <color name="colorAltSupport">#3F57CD</color>
+
+    <color name="colorAltSupport">@color/accent_blue</color>
     <color name="colorNotReaded">#F4F4F4</color>
     <color name="colorMyMessage">#E6E6E6</color>
 

@@ -99,11 +99,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/button_active"
+                android:background="@drawable/button_active_enabled"
                 android:fontFamily="@font/montserrat"
                 android:onClick="showBSheet"
                 android:text="ACTIVE BUTTON"
-                android:textColor="@color/colorMainText"
+                android:textColor="@color/accent_support"
                 android:textSize="18sp" />
 
             <CheckBox

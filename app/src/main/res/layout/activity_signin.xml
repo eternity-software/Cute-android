@@ -2,15 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    android:id="@+id/content"
     tools:context=".activities.signin.SignInActivity">
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,8 +21,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_marginVertical="@dimen/divider_56"
             android:orientation="vertical">
 
             <LinearLayout
@@ -41,41 +40,45 @@
                     android:foregroundGravity="center_horizontal"
                     app:srcCompat="@drawable/icon_signin" />
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="0"
-                    android:fontFamily="@font/montserrat"
+                    android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="center"
                     android:text="@string/sign_in"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="40sp" />
+                    android:textColor="@color/accent_support"
+                    android:textSize="40sp"
+                    app:localizableKey="sign_in" />
             </LinearLayout>
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/divider_28"
                 android:layout_marginRight="40dp"
-                android:fontFamily="@font/montserrat"
+                android:layout_marginBottom="@dimen/divider_28"
+                android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
-                android:text="@string/sub_passwords" />
+                android:text="@string/sub_passwords"
+                android:textSize="16sp"
+                app:localizableKey="sub_passwords" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
+                android:layout_marginBottom="@dimen/divider_28"
                 android:background="@drawable/edit_text_passive_double"
                 android:orientation="vertical">
 
-                <EditText
+                <ru.etysoft.cute.lang.components.LocalizableEditText
                     android:id="@+id/edittext_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -93,10 +96,11 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColor="@color/colorText"
-                    android:textColorHint="@color/colorHint" />
+                    android:textColorHint="@color/colorHint"
+                    app:localizableHint="login" />
 
 
-                <EditText
+                <ru.etysoft.cute.lang.components.LocalizableEditText
                     android:id="@+id/edittext_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -113,7 +117,8 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColor="@color/colorText"
-                    android:textColorHint="@color/colorHint" />
+                    android:textColorHint="@color/colorHint"
+                    app:localizableHint="password" />
             </LinearLayout>
 
             <LinearLayout
@@ -122,24 +127,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="45dp"
                 android:gravity="center"
-                android:paddingTop="15dp"
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     app:srcCompat="@drawable/icon_error" />
 
                 <TextView
                     android:id="@+id/error_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
                     android:text="Test error"
                     android:textColor="@color/colorError"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -154,7 +158,7 @@
         android:background="@drawable/square_rounded_top"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingVertical="10dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -164,7 +168,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="5dp"
+            android:layout_marginVertical="14dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -189,7 +193,7 @@
 
             </LinearLayout>
 
-            <Button
+            <ru.etysoft.cute.lang.components.LocalizableButton
                 android:id="@+id/button_next"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
@@ -200,10 +204,11 @@
                 android:text="@string/next"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPassiveButtonText"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:localizableButtonKey="next" />
         </LinearLayout>
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -211,19 +216,22 @@
             android:gravity="center"
             android:text="@string/next_button_privacy_policy"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            app:localizableKey="next_button_privacy_policy" />
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
+            android:layout_marginBottom="@dimen/divider_28"
             android:fontFamily="@font/montserratmedium"
             android:gravity="center"
             android:text="@string/privacy_policy"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            app:localizableKey="privacy_policy" />
 
 
     </LinearLayout>

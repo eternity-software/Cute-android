@@ -144,35 +144,37 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <TextView
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/statusv"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:fontFamily="@font/montserrat"
+                        android:fontFamily="@font/montserratalternates_medium"
                         android:gravity="center_vertical"
-                        android:text="@string/messages"
-                        android:textColor="@color/colorText"
-                        android:textSize="24sp" />
+                        android:text="@string/chats"
+                        android:textColor="@color/colorTextAccent"
+                        android:textSize="24sp"
+                        app:localizableKey="chats" />
 
                     <ImageView
                         android:id="@+id/convCreateButton"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:background="?attr/selectableItemBackground"
-                        android:paddingHorizontal="10dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/button_circle_gray"
+                        android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_convcreate" />
 
                     <ImageView
                         android:id="@+id/convSearchButton"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="@dimen/divider_7"
+                        android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="10dp"
                         app:srcCompat="@drawable/icon_search"
-                        app:tint="@color/colorMainText" />
+                        app:tint="@color/accent_support" />
                 </LinearLayout>
 
                 <ProgressBar
@@ -180,16 +182,11 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
+                    android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:indeterminate="true"
                     android:visibility="invisible" />
 
-                <View
-                    android:id="@+id/divider5"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/colorBackgroundElements" />
 
 
             </LinearLayout>

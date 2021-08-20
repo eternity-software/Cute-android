@@ -19,14 +19,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_marginVertical="@dimen/divider_28"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginBottom="@dimen/divider_14"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -38,32 +38,33 @@
                     android:foregroundGravity="center_horizontal"
                     app:srcCompat="@drawable/icon_signup" />
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="0"
-                    android:fontFamily="@font/montserrat"
+                    android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="center"
                     android:text="@string/sign_up"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="40sp" />
+                    android:textColor="@color/accent_support"
+                    android:textSize="40sp"
+                    app:localizableKey="sign_up" />
             </LinearLayout>
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
-                android:fontFamily="@font/montserrat"
+                android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
-                android:text="@string/sign_up_subnickname" />
+                android:text="@string/sign_up_subnickname"
+                app:localizableKey="sign_up_subnickname" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,20 +82,55 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="nickname" />
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
+                android:id="@+id/description_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/montserratmedium"
+                android:gravity="center"
+                android:text="@string/sign_up_display_name"
+                app:localizableKey="sign_up_displayname" />
+
+            <ru.etysoft.cute.lang.components.LocalizableEditText
+                android:id="@+id/edittext_displayname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edit_text_passive"
+                android:drawableLeft="@drawable/icon_person"
+                android:drawablePadding="10dp"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:foregroundGravity="left|clip_horizontal"
+                android:hint="@string/sign_up_display_name_hint"
+                android:inputType="textPersonName"
+                android:maxLength="255"
+                android:paddingLeft="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:textColor="@color/colorText"
+                app:localizableHint="sign_up_displayname_hint" />
+
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
-                android:fontFamily="@font/montserrat"
+                android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
-                android:text="@string/sign_up_subpassword" />
+                android:text="@string/sign_up_subpassword"
+                app:localizableKey="sign_up_subpassword" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,9 +147,10 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="password" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_password_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,20 +167,22 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="password_confirm" />
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/email_sub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
-                android:fontFamily="@font/montserrat"
+                android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
-                android:text="@string/sign_up_subemail" />
+                android:text="@string/sign_up_subemail"
+                app:localizableKey="sign_up_subemail" />
 
-            <EditText
+            <ru.etysoft.cute.lang.components.LocalizableEditText
                 android:id="@+id/edittext_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,32 +200,35 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:textColor="@color/colorText" />
+                android:textColor="@color/colorText"
+                app:localizableHint="e_mail" />
 
             <LinearLayout
                 android:id="@+id/error_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="45dp"
+                android:layout_marginTop="@dimen/divider_14"
                 android:gravity="center"
-                android:paddingTop="15dp"
+                android:layout_marginBottom="@dimen/divider_28"
                 android:visibility="gone">
 
+
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     app:srcCompat="@drawable/icon_error" />
 
                 <TextView
                     android:id="@+id/error_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
                     android:text="Test error"
                     android:textColor="@color/colorError"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -200,7 +242,7 @@
         android:background="@drawable/square_rounded_top"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingVertical="10dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -210,7 +252,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="5dp"
+            android:layout_marginVertical="14dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -235,7 +277,7 @@
 
             </LinearLayout>
 
-            <Button
+            <ru.etysoft.cute.lang.components.LocalizableButton
                 android:id="@+id/button_next"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
@@ -246,10 +288,11 @@
                 android:text="@string/next"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPassiveButtonText"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:localizableButtonKey="next" />
         </LinearLayout>
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -257,19 +300,22 @@
             android:gravity="center"
             android:text="@string/next_button_privacy_policy"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            app:localizableKey="next_button_privacy_policy" />
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
+            android:layout_marginBottom="@dimen/divider_28"
             android:fontFamily="@font/montserratmedium"
             android:gravity="center"
             android:text="@string/privacy_policy"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            app:localizableKey="privacy_policy" />
 
 
     </LinearLayout>

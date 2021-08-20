@@ -1,15 +1,17 @@
 package ru.etysoft.cute.activities.signup;
 
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.Registration.RegistrationResponse;
+import ru.etysoft.cuteframework.methods.account.Registration.RegistrationResponse;
+
 
 public interface SignUpContract {
+
     interface View {
         void showError(String text);
 
         void hideError();
 
-        void showMainActivity();
+        void showConfirmationActivity();
 
         void initializeViews();
 
@@ -19,7 +21,7 @@ public interface SignUpContract {
     }
 
     interface Presenter {
-        void onSignUpButtonClick(final String login, final String email, final String password);
+        void onSignUpButtonClick(final String login, final String displayName, final String email, final String password);
 
         void initializeNetworkStateHolder();
 
@@ -27,6 +29,6 @@ public interface SignUpContract {
     }
 
     interface Model {
-        RegistrationResponse signUp(String login, String email, String password) throws ResponseException;
+        RegistrationResponse signUp(String login, String displayName, String email, String password) throws ResponseException;
     }
 }

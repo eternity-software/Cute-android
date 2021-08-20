@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="ru.etysoft.cute.fragments.dialogs.DialogsFragment"
+        android:name="ru.etysoft.cute.activities.fragments.dialogs.DialogsFragment"
         android:label="@string/title_home"
         tools:layout="@layout/activity_dialogs">
         <action
@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="ru.etysoft.cute.fragments.account.AccountFragment"
+        android:name="ru.etysoft.cute.activities.fragments.account.AccountFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/activity_account">
         <action
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/explore"
-        android:name="ru.etysoft.cute.fragments.explore.ExploreFragment"
+        android:name="ru.etysoft.cute.activities.fragments.explore.ExploreFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/activity_meet">
         <action

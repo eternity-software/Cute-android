@@ -3,9 +3,6 @@ package ru.etysoft.cute.activities.signup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -14,7 +11,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.activities.ErrorViewUtils;
+import ru.etysoft.cute.activities.confirmation.ConfirmationActivity;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 
 public class SignUpActivity extends AppCompatActivity implements SignUpContract.View {
@@ -24,6 +22,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     private Button nextButton;
     private LinearLayout backButton;
     private EditText loginInput;
+    private EditText displayNameInput;
     private EditText emailInput;
     private EditText passwordInput;
     private EditText passwordConfirmInput;
@@ -51,10 +50,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
             @Override
             public void onClick(View v) {
                 signUpPresenter.onSignUpButtonClick(String.valueOf(loginInput.getText()),
+                        String.valueOf(displayNameInput.getText()),
                         String.valueOf(emailInput.getText()),
                         String.valueOf(passwordInput.getText()));
             }
         });
+
     }
 
     @Override
@@ -64,6 +65,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         backButton = findViewById(R.id.button_back);
         nextButton = findViewById(R.id.button_next);
         loginInput = findViewById(R.id.edittext_login);
+        displayNameInput = findViewById(R.id.edittext_displayname);
         emailInput = findViewById(R.id.edittext_email);
         passwordInput = findViewById(R.id.edittext_password);
         passwordConfirmInput = findViewById(R.id.edittext_password_confirm);
@@ -89,42 +91,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
 
     @Override
     public void showError(String text) {
-        errorView.setVisibility(View.VISIBLE);
-        errorText.setText(text);
-        Animation appearAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
-        appearAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        appearAnimation.setFillAfter(true);
-        errorView.startAnimation(appearAnimation);
+        ErrorViewUtils.show(text, errorView, errorText);
     }
 
     @Override
     public void hideError() {
-        Animation hideAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
-        hideAnimation.setFillAfter(true);
-        hideAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        errorView.startAnimation(hideAnimation);
-        hideAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                errorView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        errorView.startAnimation(hideAnimation);
+        ErrorViewUtils.hide(errorView);
     }
 
     @Override
-    public void showMainActivity() {
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+    public void showConfirmationActivity() {
+        Intent intent = new Intent(SignUpActivity.this, ConfirmationActivity.class);
         startActivity(intent);
     }
 

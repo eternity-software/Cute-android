@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context=".activities.confirmation.ConfirmationActivity">
+
+    <ScrollView
+        android:id="@+id/scrollView4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_rounded_bottom"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="30dp"
+                    app:srcCompat="@drawable/icon_open"
+                    app:tint="@color/colorBackground" />
+
+
+            </LinearLayout>
+
+            <ru.etysoft.cute.lang.components.LocalizableTextView
+                android:id="@+id/idview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/divider_56"
+                android:layout_marginBottom="@dimen/divider_56"
+                android:layout_weight="0"
+                android:fontFamily="@font/montserratalternates_medium"
+                android:gravity="center"
+                android:text="@string/confirmation"
+                android:textColor="@color/accent_support"
+                android:textSize="36sp"
+                app:localizableKey="confirmation" />
+
+            <ru.etysoft.cute.lang.components.LocalizableTextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserratmedium"
+                android:gravity="center"
+                android:text="@string/confirmation_sub"
+                android:textSize="20sp"
+                app:localizableKey="confirmation_sub" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="@dimen/divider_28"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ru.etysoft.cute.lang.components.LocalizableTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserratmedium"
+                    android:gravity="center"
+                    android:text="@string/to_mail"
+                    android:textSize="20sp"
+                    app:localizableKey="@string/to_mail" />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:text="unknownmail@mail.com"
+                    android:textColor="@color/accent_support"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+
+            <ru.etysoft.cute.lang.components.LocalizableEditText
+                android:id="@+id/edittext_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="40dp"
+                android:background="@drawable/edit_text_passive"
+                android:ems="10"
+                android:fontFamily="@font/montserrat"
+                android:foregroundGravity="left|clip_horizontal"
+                android:gravity="center"
+                android:hint="@string/confirmation_edit"
+                android:inputType="number"
+                android:maxLength="6"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:textColor="@color/colorText"
+                app:localizableHint="confirmation_edit" />
+
+            <ru.etysoft.cute.lang.components.LocalizableTextView
+                android:id="@+id/cant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="@dimen/divider_28"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/montserratmedium"
+                android:gravity="center"
+                android:text="@string/confirmation_bottom"
+                android:textColor="@color/accent_blue"
+                android:textSize="14sp"
+                app:localizableKey="confirmation_bottom" />
+
+            <LinearLayout
+                android:id="@+id/error_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="45dp"
+                android:layout_marginTop="@dimen/divider_14"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    app:srcCompat="@drawable/icon_error" />
+
+                <TextView
+                    android:id="@+id/error_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:text="Test error"
+                    android:textColor="@color/colorError"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/button_passive_enabled"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:fontFamily="@font/montserrat"
+                android:padding="10dp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorText"
+                android:textSize="18sp"
+                app:srcCompat="@drawable/icon_back_arrow" />
+
+
+        </LinearLayout>
+
+        <ru.etysoft.cute.lang.components.LocalizableButton
+            android:id="@+id/button_next"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/button_active_selector"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/next"
+            android:textAllCaps="false"
+            android:textColor="@color/colorButtonText"
+            android:textSize="18sp"
+            app:localizableButtonKey="next" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

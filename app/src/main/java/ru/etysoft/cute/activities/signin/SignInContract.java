@@ -1,7 +1,8 @@
 package ru.etysoft.cute.activities.signin;
 
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.Authorization.AuthorizationResponse;
+import ru.etysoft.cuteframework.methods.account.Login.LoginResponse;
+
 
 public interface SignInContract {
 
@@ -26,7 +27,7 @@ public interface SignInContract {
     }
 
     interface Model {
-        AuthorizationResponse signIn(String login, String password) throws ResponseException;
+        LoginResponse signIn(String login, String password) throws ResponseException;
     }
 
 

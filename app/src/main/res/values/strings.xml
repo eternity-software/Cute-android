@@ -3,84 +3,57 @@
     <string name="api_v" translatable="false">b001</string>
     <string name="app_subtext">Say what you want to say</string>
     <string name="back">Back</string>
-
-    // SIGN IN, CONFIRMATION AND SIGN UP
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
+    <string name="to_mail">to</string>
     <string name="sub_passwords">Sometimes, people choose too difficult password...</string>
-
     <string name="login">Login</string>
     <string name="password">Password</string>
-
     <string name="next_button_privacy_policy">By clicking \"Next\" button you agree our</string>
     <string name="privacy_policy">Privacy Policy</string>
-
     <string name="sign_up_subnickname">Create an amazing nickname</string>
     <string name="nickname">Nickname</string>
-
     <string name="sign_up_subpassword">Think for hard password</string>
     <string name="password_confirm">Password confirm</string>
-
     <string name="sign_up_subemail">Give us your e-mail</string>
     <string name="e_mail" translatable="false">E-mail</string>
-
     <string name="sign_in_success">Successfully signed in!</string>
     <string name="sign_up_success">Successfully signed up!</string>
-
     <string name="confirmation">Confirmation</string>
-    <string name="confirmation_sub">We have send the confirmation code to</string>
+    <string name="confirmation_sub">We have send the confirmation code</string>
     <string name="confirmation_edit">Enter code here</string>
     <string name="confirmation_button">Let me in!</string>
     <string name="confirmation_bottom">Can\'t receive?</string>
     <string name="confirmation_send_another">Send another</string>
     <string name="confirmation_send">Another code has been sended</string>
-
-    // Bottom navigation
     <string name="explore">Explore</string>
     <string name="messages">Messages</string>
     <string name="no_internet">Waiting for network...</string>
-
     <string name="account">Account</string>
-
-    // Banned
     <string name="banned_title">You are banned</string>
     <string name="banned_text">Oops! Looks like your account is banned :(</string>
     <string name="banned_button">Sign up</string>
-
-    // Block
     <string name="bl_title">Cute is not available</string>
     <string name="bl_text">Cute is not available at the moment.</string>
-
-    // Alert dialog
     <string name="adialog_yes">OK</string>
     <string name="adialog_no">Cancel</string>
     <string name="developer">Developer</string>
     <string name="debug_menu">Debug</string>
-
-    // Dialogs
     <string name="no_conv_title">Quite and empty...</string>
     <string name="no_conv_text">Oops! Looks like you haven\'t any conversations...</string>
     <string name="dialogs_error_title">Error loading chats</string>
     <string name="dialogs_error_text">Can\'t load chats. Try to check your internet connection.</string>
     <string name="dialogs_error_button">Retry</string>
-
     <string name="create_conv_text">Name</string>
     <string name="create_conv_description">Description</string>
-
     <string name="create_conv_title">Create a conversation</string>
     <string name="create_conv_button">Create</string>
     <string name="create_success">New conversation created</string>
-
-
-    // Conversation
     <string name="your_message">Your message</string>
     <string name="wait_for_record">Hold your finger to record a voice message</string>
-
     <string name="chat_search">Search for chats</string>
     <string name="chat_join_title">Join %s%</string>
     <string name="chat_join_text">Are you sure you want to join this chat?</string>
-
-    // INFO
     <string name="members">members</string>
     <string name="edit">edit</string>
     <string name="on_notif">Enable notifications</string>
@@ -88,27 +61,18 @@
     <string name="leave_text">Do you want to leave the conversation?</string>
     <string name="clear_title">Clear all messages</string>
     <string name="clear_text">You will clear all messages for yourself, and others will continue to see them.</string>
-
-
     <string name="logout_title">Logout</string>
     <string name="logout_text">Do you want to logout?</string>
     <string name="saved_to_gallery">Saved to gallery</string>
-
-    // Account
     <string name="edit_profile">Edit profile</string>
     <string name="bio">Bio</string>
     <string name="status">Status</string>
     <string name="surname">Surname</string>
     <string name="no_status">i like pineapples</string>
     <string name="save_profile">Save</string>
-
-    // NOTIFICATIONS
-
-    //SETTINGS
     <string name="interfc">Interface</string>
     <string name="night">Dark mode</string>
     <string name="change_pass">Change password</string>
-
     <string name="pass_old">Old password</string>
     <string name="pass_new">New password</string>
     <string name="pass_success">Successfully changed your password</string>
@@ -116,15 +80,11 @@
     <string name="password_incorrect">Passwords are incorrect</string>
     <string name="logout">Logout</string>
     <string name="version">Version</string>
-
     <string name="edit_conv">Edit chat</string>
-
-
-    // Success
     <string name="internet_availible">Internet connection is available</string>
-
-
-    // Errors
+    <string name="err_email">E-mail not found!</string>
+    <string name="err_lang">Can\'t setup language!</string>
+    <string name="err_confirm_code_length">Code length is wrong!</string>
     <string name="err_no_internet">No internet connection</string>
     <string name="err_not_sended">Not sent</string>
     <string name="sending">Sending...</string>
@@ -133,37 +93,26 @@
     <string name="err_confirm">You must confirm your account</string>
     <string name="err_messages_title">Error loading messages</string>
     <string name="err_messages_text">An error occured while loading chat messages</string>
-
-
     <string name="title_activity_navigation" translatable="false">Navigation</string>
     <string name="title_home" translatable="false">Home</string>
     <string name="title_dashboard" translatable="false">Dashboard</string>
     <string name="title_notifications" translatable="false">Notifications</string>
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="title_activity_account" translatable="false">Account</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label" translatable="false">First Fragment</string>
     <string name="second_fragment_label" translatable="false">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
     <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_settings" translatable="false">SettingsActivity</string>
-
-    <!-- Preference Titles -->
     <string name="messages_header" translatable="false">Messages</string>
     <string name="sync_header" translatable="false">Sync</string>
-
-    <!-- Messages Preferences -->
     <string name="signature_title" translatable="false">Your signature</string>
     <string name="reply_title" translatable="false">Default reply action</string>
-
-    <!-- Sync Preferences -->
     <string name="sync_title" translatable="false">Sync email periodically</string>
     <string name="attachment_title" translatable="false">Download incoming attachments</string>
-    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
-    </string>
+    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
     <string name="password_warning">Changing the password will automatically reset all active sessions</string>
     <string name="signout">Sign out</string>
@@ -171,5 +120,8 @@
     <string name="perms_text">For Cute to work on your device, it requires several normal permissions.</string>
     <string name="perms_btn">Grant permissions</string>
     <string name="conv_nocon">waiting for network</string>
+    <string name="sign_up_display_name">All your friends will see it</string>
+    <string name="sign_up_display_name_hint">Display name</string>
+    <string name="chats">Chats</string>
 
 </resources>

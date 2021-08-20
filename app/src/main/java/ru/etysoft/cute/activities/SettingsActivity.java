@@ -83,9 +83,6 @@ public class SettingsActivity extends AppCompatActivity {
                     final Runnable toRun = new Runnable() {
                         @Override
                         public void run() {
-                            CacheUtils cacheUtils = CacheUtils.getInstance();
-
-                            // TODO: logout API
                             cacheUtils.clean(getContext());
                             Intent meet = new Intent(getActivity(), MeetActivity.class);
                             getActivity().startActivity(meet);
@@ -98,8 +95,8 @@ public class SettingsActivity extends AppCompatActivity {
 
                         }
                     };
-                    AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.logout_text), toRun, cancel);
-                    cdd.show();
+                    AlertDialog alertDialog = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.logout_text), toRun, cancel);
+                    alertDialog.show();
                     return false;
                 }
             });

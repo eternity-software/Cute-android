@@ -8,12 +8,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.MainActivity;
+import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 
 public class Permissions {
 
-    public static void checkAvailble(final Activity activity) {
+    public static void requestAll(final Activity activity) {
         if (ContextCompat.checkSelfPermission(
                 activity,
                 "android.permission.WRITE_EXTERNAL_STORAGE")
