@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="?attr/selectableItemBackground"
+    android:background="@drawable/dialog_unread_background"
     android:paddingVertical="6dp"
     android:paddingRight="10dp">
 
@@ -32,13 +31,34 @@
         android:id="@+id/status"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginLeft="-20dp"
+        android:layout_marginLeft="-60dp"
         android:layout_marginTop="42dp"
         android:background="@drawable/circle_offline" />
 
+    <TextView
+        android:id="@+id/readed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="-20dp"
+
+
+        android:background="@drawable/back_new"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:keepScreenOn="true"
+        android:paddingHorizontal="8dp"
+        android:singleLine="true"
+        android:text="1"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="12dp"
 
         android:orientation="vertical">
@@ -46,7 +66,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:layout_gravity="center_vertical"
             android:baselineAligned="true"
             android:clipChildren="true"
             android:orientation="horizontal"
@@ -56,6 +76,7 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:paddingRight="100dp">
 
                 <TextView
@@ -70,25 +91,7 @@
             </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/readed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="-90dp"
 
-                android:layout_toRightOf="@id/name"
-                android:background="@drawable/back_new"
-                android:fontFamily="@font/montserrat"
-                android:gravity="center"
-                android:keepScreenOn="true"
-                android:paddingHorizontal="8dp"
-                android:singleLine="true"
-                android:text="1"
-                android:textColor="@color/colorWhite"
-                android:textSize="14sp" />
 
 
         </RelativeLayout>
@@ -114,16 +117,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/icnread"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center_vertical"
 
-                    android:layout_marginHorizontal="3dp"
-                    android:layout_weight="1"
-
-                    app:srcCompat="@drawable/icon_read" />
 
                 <TextView
                     android:id="@+id/time"

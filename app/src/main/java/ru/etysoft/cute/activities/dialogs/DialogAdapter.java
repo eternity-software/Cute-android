@@ -46,7 +46,6 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
         viewHolder.acronym = (TextView) view.findViewById(R.id.acronym);
         viewHolder.time = (TextView) view.findViewById(R.id.time);
         viewHolder.readstatus = (TextView) view.findViewById(R.id.readed);
-        viewHolder.read = view.findViewById(R.id.icnread);
         viewHolder.online = view.findViewById(R.id.status);
         viewHolder.picture = view.findViewById(R.id.icon);
 
