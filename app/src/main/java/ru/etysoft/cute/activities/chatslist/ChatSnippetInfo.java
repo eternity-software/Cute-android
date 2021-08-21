@@ -1,29 +1,27 @@
-package ru.etysoft.cute.activities.dialogs;
+package ru.etysoft.cute.activities.chatslist;
 
-public class DialogInfo {
+public class ChatSnippetInfo {
 
     private String name;
-    private String lastmessage;
+    private String lastMessage;
     private String acronym;
     private String cid;
     private String time;
     private String countMembers;
     private String cover;
-    private boolean isreaded;
-    private int countReaded;
+    private boolean isRead;
+    private int countRead;
     private boolean isOnline;
     private boolean isDialog;
 
-
-    // Диалог или беседа (превью)
-    public DialogInfo(String name, String lastmessage, String acronym, String cid, String time, boolean isreaded, int count, boolean isOnline, boolean isDialog, String countMembers, String cover) {
+    public ChatSnippetInfo(String name, String lastMessage, String acronym, String cid, String time, boolean isRead, int count, boolean isOnline, boolean isDialog, String countMembers, String cover) {
         this.name = name;
-        this.lastmessage = lastmessage;
+        this.lastMessage = lastMessage;
         this.acronym = acronym.toUpperCase();
         this.cid = cid;
         this.time = time;
-        this.isreaded = isreaded;
-        this.countReaded = count;
+        this.isRead = isRead;
+        this.countRead = count;
         this.isOnline = isOnline;
         this.isDialog = isDialog;
         this.countMembers = countMembers;
@@ -42,7 +40,6 @@ public class DialogInfo {
         return isDialog;
     }
 
-
     public boolean isOnline() {
         return isOnline;
     }
@@ -51,21 +48,20 @@ public class DialogInfo {
         this.isOnline = isOnline;
     }
 
-
-    public int getCountReaded() {
-        return countReaded;
+    public int getCountRead() {
+        return countRead;
     }
 
-    public void setCountReaded(int count) {
-        countReaded = count;
+    public void setCountRead(int count) {
+        countRead = count;
     }
 
-    public boolean isReaded() {
-        return isreaded;
+    public boolean isRead() {
+        return isRead;
     }
 
-    public void isReaded(boolean isreaded) {
-        this.isreaded = isreaded;
+    public void setRead(boolean isreaded) {
+        this.isRead = isreaded;
     }
 
     public String getTime() {
@@ -96,12 +92,12 @@ public class DialogInfo {
         this.name = name;
     }
 
-    public String getLastmessage() {
-        return lastmessage;
+    public String getLastMessage() {
+        return lastMessage;
     }
 
-    public void setLastmessage(String message) {
-        this.lastmessage = message;
+    public void setLastMessage(String message) {
+        this.lastMessage = message;
     }
 
 

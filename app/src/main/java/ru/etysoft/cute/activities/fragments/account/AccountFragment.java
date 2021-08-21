@@ -17,6 +17,7 @@ import ru.etysoft.cute.activities.EditProfile;
 import ru.etysoft.cute.activities.SettingsActivity;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cuteframework.Methods;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.account.GetAccount.GetAccountResponse;
@@ -72,7 +73,7 @@ public class AccountFragment extends Fragment {
         final TextView displayNameView = view.findViewById(R.id.display_name_view);
 
         try {
-            displayNameView.setText(CachedValues.getLogin(getActivity()));
+            displayNameView.setText(CachedValues.getDisplayName(getActivity()));
             loginView.setText(CachedValues.getLogin(getActivity()));
         } catch (NotCachedException e) {
             e.printStackTrace();
@@ -88,9 +89,11 @@ public class AccountFragment extends Fragment {
                         public void run() {
                             CachedValues.setDisplayName(getActivity(), getAccountResponse.getDisplayName());
                             CachedValues.setLogin(getActivity(), getAccountResponse.getLogin());
+                            CachedValues.setId(getActivity(), getAccountResponse.getId());
                             try {
                                 displayNameView.setText(CachedValues.getDisplayName(getActivity()));
                                 loginView.setText(CachedValues.getLogin(getActivity()));
+                                ImagesWorker.setGradient((ImageView) view.findViewById(R.id.userimage), Integer.parseInt(getAccountResponse.getId()));
                             } catch (NotCachedException ignored) {
                             }
 

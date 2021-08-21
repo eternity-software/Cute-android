@@ -23,7 +23,7 @@
         app:behavior_skipCollapsed="true"
         app:cardBackgroundColor="@color/colorBackground"
         app:cardCornerRadius="20dp"
-        app:cardElevation="3dp">
+        app:cardElevation="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +37,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
-                app:srcCompat="@drawable/logo" />
+                android:padding="20dp"
+                app:srcCompat="@drawable/logo_outlined" />
 
             <TextView
                 android:id="@+id/BottomTitle"
@@ -72,7 +73,7 @@
                     android:id="@+id/ButtonPassive"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
@@ -88,7 +89,7 @@
                     android:id="@+id/ButtonActive"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="40dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"

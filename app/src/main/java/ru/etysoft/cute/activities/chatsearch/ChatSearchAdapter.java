@@ -13,7 +13,7 @@ import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Conversation;
+import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
@@ -57,7 +57,7 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
                     @Override
                     public void run() {
                         if (info.isHas()) {
-                            Intent intent = new Intent(getContext(), Conversation.class);
+                            Intent intent = new Intent(getContext(), MessagingActivity.class);
                             intent.putExtra("cid", String.valueOf(info.getCid()));
                             intent.putExtra("isd", false);
                             intent.putExtra("name", info.getName());

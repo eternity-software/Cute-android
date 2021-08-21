@@ -8,4 +8,10 @@
     <declare-styleable name="LocalizableEditText">
         <attr name="localizableHint" format="string" />
     </declare-styleable>
+    <declare-styleable name="ErrorPanel">
+        <attr name="text" format="string" />
+        <attr name="title" format="string" />
+        <attr name="localizableTextKey" format="string" />
+        <attr name="localizableTitleKey" format="string" />
+    </declare-styleable>
 </resources>

@@ -20,7 +20,8 @@ public class ImagesWorker {
 
     public static void setGradient(ImageView imageView, int cid) {
         GradientDrawable gd = new GradientDrawable();
-        gd.setColors(Numbers.getGradientById(cid));
+        int[] color = new int[]{Numbers.getColorById(cid, imageView.getContext()), Numbers.getColorById(cid, imageView.getContext())};
+        gd.setColors(color);
         gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
         gd.setShape(GradientDrawable.OVAL);
         gd.setSize(100, 100);

@@ -9,6 +9,4 @@
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowSharedElementEnterTransition">@transition/test_transition</item>
     </style>
-
-
 </resources>

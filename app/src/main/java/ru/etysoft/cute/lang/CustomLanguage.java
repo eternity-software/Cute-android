@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedUrls;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cute.utils.CustomToast;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.requests.GET;
 
@@ -28,7 +28,7 @@ public class CustomLanguage {
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                CustomToast.show(context.getResources().getString(R.string.err_lang), R.drawable.icon_error, context);
+                                CuteToast.show(context.getResources().getString(R.string.err_lang), R.drawable.icon_error, context);
                             }
                         });
 

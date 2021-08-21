@@ -55,6 +55,8 @@
     <color name="colorHint">#757575</color>
     <color name="colorPassiveButtonText">#505050</color>
 
+    <color name="splashLogo">@color/accent_blue</color>
+
 
     <color name="colorPassiveMini">#ECECEC</color>
     <color name="colorPassiveMiniOutline">#ECECEC</color>
@@ -78,8 +80,10 @@
 
     <color name="colorAltSupport">@color/accent_blue</color>
     <color name="colorNotReaded">#F4F4F4</color>
+    <color name="colorNoMessagesPlanet">@color/accent_blue</color>
     <color name="colorMyMessage">#E6E6E6</color>
 
+    <color name="colorTextPanel">@color/colorLightLGray</color>
 
     <color name="colorOffline">#707070</color>
     <color name="colorOfflineOutLine">#FFFF</color>
@@ -89,4 +93,27 @@
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+
+    <!-- Avatar colors -->
+    <color name="avatar01">#1B93C1</color>
+    <color name="avatar02">#4FD596</color>
+    <color name="avatar03">#1DA898</color>
+    <color name="avatar04">#7368CF</color>
+    <color name="avatar05">#B468CF</color>
+    <color name="avatar06">#79BF4E</color>
+    <color name="avatar07">#C4C67A</color>
+    <color name="avatar08">#21AAD5</color>
+    <color name="avatar09">#4251B3</color>
+    <color name="avatar10">#757575</color>
+    <color name="avatar11">#5C2E85</color>
+    <color name="avatar12">#4FCA51</color>
+    <color name="avatar13">#D19554</color>
+    <color name="avatar14">#D1548E</color>
+    <color name="avatar15">#E33644</color>
+    <color name="avatar16">#3C48B3</color>
+    <color name="avatar17">#F3662D</color>
+    <color name="avatar18">#2DF3AE</color>
+    <color name="avatar19">#373737</color>
+    <color name="avatar20">#DC8BFF</color>
+
 </resources>

@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities.conversation;
+package ru.etysoft.cute.activities.messages;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,11 +16,11 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.utils.ImagesWorker;
 
-public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
+public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
     private final Activity context;
-    private final List<ConversationInfo> list;
+    private final List<MessageInfo> list;
 
-    public ConversationAdapter(Activity context, List<ConversationInfo> values) {
+    public MessagesAdapter(Activity context, List<MessageInfo> values) {
         super(context, R.layout.dialog_element, values);
         this.context = context;
         this.list = values;
@@ -32,7 +32,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
         View view = null;
 
         // Получение экземпляра сообщения по позиции
-        final ConversationInfo info = list.get(position);
+        final MessageInfo info = list.get(position);
 
 
         final LayoutInflater inflator = context.getLayoutInflater();
@@ -66,7 +66,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
 
 
         // Инициализируем элементы
-        final ConversationAdapter.ViewHolder viewHolder = new ConversationAdapter.ViewHolder();
+        final MessagesAdapter.ViewHolder viewHolder = new MessagesAdapter.ViewHolder();
 
         if (info.getAid() != -1) {
             // Не информационное сообщение
@@ -83,7 +83,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
 
             // Задаём контент
             final ViewHolder holder = (ViewHolder) view.getTag();
-            if (!info.isReaded()) {
+            if (!info.isRead()) {
                 holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorNotReaded));
             } else {
                 holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
@@ -114,7 +114,7 @@ public class ConversationAdapter extends ArrayAdapter<ConversationInfo> {
                 public void onClick(View v) {
                     holder.message.setText("MESSAGE INFO: \n" +
                             "ID: " + info.getId() + "\n"
-                            + "READED: " + info.isReaded() + "\n"
+                            + "READED: " + info.isRead() + "\n"
                             + "MY: " + info.isMine() + "\n"
                             + "NAME: " + info.getName() + "\n"
                             + "AID: " + info.getAid()

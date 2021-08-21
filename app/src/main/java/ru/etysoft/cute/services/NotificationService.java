@@ -21,8 +21,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Conversation;
 import ru.etysoft.cute.activities.CrashReportActivity;
+import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.utils.SendorsControl;
 
@@ -124,64 +124,11 @@ public class NotificationService extends Service {
         }
     }
 
-    public void notifyBannerNewMessage(Context context, String title, String text, String cid, String name) {
-        // до версии Android 8.0 API 26
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-        long[] vibrate = new long[]{200, 200, 200, 200, 200};
-        Intent notificationIntent = new Intent(context, Conversation.class);
-        notificationIntent.putExtra("cid", cid);
-        notificationIntent.putExtra("isd", false);
-        notificationIntent.putExtra("name", name);
-        PendingIntent contentIntent = PendingIntent.getActivity(context,
-                0, notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                0, notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-
-        builder.setContentIntent(contentIntent)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
-                .setSmallIcon(R.drawable.logo_notification)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVibrate(vibrate)
-                .setContentIntent(pendingIntent)
-                .setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(text))
-                .setTicker("Cute")
-                .setLights(Color.RED, 3000, 3000)
-                .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
-
-        SendorsControl.vibrate(getApplicationContext(), 100);
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // Альтернативный вариант
-        // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        createChannelIfNeeded(notificationManager);
-
-
-        //LED
-
-        builder.getNotification().ledARGB = Color.RED;
-        builder.getNotification().ledOffMS = 0;
-        builder.getNotification().ledOnMS = 1;
-        builder.getNotification().flags = builder.getNotification().flags | Notification.FLAG_SHOW_LIGHTS;
-        builder.setLights(Color.RED, 3000, 3000);
-        Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
-
-        notifid++;
-        notificationManager.notify(notifid, builder.build());
-    }
-
     public static void notifyBanner(Context context, String title, String text) {
         // до версии Android 8.0 API 26
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         long[] vibrate = new long[]{1000, 1000, 1000, 1000, 1000};
-        Intent notificationIntent = new Intent(context, Conversation.class);
+        Intent notificationIntent = new Intent(context, MessagingActivity.class);
 
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 0, notificationIntent,
@@ -228,6 +175,59 @@ public class NotificationService extends Service {
         builder.getNotification().flags = builder.getNotification().flags | Notification.FLAG_SHOW_LIGHTS;
         builder.setLights(Color.RED, 3000, 3000);
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        notifid++;
+        notificationManager.notify(notifid, builder.build());
+    }
+
+    public void notifyBannerNewMessage(Context context, String title, String text, String cid, String name) {
+        // до версии Android 8.0 API 26
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+        long[] vibrate = new long[]{200, 200, 200, 200, 200};
+        Intent notificationIntent = new Intent(context, MessagingActivity.class);
+        notificationIntent.putExtra("cid", cid);
+        notificationIntent.putExtra("isd", false);
+        notificationIntent.putExtra("name", name);
+        PendingIntent contentIntent = PendingIntent.getActivity(context,
+                0, notificationIntent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+        builder.setContentIntent(contentIntent)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                .setSmallIcon(R.drawable.logo_notification)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVibrate(vibrate)
+                .setContentIntent(pendingIntent)
+                .setStyle(new NotificationCompat.InboxStyle()
+                        .addLine(text))
+                .setTicker("Cute")
+                .setLights(Color.RED, 3000, 3000)
+                .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
+
+        SendorsControl.vibrate(getApplicationContext(), 100);
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Альтернативный вариант
+        // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        createChannelIfNeeded(notificationManager);
+
+
+        //LED
+
+        builder.getNotification().ledARGB = Color.RED;
+        builder.getNotification().ledOffMS = 0;
+        builder.getNotification().ledOnMS = 1;
+        builder.getNotification().flags = builder.getNotification().flags | Notification.FLAG_SHOW_LIGHTS;
+        builder.setLights(Color.RED, 3000, 3000);
+        Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
 
         notifid++;
         notificationManager.notify(notifid, builder.build());

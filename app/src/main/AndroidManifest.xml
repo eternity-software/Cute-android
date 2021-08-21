@@ -54,15 +54,14 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".activities.Conversation"
+            android:name=".activities.MessagingActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.CreateConv"
+            android:name=".activities.CreateChatActivity"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.Dialogs" />
         <activity android:name=".activities.Account" />
 
         <receiver android:name=".utils.NetworkStateReceiver">

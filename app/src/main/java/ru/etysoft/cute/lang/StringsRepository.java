@@ -1,5 +1,6 @@
 package ru.etysoft.cute.lang;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -8,6 +9,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.StringReader;
 import java.util.HashMap;
 
+import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
 
@@ -51,6 +53,15 @@ public class StringsRepository {
         } catch (Exception e) {
             e.printStackTrace();
             throw new LanguageParsingException();
+        }
+    }
+
+    public static String getOrDefault(int resId, Context context) {
+        String resourceName = context.getResources().getResourceName(R.string.chats);
+        try {
+            return StringsRepository.getValue(resourceName);
+        } catch (NoSuchValueException e) {
+            return context.getResources().getString(resId);
         }
     }
 
