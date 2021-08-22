@@ -171,7 +171,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             boolean readed = true;
                             boolean isonline;
 
-                            my = (message.getId() == Integer.parseInt(CachedValues.getId(getApplicationContext())));
+                            my = (message.getAccountId() == Integer.parseInt(CachedValues.getId(getApplicationContext())));
 
                             final int id = message.getId();
                             final int authorId = message.getAccountId();
@@ -216,6 +216,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        adapter.notifyDataSetChanged();
                         findViewById(R.id.loadingLayout).setVisibility(View.INVISIBLE);
                     }
                 });
@@ -439,7 +440,26 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             @Override
             public void run() {
                 try {
-                    SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), cid, message)).execute();
+                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), cid, message)).execute();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MessageInfo messageInfo = null;
+                            try {
+                                messageInfo = new MessageInfo(String.valueOf(sendMessageResponse.getMessageId()), name,
+                                        sendMessageResponse.getText(), true, false, Numbers.getTimeFromTimestamp(sendMessageResponse.getTime(), getApplicationContext()), false,
+                                        Integer.parseInt(CachedValues.getId(getApplicationContext())), false, "null");
+                                ids.put(String.valueOf((sendMessageResponse.getMessageId())), messageInfo);
+
+                                adapter.add(messageInfo);
+                            } catch (ResponseException e) {
+                                e.printStackTrace();
+                            } catch (NotCachedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
                 } catch (NotCachedException e) {
                     e.printStackTrace();
                 } catch (ResponseException e) {

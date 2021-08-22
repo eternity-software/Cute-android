@@ -34,9 +34,9 @@ public class CachedValues {
         return cacheUtils.getString(CacheKeys.ID, context);
     }
 
-    public static void setId(Context context, String nickname) {
+    public static void setId(Context context, String id) {
         CacheUtils cacheUtils = CacheUtils.getInstance();
-        cacheUtils.setString(CacheKeys.ID, nickname, context);
+        cacheUtils.setString(CacheKeys.ID, id, context);
     }
 
     public static String getLogin(Context context) throws NotCachedException {
