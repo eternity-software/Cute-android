@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import java.util.ArrayList;
 
 import ru.etysoft.cute.R;
@@ -24,6 +26,7 @@ import ru.etysoft.cute.activities.CreateChatActivity;
 import ru.etysoft.cute.activities.chatslist.ChatSnippetInfo;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.components.ErrorPanel;
+import ru.etysoft.cute.lang.StringsRepository;
 
 
 public class ChatsListFragment extends Fragment implements ChatsListContact.View {
@@ -31,9 +34,11 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     private ChatsListAdapter adapter;
     private ProgressBar progressBar;
     private View view;
+    private LinearLayout errorContainer;
     private ErrorPanel errorPanel;
     private ChatsListContact.Presenter presenter;
     private Toolbar toolbar;
+    private LinearLayout noChats;
 
     @SuppressLint("ClickableViewAccessibility")
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,7 +47,8 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
         view = root;
         presenter = new ChatsListPresenter(getActivity(), this);
         initViews();
-        presenter.updateChatsList(progressBar, adapter, toolbar, errorPanel, (LinearLayout) view.findViewById(R.id.empty), (LinearLayout) view.findViewById(R.id.error));
+        showProgressBarAndSetStatusMessage();
+        presenter.updateChatsList(adapter);
 
         return root;
     }
@@ -50,7 +56,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     @Override
     public void onResume() {
         super.onResume();
-        presenter.updateChatsList(progressBar, adapter, toolbar, errorPanel, (LinearLayout) view.findViewById(R.id.empty), (LinearLayout) view.findViewById(R.id.error));
+        presenter.updateChatsList(adapter);
     }
 
     @Override
@@ -59,11 +65,11 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
         toolbar = view.findViewById(R.id.toolbar);
         adapter = new ChatsListAdapter(getActivity(), new ArrayList<ChatSnippetInfo>());
         listView.setAdapter(adapter);
-
+        errorContainer = view.findViewById(R.id.error);
         progressBar = view.findViewById(R.id.loading);
         errorPanel = view.findViewById(R.id.error_panel);
         errorPanel.getRootView().setVisibility(View.INVISIBLE);
-
+        noChats = view.findViewById(R.id.empty);
         final LinearLayout error = view.findViewById(R.id.error);
         error.setVisibility(View.INVISIBLE);
         errorPanel.setReloadAction(new Runnable() {
@@ -72,7 +78,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
                 errorPanel.hide(new Runnable() {
                     @Override
                     public void run() {
-                        presenter.updateChatsList(progressBar, adapter, toolbar, errorPanel, (LinearLayout) view.findViewById(R.id.empty), (LinearLayout) view.findViewById(R.id.error));
+                        presenter.updateChatsList(adapter);
                         error.setVisibility(View.INVISIBLE);
 
                     }
@@ -110,4 +116,47 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
 
     }
 
+    @Override
+    public void showProgressBarAndSetStatusMessage() {
+        progressBar.setVisibility(View.VISIBLE);
+        setStatusMessage(StringsRepository.getOrDefault(R.string.updating, getActivity()));
+        progressBar.setVisibility(View.VISIBLE);
+        noChats.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideToolbar() {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL |
+                AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP |
+                AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        toolbar.setLayoutParams(params);
+    }
+
+    @Override
+    public void safeToolbar() {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
+        toolbar.setLayoutParams(params);
+    }
+
+    @Override
+    public void noChats() {
+        noChats.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void responseException() {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
+        toolbar.setLayoutParams(params);
+        errorPanel.show();
+        errorContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void removeProgressBarAndSetStatusMessage() {
+        setStatusMessage(StringsRepository.getOrDefault(R.string.chats, getActivity()));
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 }

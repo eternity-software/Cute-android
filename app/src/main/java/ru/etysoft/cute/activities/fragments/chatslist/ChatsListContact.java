@@ -14,12 +14,23 @@ public interface ChatsListContact {
         void initViews();
 
         void setStatusMessage(String statusMessage);
+
+        void showProgressBarAndSetStatusMessage();
+
+        void hideToolbar();
+
+        void safeToolbar();
+
+        void noChats();
+
+        void responseException();
+
+        void removeProgressBarAndSetStatusMessage();
     }
 
     interface Presenter {
 
-        void updateChatsList(final ProgressBar progressBar, final ChatsListAdapter chatsListAdapter, final Toolbar toolbar, final ErrorPanel errorPanel,
-                             final android.widget.LinearLayout noChats, final LinearLayout errorContainer);
+        void updateChatsList(final ChatsListAdapter chatsListAdapter);
 
         void onDestroy();
     }

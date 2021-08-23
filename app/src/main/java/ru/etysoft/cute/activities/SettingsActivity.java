@@ -10,8 +10,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.github.chrisbanes.photoview.BuildConfig;
+
 import ru.etysoft.cute.AlertDialog;
-import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.data.CacheUtils;

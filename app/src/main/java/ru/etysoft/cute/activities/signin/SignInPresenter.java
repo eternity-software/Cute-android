@@ -38,7 +38,6 @@ public class SignInPresenter implements SignInContract.Presenter {
                     LoginResponse loginResponse = signInModel.signIn(login, password);
 
                     if (loginResponse.isSuccess()) {
-
                         CachedValues.setLogin(context, login);
                         CachedValues.setSessionKey(context, loginResponse.getSessionKey());
                         Intent intent = new Intent(context, MainActivity.class);

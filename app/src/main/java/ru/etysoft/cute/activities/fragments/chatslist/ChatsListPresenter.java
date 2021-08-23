@@ -38,18 +38,9 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
     }
 
     @Override
-    public void updateChatsList(final ProgressBar progressBar, final ChatsListAdapter chatsListAdapter, final Toolbar toolbar, final ErrorPanel errorPanel,
-                                final LinearLayout noChats, final LinearLayout errorContainer) {
+    public void updateChatsList(final ChatsListAdapter chatsListAdapter) {
         if (!updateListLock) {
             updateListLock = true;
-            progressBar.setVisibility(View.VISIBLE);
-
-            view.setStatusMessage(StringsRepository.getOrDefault(R.string.updating, context));
-
-
-            progressBar.setVisibility(View.VISIBLE);
-
-            noChats.setVisibility(View.INVISIBLE);
             chatsListAdapter.clear();
 
             // Задаём обработчик запроса к API
@@ -69,7 +60,6 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                                 @Override
                                 public void run() {
                                     System.out.println(chat.getName());
-
                                     chatsListAdapter.add(new ChatSnippetInfo(chat.getName(),
                                             chat.getLastMessageText(),
                                             chat.getLastMessageSenderDisplayName(),
@@ -79,57 +69,24 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                                             chat.isRead(), 0, true, isDialog, "null"));
                                 }
                             });
-
-
                         }
-
-                        final boolean finalHasMessages = hasMessages;
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                chatsListAdapter.notifyDataSetChanged();
-                                if (chatsListAdapter.getCount() > 10) {
-                                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-                                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL |
-                                            AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP |
-                                            AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-                                    toolbar.setLayoutParams(params);
-                                } else {
-                                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-                                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
-                                    toolbar.setLayoutParams(params);
-                                }
-                                if (!finalHasMessages) {
-                                    noChats.setVisibility(View.VISIBLE);
-                                }
-
-                            }
-                        });
-
+                    final boolean finalHasMessages = hasMessages;
+                    chatsListAdapter.notifyDataSetChanged();
+                    if (chatsListAdapter.getCount() > 10) {
+                        view.hideToolbar();
+                    } else {
+                        view.safeToolbar();
+                    }
+                    if (!finalHasMessages) {
+                        view.noChats();
+                    }
                     } catch (NotCachedException e) {
                         e.printStackTrace();
                     } catch (ResponseException e) {
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-                                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
-                                toolbar.setLayoutParams(params);
-                                errorPanel.show();
-                                errorContainer.setVisibility(View.VISIBLE);
-                            }
-                        });
-
+                        view.responseException();
                         e.printStackTrace();
                     }
-                    context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.setStatusMessage(StringsRepository.getOrDefault(R.string.chats, context));
-
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }
-                    });
+                    view.removeProgressBarAndSetStatusMessage();
                     updateListLock = false;
                 }
             });
