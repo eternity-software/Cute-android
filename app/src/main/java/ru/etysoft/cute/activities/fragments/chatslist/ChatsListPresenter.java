@@ -42,7 +42,7 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
         if (!updateListLock) {
             updateListLock = true;
             chatsListAdapter.clear();
-
+            view.showProgressBarAndSetStatusMessage();
             // Задаём обработчик запроса к API
             Thread thread = new Thread(new Runnable() {
                 @Override

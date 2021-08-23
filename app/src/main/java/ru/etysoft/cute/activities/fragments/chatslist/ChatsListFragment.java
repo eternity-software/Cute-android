@@ -47,9 +47,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
         view = root;
         presenter = new ChatsListPresenter(getActivity(), this);
         initViews();
-        showProgressBarAndSetStatusMessage();
         presenter.updateChatsList(adapter);
-
         return root;
     }
 
