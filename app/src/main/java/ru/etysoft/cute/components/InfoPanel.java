@@ -16,7 +16,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
 import ru.etysoft.cute.lang.StringsRepository;
 
-public class ErrorPanel extends RelativeLayout {
+public class InfoPanel extends RelativeLayout {
 
     private TextView titleView;
     private TextView textView;
@@ -24,7 +24,7 @@ public class ErrorPanel extends RelativeLayout {
     private View rootView;
 
 
-    public ErrorPanel(Context context, AttributeSet attrs) {
+    public InfoPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
         initComponent(context, attrs);
     }

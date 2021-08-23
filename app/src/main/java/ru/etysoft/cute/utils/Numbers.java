@@ -44,7 +44,7 @@ public class Numbers {
 
     // Получаем локальное время из timestamp
     public static String getTimeFromTimestamp(String timestamp, Context context) {
-        return DateFormat.format("HH:mm", Long.parseLong(timestamp) * 1000).toString();
+        return DateFormat.format("HH:mm", Long.parseLong(timestamp)).toString();
     }
 
     public static boolean getBooleanFromInt(int i) {

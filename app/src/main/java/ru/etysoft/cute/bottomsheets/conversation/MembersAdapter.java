@@ -13,7 +13,8 @@ import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Profile;
-import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cuteframework.methods.chat.ChatMember;
 
 public class MembersAdapter extends ArrayAdapter<MemberInfo> {
     public static boolean canOpen = true;
@@ -40,7 +41,6 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
         // Инициализируем подэлементы
         viewHolder.name = (TextView) view.findViewById(R.id.label);
         viewHolder.picture = view.findViewById(R.id.icon);
-        viewHolder.acronym = view.findViewById(R.id.acronym);
         viewHolder.role = view.findViewById(R.id.creator);
 
         // Задаём обработчик нажатия
@@ -57,18 +57,16 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
 
         // Задаём персональные значения
         MembersAdapter.ViewHolder holder = (MembersAdapter.ViewHolder) view.getTag();
-        if (!info.getRole().equals("CREATOR")) {
+        if (!info.getRole().equals(ChatMember.Types.CREATOR)) {
             holder.role.setVisibility(View.INVISIBLE);
         }
-        ImagesWorker.setGradient(holder.picture, info.getId());
+        holder.picture.setAcronym(info.getName());
+        holder.picture.generateIdPicture(info.getId());
         holder.name.setText(info.getName());
         if (info.getPhoto().equals("null")) {
-            ImagesWorker.setGradient(holder.picture, info.getId());
-        } else {
-            holder.acronym.setVisibility(View.INVISIBLE);
 
         }
-        holder.acronym.setText(String.valueOf(info.getName().charAt(0)));
+
 
         return view;
     }
@@ -77,8 +75,7 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
     // Держим данные
     static class ViewHolder {
         protected TextView name;
-        protected TextView acronym;
-        protected ImageView picture;
+        protected Avatar picture;
         protected ImageView role;
     }
 }

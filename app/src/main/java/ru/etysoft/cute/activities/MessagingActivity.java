@@ -17,10 +17,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.r0adkll.slidr.Slidr;
-
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +29,12 @@ import ru.etysoft.cute.activities.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
+import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListResponse;
@@ -58,7 +56,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private int ts = 0;
     private Thread waiter;
     private boolean closed = false;
-
+    private ErrorPanel errorPanel;
     public boolean isVoice = true;
 
     private boolean isEmpty = true;
@@ -71,7 +69,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         cid = getIntent().getStringExtra("cid");
         name = getIntent().getStringExtra("name");
         cover = getIntent().getStringExtra("cover");
-        countMembers = getIntent().getStringExtra("countMembers");
         isDialog = getIntent().getBooleanExtra("isd", false);
 
         Avatar picture = findViewById(R.id.avatar);
@@ -89,13 +86,34 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
         }
 
+        errorPanel = findViewById(R.id.error_panel);
+        errorPanel.getRootView().setVisibility(View.INVISIBLE);
+
+        final LinearLayout error = findViewById(R.id.error);
+
+        error.setVisibility(View.INVISIBLE);
+        errorPanel.setReloadAction(new Runnable() {
+            @Override
+            public void run() {
+                errorPanel.hide(new Runnable() {
+                    @Override
+                    public void run() {
+                        processListUpdate();
+                        error.setVisibility(View.INVISIBLE);
+
+                    }
+                });
+            }
+        });
 
         TextView title = findViewById(R.id.title);
         title.setText(name);
         setupVoiceButton();
 
 
-        Slidr.attach(this);
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
+
         setupOnTextInput();
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
@@ -113,7 +131,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public void pickFiles(View v) {
         final FilePickerBottomSheet filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
-        // filePickerBottomSheet.setCancelable(true);
     }
 
 
@@ -153,7 +170,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
     private void processListUpdate() {
-
 
         // Обработка ответа JSON
         Thread loadThread = new Thread(new Runnable() {
@@ -202,20 +218,38 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
 
                         }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                final LinearLayout error = findViewById(R.id.error);
+                                error.setVisibility(View.VISIBLE);
+                                errorPanel.show();
+                            }
+                        });
                     }
 
 
                 } catch (ResponseException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final LinearLayout error = findViewById(R.id.error);
+                            error.setVisibility(View.VISIBLE);
+                            errorPanel.show();
+                        }
+                    });
                     e.printStackTrace();
                 } catch (NotCachedException e) {
                     e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         adapter.notifyDataSetChanged();
                         findViewById(R.id.loadingLayout).setVisibility(View.INVISIBLE);
                     }

@@ -6,25 +6,25 @@
 
     <ImageView
         android:id="@+id/generated"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/circle_gradiaent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/circle_colored" />
 
 
     <TextView
         android:id="@+id/acronym"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:fontFamily="@font/montserratalternates_medium"
         android:gravity="center"
-        android:text="!"
+        android:text=""
         android:textAllCaps="true"
         android:textColor="@color/colorWhite"
         android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/picture"
-        android:layout_width="60dp"
-        android:layout_height="60dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

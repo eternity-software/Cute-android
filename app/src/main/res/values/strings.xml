@@ -48,7 +48,7 @@
     <string name="create_conv_description">Description</string>
     <string name="create_conv_title">Create a conversation</string>
     <string name="create_conv_button">Create</string>
-    <string name="create_success">New conversation created</string>
+    <string name="chat_create_success">New conversation created</string>
     <string name="your_message">Your message</string>
     <string name="wait_for_record">Hold your finger to record a voice message</string>
     <string name="chat_search">Search for chats</string>

@@ -6,6 +6,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,8 +47,9 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
 
         // Инициализируем подэлементы
         viewHolder.name = (TextView) view.findViewById(R.id.label);
-        viewHolder.message = (TextView) view.findViewById(R.id.message);
+        viewHolder.messageView = (TextView) view.findViewById(R.id.message);
         viewHolder.time = (TextView) view.findViewById(R.id.time);
+        viewHolder.accentView = (TextView) view.findViewById(R.id.message_accent);
         viewHolder.readstatus = (TextView) view.findViewById(R.id.readed);
         viewHolder.online = view.findViewById(R.id.status);
         viewHolder.avatar = (Avatar) view.findViewById(R.id.avatar_component);
@@ -63,7 +67,6 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
                     intent.putExtra("isd", info.isDialog());
                     intent.putExtra("name", info.getName());
                     intent.putExtra("cover", info.getCover());
-                    intent.putExtra("countMembers", info.getCountMembers());
                     getContext().startActivity(intent);
                 }
             }
@@ -99,7 +102,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
 
         if (holder.avatar != null) {
             holder.avatar.generateIdPicture(Integer.parseInt(info.getCid()));
-            holder.avatar.setAcronym(info.getAcronym());
+            holder.avatar.setAcronym(info.getName());
         }
 
         if (!info.getCover().equals("null")) {
@@ -107,9 +110,18 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
         }
 
         holder.name.setText(info.getName());
-        holder.message.setText(info.getLastMessage());
+
+        holder.accentView.setText(info.getSenderName() + ": ");
+        holder.messageView.setText(info.getLastMessage());
 
         holder.time.setText(info.getTime());
+
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setFillAfter(false);
+        fadeIn.setInterpolator(new DecelerateInterpolator());
+        fadeIn.setDuration(800);
+
+        holder.container.startAnimation(fadeIn);
 
         return view;
     }
@@ -118,7 +130,8 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
     // Держим данные
     static class ViewHolder {
         protected TextView name;
-        protected TextView message;
+        protected TextView accentView;
+        protected TextView messageView;
         protected Avatar avatar;
         protected TextView time;
         protected TextView readstatus;

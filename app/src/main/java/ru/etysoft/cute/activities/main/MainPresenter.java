@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import org.json.JSONException;
-
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.confirmation.ConfirmationActivity;
 import ru.etysoft.cute.activities.meet.MeetActivity;
@@ -63,6 +61,7 @@ public class MainPresenter implements MainContract.Presenter {
                                             String displayName = getAccountResponse.getDisplayName();
                                             String login = getAccountResponse.getLogin();
 
+                                            CachedValues.setId(context, getAccountResponse.getId());
                                             CachedValues.setDisplayName(context, displayName);
                                             CachedValues.setLogin(context, login);
                                         } else if (confirmStatus.equals("B")) {
@@ -98,7 +97,7 @@ public class MainPresenter implements MainContract.Presenter {
                                         context.startActivity(intent);
                                         context.finish();
                                     }
-                                } catch (JSONException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }

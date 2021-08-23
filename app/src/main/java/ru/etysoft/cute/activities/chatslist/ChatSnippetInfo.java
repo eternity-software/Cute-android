@@ -7,14 +7,15 @@ public class ChatSnippetInfo {
     private String acronym;
     private String cid;
     private String time;
-    private String countMembers;
     private String cover;
     private boolean isRead;
     private int countRead;
     private boolean isOnline;
+    private String senderName;
     private boolean isDialog;
 
-    public ChatSnippetInfo(String name, String lastMessage, String acronym, String cid, String time, boolean isRead, int count, boolean isOnline, boolean isDialog, String countMembers, String cover) {
+    public ChatSnippetInfo(String name, String lastMessage, String senderName, String acronym, String cid, String time, boolean isRead,
+                           int count, boolean isOnline, boolean isDialog, String cover) {
         this.name = name;
         this.lastMessage = lastMessage;
         this.acronym = acronym.toUpperCase();
@@ -24,17 +25,19 @@ public class ChatSnippetInfo {
         this.countRead = count;
         this.isOnline = isOnline;
         this.isDialog = isDialog;
-        this.countMembers = countMembers;
+        this.senderName = senderName;
+
         this.cover = cover;
+    }
+
+    public String getSenderName() {
+        return senderName;
     }
 
     public String getCover() {
         return cover;
     }
 
-    public String getCountMembers() {
-        return countMembers;
-    }
 
     public boolean isDialog() {
         return isDialog;

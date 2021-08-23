@@ -197,19 +197,20 @@
         android:id="@+id/error"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingHorizontal="40dp"
         android:layout_weight="1"
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/messages">
 
 
-        <TextView
-            android:id="@+id/errorTitle"
+        <ru.etysoft.cute.components.ErrorPanel
+            android:id="@+id/error_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -217,33 +218,10 @@
             android:gravity="center"
             android:text="@string/err_messages_title"
             android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            app:text="@string/err_messages_text"
+            app:title="@string/err_messages_title" />
 
-        <TextView
-            android:id="@+id/errorText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/montserrat"
-            android:gravity="center"
-            android:paddingHorizontal="20dp"
-            android:text="@string/err_messages_text"
-            android:textColor="@color/colorText"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/update_dialoglist"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="0"
-            android:background="@drawable/button_passive_mini"
-            android:fontFamily="@font/montserrat"
-            android:onClick="update"
-            android:paddingHorizontal="10dp"
-            android:text="@string/dialogs_error_button"
-            android:textSize="14sp" />
 
     </LinearLayout>
 

@@ -25,7 +25,7 @@
             android:layout_height="75dp"
             android:transitionName="editchat"
             android:elevation="10dp"
-            app:srcCompat="@drawable/circle_gradiaent" />
+            app:srcCompat="@drawable/circle_colored" />
 
 
         <TextView

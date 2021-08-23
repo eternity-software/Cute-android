@@ -28,16 +28,11 @@ import ru.etysoft.cute.components.ErrorPanel;
 
 public class ChatsListFragment extends Fragment implements ChatsListContact.View {
 
-
     private ChatsListAdapter adapter;
     private ProgressBar progressBar;
     private View view;
     private ErrorPanel errorPanel;
     private ChatsListContact.Presenter presenter;
-
-
-    // Была ли последняя загрузка произведена из кэша
-    private boolean isCached = false;
     private Toolbar toolbar;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -50,6 +45,12 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
         presenter.updateChatsList(progressBar, adapter, toolbar, errorPanel, (LinearLayout) view.findViewById(R.id.empty), (LinearLayout) view.findViewById(R.id.error));
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.updateChatsList(progressBar, adapter, toolbar, errorPanel, (LinearLayout) view.findViewById(R.id.empty), (LinearLayout) view.findViewById(R.id.error));
     }
 
     @Override

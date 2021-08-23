@@ -32,4 +32,12 @@ public class CuteToast {
         toast.show();
 
     }
+
+    public static void showSuccess(String message, Activity context) {
+        show(message, R.drawable.icon_success, context);
+    }
+
+    public static void showError(String message, Activity context) {
+        show(message, R.drawable.icon_error, context);
+    }
 }

@@ -38,7 +38,7 @@
                 android:orientation="horizontal">
 
 
-                <ImageView
+                <ru.etysoft.cute.components.Avatar
                     android:id="@+id/icon"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
@@ -46,17 +46,7 @@
                     app:srcCompat="@drawable/circle_gray" />
 
 
-                <TextView
-                    android:id="@+id/conv_acronym"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_marginLeft="-75dp"
-                    android:fontFamily="@font/montserrat"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:text=""
-                    android:textColor="@color/colorWhite"
-                    android:textSize="36sp" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -69,9 +59,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
-                        android:maxLines="1"
+
+                        style="@style/autoscroll"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
                         android:text=""
                         android:textColor="@color/colorText"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
                         android:textSize="20sp" />
 
                     <TextView

@@ -14,6 +14,15 @@
         <item name="android:windowSharedElementEnterTransition">@transition/test_transition</item>
     </style>
 
+    <style name="autoscroll">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
     <style name="AppTheme.TransparentTheme">
         <item name="android:statusBarColor">@color/accent_support</item>
         <item name="android:windowLightStatusBar">false</item>

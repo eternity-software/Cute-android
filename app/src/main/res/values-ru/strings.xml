@@ -40,7 +40,7 @@
     <string name="create_conv_description">Описание</string>
     <string name="create_conv_title">Создать беседу</string>
     <string name="create_conv_button">Создать</string>
-    <string name="create_success">Новый чат создан</string>
+    <string name="chat_create_success">Новый чат создан</string>
     <string name="your_message">Ваше сообщение</string>
     <string name="members">участников</string>
     <string name="edit">редактировать</string>

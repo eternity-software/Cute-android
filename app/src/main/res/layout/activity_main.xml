@@ -28,7 +28,7 @@
 
         app:itemIconTint="@drawable/bottom_items"
 
-        app:itemTextColor="#3934D6"
+        app:itemTextColor="@color/text_gray"
         app:labelVisibilityMode="unlabeled"
 
 

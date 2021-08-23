@@ -6,14 +6,13 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrInterface;
 
-import org.json.JSONException;
-
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.Chat;
 import ru.etysoft.cuteframework.methods.chat.Creation.ChatCreateRequest;
@@ -23,6 +22,8 @@ public class CreateChatActivity extends AppCompatActivity {
 
 
     private SlidrInterface slidr;
+    boolean hasChangedToTrans = true;
+    private float mPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +31,12 @@ public class CreateChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_conv);
         // Анимация
 
-        Slidr.attach(this);
+
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
+
 
 
     public void createConv(View v) {
@@ -49,7 +53,16 @@ public class CreateChatActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                CuteToast.showSuccess(getResources().getString(R.string.chat_create_success), CreateChatActivity.this);
                                 finish();
+                            }
+                        });
+
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CuteToast.showError(getResources().getString(R.string.err_unknown), CreateChatActivity.this);
                             }
                         });
 
@@ -58,7 +71,7 @@ public class CreateChatActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (NotCachedException e) {
                     e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

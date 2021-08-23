@@ -8,7 +8,7 @@
     <item
         android:id="@+id/dialogs"
         android:checked="true"
-        android:icon="@drawable/icon_chat"
+        android:icon="@drawable/icon_chat_bubble"
         android:title="@string/messages" />
 
     <item
