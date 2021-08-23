@@ -17,32 +17,36 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.r0adkll.slidr.Slidr;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.conversation.ConversationAdapter;
-import ru.etysoft.cute.activities.conversation.ConversationInfo;
-import ru.etysoft.cute.activities.dialogs.DialogAdapter;
+import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
+import ru.etysoft.cute.activities.messages.MessageInfo;
+import ru.etysoft.cute.activities.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
-import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.components.ErrorPanel;
+import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
+import ru.etysoft.cute.utils.SliderActivity;
+import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListRequest;
+import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListResponse;
+import ru.etysoft.cuteframework.methods.messages.Message;
+import ru.etysoft.cuteframework.methods.messages.Send.SendMessageRequest;
+import ru.etysoft.cuteframework.methods.messages.Send.SendMessageResponse;
 
-public class Conversation extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
+public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
-    private List<ConversationInfo> convInfos = new ArrayList<>();
-    private Map<String, ConversationInfo> ids = new HashMap<String, ConversationInfo>();
-    private ConversationAdapter adapter;
+    private List<MessageInfo> convInfos = new ArrayList<>();
+    private Map<String, MessageInfo> ids = new HashMap<String, MessageInfo>();
+    private MessagesAdapter adapter;
 
     private String cid = "1";
     private String name = "42";
@@ -52,7 +56,7 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     private int ts = 0;
     private Thread waiter;
     private boolean closed = false;
-
+    private ErrorPanel errorPanel;
     public boolean isVoice = true;
 
     private boolean isEmpty = true;
@@ -65,18 +69,16 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         cid = getIntent().getStringExtra("cid");
         name = getIntent().getStringExtra("name");
         cover = getIntent().getStringExtra("cover");
-        countMembers = getIntent().getStringExtra("countMembers");
         isDialog = getIntent().getBooleanExtra("isd", false);
 
-        ImageView picture = findViewById(R.id.icon);
-        ImagesWorker.setGradient(picture, Integer.parseInt(cid));
+        Avatar picture = findViewById(R.id.avatar);
+        picture.generateIdPicture(Integer.parseInt(cid));
 
-        TextView acronym = findViewById(R.id.acronym);
-        acronym.setVisibility(View.VISIBLE);
-        acronym.setText(String.valueOf(name.charAt(0)).toUpperCase());
+
+        picture.setAcronym((String.valueOf(name.charAt(0))));
 
         final ListView listView = findViewById(R.id.messages);
-        adapter = new ConversationAdapter(this, convInfos);
+        adapter = new MessagesAdapter(this, convInfos);
         listView.setAdapter(adapter);
 
         TextView subtitle = findViewById(R.id.subtitle);
@@ -84,15 +86,38 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
             subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
         }
 
+        errorPanel = findViewById(R.id.error_panel);
+        errorPanel.getRootView().setVisibility(View.INVISIBLE);
+
+        final LinearLayout error = findViewById(R.id.error);
+
+        error.setVisibility(View.INVISIBLE);
+        errorPanel.setReloadAction(new Runnable() {
+            @Override
+            public void run() {
+                errorPanel.hide(new Runnable() {
+                    @Override
+                    public void run() {
+                        processListUpdate();
+                        error.setVisibility(View.INVISIBLE);
+
+                    }
+                });
+            }
+        });
 
         TextView title = findViewById(R.id.title);
         title.setText(name);
         setupVoiceButton();
 
 
-        Slidr.attach(this);
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
+
         setupOnTextInput();
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+
+        processListUpdate();
 
 
     }
@@ -106,7 +131,6 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     public void pickFiles(View v) {
         final FilePickerBottomSheet filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
-        // filePickerBottomSheet.setCancelable(true);
     }
 
 
@@ -136,79 +160,106 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
     @Override
     protected void onDestroy() {
         super.onDestroy();
-            closed = true;
-        DialogAdapter.canOpen = true;
+        closed = true;
+        ChatsListAdapter.canOpen = true;
     }
-
 
 
     public boolean isRecordPanelShown = false;
     private Thread recordWaiter;
 
 
-    private void processListUpdate(String response) {
-        try {
+    private void processListUpdate() {
 
-            // Обработка ответа JSON
-            JSONObject jsonObject = new JSONObject(response);
-            JSONObject predata = jsonObject.getJSONObject("data");
-            JSONArray data = predata.getJSONArray("messages");
-            ts = predata.getInt("ts");
+        // Обработка ответа JSON
+        Thread loadThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject message = data.getJSONObject(i);
-
-                final String id = message.getString("id");
-                final int aid = message.getInt("aid");
-                final String text = message.getString("text");
-                String time = message.getString("time");
-                final String name = message.getString("name");
-                final int mine = message.getInt("my");
-                final int read = message.getInt("readed");
-                final String photo = message.getString("photo");
+                try {
+                    GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), cid)).execute();
+                    if (getMessageListResponse.isSuccess()) {
+                        List<Message> messages = getMessageListResponse.getMessages();
+                        for (final Message message : messages) {
 
 
-                boolean my;
-                boolean readed;
-                boolean isonline;
+                            final boolean my;
+                            boolean readed = true;
+                            boolean isonline;
 
-                my = Numbers.getBooleanFromInt(mine);
+                            my = (message.getAccountId() == Integer.parseInt(CachedValues.getId(getApplicationContext())));
 
-                readed = Numbers.getBooleanFromInt(read);
+                            final int id = message.getId();
+                            final int authorId = message.getAccountId();
 
+                            boolean isInfo = false;
+                            if (authorId == -1) {
+                                isInfo = true;
 
-                boolean isInfo = false;
-                if (aid == -1) {
-                    isInfo = true;
+                            }
+                            isEmpty = false;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!ids.containsKey(String.valueOf(id))) {
+                                        MessageInfo messageInfo = new MessageInfo(String.valueOf(id), name,
+                                                message.getText(), my, false, Numbers.getTimeFromTimestamp(message.getTime(), getApplicationContext()), false,
+                                                authorId, false, "null");
+                                        ids.put(String.valueOf(id), messageInfo);
 
-                }
-                isEmpty = false;
-                // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
-                if (!ids.containsKey(id)) {
-                    ConversationInfo conversationInfo = new ConversationInfo(id, name, text, my, false, Numbers.getTimeFromTimestamp(time, getApplicationContext()), readed, aid, isInfo, photo);
-                    ids.put(id, conversationInfo);
+                                        adapter.add(messageInfo);
+                                    } else {
+                                        // Если сообщение уже есть проверяем не изменился ли статус прочитанности
+                                    }
+                                    LinearLayout loadingLayot = findViewById(R.id.loadingLayout);
+                                    loadingLayot.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                            // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
 
-                    adapter.add(conversationInfo);
-                } else {
-                    ConversationInfo conversationInfo = ids.get(id);
-                    if (conversationInfo.isReaded() != readed) {
-                        conversationInfo.setReaded(readed);
+                        }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                final LinearLayout error = findViewById(R.id.error);
+                                error.setVisibility(View.VISIBLE);
+                                errorPanel.show();
+                            }
+                        });
                     }
+
+
+                } catch (ResponseException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final LinearLayout error = findViewById(R.id.error);
+                            error.setVisibility(View.VISIBLE);
+                            errorPanel.show();
+                        }
+                    });
+                    e.printStackTrace();
+                } catch (NotCachedException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                LinearLayout loadingLayot = findViewById(R.id.loadingLayout);
-                loadingLayot.setVisibility(View.INVISIBLE);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        adapter.notifyDataSetChanged();
+                        findViewById(R.id.loadingLayout).setVisibility(View.INVISIBLE);
+                    }
+                });
+
             }
+        });
+        loadThread.start();
 
 
-
-        } catch (JSONException e) {
-            if (isEmpty) {
-                LinearLayout loadingLayot = findViewById(R.id.error);
-                loadingLayot.setVisibility(View.VISIBLE);
-            }
-            e.printStackTrace();
-
-        }
     }
 
 
@@ -415,6 +466,43 @@ public class Conversation extends AppCompatActivity implements ConversationBotto
         });
     }
 
+
+    public void sendMessage(View view) {
+        EditText messageView = findViewById(R.id.message_box);
+        final String message = String.valueOf(messageView.getText());
+        Thread sendThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), cid, message)).execute();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MessageInfo messageInfo = null;
+                            try {
+                                messageInfo = new MessageInfo(String.valueOf(sendMessageResponse.getMessageId()), name,
+                                        sendMessageResponse.getText(), true, false, Numbers.getTimeFromTimestamp(sendMessageResponse.getTime(), getApplicationContext()), false,
+                                        Integer.parseInt(CachedValues.getId(getApplicationContext())), false, "null");
+                                ids.put(String.valueOf((sendMessageResponse.getMessageId())), messageInfo);
+
+                                adapter.add(messageInfo);
+                            } catch (ResponseException e) {
+                                e.printStackTrace();
+                            } catch (NotCachedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                } catch (NotCachedException e) {
+                    e.printStackTrace();
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        sendThread.start();
+    }
 
     @Override
     public void onBackPressed() {

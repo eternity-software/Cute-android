@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.EditProfile;
 import ru.etysoft.cute.activities.SettingsActivity;
+import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.Methods;
@@ -70,9 +71,10 @@ public class AccountFragment extends Fragment {
     public void updateData() {
         final TextView loginView = view.findViewById(R.id.login_view);
         final TextView displayNameView = view.findViewById(R.id.display_name_view);
+        final TextView statusView = view.findViewById(R.id.status);
 
         try {
-            displayNameView.setText(CachedValues.getLogin(getActivity()));
+            displayNameView.setText(CachedValues.getDisplayName(getActivity()));
             loginView.setText(CachedValues.getLogin(getActivity()));
         } catch (NotCachedException e) {
             e.printStackTrace();
@@ -88,9 +90,16 @@ public class AccountFragment extends Fragment {
                         public void run() {
                             CachedValues.setDisplayName(getActivity(), getAccountResponse.getDisplayName());
                             CachedValues.setLogin(getActivity(), getAccountResponse.getLogin());
+                            CachedValues.setId(getActivity(), getAccountResponse.getId());
                             try {
                                 displayNameView.setText(CachedValues.getDisplayName(getActivity()));
                                 loginView.setText(CachedValues.getLogin(getActivity()));
+                                statusView.setText(CachedValues.getId(getActivity()));
+                                Avatar avatar = (Avatar) view.findViewById(R.id.userimage);
+                                if (avatar != null) {
+                                    avatar.generateIdPicture(Integer.parseInt(getAccountResponse.getId()));
+                                    avatar.setAcronym(getAccountResponse.getDisplayName());
+                                }
                             } catch (NotCachedException ignored) {
                             }
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    tools:context=".activities.Dialogs">
+    android:background="@color/colorBackground">
 
     <FrameLayout
         android:id="@+id/frame_container"
@@ -35,45 +33,20 @@
         android:layout_weight="1"
         android:background="@color/colorBackground"
         android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingHorizontal="40dp"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
-
-        <TextView
-            android:id="@+id/errorTitle"
+        <ru.etysoft.cute.components.ErrorPanel
+            android:id="@+id/error_panel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/montserrat"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/dialogs_error_title"
-            android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            app:text="@string/dialogs_error_text"
+            app:title="@string/dialogs_error_title" />
 
-        <TextView
-            android:id="@+id/errorText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/montserrat"
-            android:gravity="center"
-            android:paddingHorizontal="20dp"
-            android:text="@string/dialogs_error_text"
-            android:textColor="@color/colorText"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/update_dialoglist"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="0"
-            android:background="@drawable/button_passive_mini"
-            android:fontFamily="@font/montserrat"
-            android:paddingHorizontal="10dp"
-            android:text="@string/dialogs_error_button"
-            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -85,14 +58,16 @@
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="invisible">
+
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
-            android:layout_height="118dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="20dp"
             app:srcCompat="@drawable/icon_nomessages"
-            app:tint="@color/colorBackgroundElements" />
+            app:tint="@color/colorNoMessagesPlanet" />
 
         <TextView
             android:id="@+id/textView6"
@@ -112,10 +87,10 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/montserrat"
             android:gravity="center"
-            android:paddingHorizontal="20dp"
+            android:paddingHorizontal="40dp"
             android:text="@string/no_conv_text"
-            android:textColor="@color/colorText"
-            android:textSize="18sp" />
+            android:textColor="@color/colorSupportText"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -129,9 +104,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:title="@string/title_home">
+            android:clipChildren="true"
+            app:layout_scrollFlags="noScroll"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -143,6 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
+
 
                     <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/statusv"
@@ -172,7 +148,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginHorizontal="@dimen/divider_7"
                         android:background="@drawable/button_circle_gray"
-                        android:paddingHorizontal="10dp"
+                        android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_search"
                         app:tint="@color/accent_support" />
                 </LinearLayout>

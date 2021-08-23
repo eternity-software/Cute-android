@@ -64,7 +64,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageView
+                <ru.etysoft.cute.components.Avatar
                     android:id="@+id/userimage"
                     android:layout_width="80dp"
                     android:layout_height="80dp"

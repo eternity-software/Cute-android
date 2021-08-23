@@ -61,7 +61,7 @@
             android:layout_height="100dp"
 
             android:layout_marginHorizontal="80dp"
-            app:srcCompat="@drawable/logo_texted" />
+            app:srcCompat="@drawable/logo_text_white" />
 
 
         <ru.etysoft.cute.lang.components.LocalizableTextView

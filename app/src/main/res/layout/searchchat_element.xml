@@ -11,7 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="14dp"
-        android:background="@drawable/circle_gradiaent" />
+        android:background="@drawable/circle_colored" />
 
     <TextView
         android:id="@+id/acronym"

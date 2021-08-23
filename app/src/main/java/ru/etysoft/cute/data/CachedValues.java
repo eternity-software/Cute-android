@@ -28,6 +28,17 @@ public class CachedValues {
         cacheUtils.setString(CacheKeys.EMAIL, email, context);
     }
 
+    public static String getId(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.ID, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.ID, context);
+    }
+
+    public static void setId(Context context, String id) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.setString(CacheKeys.ID, id, context);
+    }
+
     public static String getLogin(Context context) throws NotCachedException {
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (!cacheUtils.hasKey(CacheKeys.LOGIN, context)) throw new NotCachedException();
@@ -69,6 +80,7 @@ public class CachedValues {
     public class CacheKeys {
         public final static String SESSION_KEY = "session";
         public final static String EMAIL = "email";
+        public final static String ID = "id";
         public final static String LOGIN = "login";
         public final static String DISPLAY_NAME = "display_name";
         public final static String CUSTOM_LANG = "custom_lang";

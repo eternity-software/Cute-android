@@ -1,26 +1,31 @@
-package ru.etysoft.cute.activities.dialogs;
+package ru.etysoft.cute.activities.chatslist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Conversation;
-import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.activities.MessagingActivity;
+import ru.etysoft.cute.components.Avatar;
 
-public class DialogAdapter extends ArrayAdapter<DialogInfo> {
+public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
     private final Activity context;
-    private final List<DialogInfo> list;
+    private final List<ChatSnippetInfo> list;
     public static boolean canOpen = true;
 
-    public DialogAdapter(Activity context, List<DialogInfo> values) {
+    public ChatsListAdapter(Activity context, List<ChatSnippetInfo> values) {
         super(context, R.layout.dialog_element, values);
         this.context = context;
         this.list = values;
@@ -31,7 +36,7 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
         View view = null;
 
         // Инициализируем информацию о беседе или диалоге
-        final DialogInfo info = list.get(position);
+        final ChatSnippetInfo info = list.get(position);
 
         final LayoutInflater inflator = context.getLayoutInflater();
 
@@ -42,12 +47,14 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
 
         // Инициализируем подэлементы
         viewHolder.name = (TextView) view.findViewById(R.id.label);
-        viewHolder.message = (TextView) view.findViewById(R.id.message);
-        viewHolder.acronym = (TextView) view.findViewById(R.id.acronym);
+        viewHolder.messageView = (TextView) view.findViewById(R.id.message);
         viewHolder.time = (TextView) view.findViewById(R.id.time);
+        viewHolder.accentView = (TextView) view.findViewById(R.id.message_accent);
         viewHolder.readstatus = (TextView) view.findViewById(R.id.readed);
         viewHolder.online = view.findViewById(R.id.status);
-        viewHolder.picture = view.findViewById(R.id.icon);
+        viewHolder.avatar = (Avatar) view.findViewById(R.id.avatar_component);
+        viewHolder.container = view.findViewById(R.id.container);
+
 
         // Задаём обработчик нажатия
         view.setOnClickListener(new View.OnClickListener() {
@@ -55,12 +62,11 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
             public void onClick(View v) {
                 if (canOpen) {
                     canOpen = false;
-                    Intent intent = new Intent(getContext(), Conversation.class);
+                    Intent intent = new Intent(getContext(), MessagingActivity.class);
                     intent.putExtra("cid", info.getCid());
                     intent.putExtra("isd", info.isDialog());
                     intent.putExtra("name", info.getName());
                     intent.putExtra("cover", info.getCover());
-                    intent.putExtra("countMembers", info.getCountMembers());
                     getContext().startActivity(intent);
                 }
             }
@@ -82,30 +88,40 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
             holder.online.setVisibility(View.INVISIBLE);
         }
 
-        if (!info.isReaded()) {
-
-            holder.read.setColorFilter(context.getResources().getColor(R.color.accent_blue));
-        } else {
-            holder.read.setColorFilter(context.getResources().getColor(R.color.colorBackgroundElements));
-        }
-        if (info.getCountReaded() == 0) {
-
+        if (info.isRead()) {
+            TypedValue selectableBackground = new TypedValue();
+            getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBackground, true);
+            holder.container.setBackgroundResource(selectableBackground.resourceId);
             holder.readstatus.setVisibility(View.INVISIBLE);
         } else {
             holder.readstatus.setVisibility(View.VISIBLE);
-            holder.readstatus.setText(String.valueOf(info.getCountReaded()));
+        }
+        if (info.getCountRead() != 0) {
+            holder.readstatus.setText(String.valueOf(info.getCountRead()));
         }
 
-        if (info.getCover().equals("null")) {
-            ImagesWorker.setGradient(holder.picture, Integer.parseInt(info.getCid()));
-        } else {
-            holder.acronym.setVisibility(View.INVISIBLE);
+        if (holder.avatar != null) {
+            holder.avatar.generateIdPicture(Integer.parseInt(info.getCid()));
+            holder.avatar.setAcronym(info.getName());
+        }
+
+        if (!info.getCover().equals("null")) {
+
         }
 
         holder.name.setText(info.getName());
-        holder.message.setText(info.getLastmessage());
-        holder.acronym.setText(info.getAcronym());
+
+        holder.accentView.setText(info.getSenderName() + ": ");
+        holder.messageView.setText(info.getLastMessage());
+
         holder.time.setText(info.getTime());
+
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setFillAfter(false);
+        fadeIn.setInterpolator(new DecelerateInterpolator());
+        fadeIn.setDuration(800);
+
+        holder.container.startAnimation(fadeIn);
 
         return view;
     }
@@ -114,12 +130,12 @@ public class DialogAdapter extends ArrayAdapter<DialogInfo> {
     // Держим данные
     static class ViewHolder {
         protected TextView name;
-        protected TextView message;
-        protected TextView acronym;
+        protected TextView accentView;
+        protected TextView messageView;
+        protected Avatar avatar;
         protected TextView time;
         protected TextView readstatus;
-        protected ImageView picture;
-        protected ImageView read;
+        protected LinearLayout container;
         protected ImageView online;
     }
 }

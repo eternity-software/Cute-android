@@ -12,7 +12,7 @@ import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.utils.CustomToast;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class ImagePreview extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class ImagePreview extends AppCompatActivity {
         PhotoView photoView = findViewById(R.id.photoView);
         Bitmap bitmap = ((BitmapDrawable) photoView.getDrawable()).getBitmap();
         ImagesWorker.saveBitmapToGallery(bitmap, this);
-        CustomToast.show(getResources().getString(R.string.saved_to_gallery), R.drawable.icon_success, this);
+        CuteToast.show(getResources().getString(R.string.saved_to_gallery), R.drawable.icon_success, this);
     }
 
     public void exit(View v) {

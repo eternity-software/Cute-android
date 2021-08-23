@@ -1,6 +1,9 @@
 package ru.etysoft.cute.bottomsheets.conversation;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,10 +35,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.r0adkll.slidr.Slidr;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,11 +48,20 @@ import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
-
-import static android.app.Activity.RESULT_OK;
+import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.ChatMember;
+import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryRequest;
+import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryResponse;
+import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
+import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
+import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveRequest;
+import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveResponse;
 
 public class ConversationBottomSheet extends BottomSheetDialogFragment {
     private BottomSheetListener mListener;
@@ -66,6 +74,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     private View.OnClickListener passiveButtonClick = null;
     private View.OnClickListener activeButtonClick = null;
 
+    private Activity activity;
     private View view;
     String name;
     String descriptionText;
@@ -88,9 +97,10 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         Slidr.attach(getActivity());
 
         // Пустой фон
+        activity = getActivity();
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
-    }
 
+    }
 
 
     @Override
@@ -126,7 +136,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 final CardView cardView = view.findViewById(R.id.appBar);
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     if (!isEditing) {
-                      //  bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        //  bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
 
                     if (cardView.getRadius() != 0) {
@@ -173,80 +183,166 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         cid = conversationId;
     }
 
-    public void loadMembers(JSONArray members) throws JSONException {
-        final ListView listView = view.findViewById(R.id.members);
-        memberInfos.clear();
-        membersCount = 0;
+    public void loadData() {
+        final TextView chatNameView = view.findViewById(R.id.conv_name);
+        final TextView chatDescriptionView = view.findViewById(R.id.conv_desc);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final ChatInfoResponse chatInfoResponse = (new ChatInfoRequest(CachedValues.getSessionKey(getContext()), cid)).execute();
 
-        int creatorid = 0;
-        for (int i = 0; i < members.length(); i++) {
-            JSONObject member = members.getJSONObject(i);
-            int id = member.getInt("id");
-            String name = member.getString("nickname");
-            String role = member.getString("role");
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Avatar avatar = view.findViewById(R.id.icon);
+                                avatar.setAcronym(chatInfoResponse.getChat().getName());
+                                avatar.generateIdPicture(chatInfoResponse.getChat().getId());
+                                chatNameView.setText(chatInfoResponse.getChat().getName());
+                                chatDescriptionView.setText(chatInfoResponse.getChat().getDescription());
+                                for (ChatMember chatMember : chatInfoResponse.getMembers()) {
+                                    MemberInfo memberInfo = new MemberInfo(chatMember.getId(),
+                                            chatMember.getDisplayName(),
+                                            chatMember.getType(), "");
 
-            String photo = member.getString("photo");
-            MemberInfo memberInfo = new MemberInfo(id, name, role, photo);
+                                    if (memberInfo.getRole().equals(ChatMember.Types.CREATOR)) {
+                                        memberInfos.add(0, memberInfo);
+                                    } else if (memberInfo.getRole().equals(ChatMember.Types.ADMIN)) {
+                                        memberInfos.add(1, memberInfo);
+                                    } else {
+                                        memberInfos.add(memberInfo);
+                                    }
+                                    membersCount++;
+                                }
+                                ((LinearLayout) view.findViewById(R.id.loading)).removeAllViews();
 
-            if (role.equals("CREATOR")) {
-                memberInfos.add(0, memberInfo);
-            } else {
-                memberInfos.add(memberInfo);
+                                TextView membersCountTextView = view.findViewById(R.id.membersCount);
+                                membersCountTextView.setText(membersCount + " " + getString(R.string.members));
+                                MembersAdapter membersAdapter = new MembersAdapter(getActivity(), memberInfos);
+                                ((ListView) view.findViewById(R.id.members)).setAdapter(membersAdapter);
+
+                            } catch (ResponseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                } catch (NotCachedException e) {
+                    e.printStackTrace();
+                }
             }
-            membersCount++;
+        });
+        thread.start();
+
+
+    }
+
+
+    public void leaveChat() {
+        final String token;
+        try {
+            token = CachedValues.getSessionKey(getActivity());
+            Runnable toRun = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    ChatLeaveResponse chatLeaveResponse = (new ChatLeaveRequest(token, cid)).execute();
+                                    if (chatLeaveResponse.isSuccess()) {
+                                        activity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                activity.finish();
+
+                                            }
+                                        });
+
+                                    }
+                                } catch (ResponseException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                        thread.start();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+            Runnable cancel = new Runnable() {
+                @Override
+                public void run() {
+
+
+                }
+            };
+
+            AlertDialog leaveDialog = new AlertDialog(getActivity(), getResources().getString(R.string.leave_title), getString(R.string.leave_text), toRun, cancel);
+            leaveDialog.show();
+            dismiss();
+        } catch (NotCachedException e) {
+            e.printStackTrace();
         }
 
-        ((LinearLayout) view.findViewById(R.id.loading)).removeAllViews();
-
-        TextView membersCountTextView = view.findViewById(R.id.membersCount);
-        membersCountTextView.setText(membersCount + " " + getString(R.string.members));
-        MembersAdapter membersAdapter = new MembersAdapter(getActivity(), memberInfos);
-        listView.setAdapter(membersAdapter);
     }
 
+    public void deleteChat() {
 
-    public void exit() {
-        // TODO: logout
-        Runnable toRun = new Runnable() {
-            @Override
-            public void run() {
+        final String token;
+        try {
+            token = CachedValues.getSessionKey(getActivity());
+
+            Runnable toRun = new Runnable() {
+                @Override
+                public void run() {
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ClearHistoryResponse clearHistoryResponse = (new ClearHistoryRequest(token, cid)).execute();
+                                if (clearHistoryResponse.isSuccess()) {
+                                    activity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            activity.finish();
+                                        }
+                                    });
+
+                                }
+                            } catch (ResponseException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                    thread.start();
+                }
+            };
+            Runnable cancel = new Runnable() {
+                @Override
+                public void run() {
 
 
-            }
-        };
-        Runnable cancel = new Runnable() {
-            @Override
-            public void run() {
+                }
+            };
+            dismiss();
+            AlertDialog deleteDialog = new AlertDialog(getActivity(), getResources().getString(R.string.clear_title), getString(R.string.clear_text), toRun, cancel);
+            deleteDialog.show();
+        } catch (NotCachedException e) {
+            e.printStackTrace();
+        }
 
-
-            }
-        };
-        dismiss();
-        AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.leave_text), toRun, cancel);
-        cdd.show();
-    }
-
-    public void delete() {
-
-        // TODO: clear API
-
-        Runnable toRun = new Runnable() {
-            @Override
-            public void run() {
-
-
-            }
-        };
-        Runnable cancel = new Runnable() {
-            @Override
-            public void run() {
-
-
-            }
-        };
-        dismiss();
-        AlertDialog cdd = new AlertDialog(getActivity(), getResources().getString(R.string.clear_title), getString(R.string.clear_text), toRun, cancel);
-        cdd.show();
     }
 
     // Задаём контент
@@ -274,25 +370,26 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_conversation, container, true);
         view = v;
+        loadData();
         ImageButton leave = v.findViewById(R.id.conv_exit);
         leave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exit();
+                leaveChat();
             }
         });
         final ImageButton delete = v.findViewById(R.id.conv_delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delete();
+                deleteChat();
             }
         });
         setContent();
 
-        ImageView icon = view.findViewById(R.id.icon);
+
         ImageView icon2 = view.findViewById(R.id.icon_edit);
-        ImagesWorker.setGradient(icon, Integer.parseInt(cid));
+
         ImagesWorker.setGradient(icon2, Integer.parseInt(cid));
 
 

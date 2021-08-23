@@ -40,7 +40,7 @@
     <string name="create_conv_description">Описание</string>
     <string name="create_conv_title">Создать беседу</string>
     <string name="create_conv_button">Создать</string>
-    <string name="create_success">Новый чат создан</string>
+    <string name="chat_create_success">Новый чат создан</string>
     <string name="your_message">Ваше сообщение</string>
     <string name="members">участников</string>
     <string name="edit">редактировать</string>
@@ -66,8 +66,8 @@
     <string name="password_warning">Смена пароля приведет к автоматическому сбросу всех активных сессий</string>
     <string name="err_not_sended">Не отправлено</string>
     <string name="sending">Отправка...</string>
-    <string name="dialogs_error_title">Ошибка загрузки чатов</string>
-    <string name="dialogs_error_text">Не удалось загрузить чаты. Попробуйте проверить подключение к интернету.</string>
+    <string name="dialogs_error_title">Водочки нам передай...</string>
+    <string name="dialogs_error_text">Ошибка при загрузке списка чатов. Проверьте подключение к интернету.</string>
     <string name="dialogs_error_button">Повторить</string>
     <string name="signout">Выйти</string>
     <string name="logout">Выйти</string>
@@ -103,4 +103,7 @@
     <string name="sign_up_display_name">Придумайте отображаемое имя</string>
     <string name="sign_up_display_name_hint">Имя</string>
     <string name="chats">Чаты</string>
+    <string name="updating">Обновление...</string>
+    <string name="crashed_title">Вы напугали деда!</string>
+    <string name="crashed_text">Cute крашнулся, такого явно не должно было произойти... Съешьте что-нибудь вкусное и, пожалуйста, дайте нам знать о своей ошибке.</string>
 </resources>

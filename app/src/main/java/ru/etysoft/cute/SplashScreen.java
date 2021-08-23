@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import ru.etysoft.cute.activities.main.MainActivity;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.CustomLanguage;
-import ru.etysoft.cute.utils.CustomToast;
 
 public class SplashScreen extends AppCompatActivity {
     private final static String ISDARK_THEME = "APP_THEME_NIGHT";
@@ -27,7 +27,7 @@ public class SplashScreen extends AppCompatActivity {
             CustomLanguage.loadExisting(this);
         } catch (NotCachedException ignored) {
         } catch (LanguageParsingException e) {
-            CustomToast.show(getResources().getString(R.string.err_lang), R.drawable.icon_error, this);
+            CuteToast.show(getResources().getString(R.string.err_lang), R.drawable.icon_error, this);
         }
 
         // Запуск активности

@@ -1,13 +1,14 @@
 package ru.etysoft.cute.exceptions;
 
 import android.content.Context;
+import android.content.Intent;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import ru.etysoft.cute.services.NotificationService;
+import ru.etysoft.cute.activities.CrashReportActivity;
 
 public class CrashExceptionHandler implements UncaughtExceptionHandler {
 
@@ -16,10 +17,7 @@ public class CrashExceptionHandler implements UncaughtExceptionHandler {
 
     private Context context;
 
-    /*
-     * if any of the parameters is null, the respective functionality
-     * will not be used
-     */
+
     public CrashExceptionHandler(Context context) {
         this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
         this.context = context;
@@ -33,7 +31,10 @@ public class CrashExceptionHandler implements UncaughtExceptionHandler {
         String stacktrace = result.toString();
         printWriter.close();
 
-        NotificationService.notifyBanner(context, "Cute crashed!", stacktrace);
+        // NotificationService.notifyBanner(context, "Cute crashed!", stacktrace);
+        Intent snoozeIntent = new Intent(context, CrashReportActivity.class);
+        snoozeIntent.putExtra("stacktrace", stacktrace);
+        context.startActivity(snoozeIntent);
 
         defaultUEH.uncaughtException(t, e);
     }

@@ -5,13 +5,41 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground">
 
-    <ImageView
-        android:id="@+id/imageView6"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_uber" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:srcCompat="@drawable/icon_uber" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratalternates_medium"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Ой, ты что тут делаешь?"
+            android:textColor="@color/accent_blue"
+            android:textSize="24sp" />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratalternates_medium"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Мы не знаем, как вы сюда попали, с какой кампанией вы связались, но вы явно забрели туда, откуда многие не возвращаются. Давайте договоримся: мы вас не видели, а вы ничего не знаете об этом месте. Хорошо? Вот и отлично."
+            android:textColor="@color/colorSupportText"
+            android:textSize="14sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

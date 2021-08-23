@@ -48,7 +48,7 @@
     <string name="create_conv_description">Description</string>
     <string name="create_conv_title">Create a conversation</string>
     <string name="create_conv_button">Create</string>
-    <string name="create_success">New conversation created</string>
+    <string name="chat_create_success">New conversation created</string>
     <string name="your_message">Your message</string>
     <string name="wait_for_record">Hold your finger to record a voice message</string>
     <string name="chat_search">Search for chats</string>
@@ -123,5 +123,8 @@
     <string name="sign_up_display_name">All your friends will see it</string>
     <string name="sign_up_display_name_hint">Display name</string>
     <string name="chats">Chats</string>
+    <string name="updating">Updating...</string>
+    <string name="crashed_title">Susliks are crying...</string>
+    <string name="crashed_text">Cute crashed, this clearly should not have happened... Eat something delicious and please let us know about your error.</string>
 
 </resources>

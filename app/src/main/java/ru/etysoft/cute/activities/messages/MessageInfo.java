@@ -1,6 +1,6 @@
-package ru.etysoft.cute.activities.conversation;
+package ru.etysoft.cute.activities.messages;
 
-public class ConversationInfo {
+public class MessageInfo {
 
     private String name;
     private String message;
@@ -8,15 +8,15 @@ public class ConversationInfo {
     private String id;
     private String photo;
     private int aid;
-    private boolean readed;
+    private boolean read;
     private final boolean isMine;
     private final boolean isDialog;
     private final boolean isInfo;
 
 
     // Сообщение
-    public ConversationInfo(String id, String name, String message, boolean isMine, boolean isDialog, String subtext, boolean readed, int aid, boolean isInfo, String photo) {
-        this.readed = readed;
+    public MessageInfo(String id, String name, String message, boolean isMine, boolean isDialog, String subtext, boolean read, int aid, boolean isInfo, String photo) {
+        this.read = read;
         this.id = id;
         this.aid = aid;
         this.subtext = subtext;
@@ -40,12 +40,12 @@ public class ConversationInfo {
         return aid;
     }
 
-    public boolean isReaded() {
-        return readed;
+    public boolean isRead() {
+        return read;
     }
 
-    public void setReaded(boolean readed) {
-        this.readed = readed;
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public String getId() {
@@ -75,7 +75,6 @@ public class ConversationInfo {
     public String getName() {
         return name;
     }
-
 
     public void setName(String name) {
         this.name = name;

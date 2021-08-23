@@ -14,10 +14,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.fragments.account.AccountFragment;
-import ru.etysoft.cute.activities.fragments.dialogs.DialogsFragment;
+import ru.etysoft.cute.activities.fragments.chatslist.ChatsListFragment;
 import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.utils.Permissions;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
     private MenuItem menuItem;
-    private DialogsFragment fragmentDialogs;
+    private ChatsListFragment fragmentDialogs;
     private AccountFragment fragmentAccount;
     private ExploreFragment fragmentExplore;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
             }
         });
-
+        CuteToast.show("Тестовое сообщение. Пук-пук", R.drawable.icon_success, this);
 
         setupViewPager(viewPager);
 
@@ -147,10 +148,15 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         viewPager.setCurrentItem(1);
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragmentExplore = new ExploreFragment();
-        fragmentDialogs = new DialogsFragment();
+        fragmentDialogs = new ChatsListFragment();
         fragmentAccount = new AccountFragment();
         viewPagerAdapter.addFragment(fragmentExplore);
         viewPagerAdapter.addFragment(fragmentDialogs);

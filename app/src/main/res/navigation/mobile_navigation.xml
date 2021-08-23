@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="ru.etysoft.cute.activities.fragments.dialogs.DialogsFragment"
+        android:name="ru.etysoft.cute.activities.fragments.chatslist.ChatsListFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/activity_dialogs">
+        tools:layout="@layout/activity_chats">
         <action
             android:id="@+id/action_navigation_home_to_navigation_dashboard"
             app:destination="@+id/navigation_dashboard"
