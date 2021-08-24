@@ -1,12 +1,6 @@
 package ru.etysoft.cute.activities.fragments.chatslist;
 
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-
-import androidx.appcompat.widget.Toolbar;
-
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
-import ru.etysoft.cute.components.ErrorPanel;
 
 public interface ChatsListContact {
 
@@ -15,17 +9,17 @@ public interface ChatsListContact {
 
         void setStatusMessage(String statusMessage);
 
-        void showProgressBarAndSetStatusMessage();
+        void showUpdateViews();
 
         void hideToolbar();
 
-        void safeToolbar();
+        void showToolbar();
 
-        void noChats();
+        void showEmptyListView();
 
-        void responseException();
+        void showErrorView();
 
-        void removeProgressBarAndSetStatusMessage();
+        void hideUpdateViews();
     }
 
     interface Presenter {

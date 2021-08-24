@@ -1,23 +1,13 @@
 package ru.etysoft.cute.activities.fragments.chatslist;
 
 import android.app.Activity;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-
-import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.List;
 
-import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.chatslist.ChatSnippetInfo;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
-import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.Methods;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
@@ -42,7 +32,7 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
         if (!updateListLock) {
             updateListLock = true;
             chatsListAdapter.clear();
-            view.showProgressBarAndSetStatusMessage();
+            view.showUpdateViews();
             // Задаём обработчик запроса к API
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -75,18 +65,18 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                     if (chatsListAdapter.getCount() > 10) {
                         view.hideToolbar();
                     } else {
-                        view.safeToolbar();
+                        view.showToolbar();
                     }
                     if (!finalHasMessages) {
-                        view.noChats();
+                        view.showEmptyListView();
                     }
                     } catch (NotCachedException e) {
                         e.printStackTrace();
                     } catch (ResponseException e) {
-                        view.responseException();
+                        view.showErrorView();
                         e.printStackTrace();
                     }
-                    view.removeProgressBarAndSetStatusMessage();
+                    view.hideUpdateViews();
                     updateListLock = false;
                 }
             });

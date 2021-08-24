@@ -115,7 +115,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     }
 
     @Override
-    public void showProgressBarAndSetStatusMessage() {
+    public void showUpdateViews() {
         progressBar.setVisibility(View.VISIBLE);
         setStatusMessage(StringsRepository.getOrDefault(R.string.updating, getActivity()));
         progressBar.setVisibility(View.VISIBLE);
@@ -132,19 +132,19 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     }
 
     @Override
-    public void safeToolbar() {
+    public void showToolbar() {
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
         toolbar.setLayoutParams(params);
     }
 
     @Override
-    public void noChats() {
+    public void showEmptyListView() {
         noChats.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void responseException() {
+    public void showErrorView() {
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
         toolbar.setLayoutParams(params);
@@ -153,7 +153,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     }
 
     @Override
-    public void removeProgressBarAndSetStatusMessage() {
+    public void hideUpdateViews() {
         setStatusMessage(StringsRepository.getOrDefault(R.string.chats, getActivity()));
         progressBar.setVisibility(View.INVISIBLE);
     }
