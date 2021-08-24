@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
-    public static final String TAG = NetworkStateReceiver.class.getSimpleName();
+
     private boolean online = true;
 
     private Runnable onlineRunnable;
@@ -17,9 +17,6 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     public NetworkStateReceiver(Runnable onlineRunnable, Runnable offlineRunnable) {
         this.offlineRunnable = offlineRunnable;
         this.onlineRunnable = onlineRunnable;
-    }
-
-    public NetworkStateReceiver() {
     }
 
     @Override
