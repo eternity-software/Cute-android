@@ -40,16 +40,12 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                     try {
                         ChatListResponse chatListResponse = Methods.getChatList(CachedValues.getSessionKey(context));
                         final List<ChatSnippet> chats = chatListResponse.getChats();
-                        System.out.println(chats.size());
-                        boolean hasMessages = false;
                         for (int i = 0; i < chats.size(); i++) {
                             final ChatSnippet chat = chats.get(i);
-                            hasMessages = true;
                             final boolean isDialog = !chat.getType().equals(Chat.Types.CONVERSATION);
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    System.out.println(chat.getName());
                                     chatsListAdapter.add(new ChatSnippetInfo(chat.getName(),
                                             chat.getLastMessageText(),
                                             chat.getLastMessageSenderDisplayName(),
@@ -60,7 +56,6 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                                 }
                             });
                         }
-                        final boolean finalHasMessages = hasMessages;
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -70,7 +65,7 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                                 } else {
                                     view.showToolbar();
                                 }
-                                if (!finalHasMessages) {
+                                if (chats.size() == 0) {
                                     view.showEmptyListView();
                                 }
                             }

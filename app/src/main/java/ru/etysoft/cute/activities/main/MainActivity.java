@@ -13,7 +13,10 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Account;
+import ru.etysoft.cute.activities.fragments.account.AccountContact;
 import ru.etysoft.cute.activities.fragments.account.AccountFragment;
+import ru.etysoft.cute.activities.fragments.account.AccountPresenter;
 import ru.etysoft.cute.activities.fragments.chatslist.ChatsListFragment;
 import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.activities.stock;
@@ -124,9 +127,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                 } else {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
-                if (position == 2) {
-                    fragmentAccount.updateData();
-                }
+//                if (position == 2) {
+//                    fragmentAccount.
+//                }
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 menuItem = bottomNavigationView.getMenu().getItem(position);
             }
