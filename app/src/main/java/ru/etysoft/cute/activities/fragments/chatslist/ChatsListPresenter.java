@@ -60,23 +60,39 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                                 }
                             });
                         }
-                    final boolean finalHasMessages = hasMessages;
-                    chatsListAdapter.notifyDataSetChanged();
-                    if (chatsListAdapter.getCount() > 10) {
-                        view.hideToolbar();
-                    } else {
-                        view.showToolbar();
-                    }
-                    if (!finalHasMessages) {
-                        view.showEmptyListView();
-                    }
+                        final boolean finalHasMessages = hasMessages;
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatsListAdapter.notifyDataSetChanged();
+                                if (chatsListAdapter.getCount() > 10) {
+                                    view.hideToolbar();
+                                } else {
+                                    view.showToolbar();
+                                }
+                                if (!finalHasMessages) {
+                                    view.showEmptyListView();
+                                }
+                            }
+                        });
+
                     } catch (NotCachedException e) {
                         e.printStackTrace();
                     } catch (ResponseException e) {
-                        view.showErrorView();
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.showErrorView();
+                            }
+                        });
                         e.printStackTrace();
                     }
-                    view.hideUpdateViews();
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.hideUpdateViews();
+                        }
+                    });
                     updateListLock = false;
                 }
             });

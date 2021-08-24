@@ -63,7 +63,6 @@ public class AccountFragment extends Fragment {
             }
         });
 
-
         return root;
     }
 
