@@ -127,9 +127,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
                 } else {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
-//                if (position == 2) {
-//                    fragmentAccount.
-//                }
+                if (position == 2) {
+                    fragmentAccount.getPresenter().updateData();
+                }
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 menuItem = bottomNavigationView.getMenu().getItem(position);
             }

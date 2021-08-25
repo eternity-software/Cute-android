@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.EditProfile;
+import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.activities.SettingsActivity;
 
 public class AccountFragment extends Fragment implements AccountContact.View{
@@ -56,7 +55,7 @@ public class AccountFragment extends Fragment implements AccountContact.View{
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), EditProfile.class);
+                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                 intent.putExtra("name", "name");
                 intent.putExtra("profilePhoto", "status");
                 intent.putExtra("status", "status");
@@ -73,5 +72,9 @@ public class AccountFragment extends Fragment implements AccountContact.View{
     public void setPersonParam(String login, String status, String photo) {
         this.status.setText(status);
         this.login.setText(login);
+    }
+
+    public AccountContact.Presenter getPresenter() {
+        return presenter;
     }
 }

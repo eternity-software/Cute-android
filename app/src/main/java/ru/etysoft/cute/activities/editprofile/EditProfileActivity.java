@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities;
+package ru.etysoft.cute.activities.editprofile;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,7 +32,7 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 
-public class EditProfile extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
     private int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
     private String id;

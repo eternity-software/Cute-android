@@ -35,7 +35,7 @@
             android:name=".EditChat"
             android:theme="@style/AppSlideTheme" />
         <activity
-            android:name=".activities.EditProfile"
+            android:name=".activities.editprofile.EditProfileActivity"
             android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".activities.ChatsSearch"
