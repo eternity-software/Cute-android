@@ -83,7 +83,7 @@
     <string name="err_messages_text">Произошла ошибка при загрузке сообщений.</string>
     <string name="edit_profile">Редактировать</string>
     <string name="no_status">кчау</string>
-    <string name="save_profile">Сохранить</string>
+    <string name="save_profile">Применить</string>
     <string name="status">Статус</string>
     <string name="no_internet">Ожидание сети...</string>
     <string name="saved_to_gallery">Сохранено в галерею</string>

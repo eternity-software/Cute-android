@@ -7,15 +7,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.r0adkll.slidr.Slidr;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,19 +24,23 @@ import java.util.Date;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.data.CacheUtils;
+import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.requests.attachements.ImageFile;
-import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditRequest;
+import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditResponse;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
     private String id;
     private String name;
-    private String status;
+    private String login;
     private String mCurrentPhotoPath;
     private ImageFile image = null;
+    private TextView nameView;
 
 
     private boolean isImageUpdated = false;
@@ -50,13 +51,13 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         name = getIntent().getExtras().getString("name");
-        status = getIntent().getExtras().getString("status");
+        login = getIntent().getExtras().getString("login");
         String urlPhoto = (CacheUtils.getInstance()).getString("profilePhoto", this);
         Slidr.attach(this);
 
 
-        TextView nameView = findViewById(R.id.name);
-        TextView statusView = findViewById(R.id.status);
+        nameView = findViewById(R.id.editTextAccountName);
+        TextView loginView = findViewById(R.id.editTextAccountLogin);
 //        ImageView imageView = findViewById(R.id.progileImage);
 
 
@@ -66,7 +67,27 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
         nameView.setText(name);
-        statusView.setText(status);
+        loginView.setText(login);
+    }
+
+    public void applyChanges(View v) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EditResponse editResponse = (new EditRequest(CachedValues.getSessionKey(EditProfileActivity.this),
+                            String.valueOf(nameView.getText()))).execute();
+                    if (editResponse.isSuccess()) {
+                        finish();
+                    }
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                } catch (NotCachedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     //TODO: переместить методы

@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
 
+import ru.etysoft.cute.R;
+
 public class Numbers {
 
 
@@ -38,7 +40,12 @@ public class Numbers {
         }
         System.out.println(secondNum + "" + firstNum);
 
-        return context.getResources().getColor(context.getResources().getIdentifier("avatar" + secondNum + "" + firstNum, "color", context.getPackageName()));
+        try {
+            return context.getResources().getColor(context.getResources().getIdentifier("avatar" + secondNum + "" + firstNum, "color", context.getPackageName()));
+
+        } catch (Exception e) {
+            return context.getResources().getColor(R.color.avatar05);
+        }
     }
 
 

@@ -3,8 +3,6 @@ package ru.etysoft.cute.activities.signup;
 import android.app.Activity;
 import android.content.IntentFilter;
 
-import org.json.JSONException;
-
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
@@ -34,6 +32,8 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
         if (!email.equals("")) {
             CachedValues.setEmail(context.getApplication(), email);
+        } else {
+            return;
         }
 
         signUpView.setEnabledActionButton(false);
@@ -62,7 +62,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                             signUpView.showError(context.getResources().getString(R.string.err_unknown));
                         }
                     });
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     context.runOnUiThread(new Runnable() {
                         @Override

@@ -1,11 +1,7 @@
 package ru.etysoft.cute.activities.fragments.account;
 
 import android.app.Activity;
-import android.content.Context;
-import android.widget.TextView;
 
-import ru.etysoft.cute.R;
-import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.Methods;
@@ -31,7 +27,10 @@ public class AccountPresenter implements AccountContact.Presenter{
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            view.setPersonParam(getAccountResponse.getLogin(), "status", "photo");
+                            if (getAccountResponse.isSuccess()) {
+                                view.setAccountInfo(getAccountResponse.getLogin(), "status", "photo",
+                                        Integer.parseInt(getAccountResponse.getId()));
+                            }
                         }
                     });
 

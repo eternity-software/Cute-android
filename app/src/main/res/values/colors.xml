@@ -47,6 +47,8 @@
     <color name="colorTransBlack">#88000000</color>
     <color name="colorTextDark">@color/colorPrimaryDark</color>
     <color name="colorMessageText">@color/colorPrimaryDark</color>
+    <color name="colorSupportButton">@color/colorPrimaryDark</color>
+
 
     <color name="colorUnreadBackground">@color/colorAccent10</color>
 

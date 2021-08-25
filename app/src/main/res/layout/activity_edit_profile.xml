@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserratalternates_medium"
             android:text="@string/page"
+            android:onClick=""
             android:textColor="@color/accent_blue"
             android:textSize="24sp"
             app:localizableKey="page" />
@@ -119,25 +120,25 @@
         </LinearLayout>
 
         <ru.etysoft.cute.lang.components.LocalizableEditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/editTextAccountLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/indent_8"
             android:background="@drawable/edit_text_passive"
             android:fontFamily="@font/montserrat"
-            android:hint="@string/sign_up_display_name_hint"
+            android:hint="@string/login"
             android:inputType="textPersonName"
             android:paddingVertical="@dimen/indent_4"
             android:paddingHorizontal="@dimen/indent_16"
             android:textSize="18sp" />
 
         <ru.etysoft.cute.lang.components.LocalizableEditText
-            android:id="@+id/editTextTextPersonName2"
+            android:id="@+id/editTextAccountName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text_passive"
             android:fontFamily="@font/montserrat"
-            android:hint="Mohutyninthu'"
+            android:hint="@string/sign_up_display_name_hint"
             android:inputType="textPersonName"
             android:paddingVertical="@dimen/indent_4"
             android:paddingHorizontal="@dimen/indent_16"
@@ -178,10 +179,25 @@
             android:fontFamily="@font/montserratalternates_medium"
             android:paddingVertical="@dimen/indent_4"
             android:paddingHorizontal="@dimen/indent_16"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_rounded_top"
+        android:fontFamily="@font/montserratalternates_medium"
+        android:onClick="applyChanges"
+        android:text="@string/save_profile"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

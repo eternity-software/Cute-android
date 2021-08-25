@@ -12,15 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.activities.SettingsActivity;
+import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
+import ru.etysoft.cute.components.Avatar;
 
 public class AccountFragment extends Fragment implements AccountContact.View{
     private View view;
 
     private ImageView settingImageView;
     private ImageView editButton;
-    private ImageView userimage;
+    private Avatar userimage;
     private TextView status;
     private TextView login;
 
@@ -39,6 +40,9 @@ public class AccountFragment extends Fragment implements AccountContact.View{
 
     @Override
     public void initializeViews() {
+        userimage = view.findViewById(R.id.userimage);
+        status = view.findViewById(R.id.status);
+        login = view.findViewById(R.id.login);
         settingImageView = view.findViewById(R.id.setting);
         settingImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,22 +56,23 @@ public class AccountFragment extends Fragment implements AccountContact.View{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                intent.putExtra("name", "name");
+                intent.putExtra("name", "");
                 intent.putExtra("profilePhoto", "status");
-                intent.putExtra("status", "status");
+                intent.putExtra("status", status.getText());
+                intent.putExtra("login", login.getText());
                 startActivity(intent);
             }
         });
-        userimage = view.findViewById(R.id.userimage);
-        status = view.findViewById(R.id.status);
-        login = view.findViewById(R.id.login);
+
 
     }
 
     @Override
-    public void setPersonParam(String login, String status, String photo) {
+    public void setAccountInfo(String login, String status, String photo, int id) {
         this.status.setText(status);
         this.login.setText(login);
+        userimage.generateIdPicture(id);
+        userimage.setAcronym(login);
     }
 
     public AccountContact.Presenter getPresenter() {

@@ -7,7 +7,7 @@ public interface AccountContact {
     interface View{
         void initializeViews();
 
-        void setPersonParam(String login, String status, String photo);
+        void setAccountInfo(String login, String status, String photo, int id);
     }
     interface Presenter{
         void updateData();

@@ -57,7 +57,8 @@ public class Avatar extends RelativeLayout {
     public void setAcronym(String name) {
         if (name.length() > 0) {
             if (name.length() > 1) {
-                acronymView.setText(name.substring(0, 2));
+                String finalName = name.substring(0, 1).toUpperCase() + name.substring(1, 2).toLowerCase();
+                acronymView.setText(finalName);
             } else {
                 acronymView.setText(name.substring(0, 1));
             }
