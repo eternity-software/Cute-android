@@ -37,10 +37,6 @@ public class AccountFragment extends Fragment implements AccountContact.View{
         return root;
     }
 
-
-
-
-
     @Override
     public void initializeViews() {
         settingImageView = view.findViewById(R.id.setting);

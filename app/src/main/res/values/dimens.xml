@@ -6,4 +6,10 @@
     <dimen name="divider_14">14dp</dimen>
     <dimen name="divider_7">7dp</dimen>
     <dimen name="corners">16dp</dimen>
+    <dimen name="indent_20">20dp</dimen>
+    <dimen name="indent_16">16dp</dimen>
+    <dimen name="indent_4">4dp</dimen>
+    <dimen name="indent_8">8dp</dimen>
+
+
 </resources>

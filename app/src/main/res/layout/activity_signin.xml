@@ -78,6 +78,7 @@
                 android:background="@drawable/edit_text_passive_double"
                 android:orientation="vertical">
 
+
                 <ru.etysoft.cute.lang.components.LocalizableEditText
                     android:id="@+id/edittext_login"
                     android:layout_width="match_parent"
@@ -98,7 +99,6 @@
                     android:textColor="@color/colorText"
                     android:textColorHint="@color/colorHint"
                     app:localizableHint="login" />
-
 
                 <ru.etysoft.cute.lang.components.LocalizableEditText
                     android:id="@+id/edittext_password"

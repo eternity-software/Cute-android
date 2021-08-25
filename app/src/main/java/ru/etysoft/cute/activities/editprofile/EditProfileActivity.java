@@ -57,11 +57,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
         TextView nameView = findViewById(R.id.name);
         TextView statusView = findViewById(R.id.status);
-        ImageView imageView = findViewById(R.id.progileImage);
+//        ImageView imageView = findViewById(R.id.progileImage);
 
 
         if (urlPhoto != null) {
-            Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).memoryPolicy(MemoryPolicy.NO_CACHE).transform(new CircleTransform()).into(imageView);
+//            Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).memoryPolicy(MemoryPolicy.NO_CACHE).transform(new CircleTransform()).into(imageView);
         }
 
 
@@ -125,13 +125,13 @@ public class EditProfileActivity extends AppCompatActivity {
                 copyStream(inputStream, fileOutputStream);
                 fileOutputStream.close();
                 inputStream.close();
-                ImageView imageView = findViewById(R.id.progileImage);
+//                ImageView imageView = findViewById(R.id.progileImage);
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                 Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
                 image = photoFile;
                 int dp = Numbers.dpToPx(150, getApplicationContext());
-                imageView.setImageBitmap(ImagesWorker.getCircleCroppedBitmap(bitmap, dp, dp));
+//                imageView.setImageBitmap(ImagesWorker.getCircleCroppedBitmap(bitmap, dp, dp));
 
             } catch (Exception e) {
                 Log.d("ACTIVITYRES", "onActivityResult: " + e.toString());

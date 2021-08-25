@@ -42,7 +42,7 @@ public class Avatar extends RelativeLayout {
         Animation bottomDown = AnimationUtils.loadAnimation(getContext(),
                 R.anim.zoom_in);
 
-        rootView.startAnimation(bottomDown);
+//        rootView.startAnimation(bottomDown);
     }
 
     @Override

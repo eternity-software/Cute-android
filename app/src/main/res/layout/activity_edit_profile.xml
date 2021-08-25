@@ -18,4 +18,170 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginRight="@dimen/indent_20"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/indent_8"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="@dimen/indent_8"
+            app:srcCompat="@drawable/icon_back_arrow" />
+
+        <ru.etysoft.cute.lang.components.LocalizableTextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratalternates_medium"
+            android:text="@string/page"
+            android:textColor="@color/accent_blue"
+            android:textSize="24sp"
+            app:localizableKey="page" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="@dimen/indent_20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.103">
+
+        <ru.etysoft.cute.components.Avatar
+            android:layout_width="60dp"
+            android:layout_height="60dp" >
+
+            <ImageView
+                android:id="@+id/imageView13"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="15dp"
+                app:srcCompat="@drawable/icon_photo_camera" />
+        </ru.etysoft.cute.components.Avatar>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Изменить шапку" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/indent_20"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/indent_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/indent_8">
+
+            <ImageView
+                android:id="@+id/imageView12"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/indent_4"
+                app:srcCompat="@drawable/icon_person_blue" />
+
+            <ru.etysoft.cute.lang.components.LocalizableTextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/montserratalternates_medium"
+                android:text="@string/sign_up_display_name_hint"
+                android:textSize="18dp"
+                app:localizableKey="sign_up_display_name_hint" />
+        </LinearLayout>
+
+        <ru.etysoft.cute.lang.components.LocalizableEditText
+            android:id="@+id/editTextTextPersonName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/indent_8"
+            android:background="@drawable/edit_text_passive"
+            android:fontFamily="@font/montserrat"
+            android:hint="@string/sign_up_display_name_hint"
+            android:inputType="textPersonName"
+            android:paddingVertical="@dimen/indent_4"
+            android:paddingHorizontal="@dimen/indent_16"
+            android:textSize="18sp" />
+
+        <ru.etysoft.cute.lang.components.LocalizableEditText
+            android:id="@+id/editTextTextPersonName2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_passive"
+            android:fontFamily="@font/montserrat"
+            android:hint="Mohutyninthu'"
+            android:inputType="textPersonName"
+            android:paddingVertical="@dimen/indent_4"
+            android:paddingHorizontal="@dimen/indent_16"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/indent_16"
+        android:layout_marginTop="@dimen/indent_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout10">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/indent_4"
+                app:srcCompat="@drawable/icon_microscope"/>
+            <ru.etysoft.cute.lang.components.LocalizableTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/bio"
+                android:gravity="center_vertical"
+                android:fontFamily="@font/montserratalternates_medium"
+                android:textSize="18sp"/>
+        </LinearLayout>
+        <ru.etysoft.cute.lang.components.LocalizableEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_passive"
+            android:layout_marginTop="@dimen/indent_8"
+            android:hint="Пишите что думате и думайте что пишете"
+            android:fontFamily="@font/montserratalternates_medium"
+            android:paddingVertical="@dimen/indent_4"
+            android:paddingHorizontal="@dimen/indent_16"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
