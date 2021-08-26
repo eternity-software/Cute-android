@@ -65,6 +65,8 @@
     <color name="colorHint">#757575</color>
     <color name="colorPassiveButtonText">#505050</color>
 
+    <color name="colorIconTint">@color/accent_support</color>
+    <color name="colorPanelGray">@color/colorLightLGray</color>
     <color name="splashLogo">@color/accent_blue</color>
 
 

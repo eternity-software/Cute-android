@@ -7,48 +7,19 @@
     android:background="@color/colorBackground"
     tools:context=".activities.CreateChatActivity">
 
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-
-        android:layout_marginTop="50dp"
-        android:background="@color/colorDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout9"
+    <ru.etysoft.cute.components.LightToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginRight="@dimen/indent_20"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+
+        app:caption="@string/edit_profile"
+        app:captionLocId="page"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-        <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/indent_8"
-            android:background="?attr/selectableItemBackground"
-            android:paddingLeft="@dimen/indent_8"
-            app:srcCompat="@drawable/icon_back_arrow" />
 
-        <ru.etysoft.cute.lang.components.LocalizableTextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserratalternates_medium"
-            android:text="@string/page"
-            android:onClick=""
-            android:textColor="@color/accent_blue"
-            android:textSize="24sp"
-            app:localizableKey="page" />
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout7"
@@ -71,6 +42,7 @@
                 android:id="@+id/imageView13"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="selectPhoto"
                 android:padding="15dp"
                 app:srcCompat="@drawable/icon_photo_camera" />
         </ru.etysoft.cute.components.Avatar>
@@ -79,6 +51,7 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
             android:text="Изменить шапку" />
 
     </LinearLayout>
@@ -106,6 +79,7 @@
                 android:layout_width="28dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/indent_4"
+                android:tint="@color/colorIconTint"
                 app:srcCompat="@drawable/icon_person_blue" />
 
             <ru.etysoft.cute.lang.components.LocalizableTextView
@@ -161,6 +135,7 @@
                 android:layout_width="28dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/indent_4"
+                android:tint="@color/colorIconTint"
                 app:srcCompat="@drawable/icon_microscope"/>
             <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:layout_width="wrap_content"
@@ -171,15 +146,29 @@
                 android:textSize="18sp"/>
         </LinearLayout>
         <ru.etysoft.cute.lang.components.LocalizableEditText
+            android:id="@+id/bioView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_passive"
+            android:background="@drawable/edit_text_passive_double"
             android:layout_marginTop="@dimen/indent_8"
-            android:hint="Пишите что думате и думайте что пишете"
-            android:fontFamily="@font/montserratalternates_medium"
+            android:hint="Bio"
+            android:fontFamily="@font/montserrat"
             android:paddingVertical="@dimen/indent_4"
             android:paddingHorizontal="@dimen/indent_16"
             android:textSize="18sp" />
+
+        <ru.etysoft.cute.lang.components.LocalizableEditText
+            android:id="@+id/statusView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_passive_double"
+            android:layout_marginTop="@dimen/indent_8"
+            android:hint="Status"
+            android:fontFamily="@font/montserrat"
+            android:paddingVertical="@dimen/indent_4"
+            android:paddingHorizontal="@dimen/indent_16"
+            android:textSize="18sp" />
+
 
     </LinearLayout>
 

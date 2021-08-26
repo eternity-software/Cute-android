@@ -17,7 +17,9 @@
         android:layout_height="match_parent"
         android:fontFamily="@font/montserratalternates_medium"
         android:gravity="center"
-        android:text=""
+        android:text=" "
+
+
         android:textColor="@color/colorWhite"
         android:textSize="20sp" />
 

@@ -21,8 +21,8 @@
 
         <ru.etysoft.cute.components.Avatar
             android:id="@+id/userimage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
 
             app:srcCompat="@drawable/icon_account" />
 
@@ -55,7 +55,7 @@
                         android:singleLine="true"
                         android:text="karlov"
                         android:textColor="@color/colorTextAccent"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
@@ -70,33 +70,34 @@
                         android:id="@+id/editProfile"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
+                        android:background="?actionBarItemBackground"
                         android:padding="4dp"
                         app:srcCompat="@drawable/icon_edit"
+                        app:tint="@color/colorSupportButton" />
+
+
+                    <ImageView
+                        android:id="@+id/imageView20"
+                        android:layout_width="28dp"
+                        android:layout_height="wrap_content"
+                        android:background="?actionBarItemBackground"
+                        android:padding="4dp"
+                        app:srcCompat="@drawable/icon_qr_code"
                         app:tint="@color/colorSupportButton" />
 
                     <ImageView
                         android:id="@+id/setting"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
+                        android:background="?actionBarItemBackground"
                         android:padding="4dp"
                         app:srcCompat="@drawable/icon_settings"
-                        app:tint="@color/colorSupportButton" />
-
-                    <ImageView
-                        android:id="@+id/imageView20"
-                        android:layout_width="28dp"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="4dp"
-                        app:srcCompat="@drawable/icon_qr_code"
                         app:tint="@color/colorSupportButton" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/status"
+                android:id="@+id/statusView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/no_status" />

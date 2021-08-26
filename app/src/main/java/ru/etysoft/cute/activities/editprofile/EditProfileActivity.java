@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,14 +24,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.CuteToast;
+import ru.etysoft.cute.components.LightToolbar;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.account.ChangeAvatar.ChangeAvatarRequest;
+import ru.etysoft.cuteframework.methods.account.ChangeAvatar.ChangeAvatarResponse;
 import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditRequest;
 import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditResponse;
+import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
+import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
+import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -38,9 +46,12 @@ public class EditProfileActivity extends AppCompatActivity {
     private String id;
     private String name;
     private String login;
+    private LightToolbar toolbar;
     private String mCurrentPhotoPath;
     private ImageFile image = null;
     private TextView nameView;
+    private TextView statusView;
+    private TextView bioView;
 
 
     private boolean isImageUpdated = false;
@@ -53,10 +64,15 @@ public class EditProfileActivity extends AppCompatActivity {
         name = getIntent().getExtras().getString("name");
         login = getIntent().getExtras().getString("login");
         String urlPhoto = (CacheUtils.getInstance()).getString("profilePhoto", this);
-        Slidr.attach(this);
 
 
         nameView = findViewById(R.id.editTextAccountName);
+        statusView = findViewById(R.id.statusView);
+        bioView = findViewById(R.id.bioView);
+
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.animateAppear();
         TextView loginView = findViewById(R.id.editTextAccountLogin);
 //        ImageView imageView = findViewById(R.id.progileImage);
 
@@ -65,9 +81,26 @@ public class EditProfileActivity extends AppCompatActivity {
 //            Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).memoryPolicy(MemoryPolicy.NO_CACHE).transform(new CircleTransform()).into(imageView);
         }
 
-
-        nameView.setText(name);
         loginView.setText(login);
+        nameView.setText(name);
+
+        try {
+            loginView.setText(CachedValues.getLogin(this));
+            nameView.setText(CachedValues.getDisplayName(this));
+            bioView.setText(CachedValues.getBio(this));
+            statusView.setText(CachedValues.getStatus(this));
+        } catch (NotCachedException e) {
+            e.printStackTrace();
+        }
+
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     public void applyChanges(View v) {
@@ -76,7 +109,10 @@ public class EditProfileActivity extends AppCompatActivity {
             public void run() {
                 try {
                     EditResponse editResponse = (new EditRequest(CachedValues.getSessionKey(EditProfileActivity.this),
-                            String.valueOf(nameView.getText()))).execute();
+                            String.valueOf(nameView.getText()),
+                            String.valueOf(statusView.getText()),
+                            String.valueOf(bioView.getText())
+                            )).execute();
                     if (editResponse.isSuccess()) {
                         finish();
                     }
@@ -151,6 +187,41 @@ public class EditProfileActivity extends AppCompatActivity {
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                 Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
                 image = photoFile;
+                Thread upload = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            UploadImageResponse uploadImageResponse = (new UploadImageRequest(image, CachedValues.getSessionKey(getApplicationContext()))).execute();
+                            String mediaId = uploadImageResponse.getMediaId();
+                            ChangeAvatarResponse changeAvatarResponse = (new ChangeAvatarRequest(CachedValues.getSessionKey(getApplicationContext()), mediaId)).execute();
+                            if(changeAvatarResponse.isSuccess())
+                            {
+                                EditProfileActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CuteToast.showSuccess("uspeshno!", EditProfileActivity.this);
+                                    }
+                                });
+                            }
+                        } catch (ResponseException | NotCachedException e) {
+                            e.printStackTrace();
+                        }
+                        catch (final Exception e)
+                        {
+                            e.printStackTrace();
+                            EditProfileActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CuteToast.showError(e.getMessage(), EditProfileActivity.this);
+                                    finish();
+                                }
+                            });
+
+
+                        }
+                    }
+                });
+                upload.start();
                 int dp = Numbers.dpToPx(150, getApplicationContext());
 //                imageView.setImageBitmap(ImagesWorker.getCircleCroppedBitmap(bitmap, dp, dp));
 

@@ -39,7 +39,7 @@
             </LinearLayout>
 
             <ru.etysoft.cute.lang.components.LocalizableTextView
-                android:id="@+id/idview"
+                android:id="@+id/loginView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ChatsSearch;
 import ru.etysoft.cute.activities.CreateChatActivity;
-import ru.etysoft.cute.activities.chatslist.ChatSnippetInfo;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
 
 
 public class ChatsListFragment extends Fragment implements ChatsListContact.View {
@@ -61,7 +61,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     public void initViews() {
         ListView listView = view.findViewById(R.id.listView);
         toolbar = view.findViewById(R.id.toolbar);
-        adapter = new ChatsListAdapter(getActivity(), new ArrayList<ChatSnippetInfo>());
+        adapter = new ChatsListAdapter(getActivity(), new ArrayList<ChatSnippet>());
         listView.setAdapter(adapter);
         errorContainer = view.findViewById(R.id.error);
         progressBar = view.findViewById(R.id.loading);

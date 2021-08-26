@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/accent_support"
-    android:fitsSystemWindows="true"
+
     android:theme="@style/AppTheme.TransparentTheme"
     tools:context=".activities.meet.MeetActivity">
 

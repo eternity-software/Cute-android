@@ -39,6 +39,28 @@ public class CachedValues {
         cacheUtils.setString(CacheKeys.ID, id, context);
     }
 
+    public static String getStatus(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.STATUS, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.STATUS, context);
+    }
+
+    public static void setStatus(Context context, String id) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.setString(CacheKeys.STATUS, id, context);
+    }
+
+    public static String getBio(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.BIO, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.BIO, context);
+    }
+
+    public static void setBio(Context context, String id) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.setString(CacheKeys.BIO, id, context);
+    }
+
     public static String getLogin(Context context) throws NotCachedException {
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (!cacheUtils.hasKey(CacheKeys.LOGIN, context)) throw new NotCachedException();
@@ -81,6 +103,8 @@ public class CachedValues {
         public final static String SESSION_KEY = "session";
         public final static String EMAIL = "email";
         public final static String ID = "id";
+        public final static String STATUS = "status";
+        public final static String BIO = "bio";
         public final static String LOGIN = "login";
         public final static String DISPLAY_NAME = "display_name";
         public final static String CUSTOM_LANG = "custom_lang";

@@ -23,7 +23,7 @@
 
 
         <ImageView
-            android:id="@+id/status"
+            android:id="@+id/statusView"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="-60dp"

@@ -36,6 +36,7 @@
             android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".activities.editprofile.EditProfileActivity"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".activities.ChatsSearch"

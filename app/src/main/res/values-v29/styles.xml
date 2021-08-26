@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/accent_support</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:forceDarkAllowed">false</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/test_transition</item>
+
     </style>
 
 

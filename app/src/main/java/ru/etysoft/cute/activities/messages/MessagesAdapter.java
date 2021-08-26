@@ -10,10 +10,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Profile;
+import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 
 public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
@@ -43,7 +47,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
             // Проверка на своё сообщение
             if (info.isMine() && !info.isInfo()) {
                 view = inflator.inflate(R.layout.conv_mymessage, null);
-            } else if (info.getAid() == -1) {
+            } else if (info.isInfo() == true) {
                 isFirstAid = false;
                 view = inflator.inflate(R.layout.info_message, null);
             } else {
@@ -68,7 +72,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
         // Инициализируем элементы
         final MessagesAdapter.ViewHolder viewHolder = new MessagesAdapter.ViewHolder();
 
-        if (info.getAid() != -1) {
+        if (!info.isInfo()) {
             // Не информационное сообщение
 
             viewHolder.time = (TextView) view.findViewById(R.id.timeview);
@@ -90,11 +94,11 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
             }
 
             if (isFirstAid) {
+                holder.userpic.setAcronym(info.getName());
                 holder.name.setText(info.getName());
-                if (info.getPhoto().equals("null")) {
-                    ImagesWorker.setGradient(holder.userpic, info.getAid());
-                } else {
-
+                holder.userpic.generateIdPicture(info.getAid());
+                if (info.getPhoto() != null) {
+                    Picasso.get().load(info.getPhoto()).transform(new CircleTransform()).into(holder.userpic.getPictureView());
                 }
                 holder.userpic.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -142,6 +146,6 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
         protected TextView message;
         protected RelativeLayout back;
         protected TextView name;
-        protected ImageView userpic;
+        protected Avatar userpic;
     }
 }

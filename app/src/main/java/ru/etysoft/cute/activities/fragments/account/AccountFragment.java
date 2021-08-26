@@ -11,10 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.squareup.picasso.Picasso;
+
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.SettingsActivity;
 import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.utils.CircleTransform;
 
 public class AccountFragment extends Fragment implements AccountContact.View{
     private View view;
@@ -41,7 +44,7 @@ public class AccountFragment extends Fragment implements AccountContact.View{
     @Override
     public void initializeViews() {
         userimage = view.findViewById(R.id.userimage);
-        status = view.findViewById(R.id.status);
+        status = view.findViewById(R.id.statusView);
         login = view.findViewById(R.id.login);
         settingImageView = view.findViewById(R.id.setting);
         settingImageView.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +76,9 @@ public class AccountFragment extends Fragment implements AccountContact.View{
         this.login.setText(login);
         userimage.generateIdPicture(id);
         userimage.setAcronym(login);
+        if(photo != null) {
+            Picasso.get().load(photo).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(userimage.getPictureView());
+        }
     }
 
     public AccountContact.Presenter getPresenter() {

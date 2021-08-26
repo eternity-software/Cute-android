@@ -32,10 +32,12 @@ import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListResponse;
 import ru.etysoft.cuteframework.methods.messages.Message;
@@ -48,7 +50,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private Map<String, MessageInfo> ids = new HashMap<String, MessageInfo>();
     private MessagesAdapter adapter;
 
-    private String cid = "1";
+    private int cid = 1;
     private String name = "42";
     private String cover = "null";
     private String countMembers = "42";
@@ -66,13 +68,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
-        cid = getIntent().getStringExtra("cid");
+        cid = getIntent().getIntExtra("cid", 0);
         name = getIntent().getStringExtra("name");
         cover = getIntent().getStringExtra("cover");
         isDialog = getIntent().getBooleanExtra("isd", false);
 
         Avatar picture = findViewById(R.id.avatar);
-        picture.generateIdPicture(Integer.parseInt(cid));
+        picture.generateIdPicture(cid);
 
 
         picture.setAcronym((String.valueOf(name.charAt(0))));
@@ -136,7 +138,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     public void showInfo(View v) {
         final ConversationBottomSheet conversationBottomSheet = new ConversationBottomSheet();
-        conversationBottomSheet.setCid(cid);
+        conversationBottomSheet.setCid(String.valueOf(cid));
         conversationBottomSheet.show(getSupportFragmentManager(), "blocked");
         conversationBottomSheet.setCancelable(true);
     }
@@ -177,15 +179,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             public void run() {
 
                 try {
-                    GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), cid)).execute();
+                    GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(cid))).execute();
                     if (getMessageListResponse.isSuccess()) {
                         List<Message> messages = getMessageListResponse.getMessages();
                         for (final Message message : messages) {
 
 
                             final boolean my;
-                            boolean readed = true;
-                            boolean isonline;
 
                             my = (message.getAccountId() == Integer.parseInt(CachedValues.getId(getApplicationContext())));
 
@@ -193,18 +193,34 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             final int authorId = message.getAccountId();
 
                             boolean isInfo = false;
-                            if (authorId == -1) {
+                            final String messageText;
+                            if (message.getType().equals(Message.Type.SERVICE)) {
                                 isInfo = true;
+                                ServiceData serviceData = message.getServiceData();
+                                if(serviceData.getType().equals(ServiceData.Types.CHAT_CREATED))
+                                {
+                                    messageText = StringsRepository.getOrDefault(R.string.chat_created, getApplicationContext())
+                                            .replace("%s", serviceData.getChatName());
+                                }
+                                else
+                                {
+                                    messageText = message.getText();
+                                }
 
                             }
+                            else
+                            {
+                                messageText = message.getText();
+                            }
                             isEmpty = false;
+                            final boolean finalIsInfo = isInfo;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (!ids.containsKey(String.valueOf(id))) {
-                                        MessageInfo messageInfo = new MessageInfo(String.valueOf(id), name,
-                                                message.getText(), my, false, Numbers.getTimeFromTimestamp(message.getTime(), getApplicationContext()), false,
-                                                authorId, false, "null");
+                                        MessageInfo messageInfo = new MessageInfo(String.valueOf(id), message.getDisplayName(),
+                                                messageText, my, false, Numbers.getTimeFromTimestamp(message.getTime(), getApplicationContext()), false,
+                                                authorId, finalIsInfo, message.getAvatarPath());
                                         ids.put(String.valueOf(id), messageInfo);
 
                                         adapter.add(messageInfo);
@@ -474,7 +490,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             @Override
             public void run() {
                 try {
-                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), cid, message)).execute();
+                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(cid), message)).execute();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

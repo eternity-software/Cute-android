@@ -106,5 +106,6 @@
     <string name="updating">Обновление...</string>
     <string name="crashed_title">Вы напугали деда!</string>
     <string name="crashed_text">Cute крашнулся, такого явно не должно было произойти... Съешьте что-нибудь вкусное и, пожалуйста, дайте нам знать о своей ошибке.</string>
-    <string name="page">Страница</string>
+    <string name="edit_account">Редактировать</string>
+    <string name="chat_created">Чат %s создан</string>
 </resources>

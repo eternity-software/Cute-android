@@ -12,12 +12,7 @@ public class MemberInfo {
         this.id = id;
         this.name = name;
         this.role = role;
-        if (photo.equals("null")) {
-            this.photo = photo;
-        } else {
-            this.photo = photo + "?size=100";
-        }
-
+        this.photo = photo;
     }
 
     public String getPhoto() {

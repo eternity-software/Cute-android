@@ -38,7 +38,7 @@ public class Numbers {
             secondNum = 1;
 
         }
-        System.out.println(secondNum + "" + firstNum);
+
 
         try {
             return context.getResources().getColor(context.getResources().getIdentifier("avatar" + secondNum + "" + firstNum, "color", context.getPackageName()));

@@ -9,11 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cuteframework.methods.chat.ChatMember;
 
 public class MembersAdapter extends ArrayAdapter<MemberInfo> {
@@ -47,9 +50,9 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), Profile.class);
-                    intent.putExtra("id", info.getId());
-                    getContext().startActivity(intent);
+                Intent intent = new Intent(getContext(), Profile.class);
+                intent.putExtra("id", info.getId());
+                getContext().startActivity(intent);
             }
         });
         view.setTag(viewHolder);
@@ -63,8 +66,9 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
         holder.picture.setAcronym(info.getName());
         holder.picture.generateIdPicture(info.getId());
         holder.name.setText(info.getName());
-        if (info.getPhoto().equals("null")) {
-
+        if (!info.getPhoto().equals("null")) {
+            Picasso.get().load(info.getPhoto()).transform(new CircleTransform()).into(
+                            holder.picture.getPictureView());
         }
 
 

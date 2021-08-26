@@ -19,13 +19,21 @@ import java.util.List;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
+import ru.etysoft.cuteframework.methods.chat.ServiceData;
+import ru.etysoft.cuteframework.methods.messages.Message;
 
-public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
+public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
     private final Activity context;
-    private final List<ChatSnippetInfo> list;
+    private final List<ChatSnippet> list;
     public static boolean canOpen = true;
 
-    public ChatsListAdapter(Activity context, List<ChatSnippetInfo> values) {
+    public ChatsListAdapter(Activity context, List<ChatSnippet> values) {
         super(context, R.layout.dialog_element, values);
         this.context = context;
         this.list = values;
@@ -36,7 +44,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
         View view = null;
 
         // Инициализируем информацию о беседе или диалоге
-        final ChatSnippetInfo info = list.get(position);
+        final ChatSnippet info = list.get(position);
 
         final LayoutInflater inflator = context.getLayoutInflater();
 
@@ -51,7 +59,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
         viewHolder.time = (TextView) view.findViewById(R.id.time);
         viewHolder.accentView = (TextView) view.findViewById(R.id.message_accent);
         viewHolder.readstatus = (TextView) view.findViewById(R.id.readed);
-        viewHolder.online = view.findViewById(R.id.status);
+        viewHolder.online = view.findViewById(R.id.statusView);
         viewHolder.avatar = (Avatar) view.findViewById(R.id.avatar_component);
         viewHolder.container = view.findViewById(R.id.container);
 
@@ -63,10 +71,10 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
                 if (canOpen) {
                     canOpen = false;
                     Intent intent = new Intent(getContext(), MessagingActivity.class);
-                    intent.putExtra("cid", info.getCid());
-                    intent.putExtra("isd", info.isDialog());
+                    intent.putExtra("cid", info.getId());
+                    intent.putExtra("isd", (info.getType().equals(ChatSnippet.Types.PRIVATE)));
                     intent.putExtra("name", info.getName());
-                    intent.putExtra("cover", info.getCover());
+                    intent.putExtra("cover", "");
                     getContext().startActivity(intent);
                 }
             }
@@ -76,9 +84,11 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
         // Задаём персональные значения
         ViewHolder holder = (ViewHolder) view.getTag();
 
+        boolean isDialog = (info.getType().equals(ChatSnippet.Types.PRIVATE));
 
-        if (info.isDialog()) {
-            if (info.isOnline()) {
+        if (isDialog) {
+            // is online check
+            if (true) {
                 holder.online.setBackground(context.getResources().getDrawable(R.drawable.circle_online));
             } else {
                 holder.online.setBackground(context.getResources().getDrawable(R.drawable.circle_offline));
@@ -96,25 +106,54 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippetInfo> {
         } else {
             holder.readstatus.setVisibility(View.VISIBLE);
         }
-        if (info.getCountRead() != 0) {
+       /* if (info.getCountRead() != 0) {
             holder.readstatus.setText(String.valueOf(info.getCountRead()));
-        }
+        }*/
 
         if (holder.avatar != null) {
-            holder.avatar.generateIdPicture(Integer.parseInt(info.getCid()));
+            holder.avatar.generateIdPicture(info.getId());
             holder.avatar.setAcronym(info.getName());
         }
 
-        if (!info.getCover().equals("null")) {
 
-        }
 
         holder.name.setText(info.getName());
 
-        holder.accentView.setText(info.getSenderName() + ": ");
-        holder.messageView.setText(info.getLastMessage());
+        if (!info.getMessageType().equals(Message.Type.SERVICE))
+        {
+            try {
+                if(info.getLastMessageSenderId() != Integer.parseInt(CachedValues.getId(context)))
+                {
+                    holder.accentView.setText(info.getLastMessageSenderDisplayName() + ": ");
+                }
+                else
+                {
+                    System.out.println(info.getAccountId() + " " + CachedValues.getId(context));
+                    holder.accentView.setText(StringsRepository.getOrDefault(R.string.your_message, context) + ": ");
+                }
+            } catch (NotCachedException e) {
+                holder.accentView.setText(info.getLastMessageSenderDisplayName() + ": ");
+                e.printStackTrace();
+            }
+            holder.messageView.setText(info.getLastMessageText());
+        }
+        else
+        {
+            ServiceData serviceData = info.getServiceData();
+            if(serviceData.getType().equals(ServiceData.Types.CHAT_CREATED))
+            {
+                try {
+                    String messageText = StringsRepository.getOrDefault(R.string.chat_created, getContext())
+                            .replace("%s", serviceData.getChatName());
+                    holder.accentView.setText(messageText);
+                    holder.messageView.setText("");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                }
+            }
 
-        holder.time.setText(info.getTime());
+        }
+        holder.time.setText(Numbers.getTimeFromTimestamp(info.getLastMessageTime(), context));
 
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setFillAfter(false);

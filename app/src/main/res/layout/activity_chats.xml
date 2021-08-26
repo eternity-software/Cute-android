@@ -139,7 +139,8 @@
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="8dp"
-                        app:srcCompat="@drawable/icon_convcreate" />
+                        app:srcCompat="@drawable/icon_convcreate"
+                        app:tint="@color/colorIconTint" />
 
                     <ImageView
                         android:id="@+id/convSearchButton"
@@ -150,7 +151,7 @@
                         android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_search"
-                        app:tint="@color/accent_support" />
+                        app:tint="@color/colorIconTint" />
                 </LinearLayout>
 
                 <ProgressBar

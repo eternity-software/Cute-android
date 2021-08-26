@@ -49,9 +49,9 @@ import java.util.List;
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cute.requests.attachements.ImageFile;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
@@ -62,6 +62,7 @@ import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
 import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveRequest;
 import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveResponse;
+import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class ConversationBottomSheet extends BottomSheetDialogFragment {
     private BottomSheetListener mListener;
@@ -144,7 +145,6 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                             @Override
                             public void run() {
                                 for (int radius = 20; radius >= 0; radius = radius - 1) {
-                                    System.out.print(radius);
                                     final int finalRadius = radius;
                                     try {
                                         Thread.sleep(10);
@@ -204,7 +204,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                                 for (ChatMember chatMember : chatInfoResponse.getMembers()) {
                                     MemberInfo memberInfo = new MemberInfo(chatMember.getId(),
                                             chatMember.getDisplayName(),
-                                            chatMember.getType(), "");
+                                            chatMember.getType(), chatMember.getPhoto());
 
                                     if (memberInfo.getRole().equals(ChatMember.Types.CREATOR)) {
                                         memberInfos.add(0, memberInfo);
@@ -233,6 +233,16 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                     e.printStackTrace();
                 } catch (NotCachedException e) {
                     e.printStackTrace();
+                }
+                catch (final Exception e)
+                {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CuteToast.showError(e.getMessage(), getActivity());
+                            dismiss();
+                        }
+                    });
                 }
             }
         });

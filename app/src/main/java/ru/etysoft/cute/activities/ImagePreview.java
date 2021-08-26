@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.squareup.picasso.Picasso;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.CuteToast;
@@ -23,6 +24,7 @@ public class ImagePreview extends AppCompatActivity {
         setContentView(R.layout.activity_image_preview);
         String photo = String.valueOf(getIntent().getExtras().get("url"));
         PhotoView photoView = findViewById(R.id.photoView);
+        Picasso.get().load(photo).into(photoView);
         photoView.setOnOutsidePhotoTapListener(new OnOutsidePhotoTapListener() {
             @Override
             public void onOutsidePhotoTap(ImageView imageView) {
