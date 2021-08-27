@@ -42,7 +42,7 @@
                 android:id="@+id/imageView13"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="selectPhoto"
+                android:onClick="updateAvatar"
                 android:padding="15dp"
                 app:srcCompat="@drawable/icon_photo_camera" />
         </ru.etysoft.cute.components.Avatar>
@@ -52,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
+            android:onClick="updateCover"
             android:text="Изменить шапку" />
 
     </LinearLayout>

@@ -34,6 +34,8 @@ import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.account.ChangeAvatar.ChangeAvatarRequest;
 import ru.etysoft.cuteframework.methods.account.ChangeAvatar.ChangeAvatarResponse;
+import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverRequest;
+import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverResponse;
 import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditRequest;
 import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditResponse;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
@@ -43,6 +45,7 @@ import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 public class EditProfileActivity extends AppCompatActivity {
 
     private int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
+    private int REQUEST_TAKE_COVER_FROM_GALLERY = 2;
     private String id;
     private String name;
     private String login;
@@ -153,10 +156,16 @@ public class EditProfileActivity extends AppCompatActivity {
         return image;
     }
 
-    public void selectPhoto(View v) {
+    public void updateAvatar(View v) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_TAKE_PHOTO_FROM_GALLERY);
+    }
+
+    public void updateCover(View v) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_TAKE_COVER_FROM_GALLERY);
     }
 
     public void back(View v) {
@@ -164,11 +173,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
+        if ((requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY | requestCode == REQUEST_TAKE_COVER_FROM_GALLERY)  && resultCode == RESULT_OK) {
             try {
-                // Creating file
                 ImageFile photoFile = null;
                 try {
                     photoFile = createImageFile();
@@ -191,17 +199,31 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
+
                             UploadImageResponse uploadImageResponse = (new UploadImageRequest(image, CachedValues.getSessionKey(getApplicationContext()))).execute();
                             String mediaId = uploadImageResponse.getMediaId();
-                            ChangeAvatarResponse changeAvatarResponse = (new ChangeAvatarRequest(CachedValues.getSessionKey(getApplicationContext()), mediaId)).execute();
-                            if(changeAvatarResponse.isSuccess())
+                            if(requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY) {
+                                ChangeAvatarResponse changeAvatarResponse = (new ChangeAvatarRequest(CachedValues.getSessionKey(getApplicationContext()), mediaId)).execute();
+                                if (changeAvatarResponse.isSuccess()) {
+                                    EditProfileActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            CuteToast.showSuccess("uspeshno!", EditProfileActivity.this);
+                                        }
+                                    });
+                                }
+                            }
+                            else if(requestCode == REQUEST_TAKE_COVER_FROM_GALLERY)
                             {
-                                EditProfileActivity.this.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CuteToast.showSuccess("uspeshno!", EditProfileActivity.this);
-                                    }
-                                });
+                                ChangeCoverResponse changeCoverResponse = (new ChangeCoverRequest(CachedValues.getSessionKey(getApplicationContext()), mediaId)).execute();
+                                if (changeCoverResponse.isSuccess()) {
+                                    EditProfileActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            CuteToast.showSuccess("uspeshno shapka!", EditProfileActivity.this);
+                                        }
+                                    });
+                                }
                             }
                         } catch (ResponseException | NotCachedException e) {
                             e.printStackTrace();

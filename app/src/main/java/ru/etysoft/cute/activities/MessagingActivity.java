@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,7 @@ import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
@@ -52,7 +55,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     private int cid = 1;
     private String name = "42";
-    private String cover = "null";
+    private String avatar = null;
     private String countMembers = "42";
     private boolean isDialog = false;
     private int ts = 0;
@@ -70,12 +73,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         setContentView(R.layout.activity_conversation);
         cid = getIntent().getIntExtra("cid", 0);
         name = getIntent().getStringExtra("name");
-        cover = getIntent().getStringExtra("cover");
+        avatar = getIntent().getStringExtra("cover");
         isDialog = getIntent().getBooleanExtra("isd", false);
 
         Avatar picture = findViewById(R.id.avatar);
         picture.generateIdPicture(cid);
 
+        if(avatar != null)
+        {
+            Picasso.get().load(avatar).transform(new CircleTransform()).into(picture.getPictureView());
+        }
 
         picture.setAcronym((String.valueOf(name.charAt(0))));
 

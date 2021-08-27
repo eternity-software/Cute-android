@@ -44,7 +44,13 @@ public class SignInPresenter implements SignInContract.Presenter {
                         context.startActivity(intent);
                     } else {
                         ErrorHandler errorHandler = loginResponse.getErrorHandler();
-                        signInView.showError(context.getResources().getString(R.string.err_unknown));
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                signInView.showError(context.getResources().getString(R.string.err_unknown));
+                            }
+                        });
+
                     }
                 } catch (ResponseException e) {
                     context.runOnUiThread(new Runnable() {

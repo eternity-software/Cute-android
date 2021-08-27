@@ -3,6 +3,7 @@ package ru.etysoft.cute.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
+import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.user.Get.GetUserRequest;
 import ru.etysoft.cuteframework.methods.user.Get.GetUserResponse;
@@ -24,6 +26,7 @@ public class Profile extends AppCompatActivity {
 
     private int id;
     private String url;
+    private String coverUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,9 @@ public class Profile extends AppCompatActivity {
 
     public void loadData() {
         final Avatar avatar = findViewById(R.id.icon);
+        final ImageView coverView = findViewById(R.id.coverView);
+        final ImageView backgroundView = findViewById(R.id.backgroundView);
+        backgroundView.setBackgroundColor(Numbers.getColorById(id, this));
         avatar.generateIdPicture(id);
         Thread loadInfo = new Thread(new Runnable() {
             @Override
@@ -54,9 +60,16 @@ public class Profile extends AppCompatActivity {
                                 TextView displayName = findViewById(R.id.displayNameView);
                                 TextView statusView = findViewById(R.id.statusView);
                                 TextView bioView = findViewById(R.id.bioView);
+
                                 displayName.setText(name);
                                 avatar.setAcronym(name);
                                 Picasso.get().load(getUserResponse.getAvatarPath()).transform(new CircleTransform()).into(avatar.getPictureView());
+                                try {
+                                    coverUrl = getUserResponse.getCoverPath();
+                                    Picasso.get().load(getUserResponse.getCoverPath()).into(coverView);
+                                } catch (ResponseException e) {
+                                    e.printStackTrace();
+                                }
                                 statusView.setText(status);
                                 bioView.setText(bio);
                             }
@@ -93,6 +106,16 @@ public class Profile extends AppCompatActivity {
         Intent intent = new Intent(Profile.this, ImagePreview.class);
         intent.putExtra("url", url);
         startActivity(intent);
+    }
+
+    public void openCover(View v) {
+        if(coverUrl != null)
+        {
+            Intent intent = new Intent(Profile.this, ImagePreview.class);
+            intent.putExtra("url", coverUrl);
+            startActivity(intent);
+        }
+
     }
 
 }

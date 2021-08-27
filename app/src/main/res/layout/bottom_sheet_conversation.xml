@@ -58,13 +58,13 @@
                         android:id="@+id/conv_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat"
+                        android:fontFamily="@font/montserratalternates_medium"
 
                         style="@style/autoscroll"
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:text=""
-                        android:textColor="@color/colorText"
+                        android:textColor="@color/colorTextAccent"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
                         android:textSize="20sp" />
@@ -251,6 +251,7 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
+
                 app:srcCompat="@drawable/circle_gray" />
 
             <TextView

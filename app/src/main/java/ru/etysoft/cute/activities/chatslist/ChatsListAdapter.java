@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.etysoft.cute.R;
@@ -22,6 +24,7 @@ import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
@@ -74,7 +77,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                     intent.putExtra("cid", info.getId());
                     intent.putExtra("isd", (info.getType().equals(ChatSnippet.Types.PRIVATE)));
                     intent.putExtra("name", info.getName());
-                    intent.putExtra("cover", "");
+                    intent.putExtra("cover", info.getAvatarPath());
                     getContext().startActivity(intent);
                 }
             }
@@ -113,6 +116,10 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
         if (holder.avatar != null) {
             holder.avatar.generateIdPicture(info.getId());
             holder.avatar.setAcronym(info.getName());
+            if(info.getAvatarPath() != null)
+            {
+                Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
+            }
         }
 
 

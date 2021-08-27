@@ -2,6 +2,8 @@ package ru.etysoft.cute.activities.fragments.chatslist;
 
 import android.app.Activity;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
@@ -50,6 +52,7 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                                     chatsListAdapter.add(chat);
                                 }
                             });
+
                         }
                         context.runOnUiThread(new Runnable() {
                             @Override
@@ -68,7 +71,7 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
 
                     } catch (NotCachedException e) {
                         e.printStackTrace();
-                    } catch (ResponseException e) {
+                    } catch (Exception e) {
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

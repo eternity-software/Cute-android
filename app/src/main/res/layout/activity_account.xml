@@ -99,6 +99,7 @@
             <TextView
                 android:id="@+id/statusView"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/montserrat"
                 android:layout_height="wrap_content"
                 android:text="@string/no_status" />
 

@@ -34,6 +34,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.r0adkll.slidr.Slidr;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,13 +49,19 @@ import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarRequest;
+import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarResponse;
+import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverRequest;
+import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverResponse;
 import ru.etysoft.cuteframework.methods.chat.ChatMember;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryRequest;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryResponse;
@@ -62,6 +69,8 @@ import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
 import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveRequest;
 import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveResponse;
+import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
+import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class ConversationBottomSheet extends BottomSheetDialogFragment {
@@ -197,6 +206,10 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         public void run() {
                             try {
                                 Avatar avatar = view.findViewById(R.id.icon);
+                                if(chatInfoResponse.getChat().getAvatarPath() != null)
+                                {
+                                    Picasso.get().load(chatInfoResponse.getChat().getAvatarPath()).transform(new CircleTransform()).into(avatar.getPictureView());
+                                }
                                 avatar.setAcronym(chatInfoResponse.getChat().getName());
                                 avatar.generateIdPicture(chatInfoResponse.getChat().getId());
                                 chatNameView.setText(chatInfoResponse.getChat().getName());
@@ -402,6 +415,13 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
         ImagesWorker.setGradient(icon2, Integer.parseInt(cid));
 
+        icon2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectPhoto();
+            }
+        });
+
 
         ImageButton edit = v.findViewById(R.id.buttonEdit);
         edit.setOnClickListener(new View.OnClickListener() {
@@ -532,7 +552,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
             try {
@@ -559,6 +579,44 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 imageView.setImageBitmap(ImagesWorker.getCircleCroppedBitmap(bitmap, dp, dp));
                 TextView acronymview2 = view.findViewById(R.id.acronym_edit);
                 acronymview2.setVisibility(View.INVISIBLE);
+                Thread upload = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            UploadImageResponse uploadImageResponse = (new UploadImageRequest(image, CachedValues.getSessionKey(getActivity()))).execute();
+                            String mediaId = uploadImageResponse.getMediaId();
+                            if(requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY) {
+                                ChangeAvatarResponse changeAvatarResponse = (new ChangeAvatarRequest(CachedValues.getSessionKey(getActivity()), mediaId, cid)).execute();
+                                if (changeAvatarResponse.isSuccess()) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            CuteToast.showSuccess("uspeshno!", getActivity());
+                                        }
+                                    });
+                                }
+                            }
+
+                        } catch (ResponseException | NotCachedException e) {
+                            e.printStackTrace();
+                        }
+                        catch (final Exception e)
+                        {
+                            e.printStackTrace();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CuteToast.showError(e.getMessage(), getActivity());
+                                    dismiss();
+                                }
+                            });
+
+
+                        }
+                    }
+                });
+                upload.start();
 
             } catch (Exception e) {
                 Log.d("ACTIVITYRES", "onActivityResult: " + e.toString());

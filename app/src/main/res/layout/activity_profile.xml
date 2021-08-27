@@ -6,20 +6,31 @@
     android:layout_height="match_parent"
     android:background="@color/colorPanelGray"
     tools:context=".activities.Profile">
-
     <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="wrap_content"
+        android:id="@+id/backgroundView"
+        android:layout_width="match_parent"
         android:layout_height="140dp"
         android:adjustViewBounds="false"
-        android:background="@color/black"
+        android:background="@color/avatar09"
         android:cropToPadding="false"
         android:scaleType="centerCrop"
-        android:tint="#74000000"
+        android:alpha="0.8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_uber"
+        tools:ignore="UseAppTint" />
+    <ImageView
+        android:id="@+id/coverView"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        android:tint="#74000000"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseAppTint" />
 
     <ScrollView
@@ -53,6 +64,7 @@
                     android:layout_height="80dp"
                     android:layout_gravity="center_vertical"
                     android:onClick="openImage"
+                    android:background="?actionBarItemBackground"
                     android:scaleType="fitXY"
                     app:srcCompat="@drawable/circle_gray" />
 
@@ -60,6 +72,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:onClick="openCover"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="15dp"
                     android:gravity="center_vertical"
@@ -96,25 +109,50 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/square_rounded_top"
         android:backgroundTint="@color/colorPanelGray"
         android:paddingHorizontal="20dp"
         android:paddingTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView7"
         tools:layout_editor_absoluteX="20dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
         <TextView
-            android:id="@+id/bioView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:fontFamily="@font/montserrat"
+            android:fontFamily="@font/montserratalternates_medium"
             android:gravity="left"
-            android:text=".."
+            android:text="@string/about"
             android:textColor="@color/colorSupportText"
             android:textIsSelectable="true"
-            android:textSize="13sp" />
+            android:textSize="16sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+            <TextView
+                android:id="@+id/bioView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserrat"
+                android:gravity="left"
+                android:text=".."
+                android:textColor="@color/colorSupportText"
+                android:textIsSelectable="true"
+                android:textSize="13sp" />
+        </ScrollView>
+        </LinearLayout>
     </ScrollView>
 
 

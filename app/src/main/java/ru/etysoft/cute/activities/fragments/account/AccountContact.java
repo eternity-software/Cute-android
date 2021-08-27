@@ -10,6 +10,8 @@ public interface AccountContact {
         void setAccountInfo(String login, String status, String photo, int id);
     }
     interface Presenter{
+        void openAvatar();
+
         void updateData();
     }
 }

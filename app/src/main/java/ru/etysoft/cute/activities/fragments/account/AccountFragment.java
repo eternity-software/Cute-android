@@ -47,6 +47,14 @@ public class AccountFragment extends Fragment implements AccountContact.View{
         status = view.findViewById(R.id.statusView);
         login = view.findViewById(R.id.login);
         settingImageView = view.findViewById(R.id.setting);
+
+        userimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPresenter().openAvatar();
+            }
+        });
+
         settingImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +90,10 @@ public class AccountFragment extends Fragment implements AccountContact.View{
     }
 
     public AccountContact.Presenter getPresenter() {
+        if(presenter == null) {
+            presenter = new AccountPresenter(getActivity(), this);
+        }
         return presenter;
+
     }
 }
