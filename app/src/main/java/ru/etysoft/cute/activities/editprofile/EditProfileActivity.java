@@ -75,7 +75,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.animateAppear();
+        toolbar.animateAppear(findViewById(R.id.toolbarContainer));
         TextView loginView = findViewById(R.id.editTextAccountLogin);
 //        ImageView imageView = findViewById(R.id.progileImage);
 

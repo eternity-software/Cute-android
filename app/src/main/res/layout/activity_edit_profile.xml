@@ -7,18 +7,24 @@
     android:background="@color/colorBackground"
     tools:context=".activities.CreateChatActivity">
 
-    <ru.etysoft.cute.components.LightToolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
+        android:id="@+id/toolbarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        app:caption="@string/edit_profile"
-        app:captionLocId="page"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ru.etysoft.cute.components.LightToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:caption="@string/edit_profile"
+            app:captionLocId="page"
+          />
+    </LinearLayout>
 
 
     <LinearLayout

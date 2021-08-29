@@ -3,6 +3,7 @@ package ru.etysoft.cute.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,10 @@ import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendRequest;
+import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendResponse;
+import ru.etysoft.cuteframework.methods.friend.SendRequest.SendFriendRequest;
+import ru.etysoft.cuteframework.methods.friend.SendRequest.SendFriendRequestResponse;
 import ru.etysoft.cuteframework.methods.user.Get.GetUserRequest;
 import ru.etysoft.cuteframework.methods.user.Get.GetUserResponse;
 
@@ -35,6 +40,7 @@ public class Profile extends AppCompatActivity {
         id = getIntent().getIntExtra("id", -1);
         loadData();
         Slidr.attach(this);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
 
     public void loadData() {
@@ -61,8 +67,43 @@ public class Profile extends AppCompatActivity {
                                 TextView statusView = findViewById(R.id.statusView);
                                 TextView bioView = findViewById(R.id.bioView);
 
+                                final ImageButton friendButton = findViewById(R.id.friendButton);
+
+                                if(getUserResponse.isFriend())
+                                {
+
+                                    friendButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_remove_person));
+                                    friendButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Thread removeThread = new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        RemoveFriendResponse removeFriendResponse = (new RemoveFriendRequest(CachedValues.getSessionKey(getApplicationContext()),
+                                                                String.valueOf(getUserResponse.getFriendId()))).execute();
+                                                        if(removeFriendResponse.isSuccess())
+                                                        {
+                                                            friendButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_add));
+                                                            friendButton.setOnClickListener(new View.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View v) {
+                                                                    addFriend(v);
+                                                                }
+                                                            });
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                            removeThread.start();
+                                        }
+                                    });
+                                }
+
                                 displayName.setText(name);
-                                avatar.setAcronym(name);
+                                avatar.setAcronym(name, Avatar.Size.LARGE);
                                 Picasso.get().load(getUserResponse.getAvatarPath()).transform(new CircleTransform()).into(avatar.getPictureView());
                                 try {
                                     coverUrl = getUserResponse.getCoverPath();
@@ -103,9 +144,39 @@ public class Profile extends AppCompatActivity {
     }
 
     public void openImage(View v) {
-        Intent intent = new Intent(Profile.this, ImagePreview.class);
-        intent.putExtra("url", url);
-        startActivity(intent);
+        if(url != null) {
+            Intent intent = new Intent(Profile.this, ImagePreview.class);
+            intent.putExtra("url", url);
+            startActivity(intent);
+        }
+    }
+
+    public void addFriend(View v)
+    {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final ImageButton friendButton = findViewById(R.id.friendButton);
+                    friendButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_remove_person));
+                    SendFriendRequestResponse sendFriendRequestResponse = (new SendFriendRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(id))).execute();
+                    if(sendFriendRequestResponse.isSuccess())
+                    {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CuteToast.showSuccess("Success", Profile.this);
+                            }
+                        });
+                    }
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     public void openCover(View v) {

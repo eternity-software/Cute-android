@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context=".activities.friends.FriendsActivity">
+
+    <ru.etysoft.cute.components.LightToolbar
+        android:id="@+id/lightToolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:caption="@string/friends_requests"
+        app:captionLocId="friends_requests"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ru.etysoft.cute.components.LightToolbar>
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="999"
+        android:textColor="@color/colorSupportText"
+        android:fontFamily="@font/montserratalternates_medium"
+
+        app:layout_constraintBottom_toBottomOf="@+id/lightToolbar"
+        app:layout_constraintStart_toEndOf="@+id/lightToolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:paddingHorizontal="12dp"
+        android:dividerHeight="0dp"
+        android:footerDividersEnabled="false"
+        android:divider="@color/white"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lightToolbar" />
+</androidx.constraintlayout.widget.ConstraintLayout>

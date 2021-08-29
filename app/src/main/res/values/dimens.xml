@@ -10,6 +10,9 @@
     <dimen name="indent_16">16dp</dimen>
     <dimen name="indent_4">4dp</dimen>
     <dimen name="indent_8">8dp</dimen>
+    <dimen name="acronym_small">5sp</dimen>
+    <dimen name="acronym_medium">10sp</dimen>
+    <dimen name="acronym_large">12sp</dimen>
 
 
 </resources>

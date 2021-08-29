@@ -2,23 +2,29 @@ package ru.etysoft.cute.activities.messages;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.activities.Profile;
+import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cuteframework.methods.messages.AttachmentData;
 
 public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
     private final Activity context;
@@ -55,7 +61,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
                     isFirstAid = true;
                     view = inflator.inflate(R.layout.chat_message, null);
                 } else {
-                    if (list.get(position - 1).getAid() != info.getAid()) {
+                    if (list.get(position - 1).getAid() != info.getAid() | list.get(position - 1).isInfo()) {
                         isFirstAid = true;
                         view = inflator.inflate(R.layout.chat_message, null);
                     } else {
@@ -74,7 +80,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
 
         if (!info.isInfo()) {
             // Не информационное сообщение
-
+            viewHolder.attachments = view.findViewById(R.id.attachments);
             viewHolder.time = (TextView) view.findViewById(R.id.timeview);
             viewHolder.message = (TextView) view.findViewById(R.id.message_body);
             viewHolder.back = view.findViewById(R.id.messageback);
@@ -93,12 +99,36 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
                 holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
             }
 
+            if(info.getMedia() != null)
+            {
+                AttachmentData attachmentData = info.getAttachmentData();
+                if(attachmentData != null) {
+                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+                    Bitmap bmp = Bitmap.createBitmap(attachmentData.getWidth(), attachmentData.getHeight(), conf); // this creates a MUTABLE bitmap
+
+                    bmp.eraseColor(context.getResources().getColor(R.color.colorNotReaded));
+                    holder.attachments.getImageView().setImageBitmap(bmp);
+
+                    Drawable drawable = new BitmapDrawable(context.getResources(), bmp);
+                    Picasso.get().load(info.getMedia()).placeholder(drawable).into(holder.attachments.getImageView());
+                    holder.attachments.getImageView().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), ImagePreview.class);
+                            intent.putExtra("url", info.getMedia());
+                            context.startActivity(intent);
+                        }
+                    });
+                }
+
+            }
+
             if (isFirstAid) {
-                holder.userpic.setAcronym(info.getName());
+                holder.userpic.setAcronym(info.getName(), Avatar.Size.SMALL);
                 holder.name.setText(info.getName());
                 holder.userpic.generateIdPicture(info.getAid());
-                if (info.getPhoto() != null) {
-                    Picasso.get().load(info.getPhoto()).transform(new CircleTransform()).into(holder.userpic.getPictureView());
+                if (info.getAvatar() != null) {
+                    Picasso.get().load(info.getAvatar()).transform(new CircleTransform()).into(holder.userpic.getPictureView());
                 }
                 holder.userpic.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -121,7 +151,8 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
                             + "READED: " + info.isRead() + "\n"
                             + "MY: " + info.isMine() + "\n"
                             + "NAME: " + info.getName() + "\n"
-                            + "AID: " + info.getAid()
+                            + "AID: " + info.getAid() + "\n"
+                            + "MEDIAD: " + info.getMedia()
                     );
                 }
             });
@@ -147,5 +178,6 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
         protected RelativeLayout back;
         protected TextView name;
         protected Avatar userpic;
+        protected Attachments attachments;
     }
 }

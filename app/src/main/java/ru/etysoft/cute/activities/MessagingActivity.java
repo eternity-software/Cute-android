@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +32,7 @@ import ru.etysoft.cute.activities.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
@@ -41,11 +43,14 @@ import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.ServiceData;
+import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
+import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListResponse;
 import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.methods.messages.Send.SendMessageRequest;
 import ru.etysoft.cuteframework.methods.messages.Send.SendMessageResponse;
+import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
@@ -65,6 +70,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public boolean isVoice = true;
 
     private boolean isEmpty = true;
+    private String mediaIdToSend;
 
 
     @Override
@@ -84,7 +90,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             Picasso.get().load(avatar).transform(new CircleTransform()).into(picture.getPictureView());
         }
 
-        picture.setAcronym((String.valueOf(name.charAt(0))));
+        picture.setAcronym((String.valueOf(name.charAt(0))), Avatar.Size.SMALL);
 
         final ListView listView = findViewById(R.id.messages);
         adapter = new MessagesAdapter(this, convInfos);
@@ -140,6 +146,49 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public void pickFiles(View v) {
         final FilePickerBottomSheet filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
+        filePickerBottomSheet.setRunnable(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               final ImageFile imageFile = new ImageFile(filePickerBottomSheet.getImages().get(position));
+               Thread thread = new Thread(new Runnable() {
+                   @Override
+                   public void run() {
+                       try {
+                           final UploadImageResponse uploadImageResponse = (new UploadImageRequest(imageFile, CachedValues.getSessionKey(getApplicationContext()))).execute();
+                           if(!uploadImageResponse.isSuccess())
+                           {
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       CuteToast.showError("Failed upload image!", MessagingActivity.this);
+                                   }
+
+                               });
+                           }
+                           else
+                           {
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       try {
+                                           CuteToast.showSuccess("Success " + uploadImageResponse.getMediaId(), MessagingActivity.this);
+                                       } catch (ResponseException e) {
+                                           e.printStackTrace();
+                                       }
+                                   }
+
+                               });
+                               mediaIdToSend = uploadImageResponse.getMediaId();
+                           }
+                       } catch (Exception e) {
+                           e.printStackTrace();
+                       }
+                   }
+               });
+               thread.start();
+
+            }
+        });
     }
 
 
@@ -227,7 +276,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                     if (!ids.containsKey(String.valueOf(id))) {
                                         MessageInfo messageInfo = new MessageInfo(String.valueOf(id), message.getDisplayName(),
                                                 messageText, my, false, Numbers.getTimeFromTimestamp(message.getTime(), getApplicationContext()), false,
-                                                authorId, finalIsInfo, message.getAvatarPath());
+                                                authorId, finalIsInfo, message.getAvatarPath(), message.getAttachmentPath(), message.getAttachmentData());
                                         ids.put(String.valueOf(id), messageInfo);
 
                                         adapter.add(messageInfo);
@@ -253,7 +302,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     }
 
 
-                } catch (ResponseException e) {
+                } catch (Exception e) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -262,10 +311,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             errorPanel.show();
                         }
                     });
-                    e.printStackTrace();
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -491,22 +536,26 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
     public void sendMessage(View view) {
+
         EditText messageView = findViewById(R.id.message_box);
+
         final String message = String.valueOf(messageView.getText());
+        messageView.setText("");
         Thread sendThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(cid), message)).execute();
+                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(cid), message, mediaIdToSend)).execute();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             MessageInfo messageInfo = null;
                             try {
-                                messageInfo = new MessageInfo(String.valueOf(sendMessageResponse.getMessageId()), name,
+                                messageInfo = new MessageInfo(String.valueOf(sendMessageResponse.getId()), name,
                                         sendMessageResponse.getText(), true, false, Numbers.getTimeFromTimestamp(sendMessageResponse.getTime(), getApplicationContext()), false,
-                                        Integer.parseInt(CachedValues.getId(getApplicationContext())), false, "null");
-                                ids.put(String.valueOf((sendMessageResponse.getMessageId())), messageInfo);
+                                        Integer.parseInt(CachedValues.getId(getApplicationContext())), false, null, sendMessageResponse.getAttachmentPath(), sendMessageResponse.getAttachmentData());
+                                mediaIdToSend = "";
+                                ids.put(String.valueOf((sendMessageResponse.getId())), messageInfo);
 
                                 adapter.add(messageInfo);
                             } catch (ResponseException e) {
@@ -514,7 +563,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             } catch (NotCachedException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     });
                 } catch (NotCachedException e) {

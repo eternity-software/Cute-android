@@ -5,11 +5,13 @@ import static android.app.Activity.RESULT_OK;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,6 +52,8 @@ import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.ImagePreview;
+import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
@@ -58,6 +63,8 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberRequest;
+import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberResponse;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarRequest;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarResponse;
 import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverRequest;
@@ -118,6 +125,65 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         super.onPause();
     }
 
+    public void addMember()
+    {
+        final String[] text = new String[1];
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
+        builder.setTitle("Invite member by id");
+
+// Set up the input
+        final EditText input = new EditText(getContext());
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            AddMemberResponse addMemberResponse = (new AddMemberRequest(CachedValues.getSessionKey(getActivity()), cid, input.getText().toString())).execute();
+                            if(addMemberResponse.isSuccess())
+                            {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dismiss();
+                                    }
+                                });
+
+                            }
+
+                        } catch (ResponseException e) {
+                            e.printStackTrace();
+                        } catch (final Exception e) {
+                            e.printStackTrace();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CuteToast.showError(e.getMessage(), getActivity());
+                                }
+                            });
+                        }
+                    }
+                });
+                thread.start();
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -157,12 +223,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                                     final int finalRadius = radius;
                                     try {
                                         Thread.sleep(10);
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                //    cardView.setRadius(Numbers.dpToPx(finalRadius, getContext()));
-                                            }
-                                        });
+
 
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
@@ -195,6 +256,13 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     public void loadData() {
         final TextView chatNameView = view.findViewById(R.id.conv_name);
         final TextView chatDescriptionView = view.findViewById(R.id.conv_desc);
+        final ImageButton addMemberButton = view.findViewById(R.id.buttonAdd);
+        addMemberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMember();
+            }
+        });
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -206,11 +274,25 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         public void run() {
                             try {
                                 Avatar avatar = view.findViewById(R.id.icon);
+
                                 if(chatInfoResponse.getChat().getAvatarPath() != null)
                                 {
                                     Picasso.get().load(chatInfoResponse.getChat().getAvatarPath()).transform(new CircleTransform()).into(avatar.getPictureView());
+                                    avatar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            try {
+                                                Intent intent = new Intent(getActivity(), ImagePreview.class);
+                                                intent.putExtra("url", chatInfoResponse.getChat().getAvatarPath());
+                                                startActivity(intent);
+                                            } catch (ResponseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    });
                                 }
-                                avatar.setAcronym(chatInfoResponse.getChat().getName());
+                                avatar.setAcronym(chatInfoResponse.getChat().getName(), Avatar.Size.MEDIUM);
                                 avatar.generateIdPicture(chatInfoResponse.getChat().getId());
                                 chatNameView.setText(chatInfoResponse.getChat().getName());
                                 chatDescriptionView.setText(chatInfoResponse.getChat().getDescription());

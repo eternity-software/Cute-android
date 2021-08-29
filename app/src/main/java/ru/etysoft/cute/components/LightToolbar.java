@@ -75,11 +75,11 @@ public class LightToolbar extends RelativeLayout {
         backView.setOnClickListener(onClick);
     }
 
-    public void animateAppear()
+    public void animateAppear(View rootView)
     {
         Animation slideFromRightAnim = AnimationUtils.loadAnimation(getContext(),
                 R.anim.slide_appear);
-        rootView.findViewById(R.id.container).startAnimation(slideFromRightAnim);
+        rootView.startAnimation(slideFromRightAnim);
     }
 
     public TextView getCaptionView() {

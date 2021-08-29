@@ -161,6 +161,24 @@
 
             </LinearLayout>
 
+            <ImageButton
+                android:id="@+id/buttonAdd"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_passive_mini"
+                android:fontFamily="@font/montserrat"
+                android:gravity="center"
+                android:maxLines="1"
+                android:scaleType="centerInside"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                android:tint="@color/colorFrontElements"
+                app:srcCompat="@drawable/icon_convcreate" />
+
             <TextView
                 android:id="@+id/membersCount"
                 android:layout_width="match_parent"

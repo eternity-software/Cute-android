@@ -114,8 +114,9 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
         }*/
 
         if (holder.avatar != null) {
+            holder.avatar.showAnimate();
             holder.avatar.generateIdPicture(info.getId());
-            holder.avatar.setAcronym(info.getName());
+            holder.avatar.setAcronym(info.getName(), Avatar.Size.MEDIUM);
             if(info.getAvatarPath() != null)
             {
                 Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());

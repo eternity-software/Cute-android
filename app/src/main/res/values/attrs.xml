@@ -18,4 +18,5 @@
         <attr name="caption" format="string" />
         <attr name="captionLocId" format="string" />
     </declare-styleable>
+
 </resources>

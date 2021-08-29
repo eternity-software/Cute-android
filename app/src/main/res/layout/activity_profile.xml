@@ -7,6 +7,18 @@
     android:background="@color/colorPanelGray"
     tools:context=".activities.Profile">
     <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:adjustViewBounds="false"
+        android:background="@color/black"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseAppTint" />
+
+    <ImageView
         android:id="@+id/backgroundView"
         android:layout_width="match_parent"
         android:layout_height="140dp"
@@ -125,8 +137,37 @@
             android:orientation="vertical">
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/friendButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:background="@drawable/button_active_enabled"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:paddingHorizontal="30dp"
+                    android:layout_marginRight="12dp"
+                    android:onClick="addFriend"
+                    android:fontFamily="@font/montserratalternates_medium"
+                    android:textAllCaps="false"
+                    app:srcCompat="@drawable/icon_add" />
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:background="@drawable/button_active_enabled"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/montserratalternates_medium"
+                    android:textAllCaps="false"
+                    android:text="@string/message" />
+            </LinearLayout>
 
-        <TextView
+
+            <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

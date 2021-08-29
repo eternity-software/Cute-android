@@ -29,17 +29,31 @@
             android:textColor="@color/colorSupportText"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/message_body"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="all"
             android:background="@drawable/mymessage"
-            android:padding="10dp"
-            android:text="Привет!"
-            android:fontFamily="@font/montserrat"
-            android:textColor="@color/colorText"
-            android:textSize="16sp" />
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/message_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+
+                android:padding="10dp"
+                android:text="Привет!"
+                android:fontFamily="@font/montserrat"
+                android:textColor="@color/colorText"
+                android:textSize="16sp" />
+
+            <ru.etysoft.cute.components.Attachments
+                android:id="@+id/attachments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:layout_marginTop="-8dp"
+                />
+        </LinearLayout>
 
     </LinearLayout>
 

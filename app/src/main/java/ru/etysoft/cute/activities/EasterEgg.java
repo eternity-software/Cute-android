@@ -20,7 +20,7 @@ public class EasterEgg extends AppCompatActivity {
         final ImageView img = findViewById(R.id.eggimg);
 
 
-        String url = "https://ru.muzikavsem.org/dl/604678494/Molchat_Doma_-_Toska_(ru.muzikavsem.org).mp3";
+        String url = "https://etysoft.ru/egg.mp3";
 
         MediaPlayer mp = new MediaPlayer();
         try {

@@ -13,6 +13,10 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="sign_up_subnickname">Create an amazing nickname</string>
     <string name="nickname">Nickname</string>
+    <string name="friends">Friends</string>
+    <string name="add_friend">Add friend</string>
+    <string name="message">Message</string>
+    <string name="friends_requests">Requests</string>
     <string name="sign_up_subpassword">Think for hard password</string>
     <string name="password_confirm">Password confirm</string>
     <string name="sign_up_subemail">Give us your e-mail</string>

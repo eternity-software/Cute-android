@@ -42,6 +42,7 @@
     <color name="colorAccent10">#1A3456FF</color>
     <color name="colorOrange">#FF4F00</color>
     <color name="colorLightLGray">#F5F5F5</color>
+    <color name="colorPrimaryGray">#C1C1C1</color>
     <color name="colorEtysoft">#4A98FF</color>
     <color name="colorGoodGray">#E4E4E4</color>
     <color name="colorTransBlack">#88000000</color>
@@ -66,6 +67,7 @@
     <color name="colorPassiveButtonText">#505050</color>
 
     <color name="colorIconTint">@color/accent_support</color>
+    <color name="colorIconSupportTint">@color/colorPrimaryGray</color>
     <color name="colorPanelGray">@color/colorLightLGray</color>
     <color name="splashLogo">@color/accent_blue</color>
 

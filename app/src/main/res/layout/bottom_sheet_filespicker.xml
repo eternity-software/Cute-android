@@ -24,10 +24,10 @@
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="12dp"
-            android:layout_marginRight="10dp"
+
             android:layout_marginBottom="20dp"
             android:orientation="vertical"
             android:visibility="visible">
@@ -45,71 +45,26 @@
                     android:paddingBottom="10dp">
 
                     <ImageView
+                        android:id="@+id/convCreateButton"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        app:srcCompat="@drawable/circle_gray" />
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/button_circle_gray"
+                        android:paddingHorizontal="8dp"
+                        app:srcCompat="@drawable/icon_image"
+                        app:tint="@color/colorIconTint" />
                 </LinearLayout>
             </HorizontalScrollView>
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_marginRight="10dp"
+                android:nestedScrollingEnabled="true"
+                android:numColumns="4"
+                android:gravity="center"
+                android:horizontalSpacing="2dp"
+                android:stretchMode="columnWidth"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
 

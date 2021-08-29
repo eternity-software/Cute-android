@@ -1,21 +1,26 @@
 package ru.etysoft.cute.activities.messages;
 
+import ru.etysoft.cuteframework.methods.messages.AttachmentData;
+
 public class MessageInfo {
 
     private String name;
     private String message;
     private String subtext;
     private String id;
-    private String photo;
+    private String avatar;
+    private String media;
     private int aid;
     private boolean read;
     private final boolean isMine;
     private final boolean isDialog;
     private final boolean isInfo;
+    private AttachmentData attachmentData;
 
 
     // Сообщение
-    public MessageInfo(String id, String name, String message, boolean isMine, boolean isDialog, String subtext, boolean read, int aid, boolean isInfo, String photo) {
+    public  MessageInfo(String id, String name, String message, boolean isMine, boolean isDialog, String subtext, boolean read, int aid, boolean isInfo, String avatar,
+                        String media, AttachmentData attachmentData) {
         this.read = read;
         this.id = id;
         this.aid = aid;
@@ -25,11 +30,21 @@ public class MessageInfo {
         this.isMine = isMine;
         this.isDialog = isDialog;
         this.isInfo = isInfo;
-        this.photo = photo + "?size=50";
+        this.avatar = avatar;
+        this.media = media;
+        this.attachmentData = attachmentData;
     }
 
-    public String getPhoto() {
-        return photo;
+    public AttachmentData getAttachmentData() {
+        return attachmentData;
+    }
+
+    public String getMedia() {
+        return media;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     public boolean isInfo() {

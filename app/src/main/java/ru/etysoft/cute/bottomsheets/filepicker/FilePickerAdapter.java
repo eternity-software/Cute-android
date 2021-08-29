@@ -1,4 +1,4 @@
-package ru.etysoft.cute.bottomsheets.conversation;
+package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,20 +11,23 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.Profile;
+import ru.etysoft.cute.bottomsheets.conversation.MemberInfo;
+import ru.etysoft.cute.bottomsheets.conversation.MembersAdapter;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cuteframework.methods.chat.ChatMember;
 
-public class MembersAdapter extends ArrayAdapter<MemberInfo> {
+public class FilePickerAdapter extends ArrayAdapter<FileInfo> {
     public static boolean canOpen = true;
     private final Activity context;
-    private final List<MemberInfo> list;
+    private final List<FileInfo> list;
 
-    public MembersAdapter(Activity context, List<MemberInfo> values) {
+    public FilePickerAdapter(Activity context, List<FileInfo> values) {
         super(context, R.layout.member_element, values);
         this.context = context;
         this.list = values;
@@ -34,43 +37,26 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
     public View getView(final int position, final View convertView, ViewGroup parent) {
         View view = null;
 
-        // Инициализируем информацию о беседе или диалоге
-        final MemberInfo info = list.get(position);
+        final FileInfo info = list.get(position);
 
         final LayoutInflater inflator = context.getLayoutInflater();
         view = inflator.inflate(R.layout.member_element, null);
-        final MembersAdapter.ViewHolder viewHolder = new MembersAdapter.ViewHolder();
+        final FilePickerAdapter.ViewHolder viewHolder = new FilePickerAdapter.ViewHolder();
 
-        // Инициализируем подэлементы
+
         viewHolder.name = (TextView) view.findViewById(R.id.label);
         viewHolder.picture = view.findViewById(R.id.icon);
         viewHolder.role = view.findViewById(R.id.creator);
 
-        // Задаём обработчик нажатия
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), Profile.class);
-                intent.putExtra("id", info.getId());
-                getContext().startActivity(intent);
-            }
-        });
+
         view.setTag(viewHolder);
 
 
-        // Задаём персональные значения
-        MembersAdapter.ViewHolder holder = (MembersAdapter.ViewHolder) view.getTag();
-        if (!info.getRole().equals(ChatMember.Types.CREATOR)) {
-            holder.role.setVisibility(View.INVISIBLE);
-        }
-        holder.picture.showAnimate();
+
+        FilePickerAdapter.ViewHolder holder = (FilePickerAdapter.ViewHolder) view.getTag();
         holder.picture.setAcronym(info.getName(), Avatar.Size.SMALL);
-        holder.picture.generateIdPicture(info.getId());
         holder.name.setText(info.getName());
-        if (!info.getPhoto().equals("null")) {
-            Picasso.get().load(info.getPhoto()).transform(new CircleTransform()).into(
-                            holder.picture.getPictureView());
-        }
+
 
 
         return view;
