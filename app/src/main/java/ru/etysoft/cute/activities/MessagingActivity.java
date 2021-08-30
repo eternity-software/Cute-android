@@ -22,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,25 +56,22 @@ import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.methods.messages.Send.SendMessageRequest;
 import ru.etysoft.cuteframework.methods.messages.Send.SendMessageResponse;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
+import ru.etysoft.cuteframework.sockets.methods.Messages.MessagesSocket;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
     private final List<MessageInfo> convInfos = new ArrayList<>();
     private final Map<String, MessageInfo> ids = new HashMap<String, MessageInfo>();
     private MessagesAdapter adapter;
+    private MessagesSocket messagesSocket;
 
     private int chatId = 1;
     private String name = "42";
     private String avatar = null;
     private final String countMembers = "42";
     private boolean isDialog = false;
-    private final int ts = 0;
-    private Thread waiter;
-    private boolean closed = false;
     private ErrorPanel errorPanel;
     public boolean isVoice = true;
-
-    private boolean isEmpty = true;
     private String mediaIdToSend;
 
 
@@ -88,8 +87,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         Avatar picture = findViewById(R.id.avatar);
         picture.generateIdPicture(chatId);
 
-        if(avatar != null)
-        {
+        if (avatar != null) {
             Picasso.get().load(avatar).transform(new CircleTransform()).into(picture.getPictureView());
         }
 
@@ -136,13 +134,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
         processListUpdate();
+        registerSocket();
 
 
     }
 
     public static void openActivity(Context context, int chatId, boolean isDialog, String name,
-                                    String avatarPath)
-    {
+                                    String avatarPath) {
         Intent intent = new Intent(context, MessagingActivity.class);
         intent.putExtra(APIKeys.CHAT_ID, chatId);
         intent.putExtra("isd", isDialog);
@@ -162,43 +160,40 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         filePickerBottomSheet.setRunnable(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               final ImageFile imageFile = new ImageFile(filePickerBottomSheet.getImages().get(position));
-               Thread thread = new Thread(new Runnable() {
-                   @Override
-                   public void run() {
-                       try {
-                           final UploadImageResponse uploadImageResponse = (new UploadImageRequest(imageFile, CachedValues.getSessionKey(getApplicationContext()))).execute();
-                           if(!uploadImageResponse.isSuccess())
-                           {
-                               runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       CuteToast.showError("Failed upload image!", MessagingActivity.this);
-                                   }
+                final ImageFile imageFile = new ImageFile(filePickerBottomSheet.getImages().get(position));
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            final UploadImageResponse uploadImageResponse = (new UploadImageRequest(imageFile, CachedValues.getSessionKey(getApplicationContext()))).execute();
+                            if (!uploadImageResponse.isSuccess()) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CuteToast.showError("Failed upload image!", MessagingActivity.this);
+                                    }
 
-                               });
-                           }
-                           else
-                           {
-                               runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       try {
-                                           CuteToast.showSuccess("Success " + uploadImageResponse.getMediaId(), MessagingActivity.this);
-                                       } catch (ResponseException e) {
-                                           e.printStackTrace();
-                                       }
-                                   }
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            CuteToast.showSuccess("Success " + uploadImageResponse.getMediaId(), MessagingActivity.this);
+                                        } catch (ResponseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
 
-                               });
-                               mediaIdToSend = uploadImageResponse.getMediaId();
-                           }
-                       } catch (Exception e) {
-                           e.printStackTrace();
-                       }
-                   }
-               });
-               thread.start();
+                                });
+                                mediaIdToSend = uploadImageResponse.getMediaId();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                thread.start();
 
             }
         });
@@ -213,25 +208,93 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
 
-
-
-
-
     public boolean isrecording = false;
 
 
+    public void registerSocket() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    messagesSocket = new MessagesSocket(CachedValues.getSessionKey(MessagingActivity.this), String.valueOf(chatId), new MessagesSocket.MessageReceiveHandler() {
+                        @Override
+                        public void onMessageReceive(final Message message) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    MessageInfo messageInfo = null;
+                                    try {
+                                        boolean isInfo = false;
+                                        final String messageText;
+                                        if (message.getType().equals(Message.Type.SERVICE)) {
+                                            isInfo = true;
+                                            ServiceData serviceData = message.getServiceData();
+                                            if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
+                                                messageText = StringsRepository.getOrDefault(R.string.chat_created, getApplicationContext())
+                                                        .replace("%s", serviceData.getChatName());
+                                            } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
+                                                messageText = StringsRepository.getOrDefault(R.string.add_member, getApplicationContext())
+                                                        .replace("%s", serviceData.getDisplayName());
+                                            } else {
+                                                messageText = message.getText();
+                                            }
+
+                                        } else {
+                                            messageText = message.getText();
+                                        }
+                                        final boolean finalIsInfo = isInfo;
+                                        messageInfo = new MessageInfo(String.valueOf(message.getId()), message.getDisplayName(),
+                                                messageText, (message.getAccountId() == Integer.parseInt(CachedValues.getId(getApplicationContext()))),
+                                                false, Numbers.getTimeFromTimestamp(message.getTime(), getApplicationContext()), false,
+                                                message.getAccountId(), finalIsInfo, message.getAvatarPath(), message.getAttachmentPath(), message.getAttachmentData());
+
+                                        ids.put(String.valueOf(message.getId()), messageInfo);
+
+                                        if (!ids.containsKey(message.getId())) {
+                                            adapter.add(messageInfo);
+                                        }
+                                    } catch (NotCachedException | ResponseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            });
+                        }
+                    });
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
+    }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        closed = true;
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        closed = true;
+
+        Thread closeThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    messagesSocket.getWebSocket().getUserSession().close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        closeThread.start();
+
         ChatsListAdapter.isMessagingActivityOpened = true;
     }
 
@@ -266,22 +329,20 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             if (message.getType().equals(Message.Type.SERVICE)) {
                                 isInfo = true;
                                 ServiceData serviceData = message.getServiceData();
-                                if(serviceData.getType().equals(ServiceData.Types.CHAT_CREATED))
-                                {
+                                if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
                                     messageText = StringsRepository.getOrDefault(R.string.chat_created, getApplicationContext())
                                             .replace("%s", serviceData.getChatName());
-                                }
-                                else
-                                {
+                                } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
+                                    messageText = StringsRepository.getOrDefault(R.string.add_member, getApplicationContext())
+                                            .replace("%s", serviceData.getDisplayName());
+                                } else {
                                     messageText = message.getText();
                                 }
 
-                            }
-                            else
-                            {
+                            } else {
                                 messageText = message.getText();
                             }
-                            isEmpty = false;
+
                             final boolean finalIsInfo = isInfo;
                             runOnUiThread(new Runnable() {
                                 @Override

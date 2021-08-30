@@ -49,8 +49,6 @@
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:onClick="back"
-
-        app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_back_arrow" />

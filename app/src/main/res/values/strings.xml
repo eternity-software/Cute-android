@@ -134,5 +134,6 @@
     <string name="crashed_text">Cute crashed, this clearly should not have happened... Eat something delicious and please let us know about your error.</string>
     <string name="edit_account">Edit account</string>
     <string name="chat_created">Chat %s created</string>
+    <string name="add_member">%s joined chat</string>
     <string name="about">About</string>
 </resources>

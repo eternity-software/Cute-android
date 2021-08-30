@@ -115,4 +115,5 @@
     <string name="friends_requests">Заявки</string>
     <string name="incoming">Входящие</string>
     <string name="outgoing">Исходящие</string>
+    <string name="add_member">%s присоединился к чату</string>
 </resources>

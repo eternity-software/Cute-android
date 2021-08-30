@@ -20,11 +20,15 @@ public interface ChatsListContact {
         void showErrorView();
 
         void hideUpdateViews();
+
+        void updateChatList();
     }
 
     interface Presenter {
 
         void updateChatsList(final ChatsListAdapter chatsListAdapter);
+
+        void createSocket();
 
         void onDestroy();
     }

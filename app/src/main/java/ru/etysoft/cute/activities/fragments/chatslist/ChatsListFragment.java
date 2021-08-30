@@ -58,6 +58,12 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     }
 
     @Override
+    public void updateChatList()
+    {
+        presenter.updateChatsList(adapter);
+    }
+
+    @Override
     public void initViews() {
         ListView listView = view.findViewById(R.id.listView);
         toolbar = view.findViewById(R.id.toolbar);
