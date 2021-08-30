@@ -8,6 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
         android:maxHeight="100dp"
        >
 

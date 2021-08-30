@@ -17,9 +17,9 @@ import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class ConfirmationPresenter implements ConfirmationContract.Presenter {
 
-    private ConfirmationContract.View confirmationView;
-    private ConfirmationContract.Model confirmationModel;
-    private Activity context;
+    private final ConfirmationContract.View confirmationView;
+    private final ConfirmationContract.Model confirmationModel;
+    private final Activity context;
     private NetworkStateReceiver networkStateReceiver;
 
     public ConfirmationPresenter(ConfirmationContract.View confirmationView, Activity context) {

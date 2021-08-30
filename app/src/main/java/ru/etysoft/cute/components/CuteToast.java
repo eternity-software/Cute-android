@@ -21,9 +21,9 @@ public class CuteToast {
         View layout = inflater.inflate(R.layout.toast,
                 (ViewGroup) context.findViewById(R.id.toast_layout_root));
 
-        ImageView image = (ImageView) layout.findViewById(R.id.image);
+        ImageView image = layout.findViewById(R.id.image);
         image.setImageResource(icon);
-        TextView text = (TextView) layout.findViewById(R.id.text);
+        TextView text = layout.findViewById(R.id.text);
         text.setText(message);
         Toast toast = new Toast(context);
         toast.setGravity(Gravity.BOTTOM, 0, Numbers.dpToPx(20, context.getApplicationContext()));

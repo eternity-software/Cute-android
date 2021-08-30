@@ -17,9 +17,9 @@ import ru.etysoft.cuteframework.methods.account.GetAccount.GetAccountResponse;
 
 public class MainPresenter implements MainContract.Presenter {
 
-    private MainContract.View mainView;
-    private MainContract.Model mainModel;
-    private Activity context;
+    private final MainContract.View mainView;
+    private final MainContract.Model mainModel;
+    private final Activity context;
     private NetworkStateReceiver networkStateReceiver;
 
     public MainPresenter(MainContract.View mainView, Activity context) {

@@ -81,8 +81,8 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
         if (!info.isInfo()) {
             // Не информационное сообщение
             viewHolder.attachments = view.findViewById(R.id.attachments);
-            viewHolder.time = (TextView) view.findViewById(R.id.timeview);
-            viewHolder.message = (TextView) view.findViewById(R.id.message_body);
+            viewHolder.time = view.findViewById(R.id.timeview);
+            viewHolder.message = view.findViewById(R.id.message_body);
             viewHolder.back = view.findViewById(R.id.messageback);
             if (isFirstAid) {
                 viewHolder.name = view.findViewById(R.id.nickname);
@@ -161,7 +161,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
             holder.message.setText(info.getMessage());
         } else {
 
-            viewHolder.message = (TextView) view.findViewById(R.id.infotext);
+            viewHolder.message = view.findViewById(R.id.infotext);
             view.setTag(viewHolder);
             final ViewHolder holder = (ViewHolder) view.getTag();
             holder.message.setText(info.getMessage());

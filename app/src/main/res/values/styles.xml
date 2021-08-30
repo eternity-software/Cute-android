@@ -21,7 +21,26 @@
 
     <style name="MaterialElements" parent="Theme.MaterialComponents.Light.Bridge">
 
+
     </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/montserratalternates_medium</item>
+    </style>
+
+    <style name="Base.Widget.Design.TabLayout" parent="android:Widget">
+        <item name="tabIndicatorColor">@color/colorTextAccent</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+        <item name="android:fontFamily">@font/montserratalternates_medium</item>
+    </style>
+
 
     <style name="CuteSwitch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->

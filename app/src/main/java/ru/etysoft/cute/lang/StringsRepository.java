@@ -15,7 +15,7 @@ import ru.etysoft.cute.exceptions.NoSuchValueException;
 
 public class StringsRepository {
 
-    private static HashMap<String, String> values = new HashMap<>();
+    private static final HashMap<String, String> values = new HashMap<>();
 
     public static void applyXml(String xmlString) throws LanguageParsingException {
         try {

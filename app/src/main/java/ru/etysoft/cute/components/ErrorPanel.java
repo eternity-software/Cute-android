@@ -48,9 +48,9 @@ public class ErrorPanel extends RelativeLayout {
         rootView = inflater.inflate(R.layout.error_panel, this);
 
 
-        titleView = (TextView) findViewById(R.id.error_title);
-        textView = (TextView) findViewById(R.id.error_text);
-        reloadButton = (ImageView) findViewById(R.id.reload);
+        titleView = findViewById(R.id.error_title);
+        textView = findViewById(R.id.error_text);
+        reloadButton = findViewById(R.id.reload);
         try {
             String customText = StringsRepository.getValue(String.valueOf(locTextId));
             String customTitle = StringsRepository.getValue(String.valueOf(locTitleId));

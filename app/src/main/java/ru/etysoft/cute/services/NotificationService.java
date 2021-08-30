@@ -97,7 +97,7 @@ public class NotificationService extends Service {
     }
 
 
-    private static String CHANNEL_ID = "Messages";
+    private static final String CHANNEL_ID = "Messages";
 
     public static void createChannelIfNeeded(NotificationManager manager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

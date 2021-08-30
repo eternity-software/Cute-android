@@ -2,10 +2,10 @@ package ru.etysoft.cute.activities.chatsearch;
 
 public class ChatSearchInfo {
 
-    private int cid;
-    private int members;
-    private String name;
-    private boolean has;
+    private final int cid;
+    private final int members;
+    private final String name;
+    private final boolean has;
 
     public ChatSearchInfo(int cid, String name, int members, boolean has) {
         this.cid = cid;

@@ -1,7 +1,6 @@
 package ru.etysoft.cute.activities.chatslist;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,7 @@ import ru.etysoft.cuteframework.methods.messages.Message;
 public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
     private final Activity context;
     private final List<ChatSnippet> list;
-    public static boolean canOpen = true;
+    public static boolean isMessagingActivityOpened = true;
 
     public ChatsListAdapter(Activity context, List<ChatSnippet> values) {
         super(context, R.layout.dialog_element, values);
@@ -57,13 +56,13 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
         final ViewHolder viewHolder = new ViewHolder();
 
         // Инициализируем подэлементы
-        viewHolder.name = (TextView) view.findViewById(R.id.label);
-        viewHolder.messageView = (TextView) view.findViewById(R.id.message);
-        viewHolder.time = (TextView) view.findViewById(R.id.time);
-        viewHolder.accentView = (TextView) view.findViewById(R.id.message_accent);
-        viewHolder.readstatus = (TextView) view.findViewById(R.id.readed);
+        viewHolder.name = view.findViewById(R.id.label);
+        viewHolder.messageView = view.findViewById(R.id.message);
+        viewHolder.time = view.findViewById(R.id.time);
+        viewHolder.accentView = view.findViewById(R.id.message_accent);
+        viewHolder.readstatus = view.findViewById(R.id.readed);
         viewHolder.online = view.findViewById(R.id.statusView);
-        viewHolder.avatar = (Avatar) view.findViewById(R.id.avatar_component);
+        viewHolder.avatar = view.findViewById(R.id.avatar_component);
         viewHolder.container = view.findViewById(R.id.container);
 
 
@@ -71,26 +70,24 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (canOpen) {
-                    canOpen = false;
-                    Intent intent = new Intent(getContext(), MessagingActivity.class);
-                    intent.putExtra("cid", info.getId());
-                    intent.putExtra("isd", (info.getType().equals(ChatSnippet.Types.PRIVATE)));
-                    intent.putExtra("name", info.getName());
-                    intent.putExtra("cover", info.getAvatarPath());
-                    getContext().startActivity(intent);
+                if (isMessagingActivityOpened) {
+                    isMessagingActivityOpened = false;
+                    MessagingActivity.openActivity(getContext(), info.getId(),
+                            (info.getType().equals(ChatSnippet.Types.PRIVATE)),
+                            info.getName(),
+                            info.getAvatarPath());
                 }
             }
         });
+
         view.setTag(viewHolder);
 
-        // Задаём персональные значения
         ViewHolder holder = (ViewHolder) view.getTag();
 
         boolean isDialog = (info.getType().equals(ChatSnippet.Types.PRIVATE));
 
         if (isDialog) {
-            // is online check
+
             if (true) {
                 holder.online.setBackground(context.getResources().getDrawable(R.drawable.circle_online));
             } else {
@@ -109,9 +106,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
         } else {
             holder.readstatus.setVisibility(View.VISIBLE);
         }
-       /* if (info.getCountRead() != 0) {
-            holder.readstatus.setText(String.valueOf(info.getCountRead()));
-        }*/
+
 
         if (holder.avatar != null) {
             holder.avatar.showAnimate();
@@ -136,7 +131,6 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                 }
                 else
                 {
-                    System.out.println(info.getAccountId() + " " + CachedValues.getId(context));
                     holder.accentView.setText(StringsRepository.getOrDefault(R.string.your_message, context) + ": ");
                 }
             } catch (NotCachedException e) {

@@ -12,22 +12,22 @@ import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.Methods;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.account.GetAccount.GetAccountResponse;
+import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListRequest;
+import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListResponse;
 
-public class AccountPresenter implements AccountContact.Presenter{
-    private Activity context;
-    private AccountContact.View view;
-    private  String photoPath = null;
+public class AccountPresenter implements AccountContact.Presenter {
+    private final Activity context;
+    private final AccountContact.View view;
+    private String photoPath = null;
 
-    public AccountPresenter(Activity activity, AccountContact.View view){
+    public AccountPresenter(Activity activity, AccountContact.View view) {
         this.context = activity;
         this.view = view;
     }
 
     @Override
-    public void openAvatar()
-    {
-        if(photoPath != null)
-        {
+    public void openAvatar() {
+        if (photoPath != null) {
             Intent intent = new Intent(context, ImagePreview.class);
             intent.putExtra("url", photoPath);
             context.startActivity(intent);
@@ -51,8 +51,7 @@ public class AccountPresenter implements AccountContact.Presenter{
                                 CachedValues.setDisplayName(context, getAccountResponse.getDisplayName());
 
 
-
-                                    photoPath = getAccountResponse.getAvatarPath();
+                                photoPath = getAccountResponse.getAvatarPath();
 
                                 CachedValues.setLogin(context, getAccountResponse.getLogin());
 
@@ -67,15 +66,47 @@ public class AccountPresenter implements AccountContact.Presenter{
                     e.printStackTrace();
                 } catch (NotCachedException e) {
                     e.printStackTrace();
-                }
-                catch (Exception e)
-                {
-                    CuteToast.showError(e.getMessage(), context);
+                } catch (final Exception e) {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CuteToast.showError(e.getMessage(), context);
+                        }
+                    });
+
                 }
 
             }
         });
         thread.start();
+        updateFriends();
+
+    }
+
+    @Override
+    public void updateFriends() {
+
+        Thread processServerRequest = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FriendListResponse friendListResponse = (new FriendListRequest(CachedValues.getSessionKey(context))).execute();
+                    if (friendListResponse.isSuccess()) {
+                        view.getFriends().clear();
+                        view.getFriends().addAll(friendListResponse.getFriends());
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.updateFriendsViews();
+                            }
+                        });
+                    }
+
+                } catch (Exception ignored) {
+                }
+            }
+        });
+        processServerRequest.start();
 
     }
 }

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     private ChatsListFragment fragmentDialogs;
     private AccountFragment fragmentAccount;
     private ExploreFragment fragmentExplore;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
     @Override
     public void setupNavigation() {
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view);
-        viewPager = (ViewPager) findViewById(R.id.view);
+        bottomNavigationView = findViewById(R.id.nav_view);
+        viewPager = findViewById(R.id.view);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

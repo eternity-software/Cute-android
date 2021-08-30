@@ -11,9 +11,9 @@ import ru.etysoft.cuteframework.methods.account.Registration.RegistrationRespons
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class SignUpPresenter implements SignUpContract.Presenter {
-    private SignUpContract.View signUpView;
-    private SignUpContract.Model signUpModel;
-    private Activity context;
+    private final SignUpContract.View signUpView;
+    private final SignUpContract.Model signUpModel;
+    private final Activity context;
     private NetworkStateReceiver networkStateReceiver;
 
     public SignUpPresenter(SignUpContract.View signInView, Activity context) {

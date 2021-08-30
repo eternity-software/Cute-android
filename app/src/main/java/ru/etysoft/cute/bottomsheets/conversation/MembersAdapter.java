@@ -42,7 +42,7 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
         final MembersAdapter.ViewHolder viewHolder = new MembersAdapter.ViewHolder();
 
         // Инициализируем подэлементы
-        viewHolder.name = (TextView) view.findViewById(R.id.label);
+        viewHolder.name = view.findViewById(R.id.label);
         viewHolder.picture = view.findViewById(R.id.icon);
         viewHolder.role = view.findViewById(R.id.creator);
 

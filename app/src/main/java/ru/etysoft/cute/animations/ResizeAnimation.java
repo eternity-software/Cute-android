@@ -6,14 +6,14 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
 public class ResizeAnimation extends Animation {
-    private View view;
-    private float toHeight;
-    private float fromHeight;
+    private final View view;
+    private final float toHeight;
+    private final float fromHeight;
 
-    private float toWidth;
-    private float fromWidth;
+    private final float toWidth;
+    private final float fromWidth;
 
-    private float toScale = 0f;
+    private final float toScale = 0f;
 
     public ResizeAnimation(View view, float fromWidth, float fromHeight, float toWidth, float toHeight) {
         this.toHeight = toHeight;

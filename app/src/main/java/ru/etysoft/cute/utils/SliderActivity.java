@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrListener;
 import com.r0adkll.slidr.util.ViewDragHelper;
 
@@ -48,7 +49,7 @@ public class SliderActivity {
         }
     }
 
-    public void attachSlider(final Activity activity) {
+    public SlidrInterface attachSlider(final Activity activity) {
         final SlidrConfig slidrConfig = new SlidrConfig.Builder().listener(new SlidrListener() {
             @Override
             public void onSlideStateChanged(int state) {
@@ -74,6 +75,6 @@ public class SliderActivity {
                 return false;
             }
         }).build();
-        Slidr.attach(activity, slidrConfig);
+        return Slidr.attach(activity, slidrConfig);
     }
 }

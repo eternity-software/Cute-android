@@ -55,11 +55,7 @@ public class Numbers {
     }
 
     public static boolean getBooleanFromInt(int i) {
-        if (i == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return i == 1;
 
     }
 

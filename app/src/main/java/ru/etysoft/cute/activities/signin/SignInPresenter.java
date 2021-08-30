@@ -16,9 +16,9 @@ import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class SignInPresenter implements SignInContract.Presenter {
 
-    private SignInContract.View signInView;
-    private SignInContract.Model signInModel;
-    private Activity context;
+    private final SignInContract.View signInView;
+    private final SignInContract.Model signInModel;
+    private final Activity context;
     private NetworkStateReceiver networkStateReceiver;
 
     public SignInPresenter(SignInContract.View signInView, Activity context) {

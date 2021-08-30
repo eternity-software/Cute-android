@@ -20,8 +20,8 @@ import ru.etysoft.cuteframework.methods.messages.Message;
 
 public class ChatsListPresenter implements ChatsListContact.Presenter {
 
-    private Activity context;
-    private ChatsListContact.View view;
+    private final Activity context;
+    private final ChatsListContact.View view;
 
     private boolean updateListLock = false;
 

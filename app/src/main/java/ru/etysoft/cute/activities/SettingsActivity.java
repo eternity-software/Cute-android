@@ -19,7 +19,7 @@ import ru.etysoft.cute.data.CacheUtils;
 public class SettingsActivity extends AppCompatActivity {
 
     public static int count = 0;
-    private static String ISDARK_THEME = "APP_THEME_NIGHT";
+    private static final String ISDARK_THEME = "APP_THEME_NIGHT";
     private static CacheUtils cacheUtils;
 
     @Override
@@ -112,7 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
-            final SwitchPreferenceCompat switchPreference = (SwitchPreferenceCompat) findPreference("APP_THEME_NIGHT");
+            final SwitchPreferenceCompat switchPreference = findPreference("APP_THEME_NIGHT");
             switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {

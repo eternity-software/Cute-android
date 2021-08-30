@@ -16,6 +16,8 @@
     <string name="friends">Friends</string>
     <string name="add_friend">Add friend</string>
     <string name="message">Message</string>
+    <string name="incoming">Incoming</string>
+    <string name="outgoing">Outgoing</string>
     <string name="friends_requests">Requests</string>
     <string name="sign_up_subpassword">Think for hard password</string>
     <string name="password_confirm">Password confirm</string>
@@ -84,7 +86,7 @@
     <string name="password_incorrect">Passwords are incorrect</string>
     <string name="logout">Logout</string>
     <string name="version">Version</string>
-    <string name="edit_conv">Edit chat</string>
+    <string name="edit_conv">Bio</string>
     <string name="internet_availible">Internet connection is available</string>
     <string name="err_email">E-mail not found!</string>
     <string name="err_lang">Can\'t setup language!</string>

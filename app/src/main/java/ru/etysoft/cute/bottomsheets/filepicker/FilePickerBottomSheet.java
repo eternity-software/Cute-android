@@ -120,7 +120,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        GridView gallery = (GridView) bottomSheet.findViewById(R.id.gridView);
+        GridView gallery = bottomSheet.findViewById(R.id.gridView);
 
         gallery.setAdapter(new ImageAdapter(bottomSheet));
 
@@ -145,8 +145,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private class ImageAdapter extends BaseAdapter {
 
         /** The context. */
-        private FrameLayout context;
-        private int threadCount = 0;
+        private final FrameLayout context;
+        private final int threadCount = 0;
 
         /**
          * Instantiates a new image adapter.

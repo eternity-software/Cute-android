@@ -31,7 +31,7 @@ public class stock extends AppCompatActivity implements FloatingBottomSheet.Bott
     private static stock main;
     public Activity parent;
     //Константы
-    private String ISDARK_THEME = "APP_THEME_NIGHT";
+    private final String ISDARK_THEME = "APP_THEME_NIGHT";
 
     public static stock get() {
         return main;

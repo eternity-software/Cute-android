@@ -44,7 +44,7 @@ public class FilePickerAdapter extends ArrayAdapter<FileInfo> {
         final FilePickerAdapter.ViewHolder viewHolder = new FilePickerAdapter.ViewHolder();
 
 
-        viewHolder.name = (TextView) view.findViewById(R.id.label);
+        viewHolder.name = view.findViewById(R.id.label);
         viewHolder.picture = view.findViewById(R.id.icon);
         viewHolder.role = view.findViewById(R.id.creator);
 

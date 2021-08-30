@@ -10,8 +10,8 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     private boolean online = true;
 
-    private Runnable onlineRunnable;
-    private Runnable offlineRunnable;
+    private final Runnable onlineRunnable;
+    private final Runnable offlineRunnable;
 
 
     public NetworkStateReceiver(Runnable onlineRunnable, Runnable offlineRunnable) {

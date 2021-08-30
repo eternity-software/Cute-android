@@ -1,6 +1,8 @@
 package ru.etysoft.cute.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,6 +43,7 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
+import ru.etysoft.cuteframework.data.APIKeys;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
@@ -54,16 +57,16 @@ import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
-    private List<MessageInfo> convInfos = new ArrayList<>();
-    private Map<String, MessageInfo> ids = new HashMap<String, MessageInfo>();
+    private final List<MessageInfo> convInfos = new ArrayList<>();
+    private final Map<String, MessageInfo> ids = new HashMap<String, MessageInfo>();
     private MessagesAdapter adapter;
 
-    private int cid = 1;
+    private int chatId = 1;
     private String name = "42";
     private String avatar = null;
-    private String countMembers = "42";
+    private final String countMembers = "42";
     private boolean isDialog = false;
-    private int ts = 0;
+    private final int ts = 0;
     private Thread waiter;
     private boolean closed = false;
     private ErrorPanel errorPanel;
@@ -77,13 +80,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
-        cid = getIntent().getIntExtra("cid", 0);
-        name = getIntent().getStringExtra("name");
-        avatar = getIntent().getStringExtra("cover");
+        chatId = getIntent().getIntExtra(APIKeys.CHAT_ID, 0);
+        name = getIntent().getStringExtra(APIKeys.NAME);
+        avatar = getIntent().getStringExtra(APIKeys.AVATAR_PATH);
         isDialog = getIntent().getBooleanExtra("isd", false);
 
         Avatar picture = findViewById(R.id.avatar);
-        picture.generateIdPicture(cid);
+        picture.generateIdPicture(chatId);
 
         if(avatar != null)
         {
@@ -137,6 +140,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     }
 
+    public static void openActivity(Context context, int chatId, boolean isDialog, String name,
+                                    String avatarPath)
+    {
+        Intent intent = new Intent(context, MessagingActivity.class);
+        intent.putExtra(APIKeys.CHAT_ID, chatId);
+        intent.putExtra("isd", isDialog);
+        intent.putExtra(APIKeys.NAME, name);
+        intent.putExtra(APIKeys.AVATAR_PATH, avatarPath);
+        context.startActivity(intent);
+    }
 
     public void back(View v) {
         onBackPressed();
@@ -194,7 +207,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     public void showInfo(View v) {
         final ConversationBottomSheet conversationBottomSheet = new ConversationBottomSheet();
-        conversationBottomSheet.setCid(String.valueOf(cid));
+        conversationBottomSheet.setCid(String.valueOf(chatId));
         conversationBottomSheet.show(getSupportFragmentManager(), "blocked");
         conversationBottomSheet.setCancelable(true);
     }
@@ -219,7 +232,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     protected void onDestroy() {
         super.onDestroy();
         closed = true;
-        ChatsListAdapter.canOpen = true;
+        ChatsListAdapter.isMessagingActivityOpened = true;
     }
 
 
@@ -235,7 +248,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             public void run() {
 
                 try {
-                    GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(cid))).execute();
+                    GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId))).execute();
                     if (getMessageListResponse.isSuccess()) {
                         List<Message> messages = getMessageListResponse.getMessages();
                         for (final Message message : messages) {
@@ -545,7 +558,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             @Override
             public void run() {
                 try {
-                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(cid), message, mediaIdToSend)).execute();
+                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

@@ -60,9 +60,9 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
         final FriendsAdapter.ViewHolder viewHolder = new FriendsAdapter.ViewHolder();
 
         // Инициализируем подэлементы
-        viewHolder.name = (TextView) view.findViewById(R.id.displayNameView);
+        viewHolder.name = view.findViewById(R.id.displayNameView);
 
-        viewHolder.avatar = (Avatar) view.findViewById(R.id.avatarView);
+        viewHolder.avatar = view.findViewById(R.id.avatarView);
         viewHolder.container = view.findViewById(R.id.container);
 
 
@@ -82,9 +82,8 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
 
 
         if (holder.avatar != null) {
-            holder.avatar.showAnimate();
             holder.avatar.generateIdPicture(info.getAccountId());
-            holder.avatar.setAcronym(info.getDisplayName(), Avatar.Size.MEDIUM);
+            holder.avatar.setAcronym(info.getDisplayName(), Avatar.Size.SMALL);
             if (info.getAvatarPath() != null) {
                 Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
             }
@@ -94,12 +93,7 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
         holder.name.setText(info.getDisplayName());
 
 
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setFillAfter(false);
-        fadeIn.setInterpolator(new DecelerateInterpolator());
-        fadeIn.setDuration(800);
 
-        holder.container.startAnimation(fadeIn);
 
         return view;
     }

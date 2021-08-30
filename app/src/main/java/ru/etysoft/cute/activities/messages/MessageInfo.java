@@ -8,14 +8,14 @@ public class MessageInfo {
     private String message;
     private String subtext;
     private String id;
-    private String avatar;
-    private String media;
-    private int aid;
+    private final String avatar;
+    private final String media;
+    private final int aid;
     private boolean read;
     private final boolean isMine;
     private final boolean isDialog;
     private final boolean isInfo;
-    private AttachmentData attachmentData;
+    private final AttachmentData attachmentData;
 
 
     // Сообщение

@@ -1,8 +1,8 @@
 package ru.etysoft.cute.bottomsheets.filepicker;
 
 public class FileInfo {
-    private String name;
-    private String filePath;
+    private final String name;
+    private final String filePath;
 
     public FileInfo(String name, String filePath) {
         this.name = name;

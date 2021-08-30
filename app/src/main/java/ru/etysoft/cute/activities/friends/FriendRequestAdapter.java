@@ -36,7 +36,7 @@ import ru.etysoft.cuteframework.methods.friend.Friend;
 public class FriendRequestAdapter extends ArrayAdapter<Friend> {
     private final Activity context;
     private final List<Friend> list;
-    public static boolean canOpen = true;
+    private boolean isIncoming = true;
 
     public FriendRequestAdapter(Activity context, List<Friend> values) {
         super(context, R.layout.friend_element, values);
@@ -44,6 +44,14 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
         this.list = values;
 
 
+    }
+
+    public void setIncoming(boolean incoming) {
+        isIncoming = incoming;
+    }
+
+    public boolean isIncoming() {
+        return isIncoming;
     }
 
     @Override
@@ -61,9 +69,9 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
         final FriendRequestAdapter.ViewHolder viewHolder = new FriendRequestAdapter.ViewHolder();
 
         // Инициализируем подэлементы
-        viewHolder.name = (TextView) view.findViewById(R.id.displayNameView);
+        viewHolder.name = view.findViewById(R.id.displayNameView);
 
-        viewHolder.avatar = (Avatar) view.findViewById(R.id.avatarView);
+        viewHolder.avatar = view.findViewById(R.id.avatarView);
         viewHolder.container = view.findViewById(R.id.container);
         viewHolder.acceptButton = view.findViewById(R.id.acceptButton);
         viewHolder.declineButton = view.findViewById(R.id.declineButton);
@@ -86,26 +94,24 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
 
 
         if (holder.avatar != null) {
-            holder.avatar.showAnimate();
+
             holder.avatar.generateIdPicture(info.getAccountId());
-            holder.avatar.setAcronym(info.getDisplayName(), Avatar.Size.MEDIUM);
+            holder.avatar.setAcronym(info.getDisplayName(), Avatar.Size.SMALL);
             if (info.getAvatarPath() != null) {
                 Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
             }
         }
 
 
+        if(!isIncoming)
+        {
+            holder.acceptButton.setVisibility(View.GONE);
+        }
 
 
         holder.name.setText(info.getDisplayName());
 
 
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setFillAfter(false);
-        fadeIn.setInterpolator(new DecelerateInterpolator());
-        fadeIn.setDuration(800);
-
-        holder.container.startAnimation(fadeIn);
 
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override

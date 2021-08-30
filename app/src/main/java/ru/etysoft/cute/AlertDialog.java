@@ -19,7 +19,8 @@ public class AlertDialog extends Dialog implements android.view.View.OnClickList
     public TextView titleview, textview;
     public Runnable positive = null;
     public Runnable negative = null;
-    private String text, title;
+    private final String text;
+    private final String title;
 
     public AlertDialog(Activity a, String title, String text, Runnable positive, Runnable negative) {
         super(a);
@@ -49,8 +50,8 @@ public class AlertDialog extends Dialog implements android.view.View.OnClickList
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        yes = (Button) findViewById(R.id.dialog_active);
-        no = (Button) findViewById(R.id.dialog_passive);
+        yes = findViewById(R.id.dialog_active);
+        no = findViewById(R.id.dialog_passive);
         titleview = findViewById(R.id.title_dialog);
         textview = findViewById(R.id.dialog_text);
         titleview.setText(title);

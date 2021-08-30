@@ -12,10 +12,10 @@ import ru.etysoft.cute.activities.CrashReportActivity;
 
 public class CrashExceptionHandler implements UncaughtExceptionHandler {
 
-    private UncaughtExceptionHandler defaultUEH;
+    private final UncaughtExceptionHandler defaultUEH;
 
 
-    private Context context;
+    private final Context context;
 
 
     public CrashExceptionHandler(Context context) {

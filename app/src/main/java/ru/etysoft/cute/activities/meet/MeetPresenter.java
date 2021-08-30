@@ -8,7 +8,7 @@ import ru.etysoft.cute.activities.signup.SignUpActivity;
 
 public class MeetPresenter implements MeetContract.Presenter {
 
-    private MeetContract.View meetView;
+    private final MeetContract.View meetView;
 
     public MeetPresenter(MeetContract.View meetView) {
         this.meetView = meetView;

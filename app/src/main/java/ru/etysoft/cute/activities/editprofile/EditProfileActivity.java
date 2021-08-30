@@ -44,8 +44,8 @@ import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
-    private int REQUEST_TAKE_COVER_FROM_GALLERY = 2;
+    private final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
+    private final int REQUEST_TAKE_COVER_FROM_GALLERY = 2;
     private String id;
     private String name;
     private String login;
@@ -57,7 +57,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView bioView;
 
 
-    private boolean isImageUpdated = false;
+    private final boolean isImageUpdated = false;
 
 
     @Override

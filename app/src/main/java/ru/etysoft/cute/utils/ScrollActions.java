@@ -7,10 +7,6 @@ public class ScrollActions {
         if (listView.getAdapter().getCount() == 0) return false;
         int pos = listView.getLastVisiblePosition();
         if (pos <= 0) return false;
-        if (listView.getChildAt(pos).getBottom() > listView.getHeight()) {
-            return true;
-        } else {
-            return false;
-        }
+        return listView.getChildAt(pos).getBottom() > listView.getHeight();
     }
 }

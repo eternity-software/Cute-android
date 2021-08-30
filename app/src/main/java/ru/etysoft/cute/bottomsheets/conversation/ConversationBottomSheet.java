@@ -88,15 +88,15 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     boolean isEditing = false;
 
     // Нажатия на кнопки
-    private View.OnClickListener passiveButtonClick = null;
-    private View.OnClickListener activeButtonClick = null;
+    private final View.OnClickListener passiveButtonClick = null;
+    private final View.OnClickListener activeButtonClick = null;
 
     private Activity activity;
     private View view;
     String name;
     String descriptionText;
     BottomSheetBehavior bottomSheetBehavior;
-    private int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
+    private final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
     private String mCurrentPhotoPath;
     private ImageFile image = null;
 
@@ -189,7 +189,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         super.onResume();
     }
 
-    private List<MemberInfo> memberInfos = new ArrayList<>();
+    private final List<MemberInfo> memberInfos = new ArrayList<>();
     private int membersCount = 0;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -544,7 +544,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                     });
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                     params.setMargins(0, 0, 0, Numbers.dpToPx(-20, getContext()));
-                    ((CardView) view.findViewById(R.id.appBar)).setLayoutParams(params);
+                    view.findViewById(R.id.appBar).setLayoutParams(params);
                     bottomSheetBehavior.setDraggable(false);
                     view.findViewById(R.id.content).startAnimation(fadeIn);
                     bottomSheetBehavior.setFitToContents(false);

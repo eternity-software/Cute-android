@@ -18,6 +18,7 @@ public class Avatar extends RelativeLayout {
     private TextView acronymView;
     private ImageView generatedPictureView;
     private ImageView pictureView;
+    private ImageView onlineView;
     private View rootView;
 
     public Avatar(Context context, AttributeSet attributeSet) {
@@ -35,11 +36,25 @@ public class Avatar extends RelativeLayout {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.avatar, this);
 
-        acronymView = (TextView) findViewById(R.id.acronym);
-        generatedPictureView = (ImageView) findViewById(R.id.generated);
-        pictureView = (ImageView) findViewById(R.id.picture);
+        acronymView = findViewById(R.id.acronym);
+        generatedPictureView = findViewById(R.id.generated);
+        pictureView = findViewById(R.id.picture);
+        onlineView = findViewById(R.id.onlineView);
+        onlineView.setVisibility(View.INVISIBLE);
 
+    }
 
+    public void setOnline(boolean isOnline)
+    {
+        onlineView.setVisibility(VISIBLE);
+        if(isOnline)
+        {
+            onlineView.setBackground(getResources().getDrawable(R.drawable.circle_online));
+        }
+        else
+        {
+            onlineView.setBackground(getResources().getDrawable(R.drawable.circle_offline));
+        }
     }
 
     @Override

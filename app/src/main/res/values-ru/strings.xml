@@ -109,4 +109,10 @@
     <string name="edit_account">Редактировать</string>
     <string name="chat_created">Чат %s создан</string>
     <string name="about">О себе</string>
+    <string name="friends">Друзья</string>
+    <string name="add_friend">Добавить друга</string>
+    <string name="message">Сообщение</string>
+    <string name="friends_requests">Заявки</string>
+    <string name="incoming">Входящие</string>
+    <string name="outgoing">Исходящие</string>
 </resources>

@@ -44,7 +44,7 @@ public class LightToolbar extends RelativeLayout {
             text = typedArray.getText(0);
             locCaptionId = typedArray.getText(1);
         }
-        captionView = (TextView) findViewById(R.id.caption);
+        captionView = findViewById(R.id.caption);
         backView = findViewById(R.id.back_button);
         if (context instanceof Activity) {
 

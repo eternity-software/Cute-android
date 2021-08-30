@@ -30,21 +30,20 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
     public View getView(int position, final View convertView, ViewGroup parent) {
         View view = null;
         final ChatSearchInfo info = list.get(position);
-        final LayoutInflater inflator = context.getLayoutInflater();
+        final LayoutInflater layoutInflater = context.getLayoutInflater();
 
-        view = inflator.inflate(R.layout.searchchat_element, null);
+        view = layoutInflater.inflate(R.layout.searchchat_element, null);
 
         final ViewHolder viewHolder = new ViewHolder();
 
-        viewHolder.name = (TextView) view.findViewById(R.id.label);
-        viewHolder.acronym = (TextView) view.findViewById(R.id.acronym);
+        viewHolder.name = view.findViewById(R.id.label);
+        viewHolder.acronym = view.findViewById(R.id.acronym);
         viewHolder.photo = view.findViewById(R.id.icon);
         viewHolder.members = view.findViewById(R.id.members);
 
 
         view.setTag(viewHolder);
 
-        // Задаём контент
         final ViewHolder holder = (ViewHolder) view.getTag();
 
 
@@ -62,7 +61,7 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
                             intent.putExtra("isd", false);
                             intent.putExtra("name", info.getName());
                             intent.putExtra("cover", "null");
-                            getContext().startActivity(intent);
+                            MessagingActivity.openActivity(getContext(), info.getCid(), false, info.getName(), null);
                         } else {
 
 

@@ -75,10 +75,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     public boolean isPasswordsCorrect() {
         String passwordFieldContent = String.valueOf(passwordInput.getText());
         String passwordConfirmFieldContent = String.valueOf(passwordConfirmInput.getText());
-        if (passwordConfirmFieldContent.equals(passwordFieldContent) && passwordFieldContent.length() > 4) {
-            return true;
-        }
-        return false;
+        return passwordConfirmFieldContent.equals(passwordFieldContent) && passwordFieldContent.length() > 4;
     }
 
     @Override
