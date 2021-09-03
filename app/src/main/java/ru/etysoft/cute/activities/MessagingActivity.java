@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,7 +90,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             Picasso.get().load(avatar).transform(new CircleTransform()).into(picture.getPictureView());
         }
 
-        picture.setAcronym((String.valueOf(name.charAt(0))), Avatar.Size.SMALL);
+        picture.setAcronym((name), Avatar.Size.SMALL);
 
         final ListView listView = findViewById(R.id.messages);
         adapter = new MessagesAdapter(this, convInfos);

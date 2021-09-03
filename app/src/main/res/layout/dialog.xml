@@ -13,7 +13,7 @@
         app:behavior_skipCollapsed="true"
         app:cardBackgroundColor="@color/colorBackground"
         app:cardCornerRadius="20dp"
-        app:cardElevation="3dp">
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,11 +33,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:fontFamily="@font/montserrat"
+                    android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="left"
                     android:text="Title"
-                    android:textColor="@color/colorText"
-                    android:textSize="20sp" />
+                    android:textColor="@color/colorTextAccent"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/dialog_text"
@@ -45,9 +45,10 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat"
                     android:gravity="start"
+                    android:paddingTop="12dp"
                     android:text="Text. I like cute and hope you like it)"
                     android:textColor="@color/colorText"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:id="@+id/motherButtons"
