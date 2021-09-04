@@ -28,6 +28,17 @@ public class CachedValues {
         cacheUtils.setString(CacheKeys.EMAIL, email, context);
     }
 
+    public static void setAvatar(Context context, String urlPhoto) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.setString(CacheKeys.AVATAR, urlPhoto, context);
+    }
+    public static String getAvatar(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.AVATAR, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.AVATAR, context);
+    }
+
+
     public static String getId(Context context) throws NotCachedException {
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (!cacheUtils.hasKey(CacheKeys.ID, context)) throw new NotCachedException();
@@ -108,6 +119,7 @@ public class CachedValues {
         public final static String LOGIN = "login";
         public final static String DISPLAY_NAME = "display_name";
         public final static String CUSTOM_LANG = "custom_lang";
+        public final static String AVATAR = "avatar";
     }
 }
 

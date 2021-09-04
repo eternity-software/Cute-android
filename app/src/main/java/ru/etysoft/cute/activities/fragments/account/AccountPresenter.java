@@ -48,13 +48,8 @@ public class AccountPresenter implements AccountContact.Presenter {
                             if (getAccountResponse.isSuccess()) {
                                 CachedValues.setStatus(context, getAccountResponse.getStatus());
                                 CachedValues.setBio(context, getAccountResponse.getBio());
-                                CachedValues.setDisplayName(context, getAccountResponse.getDisplayName());
-
-
+                                CachedValues.setAvatar(context, getAccountResponse.getAvatarPath());
                                 photoPath = getAccountResponse.getAvatarPath();
-
-                                CachedValues.setLogin(context, getAccountResponse.getLogin());
-
                                 view.setAccountInfo(getAccountResponse.getLogin(), getAccountResponse.getStatus(), photoPath,
                                         Integer.parseInt(getAccountResponse.getId()));
 

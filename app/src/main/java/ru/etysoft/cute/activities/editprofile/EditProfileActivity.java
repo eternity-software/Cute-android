@@ -1,5 +1,6 @@
 package ru.etysoft.cute.activities.editprofile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.r0adkll.slidr.Slidr;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,11 +26,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.LightToolbar;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
@@ -42,20 +46,17 @@ import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity implements EditProfileContract.View{
 
     private final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
     private final int REQUEST_TAKE_COVER_FROM_GALLERY = 2;
-    private String id;
-    private String name;
-    private String login;
+    private String id, name, login, urlPhoto;
     private LightToolbar toolbar;
     private String mCurrentPhotoPath;
     private ImageFile image = null;
-    private TextView nameView;
-    private TextView statusView;
-    private TextView bioView;
-
+    private Avatar avatar;
+    private TextView nameView, statusView, bioView, loginView;
+    private EditProfilePresenter editProfilePresenter;
 
     private final boolean isImageUpdated = false;
 
@@ -64,41 +65,42 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        name = getIntent().getExtras().getString("name");
-        login = getIntent().getExtras().getString("login");
-        String urlPhoto = (CacheUtils.getInstance()).getString("profilePhoto", this);
+        editProfilePresenter = new EditProfilePresenter(EditProfileActivity.this, this);
+        initializeViews();
+        setAccountInfo();
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+    }
 
 
+
+    @Override
+    public void initializeViews() {
         nameView = findViewById(R.id.editTextAccountName);
         statusView = findViewById(R.id.statusView);
         bioView = findViewById(R.id.bioView);
-
-
         toolbar = findViewById(R.id.toolbar);
         toolbar.animateAppear(findViewById(R.id.toolbarContainer));
-        TextView loginView = findViewById(R.id.editTextAccountLogin);
-//        ImageView imageView = findViewById(R.id.progileImage);
+        loginView = findViewById(R.id.editTextAccountLogin);
+        avatar = findViewById(R.id.avatarView);
+    }
 
-
-        if (urlPhoto != null) {
-//            Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).memoryPolicy(MemoryPolicy.NO_CACHE).transform(new CircleTransform()).into(imageView);
-        }
-
-        loginView.setText(login);
-        nameView.setText(name);
-
+    @Override
+    public void setAccountInfo() {
         try {
+            urlPhoto = CachedValues.getAvatar(this);
             loginView.setText(CachedValues.getLogin(this));
             nameView.setText(CachedValues.getDisplayName(this));
             bioView.setText(CachedValues.getBio(this));
             statusView.setText(CachedValues.getStatus(this));
-        } catch (NotCachedException e) {
+
+            if (urlPhoto != null){
+                Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(avatar.getPictureView());
+            }
+        }catch (NotCachedException e){
             e.printStackTrace();
         }
-
-        SliderActivity sliderActivity = new SliderActivity();
-        sliderActivity.attachSlider(this);
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
 
     @Override
@@ -252,4 +254,6 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

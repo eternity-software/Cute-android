@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".activities.CreateChatActivity">
+    tools:context=".activities.editprofile.EditProfileActivity">
 
     <LinearLayout
         android:id="@+id/toolbarContainer"
@@ -53,11 +53,12 @@
                 app:layout_constraintVertical_bias="0.103">
 
                 <ru.etysoft.cute.components.Avatar
+                    android:id="@+id/avatarView"
                     android:layout_width="60dp"
                     android:layout_height="60dp">
 
                     <ImageView
-                        android:id="@+id/imageView13"
+                        android:id="@+id/imageView22"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="updateAvatar"
@@ -65,17 +66,17 @@
                         app:srcCompat="@drawable/icon_photo_camera" />
                 </ru.etysoft.cute.components.Avatar>
 
-                <TextView
-                    android:id="@+id/button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="12dp"
-                    android:gravity="center"
-                    android:fontFamily="@font/montserratalternates_medium"
-                    android:textSize="18sp"
-                    android:onClick="updateCover"
-                    android:background="@drawable/square_rounded_corners_gray"
-                    android:text="Изменить шапку" />
+<!--                <TextView-->
+<!--                    android:id="@+id/button"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_marginLeft="12dp"-->
+<!--                    android:background="@drawable/square_rounded_corners_gray"-->
+<!--                    android:fontFamily="@font/montserratalternates_medium"-->
+<!--                    android:gravity="center"-->
+<!--                    android:onClick="updateCover"-->
+<!--                    android:text="Изменить шапку"-->
+<!--                    android:textSize="18sp" />-->
 
             </LinearLayout>
 
