@@ -44,7 +44,7 @@
             android:scaleType="centerInside"
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
-            android:tint="@color/colorFrontElements"
+            android:tint="@color/colorPassiveImage"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/stat_sys_download" />

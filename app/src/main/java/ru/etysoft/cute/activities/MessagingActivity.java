@@ -33,6 +33,8 @@ import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.activities.messages.MessageInfo;
 import ru.etysoft.cute.activities.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
+import ru.etysoft.cute.bottomsheets.conversation.MemberInfo;
+import ru.etysoft.cute.bottomsheets.conversation.MembersAdapter;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
@@ -46,6 +48,9 @@ import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.data.APIKeys;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.ChatMember;
+import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
+import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
 import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
@@ -133,6 +138,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
         processListUpdate();
+        loadChatInfo();
         registerSocket();
 
 
@@ -268,7 +274,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             }
         });
         thread.start();
-
     }
 
 
@@ -301,6 +306,47 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public boolean isRecordPanelShown = false;
     private Thread recordWaiter;
 
+    private void loadChatInfo()
+    {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final ChatInfoResponse chatInfoResponse = (new ChatInfoRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId))).execute();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+                                TextView membersView = findViewById(R.id.subtitle);
+                                membersView.setText(chatInfoResponse.getMembers().size() + " " + getResources().getString(R.string.members));
+                            } catch (ResponseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                } catch (NotCachedException e) {
+                    e.printStackTrace();
+                }
+                catch (final Exception e)
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CuteToast.showError(e.getMessage(), MessagingActivity.this);
+
+                        }
+                    });
+                }
+            }
+        });
+        thread.start();
+    }
 
     private void processListUpdate() {
 
@@ -554,8 +600,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         }
                 }
                 return true;
-
-
             }
         });
 
@@ -617,7 +661,10 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         Thread sendThread = new Thread(new Runnable() {
             @Override
             public void run() {
+
+
                 try {
+                    Thread.sleep(10);
                     final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -640,9 +687,10 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     });
                 } catch (NotCachedException e) {
                     e.printStackTrace();
-                } catch (ResponseException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
         });
         sendThread.start();

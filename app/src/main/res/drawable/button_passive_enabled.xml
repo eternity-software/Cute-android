@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/colorLightLGray">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorLightLGray" />
+            <solid android:color="@color/colorButtonPassive" />
 
             <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
 

@@ -93,7 +93,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
 
             // Задаём контент
             final ViewHolder holder = (ViewHolder) view.getTag();
-            if (!info.isRead()) {
+            if (info.isRead()) {
                 holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorNotReaded));
             } else {
                 holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
@@ -106,7 +106,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
                     Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
                     Bitmap bmp = Bitmap.createBitmap(attachmentData.getWidth(), attachmentData.getHeight(), conf); // this creates a MUTABLE bitmap
 
-                    bmp.eraseColor(context.getResources().getColor(R.color.colorNotReaded));
+                    bmp.eraseColor(context.getResources().getColor(R.color.colorPlaceholder));
                     holder.attachments.getImageView().setImageBitmap(bmp);
 
                     Drawable drawable = new BitmapDrawable(context.getResources(), bmp);
@@ -119,6 +119,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
                             context.startActivity(intent);
                         }
                     });
+                    holder.attachments.setVisibility(View.VISIBLE);
                 }
 
             }

@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/accent_support" />
+            <solid android:color="@color/accent_blue" />
             <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
             <corners android:radius="100dp" />
         </shape>

@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/square_rounded_bottom"
+                android:backgroundTint="@color/colorAccentTop"
                 android:orientation="vertical">
 
                 <ImageView
@@ -33,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="30dp"
                     app:srcCompat="@drawable/icon_open"
-                    app:tint="@color/colorBackground" />
+                    app:tint="@color/white" />
 
 
             </LinearLayout>
@@ -49,7 +50,7 @@
                 android:fontFamily="@font/montserratalternates_medium"
                 android:gravity="center"
                 android:text="@string/confirmation"
-                android:textColor="@color/accent_support"
+                android:textColor="@color/colorTitle"
                 android:textSize="36sp"
                 app:localizableKey="confirmation" />
 
@@ -90,7 +91,8 @@
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
                     android:text="unknownmail@mail.com"
-                    android:textColor="@color/accent_support"
+
+                    android:textColor="@color/colorTitle"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -123,7 +125,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:gravity="center"
                 android:text="@string/confirmation_bottom"
-                android:textColor="@color/accent_blue"
+                android:textColor="@color/colorTextAccent"
                 android:textSize="14sp"
                 app:localizableKey="confirmation_bottom" />
 

@@ -14,7 +14,7 @@
     <color name="black_opacity_50">#803F414D</color>
     <color name="white_opacity_50">#80FFFFFF</color>
     <color name="accent_blue">#526FFF</color>
-    <color name="accent_support">#3752DB</color>
+    <color name="accent_support">#3456FF</color>
     <color name="orange">#FF8800</color>
     <color name="light_accent">#66BFFF</color>
     <color name="state_green">#22A64D</color>
@@ -46,78 +46,74 @@
     <color name="colorEtysoft">#4A98FF</color>
     <color name="colorGoodGray">#E4E4E4</color>
     <color name="colorTransBlack">#88000000</color>
-    <color name="colorTextDark">@color/colorPrimaryDark</color>
-    <color name="colorMessageText">@color/colorPrimaryDark</color>
-    <color name="colorSupportButton">@color/colorPrimaryDark</color>
-
-    <color name="colorTitle">@color/accent_blue</color>
-
-
+    <color name="colorTextDark">#FFF</color>
+    <color name="colorMessageText">@color/colorLightLGray</color>
+    <color name="colorSupportButton">#FFFF</color>
 
 
     <color name="colorUnreadBackground">@color/colorAccent10</color>
 
-    <color name="colorNavigationUnfocused">@color/achromatic_75</color>
-    <color name="colorNavigationFocused">@color/accent_blue</color>
+    <color name="colorNavigationUnfocused">#5C6A87</color>
+    <color name="colorNavigationFocused">#FFFFFF</color>
 
-    <color name="colorEditText">#F1F1F1</color>
-    <color name="colorEditTextOutline">#F1F1F1</color>
-    <color name="colorEditTextIcon">#ACACAC</color>
+    <color name="colorButtonCircle">@color/colorBackgroundElements</color>
+    <color name="colorAccountTop">@color/colorBackgroundElements</color>
+
+    <color name="colorEditText">@color/colorBackgroundElements</color>
+    <color name="colorEditTextOutline">@color/colorBackground</color>
+    <color name="colorEditTextIcon">#FFF</color>
 
 
-    <color name="colorBackButton">#D8D8D8</color>
+    <color name="colorBackButton">#FFFFFF</color>
     <color name="colorButtonText">#FFFFFF</color>
-    <color name="colorHint">#757575</color>
-    <color name="colorPassiveButtonText">#505050</color>
+    <color name="colorHint">#D1D1D1</color>
+    <color name="colorPassiveButtonText">#CACACA</color>
 
-    <color name="colorIconTint">@color/accent_support</color>
+    <color name="colorIconTint">#FFFFFF</color>
     <color name="colorIconSupportTint">@color/colorPrimaryGray</color>
-    <color name="colorPanelGray">@color/colorLightLGray</color>
-    <color name="splashLogo">@color/accent_blue</color>
+    <color name="colorPanelGray">@color/colorBackground</color>
+    <color name="splashLogo">#FFFFFF</color>
+    <color name="splashBackground">@color/colorBackground</color>
+    <color name="colorButtonPassive">@color/colorBackgroundElements</color>
 
 
-    <color name="colorPassiveMini">#ECECEC</color>
-    <color name="colorPassiveMiniOutline">#ECECEC</color>
+    <color name="colorPassiveMini">@color/colorBackgroundElements</color>
+    <color name="colorPassiveMiniOutline">@color/colorBackgroundElements</color>
 
-    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorAccentTop">@color/colorBackgroundElements</color>
+    <color name="colorAccentIcon">#FFF</color>
+
+    <color name="colorBackground">#232D40</color>
     <color name="colorDarkBackground">#EFEFEF</color>
-    <color name="colorBackgroundElements">#D6D6D6</color>
-    <color name="colorFrontElements">#A2A2A2</color>
-    <color name="colorPassiveImage">#FFFFFF</color>
-    <color name="colorText">#252525</color>
-    <color name="colorTextAccent">@color/accent_blue</color>
+    <color name="colorBackgroundElements">#2E3B53</color>
+    <color name="colorFrontElements">#FFFFFF</color>
+    <color name="colorText">#FFFFFF</color>
+    <color name="colorTextAccent">#FFFFFF</color>
     <color name="colorError">@color/colorOrange</color>
-    <color name="colorErrorIcon">@color/colorOrange</color>
+    <color name="colorErrorIcon">#FFF</color>
     <color name="colorSuccess">@color/state_green</color>
-    <color name="colorDivider">#F4F4F4</color>
+    <color name="colorDivider">@color/colorBackgroundElements</color>
     <color name="colorPlaceholder">@color/colorBackground</color>
-    <color name="splashBackground">#FFF</color>
-
-    <color name="colorAccentTop">@color/accent_blue</color>
-    <color name="colorAccentIcon">@color/accent_blue</color>
-
 
     <color name="colorOnline">@color/state_green</color>
-    <color name="colorOnlineOutLine">@color/white</color>
+    <color name="colorOnlineOutLine">@color/colorBackground</color>
 
-    <color name="colorSupportText">@color/text_soft_gray</color>
+    <color name="colorSupportText">@color/colorPrimaryGray</color>
     <color name="colorButtonTrans">@color/text_soft_gray</color>
-    <color name="colorButtonPassive">@color/colorLightLGray</color>
-
-    <color name="colorButtonCircle">@color/colorLightLGray</color>
-
-    <color name="colorAccountTop">@color/colorLightLGray</color>
 
     <color name="colorProgressBar">@color/accent_blue</color>
+    <color name="colorTitle">#FFF</color>
 
-    <color name="colorAltSupport">@color/accent_blue</color>
+
+    <color name="colorAltSupport">#FFFFFF</color>
     <color name="colorNotReaded">#F4F4F4</color>
-    <color name="colorNoMessagesPlanet">@color/accent_blue</color>
-    <color name="colorMyMessage">#E6E6E6</color>
-    <color name="colorMessage">#E6E6E6</color>
-    <color name="colorTextLink">#BABABA</color>
+    <color name="colorNoMessagesPlanet">#FFFFFF</color>
+    <color name="colorMyMessage">@color/colorBackgroundElements</color>
+    <color name="colorMessage">@color/accent_blue</color>
+    <color name="colorTextLink">#FFFFFF</color>
 
-    <color name="colorTextPanel">@color/colorLightLGray</color>
+    <color name="colorTextPanel">@color/colorBackgroundElements</color>
+
 
     <color name="colorOffline">#707070</color>
     <color name="colorOfflineOutLine">#FFFF</color>

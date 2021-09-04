@@ -179,18 +179,18 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="86dp">
             <TextView
                 android:id="@+id/bioView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/montserrat"
+                android:fontFamily="@font/montserratmedium"
                 android:gravity="left"
-                android:text=".."
+                android:text="Ребята, не стоит вскрывать эту тему. Вы молодые, шутливые, вам все легко. Это не то. Это не Чикатило и даже не архивы спецслужб. Сюда лучше не лезть. Серьезно, любой из вас будет жалеть.  Лучше..."
                 android:textColor="@color/colorSupportText"
                 android:textIsSelectable="true"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
         </ScrollView>
         </LinearLayout>
     </ScrollView>

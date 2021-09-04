@@ -62,12 +62,16 @@ public class AccountPresenter implements AccountContact.Presenter {
                 } catch (NotCachedException e) {
                     e.printStackTrace();
                 } catch (final Exception e) {
-                    context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            CuteToast.showError(e.getMessage(), context);
-                        }
-                    });
+                    if(context != null)
+                    {
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CuteToast.showError(e.getMessage(), context);
+                            }
+                        });
+                    }
+
 
                 }
 

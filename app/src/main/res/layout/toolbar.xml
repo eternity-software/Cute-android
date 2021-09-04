@@ -23,7 +23,8 @@
                 android:background="?actionBarItemBackground"
                 android:paddingVertical="16dp"
                 android:paddingLeft="@dimen/indent_8"
-                app:srcCompat="@drawable/icon_back_arrow" />
+                app:srcCompat="@drawable/icon_back_arrow"
+                app:tint="@color/colorBackButton" />
 
             <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/caption"
@@ -31,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratalternates_medium"
                 android:text="Где я"
-                android:textColor="@color/accent_blue"
+                android:textColor="@color/colorTitle"
                 android:textSize="22sp"
                 />
 

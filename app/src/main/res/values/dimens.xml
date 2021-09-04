@@ -13,6 +13,7 @@
     <dimen name="acronym_small">5sp</dimen>
     <dimen name="acronym_medium">8sp</dimen>
     <dimen name="acronym_large">12sp</dimen>
+    <dimen name="messageText">14sp</dimen>
 
 
 </resources>

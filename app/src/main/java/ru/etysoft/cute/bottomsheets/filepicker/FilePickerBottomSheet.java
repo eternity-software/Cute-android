@@ -2,9 +2,11 @@ package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,10 +31,16 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.CuteToast;
+import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.images.WaterfallBalancer;
+import ru.etysoft.cute.images.WaterfallImageLoader;
+import ru.etysoft.cute.utils.ImageRotationFix;
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private View view;
@@ -43,6 +51,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     }
 
     private android.widget.AdapterView.OnItemClickListener onItemClickListener;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,15 +61,13 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         return v;
     }
 
-    public void setRunnable(AdapterView.OnItemClickListener onItemClickListener)
-    {
+    public void setRunnable(AdapterView.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         // Пустой фон
@@ -144,21 +151,26 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
     private class ImageAdapter extends BaseAdapter {
 
-        /** The context. */
+        /**
+         * The context.
+         */
         private final FrameLayout context;
         private final int threadCount = 0;
+        private WaterfallBalancer waterfallBalancer;
+
 
         /**
          * Instantiates a new image adapter.
          *
-         * @param localContext
-         *            the local context
+         * @param localContext the local context
          */
         public ImageAdapter(FrameLayout localContext) {
             context = localContext;
             images = getAllShownImagesPath(context);
             Collections.reverse(images);
+            waterfallBalancer = new WaterfallBalancer(getActivity(), 10);
         }
+
 
         public int getCount() {
             return images.size();
@@ -174,41 +186,18 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
         public View getView(final int position, View convertView,
                             ViewGroup parent) {
-            final ImageView picturesView;
+            final SmartImageView picturesView;
 
-            if (convertView == null) {
-                picturesView = new ImageView(context.getContext());
-                picturesView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                picturesView
-                        .setLayoutParams(new GridView.LayoutParams(270, 270));
-
-            } else {
-                picturesView = (ImageView) convertView;
-            }
+            picturesView = new SmartImageView(context.getContext());
+            picturesView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            picturesView
+                    .setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 270));
+            picturesView.setImagePath(images.get(position));
 
             try {
                 picturesView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.icon_image));
 
-                    Thread loadImage = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                final Bitmap bitmap = decodeFile(new File(images.get(position)));
-                                if (bitmap != null) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                picturesView.setImageBitmap(bitmap);
-                                            }
-                                        });
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
-                    loadImage.start();
+                waterfallBalancer.add(picturesView);
 
 
             } catch (Exception e) {
@@ -216,46 +205,14 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             }
 
 
-
             return picturesView;
         }
 
-            private Bitmap decodeFile(File f) throws Exception{
-                Bitmap b = null;
-
-                //Decode image size
-                BitmapFactory.Options o = new BitmapFactory.Options();
-                o.inJustDecodeBounds = true;
-
-                FileInputStream fis = new FileInputStream(f);
-                BitmapFactory.decodeStream(fis, null, o);
-                fis.close();
-
-                int scale = 1;
-
-                int MAX_SIZE = 500;
-
-                int IMAGE_MAX_SIZE=Math.max(MAX_SIZE,MAX_SIZE);
-                if (o.outHeight > MAX_SIZE || o.outWidth > MAX_SIZE) {
-                    scale = (int)Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
-                            (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
-                }
-
-                //Decode with inSampleSize
-                BitmapFactory.Options o2 = new BitmapFactory.Options();
-                o2.inSampleSize = scale;
-                fis = new FileInputStream(f);
-                b = BitmapFactory.decodeStream(fis, null, o2);
-                fis.close();
-
-                return b;
-            }
 
         /**
          * Getting All Images Path.
          *
-         * @param activity
-         *            the activity
+         * @param activity the activity
          * @return ArrayList with images Path
          */
         private ArrayList<String> getAllShownImagesPath(FrameLayout activity) {
@@ -266,8 +223,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             String absolutePathOfImage = null;
             uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-            String[] projection = { MediaStore.MediaColumns.DATA,
-                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+            String[] projection = {MediaStore.MediaColumns.DATA,
+                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
             cursor = activity.getContext().getContentResolver().query(uri, projection, null,
                     null, null);

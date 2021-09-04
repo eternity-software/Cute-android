@@ -137,6 +137,7 @@
                             android:textColor="@color/colorWhite"
                             android:textSize="14sp"
                             android:tint="@color/colorFrontElements"
+                            android:backgroundTint="@color/colorBackgroundElements"
                             android:transitionName="delbtn"
                             app:srcCompat="@drawable/icon_delete" />
 
@@ -154,6 +155,7 @@
                             android:textColor="@color/colorWhite"
                             android:textSize="14sp"
                             android:tint="@color/colorFrontElements"
+                            android:backgroundTint="@color/colorBackgroundElements"
                             android:transitionName="exitbtn"
                             app:srcCompat="@drawable/icon_exit" />
                     </LinearLayout>
@@ -176,6 +178,7 @@
                 android:scaleType="centerInside"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
+                android:backgroundTint="@color/colorBackgroundElements"
                 android:tint="@color/colorFrontElements"
                 app:srcCompat="@drawable/icon_convcreate" />
 

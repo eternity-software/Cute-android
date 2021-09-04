@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorBackground"
-    android:clipToPadding="false"
     android:paddingVertical="6dp"
     android:paddingLeft="60dp"
     android:paddingRight="15dp">
@@ -32,24 +31,28 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:background="@drawable/mymessage"
             android:orientation="vertical">
-            <TextView
+            <ru.etysoft.cute.components.MessageTextView
                 android:id="@+id/message_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="all"
-
-                android:padding="10dp"
-                android:text="Привет!"
+                android:layout_margin="8dp"
+                android:textIsSelectable="true"
+                android:text="Это сообщение с очень длииииииииииииииинными словами"
                 android:fontFamily="@font/montserrat"
                 android:textColor="@color/colorText"
-                android:textSize="16sp" />
+                android:includeFontPadding="false"
+                android:textSize="@dimen/messageText"
+              />
 
             <ru.etysoft.cute.components.Attachments
                 android:id="@+id/attachments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:padding="4dp"
                 android:layout_marginTop="-8dp"
                 />

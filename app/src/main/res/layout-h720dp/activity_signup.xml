@@ -36,7 +36,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0"
                     android:foregroundGravity="center_horizontal"
-                    app:srcCompat="@drawable/icon_signup" />
+                    app:srcCompat="@drawable/icon_signup"
+                    app:tint="@color/colorAccentIcon" />
 
                 <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/textView2"
@@ -48,7 +49,7 @@
                     android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="center"
                     android:text="@string/sign_up"
-                    android:textColor="@color/accent_support"
+                    android:textColor="@color/colorTitle"
                     android:textSize="40sp"
                     app:localizableKey="sign_up" />
             </LinearLayout>

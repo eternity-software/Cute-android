@@ -116,4 +116,5 @@
     <string name="incoming">Входящие</string>
     <string name="outgoing">Исходящие</string>
     <string name="add_member">%s присоединился к чату</string>
+    <string name="unknown_service_message">Неизвестное сервисное сообщение</string>
 </resources>

@@ -102,7 +102,7 @@
                     android:maxLines="1"
                     android:paddingRight="1dp"
                     android:text="Таня: "
-                    android:textColor="@color/accent_blue"
+                    android:textColor="@color/colorTextAccent"
                     android:textSize="14sp" />
 
                 <TextView

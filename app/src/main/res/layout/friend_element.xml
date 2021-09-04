@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/square_rounded_corners_gray"
+        android:backgroundTint="@color/colorAccountTop"
         android:padding="8dp">
         <ru.etysoft.cute.components.Avatar
             android:id="@+id/avatarView"

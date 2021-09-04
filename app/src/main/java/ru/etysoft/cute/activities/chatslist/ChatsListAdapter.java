@@ -153,6 +153,25 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                     e.printStackTrace();
                 }
             }
+            else if(serviceData.getType().equals(ServiceData.Types.ADD_MEMBER))
+            {
+                try {
+                    String messageText = StringsRepository.getOrDefault(R.string.add_member, getContext())
+                            .replace("%s", serviceData.getDisplayName());
+                    holder.accentView.setText(messageText);
+                    holder.messageView.setText("");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+
+                    String messageText = StringsRepository.getOrDefault(R.string.unknown_service_message, getContext());
+                    holder.accentView.setText(messageText);
+                    holder.messageView.setText("");
+
+            }
 
         }
         holder.time.setText(Numbers.getTimeFromTimestamp(info.getLastMessageTime(), context));

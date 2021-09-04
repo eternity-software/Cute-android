@@ -23,7 +23,7 @@
         <shape android:shape="rectangle">
 
 
-            <solid android:color="@color/accent_support" />
+            <solid android:color="@color/accent_blue" />
 
             <padding
                 android:bottom="1dp"

@@ -42,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/requestCountView"
@@ -50,6 +51,7 @@
                 android:layout_marginStart="10dp"
                 android:gravity="right"
                 android:paddingRight="10dp"
+
                 android:background="@drawable/text_outline_shape"
                 android:fontFamily="@font/montserratalternates_medium"
 

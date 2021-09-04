@@ -38,7 +38,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0"
                     android:foregroundGravity="center_horizontal"
-                    app:srcCompat="@drawable/icon_signin" />
+                    app:srcCompat="@drawable/icon_signin"
+                    app:tint="@color/colorAccentIcon" />
 
                 <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/textView2"
@@ -50,7 +51,7 @@
                     android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="center"
                     android:text="@string/sign_in"
-                    android:textColor="@color/accent_support"
+                    android:textColor="@color/colorTitle"
                     android:textSize="40sp"
                     app:localizableKey="sign_in" />
             </LinearLayout>
@@ -158,7 +159,7 @@
         android:background="@drawable/square_rounded_top"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-
+        android:backgroundTint="@color/colorAccentTop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
