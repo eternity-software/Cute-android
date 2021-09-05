@@ -42,6 +42,7 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cuteframework.methods.friend.Friend;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListRequest;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListResponse;
+import ru.etysoft.cuteframework.methods.user.User;
 
 public class AccountFragment extends Fragment implements AccountContact.View {
     private View view;
@@ -56,7 +57,7 @@ public class AccountFragment extends Fragment implements AccountContact.View {
     private TextView friendsCountView;
     private FriendsSnippetAdapter friendsSnippetAdapter;
 
-    private List<Friend> friends;
+    private List<User> friends;
 
     private AccountContact.Presenter presenter;
 
@@ -65,7 +66,7 @@ public class AccountFragment extends Fragment implements AccountContact.View {
 
         final View root = inflater.inflate(R.layout.activity_account, container, false);
         view = root;
-        friends = new ArrayList<Friend>();
+        friends = new ArrayList<User>();
         presenter = new AccountPresenter(getActivity(), this);
         initializeViews();
         presenter.updateData();
@@ -142,10 +143,14 @@ public class AccountFragment extends Fragment implements AccountContact.View {
         if (photo != null) {
             Picasso.get().load(photo).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(userimage.getPictureView());
         }
+        else
+        {
+            System.out.println("aaaa where is my pipi!?");
+        }
     }
 
     @Override
-    public List<Friend> getFriends() {
+    public List<User> getFriends() {
         return friends;
     }
 

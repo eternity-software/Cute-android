@@ -98,7 +98,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             holder.online.setVisibility(View.INVISIBLE);
         }
 
-        if (info.isRead()) {
+        if (info.getMessage().isRead()) {
             TypedValue selectableBackground = new TypedValue();
             getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBackground, true);
             holder.container.setBackgroundResource(selectableBackground.resourceId);
@@ -122,26 +122,26 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
 
         holder.name.setText(info.getName());
 
-        if (!info.getMessageType().equals(Message.Type.SERVICE))
+        if (!info.getMessage().getType().equals(Message.Type.SERVICE))
         {
             try {
-                if(info.getLastMessageSenderId() != Integer.parseInt(CachedValues.getId(context)))
+                if(info.getMessage().getSender().getId() == Integer.parseInt(CachedValues.getId(context)))
                 {
-                    holder.accentView.setText(info.getLastMessageSenderDisplayName() + ": ");
+                    holder.accentView.setText(info.getMessage().getSender().getDisplayName() + ": ");
                 }
                 else
                 {
                     holder.accentView.setText(StringsRepository.getOrDefault(R.string.your_message, context) + ": ");
                 }
             } catch (NotCachedException e) {
-                holder.accentView.setText(info.getLastMessageSenderDisplayName() + ": ");
+                holder.accentView.setText(info.getMessage().getSender().getDisplayName() + ": ");
                 e.printStackTrace();
             }
-            holder.messageView.setText(info.getLastMessageText());
+            holder.messageView.setText(info.getMessage().getText());
         }
         else
         {
-            ServiceData serviceData = info.getServiceData();
+            ServiceData serviceData = info.getMessage().getServiceData();
             if(serviceData.getType().equals(ServiceData.Types.CHAT_CREATED))
             {
                 try {
@@ -174,7 +174,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             }
 
         }
-        holder.time.setText(Numbers.getTimeFromTimestamp(info.getLastMessageTime(), context));
+        holder.time.setText(Numbers.getTimeFromTimestamp(info.getMessage().getTime(), context));
 
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setFillAfter(false);

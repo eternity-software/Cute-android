@@ -40,8 +40,8 @@ import ru.etysoft.cuteframework.methods.account.ChangeAvatar.ChangeAvatarRequest
 import ru.etysoft.cuteframework.methods.account.ChangeAvatar.ChangeAvatarResponse;
 import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverRequest;
 import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverResponse;
-import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditRequest;
-import ru.etysoft.cuteframework.methods.account.EditDisplayName.EditResponse;
+import ru.etysoft.cuteframework.methods.account.Edit.EditRequest;
+import ru.etysoft.cuteframework.methods.account.Edit.EditResponse;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
@@ -116,7 +116,8 @@ public class EditProfileActivity extends AppCompatActivity implements EditProfil
                     EditResponse editResponse = (new EditRequest(CachedValues.getSessionKey(EditProfileActivity.this),
                             String.valueOf(nameView.getText()),
                             String.valueOf(statusView.getText()),
-                            String.valueOf(bioView.getText())
+                            String.valueOf(bioView.getText()),
+                            String.valueOf(loginView.getText())
                             )).execute();
                     if (editResponse.isSuccess()) {
                         finish();

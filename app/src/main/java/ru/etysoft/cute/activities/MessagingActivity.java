@@ -49,23 +49,25 @@ import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.data.APIKeys;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.ChatMember;
+import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
+import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
+import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageRequest;
+import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageResponse;
 import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
-import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListRequest;
-import ru.etysoft.cuteframework.methods.messages.GetList.GetMessageListResponse;
+import ru.etysoft.cuteframework.methods.messages.AttachmentData;
 import ru.etysoft.cuteframework.methods.messages.Message;
-import ru.etysoft.cuteframework.methods.messages.Send.SendMessageRequest;
-import ru.etysoft.cuteframework.methods.messages.Send.SendMessageResponse;
+import ru.etysoft.cuteframework.methods.user.User;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 import ru.etysoft.cuteframework.sockets.methods.Messages.MessagesSocket;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
-    private final List<MessageInfo> convInfos = new ArrayList<>();
-    private final Map<String, MessageInfo> ids = new HashMap<String, MessageInfo>();
+    private final List<Message> convInfos = new ArrayList<>();
+    private final Map<String, Message> ids = new HashMap<String, Message>();
     private MessagesAdapter adapter;
     private MessagesSocket messagesSocket;
 
@@ -85,7 +87,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         setContentView(R.layout.activity_conversation);
         chatId = getIntent().getIntExtra(APIKeys.CHAT_ID, 0);
         name = getIntent().getStringExtra(APIKeys.NAME);
-        avatar = getIntent().getStringExtra(APIKeys.AVATAR_PATH);
+        avatar = getIntent().getStringExtra(APIKeys.AVATAR);
         isDialog = getIntent().getBooleanExtra("isd", false);
 
         Avatar picture = findViewById(R.id.avatar);
@@ -98,7 +100,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         picture.setAcronym((name), Avatar.Size.SMALL);
 
         final ListView listView = findViewById(R.id.messages);
-        adapter = new MessagesAdapter(this, convInfos);
+        adapter = new MessagesAdapter(this, convInfos, isDialog);
         listView.setAdapter(adapter);
 
         TextView subtitle = findViewById(R.id.subtitle);
@@ -150,7 +152,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         intent.putExtra(APIKeys.CHAT_ID, chatId);
         intent.putExtra("isd", isDialog);
         intent.putExtra(APIKeys.NAME, name);
-        intent.putExtra(APIKeys.AVATAR_PATH, avatarPath);
+        intent.putExtra(APIKeys.AVATAR, avatarPath);
         context.startActivity(intent);
     }
 
@@ -227,40 +229,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    MessageInfo messageInfo = null;
-                                    try {
-                                        boolean isInfo = false;
-                                        final String messageText;
-                                        if (message.getType().equals(Message.Type.SERVICE)) {
-                                            isInfo = true;
-                                            ServiceData serviceData = message.getServiceData();
-                                            if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
-                                                messageText = StringsRepository.getOrDefault(R.string.chat_created, getApplicationContext())
-                                                        .replace("%s", serviceData.getChatName());
-                                            } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
-                                                messageText = StringsRepository.getOrDefault(R.string.add_member, getApplicationContext())
-                                                        .replace("%s", serviceData.getDisplayName());
-                                            } else {
-                                                messageText = message.getText();
-                                            }
 
-                                        } else {
-                                            messageText = message.getText();
-                                        }
-                                        final boolean finalIsInfo = isInfo;
-                                        messageInfo = new MessageInfo(String.valueOf(message.getId()), message.getDisplayName(),
-                                                messageText, (message.getAccountId() == Integer.parseInt(CachedValues.getId(getApplicationContext()))),
-                                                false, Numbers.getTimeFromTimestamp(message.getTime(), getApplicationContext()), false,
-                                                message.getAccountId(), finalIsInfo, message.getAvatarPath(), message.getAttachmentPath(), message.getAttachmentData());
-
-                                        ids.put(String.valueOf(message.getId()), messageInfo);
+                                        ids.put(String.valueOf(message.getId()), message);
 
                                         if (!ids.containsKey(message.getId())) {
-                                            adapter.add(messageInfo);
+                                            adapter.add(message);
                                         }
-                                    } catch (NotCachedException | ResponseException e) {
-                                        e.printStackTrace();
-                                    }
+
 
                                 }
                             });
@@ -362,43 +337,15 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         for (final Message message : messages) {
 
 
-                            final boolean my;
 
-                            my = (message.getAccountId() == Integer.parseInt(CachedValues.getId(getApplicationContext())));
-
-                            final int id = message.getId();
-                            final int authorId = message.getAccountId();
-
-                            boolean isInfo = false;
-                            final String messageText;
-                            if (message.getType().equals(Message.Type.SERVICE)) {
-                                isInfo = true;
-                                ServiceData serviceData = message.getServiceData();
-                                if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
-                                    messageText = StringsRepository.getOrDefault(R.string.chat_created, getApplicationContext())
-                                            .replace("%s", serviceData.getChatName());
-                                } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
-                                    messageText = StringsRepository.getOrDefault(R.string.add_member, getApplicationContext())
-                                            .replace("%s", serviceData.getDisplayName());
-                                } else {
-                                    messageText = message.getText();
-                                }
-
-                            } else {
-                                messageText = message.getText();
-                            }
-
-                            final boolean finalIsInfo = isInfo;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (!ids.containsKey(String.valueOf(id))) {
-                                        MessageInfo messageInfo = new MessageInfo(String.valueOf(id), message.getDisplayName(),
-                                                messageText, my, false, Numbers.getTimeFromTimestamp(message.getTime(), getApplicationContext()), false,
-                                                authorId, finalIsInfo, message.getAvatarPath(), message.getAttachmentPath(), message.getAttachmentData());
-                                        ids.put(String.valueOf(id), messageInfo);
+                                    if (!ids.containsKey(String.valueOf(message.getId()))) {
 
-                                        adapter.add(messageInfo);
+                                        ids.put(String.valueOf(message.getId()), message);
+
+                                        adapter.add(message);
                                     } else {
                                         // Если сообщение уже есть проверяем не изменился ли статус прочитанности
                                     }
@@ -664,25 +611,25 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
                 try {
-                    Thread.sleep(10);
-                    final SendMessageResponse sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
+
+                    final SendMessageResponse sendMessageResponse;
+                    if(mediaIdToSend == null)
+                    {
+                        sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message)).execute();
+                    }
+                    else
+                    {
+                        sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
+                    }
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            MessageInfo messageInfo = null;
-                            try {
-                                messageInfo = new MessageInfo(String.valueOf(sendMessageResponse.getId()), name,
-                                        sendMessageResponse.getText(), true, false, Numbers.getTimeFromTimestamp(sendMessageResponse.getTime(), getApplicationContext()), false,
-                                        Integer.parseInt(CachedValues.getId(getApplicationContext())), false, null, sendMessageResponse.getAttachmentPath(), sendMessageResponse.getAttachmentData());
-                                mediaIdToSend = "";
-                                ids.put(String.valueOf((sendMessageResponse.getId())), messageInfo);
 
-                                adapter.add(messageInfo);
-                            } catch (ResponseException e) {
-                                e.printStackTrace();
-                            } catch (NotCachedException e) {
-                                e.printStackTrace();
-                            }
+                                ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), sendMessageResponse.getMessage());
+
+                                adapter.add(sendMessageResponse.getMessage());
+
                         }
                     });
                 } catch (NotCachedException e) {

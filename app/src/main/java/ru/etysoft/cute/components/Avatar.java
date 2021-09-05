@@ -103,7 +103,7 @@ public class Avatar extends RelativeLayout {
         }
     }
 
-    public void generateIdPicture(int id) {
+    public void generateIdPicture(long id) {
         ImagesWorker.setGradient(generatedPictureView, id);
     }
 

@@ -18,13 +18,14 @@ import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cuteframework.methods.friend.Friend;
+import ru.etysoft.cuteframework.methods.user.User;
 
 public class FriendsSnippetAdapter extends RecyclerView.Adapter<FriendsSnippetAdapter.ViewHolder>{
 
     private final LayoutInflater inflater;
-    private final List<Friend> friends;
+    private final List<User> friends;
 
-    FriendsSnippetAdapter(Context context, List<Friend> friends) {
+    FriendsSnippetAdapter(Context context, List<User> friends) {
         this.friends = friends;
         this.inflater = LayoutInflater.from(context);
     }
@@ -38,19 +39,19 @@ public class FriendsSnippetAdapter extends RecyclerView.Adapter<FriendsSnippetAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Friend friend = friends.get(position);
+        final User friend = friends.get(position);
         holder.avatar.setAcronym(friend.getDisplayName(), Avatar.Size.SMALL);
-        holder.avatar.generateIdPicture(friend.getAccountId());
+        holder.avatar.generateIdPicture((int) friend.getId());
         holder.avatar.setOnline(true);
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(inflater.getContext(), Profile.class);
-                intent.putExtra("id", friend.getAccountId());
+                intent.putExtra("id", friend.getId());
                 inflater.getContext().startActivity(intent);
             }
         });
-        Picasso.get().load(friend.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
+        Picasso.get().load(friend.getAvatar()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
     }
 
     @Override

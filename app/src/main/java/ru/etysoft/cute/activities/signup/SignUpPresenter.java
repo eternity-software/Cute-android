@@ -45,7 +45,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                     RegistrationResponse registrationResponse = signUpModel.signUp(login, displayName, email, password);
 
                     if (registrationResponse.isSuccess()) {
-                        String sessionKey = registrationResponse.getSessionKey();
+                        String sessionKey = registrationResponse.getToken();
                         CachedValues.setLogin(context, login);
                         CachedValues.setDisplayName(context, displayName);
                         CachedValues.setEmail(context, email);

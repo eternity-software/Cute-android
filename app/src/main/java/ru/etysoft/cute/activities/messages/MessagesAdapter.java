@@ -23,17 +23,26 @@ import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.CircleTransform;
+import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.messages.AttachmentData;
+import ru.etysoft.cuteframework.methods.messages.Message;
 
-public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
+public class MessagesAdapter extends ArrayAdapter<Message> {
     private final Activity context;
-    private final List<MessageInfo> list;
+    private final List<Message> list;
+    private boolean isDialog;
 
-    public MessagesAdapter(Activity context, List<MessageInfo> values) {
+    public MessagesAdapter(Activity context, List<Message> values, boolean isDialog) {
         super(context, R.layout.dialog_element, values);
         this.context = context;
         this.list = values;
+        this.isDialog = isDialog;
     }
 
 
@@ -42,33 +51,45 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
         View view = null;
 
         // Получение экземпляра сообщения по позиции
-        final MessageInfo info = list.get(position);
+        final Message info = list.get(position);
 
 
         final LayoutInflater inflator = context.getLayoutInflater();
         boolean isFirstAid = false;
 
         // Проверка на беседу
-        if (!info.isDialog()) {
+        if (!isDialog) {
             // Проверка на своё сообщение
-            if (info.isMine() && !info.isInfo()) {
-                view = inflator.inflate(R.layout.conv_mymessage, null);
-            } else if (info.isInfo() == true) {
-                isFirstAid = false;
-                view = inflator.inflate(R.layout.info_message, null);
-            } else {
-                if (position == 0) {
-                    isFirstAid = true;
-                    view = inflator.inflate(R.layout.chat_message, null);
+            boolean isMine = false;
+            try {
+                isMine = (info.getSender().getId() == Integer.parseInt(CachedValues.getId(context)));
+            }
+            catch (Exception ignored)
+            {
+
+            }
+
+                if (info.getType().equals(Message.Type.SERVICE)) {
+                    view = inflator.inflate(R.layout.info_message, null);
+
+
+                } else if (isMine) {
+                    isFirstAid = false;
+                    view = inflator.inflate(R.layout.conv_mymessage, null);
                 } else {
-                    if (list.get(position - 1).getAid() != info.getAid() | list.get(position - 1).isInfo()) {
+                    if (position == 0) {
                         isFirstAid = true;
                         view = inflator.inflate(R.layout.chat_message, null);
                     } else {
-                        view = inflator.inflate(R.layout.chat_messagenoinfo, null);
+                        if (list.get(position - 1).getSender().getId() != info.getSender().getId() | list.get(position - 1).getType().equals(Message.Type.SERVICE)) {
+                            isFirstAid = true;
+                            view = inflator.inflate(R.layout.chat_message, null);
+                        } else {
+                            view = inflator.inflate(R.layout.chat_messagenoinfo, null);
+                        }
                     }
                 }
-            }
+
 
         } else {
 
@@ -78,7 +99,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
         // Инициализируем элементы
         final MessagesAdapter.ViewHolder viewHolder = new MessagesAdapter.ViewHolder();
 
-        if (!info.isInfo()) {
+        if (!info.getType().equals(Message.Type.SERVICE)) {
             // Не информационное сообщение
             viewHolder.attachments = view.findViewById(R.id.attachments);
             viewHolder.time = view.findViewById(R.id.timeview);
@@ -99,7 +120,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
                 holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
             }
 
-            if(info.getMedia() != null)
+            if(info.getAttachmentData() != null)
             {
                 AttachmentData attachmentData = info.getAttachmentData();
                 if(attachmentData != null) {
@@ -110,12 +131,12 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
                     holder.attachments.getImageView().setImageBitmap(bmp);
 
                     Drawable drawable = new BitmapDrawable(context.getResources(), bmp);
-                    Picasso.get().load(info.getMedia()).placeholder(drawable).into(holder.attachments.getImageView());
+                    Picasso.get().load(info.getAttachmentPath()).placeholder(drawable).into(holder.attachments.getImageView());
                     holder.attachments.getImageView().setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ImagePreview.class);
-                            intent.putExtra("url", info.getMedia());
+                            intent.putExtra("url", info.getAttachmentPath());
                             context.startActivity(intent);
                         }
                     });
@@ -125,17 +146,17 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
             }
 
             if (isFirstAid) {
-                holder.userpic.setAcronym(info.getName(), Avatar.Size.SMALL);
-                holder.name.setText(info.getName());
-                holder.userpic.generateIdPicture(info.getAid());
-                if (info.getAvatar() != null) {
-                    Picasso.get().load(info.getAvatar()).transform(new CircleTransform()).into(holder.userpic.getPictureView());
+                holder.userpic.setAcronym(info.getSender().getDisplayName(), Avatar.Size.SMALL);
+                holder.name.setText(info.getSender().getDisplayName());
+                holder.userpic.generateIdPicture((int) info.getSender().getId());
+                if (info.getSender().getAvatar() != null) {
+                    Picasso.get().load(info.getSender().getAvatar()).transform(new CircleTransform()).into(holder.userpic.getPictureView());
                 }
                 holder.userpic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), Profile.class);
-                        intent.putExtra("id", info.getAid());
+                        intent.putExtra("id", info.getSender().getId());
                         getContext().startActivity(intent);
                     }
                 });
@@ -143,29 +164,32 @@ public class MessagesAdapter extends ArrayAdapter<MessageInfo> {
             }
 
 
-            view.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    holder.message.setText("MESSAGE INFO: \n" +
-                            "ID: " + info.getId() + "\n"
-                            + "READED: " + info.isRead() + "\n"
-                            + "MY: " + info.isMine() + "\n"
-                            + "NAME: " + info.getName() + "\n"
-                            + "AID: " + info.getAid() + "\n"
-                            + "MEDIAD: " + info.getMedia()
-                    );
-                }
-            });
 
-            holder.time.setText(info.getSubtext());
-            holder.message.setText(info.getMessage());
+            holder.time.setText(Numbers.getTimeFromTimestamp(info.getTime(), context));
+            holder.message.setText(info.getText());
         } else {
+            String messageText = "";
+            try {
+            ServiceData serviceData = info.getServiceData();
+            if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
 
+                    messageText = StringsRepository.getOrDefault(R.string.chat_created, getContext())
+                            .replace("%s", serviceData.getChatName());
+
+            } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
+                messageText = StringsRepository.getOrDefault(R.string.add_member, getContext())
+                        .replace("%s", serviceData.getDisplayName());
+            } else {
+                messageText = info.getText();
+            }
+            } catch (ResponseException e) {
+                e.printStackTrace();
+            }
             viewHolder.message = view.findViewById(R.id.infotext);
             view.setTag(viewHolder);
             final ViewHolder holder = (ViewHolder) view.getTag();
-            holder.message.setText(info.getMessage());
+            holder.message.setText(messageText);
         }
 
         return view;

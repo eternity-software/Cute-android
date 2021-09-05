@@ -22,14 +22,15 @@ import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendRequest;
 import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendResponse;
-import ru.etysoft.cuteframework.methods.friend.SendRequest.SendFriendRequest;
-import ru.etysoft.cuteframework.methods.friend.SendRequest.SendFriendRequestResponse;
+
+import ru.etysoft.cuteframework.methods.friend.SendRequest.AddFriendRequest;
+import ru.etysoft.cuteframework.methods.friend.SendRequest.AddFriendRequestResponse;
 import ru.etysoft.cuteframework.methods.user.Get.GetUserRequest;
 import ru.etysoft.cuteframework.methods.user.Get.GetUserResponse;
 
 public class Profile extends AppCompatActivity {
 
-    private int id;
+    private long id;
     private String url;
     private String coverUrl;
 
@@ -37,11 +38,13 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        id = getIntent().getIntExtra("id", -1);
+        id = getIntent().getLongExtra("id", -1);
         loadData();
         Slidr.attach(this);
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
+
+
 
     public void loadData() {
         final Avatar avatar = findViewById(R.id.icon);
@@ -55,10 +58,10 @@ public class Profile extends AppCompatActivity {
                 try {
                     final GetUserResponse getUserResponse = (new GetUserRequest(CachedValues.getSessionKey(Profile.this), String.valueOf(id))).execute();
                     if(getUserResponse.isSuccess()) {
-                        final String name = getUserResponse.getDisplayName();
-                        final String bio = getUserResponse.getBio();
-                        final String status = getUserResponse.getStatus();
-                        url = getUserResponse.getAvatarPath();
+                        final String name = getUserResponse.getUser().getDisplayName();
+                        final String bio = getUserResponse.getUser().getBioText();
+                        final String status = getUserResponse.getUser().getStatusText();
+                        url = getUserResponse.getUser().getAvatar();
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -69,7 +72,7 @@ public class Profile extends AppCompatActivity {
 
                                 final ImageButton friendButton = findViewById(R.id.friendButton);
 
-                                if(getUserResponse.isFriend())
+                                if(getUserResponse.getUser().isFriend())
                                 {
 
                                     friendButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_remove_person));
@@ -104,13 +107,11 @@ public class Profile extends AppCompatActivity {
 
                                 displayName.setText(name);
                                 avatar.setAcronym(name, Avatar.Size.LARGE);
-                                Picasso.get().load(getUserResponse.getAvatarPath()).transform(new CircleTransform()).into(avatar.getPictureView());
-                                try {
-                                    coverUrl = getUserResponse.getCoverPath();
-                                    Picasso.get().load(getUserResponse.getCoverPath()).into(coverView);
-                                } catch (ResponseException e) {
-                                    e.printStackTrace();
-                                }
+                                Picasso.get().load(getUserResponse.getUser().getAvatar()).transform(new CircleTransform()).into(avatar.getPictureView());
+
+                                    coverUrl = getUserResponse.getUser().getCover();
+                                    Picasso.get().load(getUserResponse.getUser().getCover()).into(coverView);
+
                                 statusView.setText(status);
                                 bioView.setText(bio);
                             }
@@ -159,7 +160,7 @@ public class Profile extends AppCompatActivity {
                 try {
                     final ImageButton friendButton = findViewById(R.id.friendButton);
                     friendButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_remove_person));
-                    SendFriendRequestResponse sendFriendRequestResponse = (new SendFriendRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(id))).execute();
+                    AddFriendRequestResponse sendFriendRequestResponse = (new AddFriendRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(id))).execute();
                     if(sendFriendRequestResponse.isSuccess())
                     {
                         runOnUiThread(new Runnable() {

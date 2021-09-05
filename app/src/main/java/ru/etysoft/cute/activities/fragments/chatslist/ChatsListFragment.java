@@ -160,7 +160,11 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
 
     @Override
     public void hideUpdateViews() {
-        setStatusMessage(StringsRepository.getOrDefault(R.string.chats, getActivity()));
+        if(getActivity() != null)
+        {
+            setStatusMessage(StringsRepository.getOrDefault(R.string.chats, getActivity()));
+        }
+
         progressBar.setVisibility(View.INVISIBLE);
     }
 }

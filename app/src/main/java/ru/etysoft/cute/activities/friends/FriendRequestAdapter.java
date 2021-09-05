@@ -27,18 +27,20 @@ import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.friend.AcceptRequest.AcceptFriendRequest;
-import ru.etysoft.cuteframework.methods.friend.AcceptRequest.AcceptFriendResponse;
-import ru.etysoft.cuteframework.methods.friend.DeclineRequest.DeclineFriendRequest;
-import ru.etysoft.cuteframework.methods.friend.DeclineRequest.DeclineFriendResponse;
-import ru.etysoft.cuteframework.methods.friend.Friend;
 
-public class FriendRequestAdapter extends ArrayAdapter<Friend> {
+import ru.etysoft.cuteframework.methods.friend.Friend;
+import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendRequest;
+import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendResponse;
+import ru.etysoft.cuteframework.methods.friend.SendRequest.AddFriendRequest;
+import ru.etysoft.cuteframework.methods.friend.SendRequest.AddFriendRequestResponse;
+import ru.etysoft.cuteframework.methods.user.User;
+
+public class FriendRequestAdapter extends ArrayAdapter<User> {
     private final Activity context;
-    private final List<Friend> list;
+    private final List<User> list;
     private boolean isIncoming = true;
 
-    public FriendRequestAdapter(Activity context, List<Friend> values) {
+    public FriendRequestAdapter(Activity context, List<User> values) {
         super(context, R.layout.friend_element, values);
         this.context = context;
         this.list = values;
@@ -59,7 +61,7 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
         View view = null;
 
         // Инициализируем информацию о беседе или диалоге
-        final Friend info = list.get(position);
+        final User info = list.get(position);
 
         final LayoutInflater inflator = context.getLayoutInflater();
 
@@ -82,7 +84,7 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), Profile.class);
-                intent.putExtra("id", info.getAccountId());
+                intent.putExtra("id", info.getId());
                 getContext().startActivity(intent);
             }
         });
@@ -95,10 +97,10 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
 
         if (holder.avatar != null) {
 
-            holder.avatar.generateIdPicture(info.getAccountId());
+            holder.avatar.generateIdPicture((int) info.getId());
             holder.avatar.setAcronym(info.getDisplayName(), Avatar.Size.SMALL);
-            if (info.getAvatarPath() != null) {
-                Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
+            if (info.getAvatar() != null) {
+                Picasso.get().load(info.getAvatar()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
             }
         }
 
@@ -120,7 +122,7 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
                     @Override
                     public void run() {
                         try {
-                            AcceptFriendResponse acceptFriendResponse = (new AcceptFriendRequest(CachedValues.getSessionKey(getContext()), String.valueOf(info.getRequestId()))).execute();
+                            AddFriendRequestResponse acceptFriendResponse = (new AddFriendRequest(CachedValues.getSessionKey(getContext()), String.valueOf(info.getId()))).execute();
                             if(acceptFriendResponse.isSuccess())
                             {
                                 context.runOnUiThread(new Runnable() {
@@ -148,7 +150,7 @@ public class FriendRequestAdapter extends ArrayAdapter<Friend> {
                     @Override
                     public void run() {
                         try {
-                            DeclineFriendResponse declineFriendResponse = (new DeclineFriendRequest(CachedValues.getSessionKey(getContext()), String.valueOf(info.getRequestId()))).execute();
+                            RemoveFriendResponse declineFriendResponse = (new RemoveFriendRequest(CachedValues.getSessionKey(getContext()), String.valueOf(info.getId()))).execute();
                             if(declineFriendResponse.isSuccess())
                             {
                                 context.runOnUiThread(new Runnable() {

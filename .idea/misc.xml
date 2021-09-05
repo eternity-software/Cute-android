@@ -18,9 +18,11 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_button_accent.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_offline.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_online.xml" value="0.37864583333333335" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/crop_square.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/custom_toast.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/dialog_message.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/file_image_preview.xml" value="0.37864583333333335" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/image_edit_buttons_background.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/image_placeholder.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_rounded_corners.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_rounded_corners_gray.xml" value="0.37864583333333335" />
@@ -42,6 +44,7 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_explore.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_friend_request.xml" value="0.33" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_friends.xml" value="0.33" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_image_edit.xml" value="0.3625" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_image_preview.xml" value="0.33" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_main.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_meet.xml" value="0.20260416666666667" />

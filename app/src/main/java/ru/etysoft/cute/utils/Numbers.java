@@ -22,7 +22,7 @@ public class Numbers {
         return (int) px;
     }
 
-    public static int getColorById(int id, Context context) {
+    public static int getColorById(long id, Context context) {
         int color1 = Color.parseColor("#B83ADE");
         int color2 = Color.parseColor("#3a8fde");
         String sid = String.valueOf(id);

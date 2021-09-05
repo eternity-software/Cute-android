@@ -106,7 +106,7 @@
 
 
     <color name="colorAltSupport">#FFFFFF</color>
-    <color name="colorNotReaded">#F4F4F4</color>
+    <color name="colorNotReaded">@color/colorBackgroundElements</color>
     <color name="colorNoMessagesPlanet">#FFFFFF</color>
     <color name="colorMyMessage">@color/colorBackgroundElements</color>
     <color name="colorMessage">@color/accent_blue</color>

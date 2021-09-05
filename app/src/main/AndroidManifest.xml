@@ -29,13 +29,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.friends.FriendRequestActivity"
-            android:theme="@style/AppSlideTheme"
+            android:name=".activities.ImageEdit.ImageEdit"
             android:exported="true" />
         <activity
+            android:name=".activities.friends.FriendRequestActivity"
+            android:exported="true"
+            android:theme="@style/AppSlideTheme" />
+        <activity
             android:name=".activities.friends.FriendsActivity"
-            android:theme="@style/AppSlideTheme"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/AppSlideTheme" />
         <activity android:name=".activities.CrashReportActivity" />
         <activity
             android:name=".activities.ImagePreview"

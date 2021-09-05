@@ -20,6 +20,7 @@ import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListRequest;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListResponse;
 import ru.etysoft.cuteframework.methods.friend.GetRequests.FriendRequestsResponse;
 import ru.etysoft.cuteframework.methods.friend.GetRequests.GetIncomingFriendRequests;
+import ru.etysoft.cuteframework.methods.user.User;
 
 public class FriendsActivity extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
-        adapter = new FriendsAdapter(this, new ArrayList<Friend>());
+        adapter = new FriendsAdapter(this, new ArrayList<User>());
         ListView listView = findViewById(R.id.listView);
         friendsCountView = findViewById(R.id.friendsCountView);
 

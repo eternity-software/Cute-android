@@ -2,6 +2,7 @@ package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.images.WaterfallBalancer;
@@ -143,6 +145,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                             300).show();
                 Picasso.get().load(new File(images.get(position))).into((ImageView) arg1);
                 onItemClickListener.onItemClick(arg0, arg1, position, arg3);
+                ImageEdit.open(Uri.fromFile(new File(images.get(position))), getActivity());
                 dismiss();
 
             }

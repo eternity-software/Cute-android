@@ -3,12 +3,12 @@ package ru.etysoft.cute.bottomsheets.conversation;
 public class MemberInfo {
 
 
-    private int id;
+    private long id;
     private String name;
     private String role;
     private final String photo;
 
-    public MemberInfo(int id, String name, String role, String photo) {
+    public MemberInfo(long id, String name, String role, String photo) {
         this.id = id;
         this.name = name;
         this.role = role;
@@ -27,7 +27,7 @@ public class MemberInfo {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

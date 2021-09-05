@@ -1,6 +1,7 @@
 package ru.etysoft.cute.activities.confirmation;
 
-import ru.etysoft.cuteframework.Methods;
+
+import ru.etysoft.cuteframework.CuteFramework;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.account.Confirmation.ConfirmationResponse;
 
@@ -8,6 +9,6 @@ import ru.etysoft.cuteframework.methods.account.Confirmation.ConfirmationRespons
 public class ConfirmationModel implements ConfirmationContract.Model {
     @Override
     public ConfirmationResponse confirm(int code, String token) throws ResponseException {
-        return Methods.confirmation(token, code);
+        return CuteFramework.confirmation(token, code);
     }
 }

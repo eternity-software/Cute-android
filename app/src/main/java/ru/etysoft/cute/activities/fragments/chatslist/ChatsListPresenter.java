@@ -16,7 +16,7 @@ import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.Numbers;
-import ru.etysoft.cuteframework.Methods;
+import ru.etysoft.cuteframework.CuteFramework;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.Chat;
 import ru.etysoft.cuteframework.methods.chat.ChatList.ChatListResponse;
@@ -80,7 +80,7 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                 @Override
                 public void run() {
                     try {
-                        ChatListResponse chatListResponse = Methods.getChatList(CachedValues.getSessionKey(context));
+                        ChatListResponse chatListResponse = CuteFramework.getChatList(CachedValues.getSessionKey(context));
                         final List<ChatSnippet> chats = chatListResponse.getChats();
 
                         for (int i = 0; i < chats.size(); i++) {

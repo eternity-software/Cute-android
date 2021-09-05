@@ -33,13 +33,14 @@ import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
 import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.friend.Friend;
 import ru.etysoft.cuteframework.methods.messages.Message;
+import ru.etysoft.cuteframework.methods.user.User;
 
-public class FriendsAdapter extends ArrayAdapter<Friend> {
+public class FriendsAdapter extends ArrayAdapter<User> {
     private final Activity context;
-    private final List<Friend> list;
+    private final List<User> list;
     public static boolean canOpen = true;
 
-    public FriendsAdapter(Activity context, List<Friend> values) {
+    public FriendsAdapter(Activity context, List<User> values) {
         super(context, R.layout.friend_element, values);
         this.context = context;
         this.list = values;
@@ -50,7 +51,7 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
         View view = null;
 
         // Инициализируем информацию о беседе или диалоге
-        final Friend info = list.get(position);
+        final User info = list.get(position);
 
         final LayoutInflater inflator = context.getLayoutInflater();
 
@@ -71,7 +72,7 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), Profile.class);
-                intent.putExtra("id", info.getAccountId());
+                intent.putExtra("id", info.getId());
                 getContext().startActivity(intent);
             }
         });
@@ -82,10 +83,10 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
 
 
         if (holder.avatar != null) {
-            holder.avatar.generateIdPicture(info.getAccountId());
+            holder.avatar.generateIdPicture((int) info.getId());
             holder.avatar.setAcronym(info.getDisplayName(), Avatar.Size.SMALL);
-            if (info.getAvatarPath() != null) {
-                Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
+            if (info.getAvatar() != null) {
+                Picasso.get().load(info.getAvatar()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
             }
         }
 

@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 public class ImagesWorker {
 
 
-    public static void setGradient(ImageView imageView, int cid) {
+    public static void setGradient(ImageView imageView, long cid) {
         GradientDrawable gd = new GradientDrawable();
         int[] color = new int[]{Numbers.getColorById(cid, imageView.getContext()), Numbers.getColorById(cid, imageView.getContext())};
         gd.setColors(color);

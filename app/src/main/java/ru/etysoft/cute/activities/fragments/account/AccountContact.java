@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.etysoft.cuteframework.methods.friend.Friend;
+import ru.etysoft.cuteframework.methods.user.User;
 
 public interface AccountContact {
     interface Model{
@@ -14,7 +15,7 @@ public interface AccountContact {
 
         void setAccountInfo(String login, String status, String photo, int id);
 
-        List<Friend> getFriends();
+        List<User> getFriends();
 
         void updateFriendsViews();
     }

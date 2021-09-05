@@ -9,7 +9,7 @@ import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cuteframework.Methods;
+import ru.etysoft.cuteframework.CuteFramework;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.account.GetAccount.GetAccountResponse;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListRequest;
@@ -41,16 +41,15 @@ public class AccountPresenter implements AccountContact.Presenter {
             @Override
             public void run() {
                 try {
-                    final GetAccountResponse getAccountResponse = Methods.getInfo(CachedValues.getSessionKey(context));
+                    final GetAccountResponse getAccountResponse = CuteFramework.getInfo(CachedValues.getSessionKey(context));
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (getAccountResponse.isSuccess()) {
                                 CachedValues.setStatus(context, getAccountResponse.getStatus());
                                 CachedValues.setBio(context, getAccountResponse.getBio());
-                                CachedValues.setAvatar(context, getAccountResponse.getAvatarPath());
-                                photoPath = getAccountResponse.getAvatarPath();
-                                view.setAccountInfo(getAccountResponse.getLogin(), getAccountResponse.getStatus(), photoPath,
+                                CachedValues.setAvatar(context, getAccountResponse.getAvatar());
+                                view.setAccountInfo(getAccountResponse.getLogin(), getAccountResponse.getStatus(), getAccountResponse.getAvatar(),
                                         Integer.parseInt(getAccountResponse.getId()));
 
                             }

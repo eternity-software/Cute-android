@@ -275,15 +275,15 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                             try {
                                 Avatar avatar = view.findViewById(R.id.icon);
 
-                                if(chatInfoResponse.getChat().getAvatarPath() != null)
+                                if(chatInfoResponse.getChat().getAvatar() != null)
                                 {
-                                    Picasso.get().load(chatInfoResponse.getChat().getAvatarPath()).transform(new CircleTransform()).into(avatar.getPictureView());
+                                    Picasso.get().load(chatInfoResponse.getChat().getAvatar()).transform(new CircleTransform()).into(avatar.getPictureView());
                                     avatar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             try {
                                                 Intent intent = new Intent(getActivity(), ImagePreview.class);
-                                                intent.putExtra("url", chatInfoResponse.getChat().getAvatarPath());
+                                                intent.putExtra("url", chatInfoResponse.getChat().getAvatar());
                                                 startActivity(intent);
                                             } catch (ResponseException e) {
                                                 e.printStackTrace();
@@ -299,7 +299,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                                 for (ChatMember chatMember : chatInfoResponse.getMembers()) {
                                     MemberInfo memberInfo = new MemberInfo(chatMember.getId(),
                                             chatMember.getDisplayName(),
-                                            chatMember.getType(), chatMember.getPhoto());
+                                            chatMember.getType(), chatMember.getAvatar());
 
                                     if (memberInfo.getRole().equals(ChatMember.Types.CREATOR)) {
                                         memberInfos.add(0, memberInfo);
@@ -331,6 +331,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 }
                 catch (final Exception e)
                 {
+                    e.printStackTrace();
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

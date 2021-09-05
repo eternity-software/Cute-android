@@ -20,11 +20,12 @@ import ru.etysoft.cuteframework.methods.friend.Friend;
 import ru.etysoft.cuteframework.methods.friend.GetRequests.FriendRequestsResponse;
 import ru.etysoft.cuteframework.methods.friend.GetRequests.GetIncomingFriendRequests;
 import ru.etysoft.cuteframework.methods.friend.GetRequests.GetOutgoingFriendRequests;
+import ru.etysoft.cuteframework.methods.user.User;
 
 public class RequestPage extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
 
-    private List<Friend> requests;
+    private List<User> requests;
     private FriendRequestAdapter adapter;
     private TextView countRequestView;
     private Context context;
