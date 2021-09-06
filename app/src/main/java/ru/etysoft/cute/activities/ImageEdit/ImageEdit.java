@@ -1,40 +1,46 @@
 package ru.etysoft.cute.activities.ImageEdit;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import java.io.File;
+import java.io.IOException;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.DrawingView;
+import ru.etysoft.cute.utils.ImageRotationFix;
 
 public class ImageEdit extends AppCompatActivity {
+
+    private boolean isEraser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_edit);
-        EditText editText = findViewById(R.id.text);
+        final EditText editText = findViewById(R.id.text);
 
         String uri = getIntent().getExtras().getString("uri");
         final ImageView imageView = findViewById(R.id.mainImageView);
-        imageView.setImageURI(Uri.parse(uri));
+        try {
+            imageView.setImageBitmap(ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(this, Uri.fromFile(new File(uri))));
+        } catch (IOException e) {
+            e.printStackTrace();
+            finish();
+        }
 
 
         editText.setOnTouchListener(new View.OnTouchListener() {
@@ -61,8 +67,32 @@ public class ImageEdit extends AppCompatActivity {
         });
     }
 
-    public void save(View v)
-    {
+    public void brush(View v) {
+        final EditText editText = findViewById(R.id.text);
+        editText.clearFocus();
+        editText.setCursorVisible(false);
+        getWindow().getDecorView().clearFocus();
+
+
+        getWindow().getDecorView().requestFocus();
+        final DrawingView drawingView = findViewById(R.id.draw_view);
+        if (isEraser) {
+            isEraser = false;
+            drawingView.setPaint();
+            ((ImageView) v).setImageDrawable(getResources().getDrawable(R.drawable.icon_clean));
+        } else {
+            isEraser = true;
+            drawingView.setEraser();
+            ((ImageView) v).setImageDrawable(getResources().getDrawable(R.drawable.icon_brush));
+
+        }
+    }
+
+    public void save(View v) {
+        getWindow().getDecorView().clearFocus();
+        getWindow().getDecorView().requestFocus();
+        final EditText editText = findViewById(R.id.text);
+        editText.setCursorVisible(false);
         final ConstraintLayout container = findViewById(R.id.bitmapContainer);
         container.setDrawingCacheEnabled(true);
         Bitmap b = container.getDrawingCache();
@@ -86,7 +116,7 @@ public class ImageEdit extends AppCompatActivity {
     public void text(View v)
     {
         final EditText editText = findViewById(R.id.text);
-
+        editText.setCursorVisible(true);
         editText.requestFocus();
         editText.postDelayed(new Runnable(){
                                @Override public void run(){

@@ -51,6 +51,7 @@
     <color name="colorSupportButton">@color/colorPrimaryDark</color>
 
     <color name="colorTitle">@color/accent_blue</color>
+    <color name="colorMessageState">@color/accent_blue</color>
 
 
 

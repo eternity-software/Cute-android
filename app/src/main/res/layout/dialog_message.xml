@@ -29,8 +29,7 @@
 
 
                 android:fontFamily="@font/montserrat"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginVertical="12dp"
+                android:layout_margin="10dp"
                 android:text="1111"
                 android:textColor="#fff"
                 android:textSize="@dimen/messageText" />
@@ -60,6 +59,8 @@
             android:fontFamily="@font/montserrat"
             android:textColor="@color/colorSupportText"
             android:textSize="12sp" />
+
+
     </LinearLayout>
 
 </RelativeLayout>

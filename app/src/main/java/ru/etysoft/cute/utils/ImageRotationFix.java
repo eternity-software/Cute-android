@@ -28,8 +28,19 @@ public class ImageRotationFix {
      */
     public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
             throws IOException {
-        int MAX_HEIGHT = 512;
-        int MAX_WIDTH = 512;
+        return handleSamplingAndRotationBitmap(context, selectedImage, 512, 512);
+    }
+
+    public static Bitmap handleSamplingAndRotationBitmapNoCropping(Context context, Uri selectedImage)
+            throws IOException {
+        return handleSamplingAndRotationBitmap(context, selectedImage, 5012, 5012);
+    }
+
+
+    public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage, int height, int width)
+            throws IOException {
+        int MAX_HEIGHT = height;
+        int MAX_WIDTH = width;
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();

@@ -30,35 +30,27 @@ import java.util.Map;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
-import ru.etysoft.cute.activities.messages.MessageInfo;
 import ru.etysoft.cute.activities.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
-import ru.etysoft.cute.bottomsheets.conversation.MemberInfo;
-import ru.etysoft.cute.bottomsheets.conversation.MembersAdapter;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.data.APIKeys;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.chat.ChatMember;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
 import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageRequest;
 import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageResponse;
-import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
-import ru.etysoft.cuteframework.methods.messages.AttachmentData;
 import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.methods.user.User;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
@@ -79,6 +71,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private ErrorPanel errorPanel;
     public boolean isVoice = true;
     private String mediaIdToSend;
+    private String mediaPathToSend;
 
 
     @Override
@@ -194,6 +187,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
                                 });
                                 mediaIdToSend = uploadImageResponse.getMediaId();
+                                mediaPathToSend = uploadImageResponse.getPath();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -605,42 +599,69 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         final String message = String.valueOf(messageView.getText());
         messageView.setText("");
-        Thread sendThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+
+        final Message messagePreview;
+        try {
+            messagePreview = new Message(-1, 1, false, message, null, null, null, null, null, null, null,
+                    new User(null, null, null, null, CachedValues.getId(this), null, null, null, false));
+            adapter.add(messagePreview);
 
 
-                try {
+            Thread sendThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                    final SendMessageResponse sendMessageResponse;
-                    if(mediaIdToSend == null)
-                    {
-                        sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message)).execute();
-                    }
-                    else
-                    {
-                        sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
-                    }
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                    try {
 
-                                ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), sendMessageResponse.getMessage());
-
-                                adapter.add(sendMessageResponse.getMessage());
-
+                        final SendMessageResponse sendMessageResponse;
+                        if (mediaIdToSend == null) {
+                            sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message)).execute();
+                        } else {
+                            sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
                         }
-                    });
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-            }
-        });
-        sendThread.start();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                Message newMessage = sendMessageResponse.getMessage();
+                                messagePreview.setId(newMessage.getId());
+                                messagePreview.setTime(newMessage.getTime());
+                                messagePreview.setText(newMessage.getText());
+                                messagePreview.setAttachmentData(newMessage.getAttachmentData());
+                                messagePreview.setAttachmentPath(newMessage.getCleanAttachmentPath());
+                                messagePreview.setAttachmentType(newMessage.getAttachmentType());
+                                adapter.notifyDataSetChanged();
+
+                                ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
+
+
+                            }
+                        });
+                    } catch (Exception e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+
+                                messagePreview.setId(-2);
+
+                                adapter.notifyDataSetChanged();
+
+
+                            }
+                        });
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            sendThread.start();
+        } catch (NotCachedException e) {
+
+            e.printStackTrace();
+        }
     }
 
     @Override

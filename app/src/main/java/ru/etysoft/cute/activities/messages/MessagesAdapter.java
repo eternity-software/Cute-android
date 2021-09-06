@@ -9,10 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,7 +23,6 @@ import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
@@ -56,39 +54,43 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
 
         final LayoutInflater inflator = context.getLayoutInflater();
         boolean isFirstAid = false;
+        boolean isService = false;
 
         // Проверка на беседу
         if (!isDialog) {
             // Проверка на своё сообщение
             boolean isMine = false;
             try {
+
                 isMine = (info.getSender().getId() == Integer.parseInt(CachedValues.getId(context)));
-            }
-            catch (Exception ignored)
-            {
-
-            }
-
-                if (info.getType().equals(Message.Type.SERVICE)) {
-                    view = inflator.inflate(R.layout.info_message, null);
-
-
-                } else if (isMine) {
-                    isFirstAid = false;
-                    view = inflator.inflate(R.layout.conv_mymessage, null);
+                if (info.getId() > 0) {
+                    isService = info.getType().equals(Message.Type.SERVICE);
                 } else {
-                    if (position == 0) {
+                    isService = false;
+                }
+            } catch (Exception ignored) {
+
+            }
+
+
+            if (isMine) {
+                isFirstAid = false;
+                view = inflator.inflate(R.layout.conv_mymessage, null);
+            } else if (info.getType().equals(Message.Type.SERVICE)) {
+                view = inflator.inflate(R.layout.info_message, null);
+            } else {
+                if (position == 0) {
+                    isFirstAid = true;
+                    view = inflator.inflate(R.layout.chat_message, null);
+                } else {
+                    if (list.get(position - 1).getSender().getId() != info.getSender().getId() | list.get(position - 1).getType().equals(Message.Type.SERVICE)) {
                         isFirstAid = true;
                         view = inflator.inflate(R.layout.chat_message, null);
                     } else {
-                        if (list.get(position - 1).getSender().getId() != info.getSender().getId() | list.get(position - 1).getType().equals(Message.Type.SERVICE)) {
-                            isFirstAid = true;
-                            view = inflator.inflate(R.layout.chat_message, null);
-                        } else {
-                            view = inflator.inflate(R.layout.chat_messagenoinfo, null);
-                        }
+                        view = inflator.inflate(R.layout.chat_messagenoinfo, null);
                     }
                 }
+            }
 
 
         } else {
@@ -99,11 +101,12 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
         // Инициализируем элементы
         final MessagesAdapter.ViewHolder viewHolder = new MessagesAdapter.ViewHolder();
 
-        if (!info.getType().equals(Message.Type.SERVICE)) {
+        if (!isService) {
             // Не информационное сообщение
             viewHolder.attachments = view.findViewById(R.id.attachments);
             viewHolder.time = view.findViewById(R.id.timeview);
             viewHolder.message = view.findViewById(R.id.message_body);
+            viewHolder.state = view.findViewById(R.id.state);
             viewHolder.back = view.findViewById(R.id.messageback);
             if (isFirstAid) {
                 viewHolder.name = view.findViewById(R.id.nickname);
@@ -114,16 +117,17 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
 
             // Задаём контент
             final ViewHolder holder = (ViewHolder) view.getTag();
-            if (info.isRead()) {
-                holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorNotReaded));
-            } else {
-                holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
-            }
+            if (info.getId() > 0) {
+                holder.state.setVisibility(View.GONE);
+                if (info.isRead()) {
+                    holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorNotReaded));
+                } else {
+                    holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
+                }
 
-            if(info.getAttachmentData() != null)
-            {
+
                 AttachmentData attachmentData = info.getAttachmentData();
-                if(attachmentData != null) {
+                if (attachmentData != null) {
                     Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
                     Bitmap bmp = Bitmap.createBitmap(attachmentData.getWidth(), attachmentData.getHeight(), conf); // this creates a MUTABLE bitmap
 
@@ -143,31 +147,32 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
                     holder.attachments.setVisibility(View.VISIBLE);
                 }
 
-            }
 
-            if (isFirstAid) {
-                holder.userpic.setAcronym(info.getSender().getDisplayName(), Avatar.Size.SMALL);
-                holder.name.setText(info.getSender().getDisplayName());
-                holder.userpic.generateIdPicture((int) info.getSender().getId());
-                if (info.getSender().getAvatar() != null) {
-                    Picasso.get().load(info.getSender().getAvatar()).transform(new CircleTransform()).into(holder.userpic.getPictureView());
-                }
-                holder.userpic.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), Profile.class);
-                        intent.putExtra("id", info.getSender().getId());
-                        getContext().startActivity(intent);
+                if (isFirstAid) {
+                    holder.userpic.setAcronym(info.getSender().getDisplayName(), Avatar.Size.SMALL);
+                    holder.name.setText(info.getSender().getDisplayName());
+                    holder.userpic.generateIdPicture((int) info.getSender().getId());
+                    if (info.getSender().getAvatar() != null) {
+                        Picasso.get().load(info.getSender().getAvatar()).transform(new CircleTransform()).into(holder.userpic.getPictureView());
                     }
-                });
+                    holder.userpic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), Profile.class);
+                            intent.putExtra("id", info.getSender().getId());
+                            getContext().startActivity(intent);
+                        }
+                    });
 
+                }
+
+
+                holder.time.setText(Numbers.getTimeFromTimestamp(info.getTime(), context));
+            } else if (info.getId() == -2) {
+                holder.state.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_error));
             }
-
-
-
-
-            holder.time.setText(Numbers.getTimeFromTimestamp(info.getTime(), context));
             holder.message.setText(info.getText());
+
         } else {
             String messageText = "";
             try {
@@ -200,6 +205,7 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
     static class ViewHolder {
         protected TextView time;
         protected TextView message;
+        protected ImageView state;
         protected RelativeLayout back;
         protected TextView name;
         protected Avatar userpic;

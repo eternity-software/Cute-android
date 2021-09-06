@@ -23,6 +23,7 @@ public class ImagePreview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
         String photo = String.valueOf(getIntent().getExtras().get("url"));
+        System.out.println("Previewing " + photo);
         PhotoView photoView = findViewById(R.id.photoView);
         Picasso.get().load(photo).into(photoView);
         photoView.setOnOutsidePhotoTapListener(new OnOutsidePhotoTapListener() {

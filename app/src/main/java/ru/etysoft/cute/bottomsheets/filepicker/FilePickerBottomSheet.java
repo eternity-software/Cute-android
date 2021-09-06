@@ -1,13 +1,7 @@
 package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,21 +22,14 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
-import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.images.WaterfallBalancer;
-import ru.etysoft.cute.images.WaterfallImageLoader;
-import ru.etysoft.cute.utils.ImageRotationFix;
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private View view;
@@ -143,9 +130,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                             getContext(),
                             "position " + position + " " + images.get(position),
                             300).show();
-                Picasso.get().load(new File(images.get(position))).into((ImageView) arg1);
+
                 onItemClickListener.onItemClick(arg0, arg1, position, arg3);
-                ImageEdit.open(Uri.fromFile(new File(images.get(position))), getActivity());
+                ImageEdit.open(Uri.parse(getImages().get(position)), getActivity());
                 dismiss();
 
             }
