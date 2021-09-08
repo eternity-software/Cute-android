@@ -63,7 +63,7 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
             try {
 
                 isMine = (info.getSender().getId() == Integer.parseInt(CachedValues.getId(context)));
-                if (info.getId() > 0) {
+                if (info.getId() >= 0) {
                     isService = info.getType().equals(Message.Type.SERVICE);
                 } else {
                     isService = false;
@@ -118,7 +118,10 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
             // Задаём контент
             final ViewHolder holder = (ViewHolder) view.getTag();
             if (info.getId() > 0) {
-                holder.state.setVisibility(View.GONE);
+                if(holder.state != null)
+                {
+                    holder.state.setVisibility(View.GONE);
+                }
                 if (info.isRead()) {
                     holder.back.setBackgroundColor(context.getResources().getColor(R.color.colorNotReaded));
                 } else {
@@ -166,12 +169,19 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
 
                 }
 
+                if(holder.time != null)
+                {
+                    holder.time.setText(String.valueOf(Numbers.getTimeFromTimestamp(info.getTime() + "000", context)));
+                }
 
-                holder.time.setText(Numbers.getTimeFromTimestamp(info.getTime(), context));
             } else if (info.getId() == -2) {
                 holder.state.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_error));
             }
-            holder.message.setText(info.getText());
+            if(holder.message != null)
+            {
+                holder.message.setText(info.getText());
+
+            }
 
         } else {
             String messageText = "";
