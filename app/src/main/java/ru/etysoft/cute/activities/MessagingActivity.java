@@ -219,22 +219,27 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 try {
                     messagesSocket = new MessagesSocket(CachedValues.getSessionKey(MessagingActivity.this), String.valueOf(chatId), new MessagesSocket.MessageReceiveHandler() {
                         @Override
-                        public void onMessageReceive(final Message message) {
+                        public void onMessageReceive(final SendMessageResponse sendMessageResponse) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    try {
 
-                                        ids.put(String.valueOf(message.getId()), message);
-
-                                        if (!ids.containsKey(message.getId())) {
-                                            adapter.add(message);
+                                        if (!ids.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
+                                            adapter.add(sendMessageResponse.getMessage());
                                         }
-
+                                        ids.put(String.valueOf(sendMessageResponse.getMessage().getId()), sendMessageResponse.getMessage());
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
 
                                 }
                             });
                         }
                     });
+
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
