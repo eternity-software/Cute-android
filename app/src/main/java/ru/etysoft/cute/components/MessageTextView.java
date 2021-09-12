@@ -8,22 +8,47 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 public class MessageTextView extends AppCompatTextView {
 
+
     public MessageTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onMeasure(int widthSpec, int heightSpec) {
+        int widthMode = MeasureSpec.getMode(widthSpec);
 
-        int width = (int) Math.ceil(getMaxLineWidth(getLayout()));
-        int height = getMeasuredHeight();
-        setMeasuredDimension(width, height);
 
-        setWidth(width);
+
+            Layout layout = getLayout();
+            if (layout != null) {
+                int maxWidth = (int) Math.ceil(getMaxLineWidth2(layout));
+                widthSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.AT_MOST);
+            }
+
+        super.onMeasure(widthSpec, heightSpec);
     }
 
-    private float getMaxLineWidth(Layout layout) {
+
+
+    public void initializeSize()
+    {
+        try {
+            int width = (int) getMaxLineWidth(getLayout());
+            int height = getMeasuredHeight();
+            setMeasuredDimension(width, height);
+
+            setWidth(width);
+            System.out.println("setted " + width + " to " + getText());
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    private float getMaxLineWidth2(Layout layout) {
         float maximumWidth = 0.0f;
         int lines = layout.getLineCount();
         for (int i = 0; i < lines; i++) {
@@ -31,5 +56,16 @@ public class MessageTextView extends AppCompatTextView {
         }
 
         return maximumWidth;
+    }
+
+    private float getMaxLineWidth(Layout layout) {
+        float max_width = 0f;
+        int lines = layout.getLineCount();
+        for (int i = 0; i < lines; i++) {
+            if (layout.getLineWidth(i) > max_width) {
+                max_width = layout.getLineWidth(i);
+            }
+        }
+        return max_width;
     }
 }

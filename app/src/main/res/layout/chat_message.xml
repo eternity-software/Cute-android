@@ -15,7 +15,7 @@
         android:orientation="horizontal">
 
         <ru.etysoft.cute.components.Avatar
-            android:id="@+id/userpic"
+            android:id="@+id/avatarView"
             android:layout_width="40dp"
             android:layout_height="40dp" />
 
@@ -28,7 +28,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/nickname"
+                android:id="@+id/displayNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
@@ -47,6 +47,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/messageContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -55,7 +56,7 @@
                     android:orientation="vertical">
 
 
-                    <ru.etysoft.cute.components.MessageTextView
+                    <ru.etysoft.cute.components.LeftMessageTextView
                         android:id="@+id/message_body"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -67,6 +68,14 @@
                         android:textColor="#fff"
                         android:textColorLink="@color/colorTextLink"
                         android:textSize="@dimen/messageText" />
+
+                    <TextView
+                        android:id="@+id/emojiView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🐈"
+                        android:textColor="@color/colorText"
+                        android:textSize="60sp"/>
 
                     <ru.etysoft.cute.components.Attachments
                         android:id="@+id/attachments"

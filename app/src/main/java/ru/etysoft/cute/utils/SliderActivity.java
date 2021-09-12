@@ -25,15 +25,18 @@ public class SliderActivity {
 
     private float percent = 0;
 
-    private static void setAppTheme(Activity activity, int state) {
+    public static void setAppTheme(Activity activity, int state) {
 
+        System.out.println("Invoked!");
         if (state == ViewDragHelper.STATE_SETTLING) {
             return;
         }
 
         final @ColorRes int color = getWindowColor(state);
         ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(activity, color));
-        activity.getWindow().setBackgroundDrawable(colorDrawable);
+      //  activity.getWindow().setBackgroundDrawable(colorDrawable);
+        activity.getWindow().getDecorView().setBackgroundColor(activity.getResources().getColor(color));
+
     }
 
     @ColorRes
@@ -49,24 +52,33 @@ public class SliderActivity {
         }
     }
 
+
     public SlidrInterface attachSlider(final Activity activity) {
+        try {
+            setAppTheme(activity, ViewDragHelper.STATE_IDLE);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         final SlidrConfig slidrConfig = new SlidrConfig.Builder().listener(new SlidrListener() {
+
             @Override
             public void onSlideStateChanged(int state) {
-                if (percent == 0 && state == ViewDragHelper.STATE_IDLE) {
-                    return;
-                }
+                System.out.println("www");
+
                 setAppTheme(activity, state);
             }
 
             @Override
             public void onSlideChange(float percent) {
+                System.out.println("wafww");
                 SliderActivity.this.percent = percent;
             }
 
             @Override
             public void onSlideOpened() {
-
+                System.out.println("waww");
             }
 
             @Override

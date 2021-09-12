@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/messageback"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,8 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:gravity="right"
-        android:orientation="horizontal">
+        android:gravity="end"
+        android:orientation="horizontal"
+        >
 
         <ImageView
             android:id="@+id/state"
@@ -45,11 +47,13 @@
 
 
         <LinearLayout
+            android:id="@+id/messageContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:background="@drawable/mymessage"
             android:orientation="vertical">
+
             <ru.etysoft.cute.components.MessageTextView
                 android:id="@+id/message_body"
                 android:layout_width="wrap_content"
@@ -57,12 +61,21 @@
                 android:autoLink="all"
                 android:layout_margin="10dp"
                 android:textIsSelectable="true"
-                android:text="Это сообщение с очень длииииииииииииииинными словами"
+                android:text="самса по 60р с рыбой и капустой"
                 android:fontFamily="@font/montserrat"
                 android:textColor="@color/colorText"
                 android:includeFontPadding="false"
                 android:textSize="@dimen/messageText"
               />
+
+
+            <TextView
+                android:id="@+id/emojiView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🐈"
+                android:textColor="@color/colorText"
+                android:textSize="60sp"/>
 
             <ru.etysoft.cute.components.Attachments
                 android:id="@+id/attachments"
@@ -70,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:padding="4dp"
+                android:layout_weight="1"
                 android:layout_marginTop="-8dp"
                 />
         </LinearLayout>

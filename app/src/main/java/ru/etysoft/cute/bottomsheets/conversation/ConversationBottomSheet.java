@@ -62,6 +62,7 @@ import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberRequest;
 import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberResponse;
@@ -206,7 +207,9 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
+
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 final CardView cardView = view.findViewById(R.id.appBar);
@@ -234,7 +237,8 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         });
                         animation.start();
                     }
-                } else {
+                } else if (newState == BottomSheetBehavior.STATE_HIDDEN){
+
 
                     // cardView.setRadius(Numbers.dpToPx(20, getContext()));
                 }
@@ -247,6 +251,20 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         });
 
 
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        System.out.println("closed!");
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(getActivity());
     }
 
     public void setCid(String conversationId) {
@@ -332,13 +350,17 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 catch (final Exception e)
                 {
                     e.printStackTrace();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            CuteToast.showError(e.getMessage(), getActivity());
-                            dismiss();
-                        }
-                    });
+                    if(getActivity() != null)
+                    {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CuteToast.showError(e.getMessage(), getActivity());
+                                dismiss();
+                            }
+                        });
+                    }
+
                 }
             }
         });

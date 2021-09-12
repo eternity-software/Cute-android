@@ -15,6 +15,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/messageContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="50"
@@ -33,6 +34,14 @@
                 android:text="1111"
                 android:textColor="#fff"
                 android:textSize="@dimen/messageText" />
+
+            <TextView
+                android:id="@+id/emojiView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🐈"
+                android:textColor="@color/colorText"
+                android:textSize="60sp"/>
 
             <ru.etysoft.cute.components.Attachments
                 android:id="@+id/attachments"

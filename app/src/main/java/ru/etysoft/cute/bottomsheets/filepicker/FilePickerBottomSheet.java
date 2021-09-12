@@ -125,16 +125,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
-                if (null != images && !images.isEmpty())
-                    Toast.makeText(
-                            getContext(),
-                            "position " + position + " " + images.get(position),
-                            300).show();
-
                 onItemClickListener.onItemClick(arg0, arg1, position, arg3);
-                ImageEdit.open(Uri.parse(getImages().get(position)), getActivity());
-                dismiss();
-
             }
         });
     }
@@ -181,7 +172,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             picturesView = new SmartImageView(context.getContext());
             picturesView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             picturesView
-                    .setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 270));
+                    .setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
             picturesView.setImagePath(images.get(position));
 
             try {

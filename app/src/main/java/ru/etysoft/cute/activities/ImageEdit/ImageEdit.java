@@ -26,6 +26,7 @@ import ru.etysoft.cute.utils.ImageRotationFix;
 public class ImageEdit extends AppCompatActivity {
 
     private boolean isEraser = false;
+    public final static int RESULT_CODE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,8 @@ public class ImageEdit extends AppCompatActivity {
         });
     }
 
+
+
     public void brush(View v) {
         final EditText editText = findViewById(R.id.text);
         editText.clearFocus();
@@ -96,7 +99,12 @@ public class ImageEdit extends AppCompatActivity {
         final ConstraintLayout container = findViewById(R.id.bitmapContainer);
         container.setDrawingCacheEnabled(true);
         Bitmap b = container.getDrawingCache();
-        MediaStore.Images.Media.insertImage(getContentResolver(), b, "CUTE_EDITED" + System.currentTimeMillis(), "Cute photo editor");
+        String result = MediaStore.Images.Media.insertImage(getContentResolver(), b, "CUTE_EDITED" + System.currentTimeMillis(), "Cute photo editor");
+
+        Intent intent = new Intent();
+        intent.putExtra("uri", result);
+        setResult(RESULT_CODE, intent);
+
         finish();
     }
 
@@ -105,6 +113,13 @@ public class ImageEdit extends AppCompatActivity {
         Intent intent = new Intent(activity, ImageEdit.class);
         intent.putExtra("uri", uri.getPath());
         activity.startActivity(intent);
+    }
+
+    public static void openForResult(Uri uri, Activity activity)
+    {
+        Intent intent = new Intent(activity, ImageEdit.class);
+        intent.putExtra("uri", uri.getPath());
+        activity.startActivityForResult(intent, RESULT_CODE);
     }
 
     float fromX = 0;
@@ -127,12 +142,15 @@ public class ImageEdit extends AppCompatActivity {
                 ,200);
     }
 
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         final EditText editText = findViewById(R.id.text);
         editText.clearFocus();
         getWindow().getDecorView().clearFocus();
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
     public void crop(View v) {

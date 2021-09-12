@@ -1,27 +1,47 @@
 package ru.etysoft.cute.activities;
 
+import android.animation.Animator;
+import android.animation.LayoutTransition;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.view.WindowInsetsAnimation;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.math.MathUtils;
+import com.r0adkll.slidr.util.ViewDragHelper;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +50,7 @@ import java.util.Map;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
+import ru.etysoft.cute.activities.imagesend.ImageSendActivity;
 import ru.etysoft.cute.activities.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
@@ -39,6 +60,7 @@ import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
+import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.data.APIKeys;
@@ -58,7 +80,7 @@ import ru.etysoft.cuteframework.sockets.methods.Messages.MessagesSocket;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
-    private final List<Message> convInfos = new ArrayList<>();
+    private final List<Message> messageList = new ArrayList<>();
     private final Map<String, Message> ids = new HashMap<String, Message>();
     private MessagesAdapter adapter;
     private MessagesSocket messagesSocket;
@@ -92,9 +114,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         picture.setAcronym((name), Avatar.Size.SMALL);
 
-        final ListView listView = findViewById(R.id.messages);
-        adapter = new MessagesAdapter(this, convInfos, isDialog);
-        listView.setAdapter(adapter);
+        final RecyclerView recyclerView = findViewById(R.id.messages);
+        adapter = new MessagesAdapter(this, messageList, isDialog, recyclerView);
+        recyclerView.setAdapter(adapter);
 
         TextView subtitle = findViewById(R.id.subtitle);
         if (!isDialog) {
@@ -126,17 +148,103 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         setupVoiceButton();
 
 
-        SliderActivity sliderActivity = new SliderActivity();
-        sliderActivity.attachSlider(this);
-
         setupOnTextInput();
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+
 
         processListUpdate();
         loadChatInfo();
         registerSocket();
 
+        final ViewGroup rootView = (ViewGroup) findViewById(R.id.rootView);
 
+        if (Build.VERSION.SDK_INT >= 30) {
+            rootView.setWindowInsetsAnimationCallback(new WindowInsetsAnimation.Callback(WindowInsetsAnimation.Callback.DISPATCH_MODE_STOP) {
+                float startBottom = 0;
+                float endBottom = 0;
+
+                @NonNull
+                @Override
+                public WindowInsetsAnimation.Bounds onStart(@NonNull WindowInsetsAnimation animation, @NonNull WindowInsetsAnimation.Bounds bounds) {
+                    startBottom = rootView.getBottom();
+                    return super.onStart(animation, bounds);
+                }
+
+                @Override
+                public void onPrepare(@NonNull WindowInsetsAnimation animation) {
+                    super.onPrepare(animation);
+                    endBottom = rootView.getBottom();
+                    rootView.setTranslationY(startBottom - endBottom);
+                }
+
+                @NonNull
+                @Override
+                public WindowInsets onProgress(@NonNull WindowInsets insets, @NonNull List<WindowInsetsAnimation> runningAnimations) {
+                    float offset = MathUtils.lerp(startBottom - endBottom,
+                            0,
+                            android.R.anim.decelerate_interpolator);
+
+                    rootView.setTranslationY(offset);
+
+                    return insets;
+                }
+            });
+
+            rootView.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+
+                    return null;
+                }
+            });
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+            LinearLayout editTextContainer = findViewById(R.id.linearLayout3);
+
+            final ValueAnimator anim = ValueAnimator.ofInt(recyclerView.getMeasuredHeight(), -100);
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();
+                    layoutParams.height = val;
+                    recyclerView.setLayoutParams(layoutParams);
+                }
+            });
+            anim.setDuration(500);
+
+            LayoutTransition layoutTransition = rootView.getLayoutTransition();
+            layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
+            layoutTransition.setStartDelay(LayoutTransition.CHANGING, 0);
+            layoutTransition.setDuration(500);
+            layoutTransition.addTransitionListener(new LayoutTransition.TransitionListener() {
+                @Override
+                public void startTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+                    //  anim.start();
+                }
+
+                @Override
+                public void endTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+                    EditText messageView = findViewById(R.id.message_box);
+                    messageView.setCursorVisible(true);
+                    messageView.requestFocus();
+                }
+            });
+
+
+            layoutTransition.setInterpolator(LayoutTransition.CHANGING, new DecelerateInterpolator(6.5f));
+
+        }
+
+
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     public static void openActivity(Context context, int chatId, boolean isDialog, String name,
@@ -153,48 +261,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         onBackPressed();
     }
 
-
+    private FilePickerBottomSheet filePickerBottomSheet;
     public void pickFiles(View v) {
-        final FilePickerBottomSheet filePickerBottomSheet = new FilePickerBottomSheet();
+        final EditText messageView = findViewById(R.id.message_box);
+
+        filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
         filePickerBottomSheet.setRunnable(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final ImageFile imageFile = new ImageFile(filePickerBottomSheet.getImages().get(position));
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            final UploadImageResponse uploadImageResponse = (new UploadImageRequest(imageFile, CachedValues.getSessionKey(getApplicationContext()))).execute();
-                            if (!uploadImageResponse.isSuccess()) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CuteToast.showError("Failed upload image!", MessagingActivity.this);
-                                    }
-
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            CuteToast.showSuccess("Success " + uploadImageResponse.getMediaId(), MessagingActivity.this);
-                                        } catch (ResponseException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                });
-                                mediaIdToSend = uploadImageResponse.getMediaId();
-                                mediaPathToSend = uploadImageResponse.getPath();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getImages().get(position), messageView.getText().toString());
 
             }
         });
@@ -226,12 +302,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                     try {
 
                                         if (!ids.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
-                                            adapter.add(sendMessageResponse.getMessage());
+                                            messageList.add(sendMessageResponse.getMessage());
+                                            adapter.notifyDataSetChanged();
                                         }
                                         ids.put(String.valueOf(sendMessageResponse.getMessage().getId()), sendMessageResponse.getMessage());
-                                    }
-                                    catch (Exception e)
-                                    {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
@@ -280,8 +355,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public boolean isRecordPanelShown = false;
     private Thread recordWaiter;
 
-    private void loadChatInfo()
-    {
+    private void loadChatInfo() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -306,9 +380,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     e.printStackTrace();
                 } catch (NotCachedException e) {
                     e.printStackTrace();
-                }
-                catch (final Exception e)
-                {
+                } catch (final Exception e) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -336,7 +408,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         for (final Message message : messages) {
 
 
-
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -344,7 +415,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
                                         ids.put(String.valueOf(message.getId()), message);
 
-                                        adapter.add(message);
+                                        adapter.addItem(message);
+
                                     } else {
                                         // Если сообщение уже есть проверяем не изменился ли статус прочитанности
                                     }
@@ -383,7 +455,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     @Override
                     public void run() {
 
-                        adapter.notifyDataSetChanged();
+
+                        System.out.println("hmmm");
+                        final RecyclerView recyclerView = findViewById(R.id.messages);
+                        adapter = new MessagesAdapter(MessagingActivity.this, messageList, isDialog, recyclerView);
+                        recyclerView.setAdapter(adapter);
                         findViewById(R.id.loadingLayout).setVisibility(View.INVISIBLE);
                     }
                 });
@@ -597,19 +673,94 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         });
     }
 
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
-    public void sendMessage(View view) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (data == null) return;
 
-        EditText messageView = findViewById(R.id.message_box);
+        if (resultCode == ImageSendActivity.CODE) {
+            if(filePickerBottomSheet != null)
+            {
+                filePickerBottomSheet.dismiss();
+            }
+            final String message = data.getStringExtra("text");
+            String imageUri = data.getStringExtra("uri");
+            System.out.println(imageUri);
 
-        final String message = String.valueOf(messageView.getText());
-        messageView.setText("");
+           ImageFile imageFile;
 
+            try {
+                imageFile = new ImageFile(getRealPathFromURI(this, Uri.parse(imageUri)));
+            }
+            catch (Exception e)
+            {
+                imageFile = new ImageFile(imageUri);
+            }
+
+
+            final ImageFile finalImageFile = imageFile;
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        final UploadImageResponse uploadImageResponse = (new UploadImageRequest(finalImageFile, CachedValues.getSessionKey(getApplicationContext()))).execute();
+                        if (!uploadImageResponse.isSuccess()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CuteToast.showError("Failed upload image!", MessagingActivity.this);
+                                }
+
+                            });
+                        } else {
+
+                            mediaIdToSend = uploadImageResponse.getMediaId();
+                            mediaPathToSend = uploadImageResponse.getPath();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sendMessageWithPreview(message);
+                                }
+                            });
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void sendMessageWithPreview(final String message) {
         final Message messagePreview;
         try {
-            messagePreview = new Message(-1, 1, false, message, null, null, null, null, null, null, null,
+            EditText messageView = findViewById(R.id.message_box);
+            messageView.setText("");
+            String placegolderText = message;
+            if(mediaIdToSend != null)
+            {
+                placegolderText += "(Изображение)";
+            }
+            messagePreview = new Message(-1, 1, false, placegolderText, null, null, null, null, null, null, null,
                     new User(null, null, null, null, CachedValues.getId(this), null, null, null, false));
-            adapter.add(messagePreview);
+            adapter.addItem(messagePreview);
 
 
             Thread sendThread = new Thread(new Runnable() {
@@ -621,26 +772,44 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
                         final SendMessageResponse sendMessageResponse;
                         if (mediaIdToSend == null) {
-                            sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message)).execute();
+                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message)).execute();
                         } else {
-                            sendMessageResponse   = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
+                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
                         }
+                        mediaIdToSend = null;
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
 
-                                Message newMessage = sendMessageResponse.getMessage();
-                                messagePreview.setId(newMessage.getId());
-                                messagePreview.setTime(newMessage.getTime());
-                                messagePreview.setText(newMessage.getText());
-                                messagePreview.setAttachmentData(newMessage.getAttachmentData());
-                                messagePreview.setAttachmentPath(newMessage.getCleanAttachmentPath());
-                                messagePreview.setAttachmentType(newMessage.getAttachmentType());
-                                adapter.notifyDataSetChanged();
+                                try {
 
-                                ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
 
+                                    Message newMessage = sendMessageResponse.getMessage();
+                                    messagePreview.setId(newMessage.getId());
+                                    messagePreview.setTime(newMessage.getTime());
+                                    messagePreview.setText(newMessage.getText());
+                                    messagePreview.setType(newMessage.getType());
+                                    messagePreview.setAttachmentData(newMessage.getAttachmentData());
+                                    messagePreview.setAttachmentPath(newMessage.getCleanAttachmentPath());
+                                    messagePreview.setAttachmentType(newMessage.getAttachmentType());
+                                    try {
+
+                                        messagePreview.notifyDataChanged();
+                                    } catch (Exception ignored) {
+                                    }
+
+                                    ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            messagePreview.setId(-2);
+                                            messagePreview.notifyDataChanged();
+                                        }
+                                    });
+                                }
 
                             }
                         });
@@ -648,13 +817,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
-
                                 messagePreview.setId(-2);
-
-                                adapter.notifyDataSetChanged();
-
-
+                                messagePreview.notifyDataChanged();
                             }
                         });
                         e.printStackTrace();
@@ -669,11 +833,21 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
+    public void sendMessage(View view) {
+
+        EditText messageView = findViewById(R.id.message_box);
+
+        final String message = String.valueOf(messageView.getText());
+        messageView.setText("");
+
+        sendMessageWithPreview(message);
+
+
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-
-        //  overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }

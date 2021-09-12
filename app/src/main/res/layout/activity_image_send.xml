@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AppSlideTheme"
+    android:background="@color/colorBackgroundElements"
+    tools:context=".activities.imagesend.ImageSendActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/photoView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:layout_marginBottom="20dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/houses"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:elevation="10dp"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="horizontal"
+
+        android:background="@drawable/square_rounded_top"
+        android:backgroundTint="@color/colorBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/message_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="8dp"
+            android:layout_weight="1"
+            android:background="@color/colorBackground"
+            android:fontFamily="@font/montserratmedium"
+            android:hint="@string/your_message"
+            android:textColor="@color/colorMessageText"
+            android:inputType="textMultiLine|textCapSentences"
+            android:layout_marginLeft="14dp"
+            android:maxHeight="150dp"
+            android:backgroundTint="@color/colorBackground"
+            android:textColorHint="@color/colorSupportText"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/editButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="bottom"
+            android:layout_marginVertical="7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/button_circle_gray"
+            android:onClick="editImageButtonClick"
+            android:padding="8dp"
+            android:tint="@color/colorAccentIcon"
+            app:srcCompat="@drawable/icon_brush" />
+
+        <ImageView
+            android:id="@+id/sendButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="bottom"
+            android:layout_marginVertical="7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="7dp"
+            android:background="@drawable/circle_button_accent"
+            android:onClick="sendButtonClick"
+            android:padding="8dp"
+            app:srcCompat="@drawable/icon_send" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

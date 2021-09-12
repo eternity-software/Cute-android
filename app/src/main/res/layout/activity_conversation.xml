@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
+    android:animateLayoutChanges="true"
     style="@style/AppSlideTheme"
     tools:context=".activities.MessagingActivity">
 
@@ -91,7 +93,7 @@
         android:id="@+id/linearLayout3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        android:animateLayoutChanges="true"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -119,13 +121,14 @@
             android:layout_marginVertical="8dp"
             android:layout_weight="1"
             android:background="@color/colorBackground"
-            android:fontFamily="@font/montserrat"
+            android:fontFamily="@font/montserratmedium"
             android:hint="@string/your_message"
+            android:textColor="@color/colorMessageText"
             android:inputType="textMultiLine|textCapSentences"
             android:maxHeight="150dp"
             android:backgroundTint="@color/colorBackground"
             android:textColorHint="@color/colorSupportText"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/sendButton"
@@ -156,20 +159,24 @@
         app:srcCompat="@drawable/icon_microphone" />
 
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:divider="@color/colorBackground"
-        android:foregroundGravity="bottom"
-        android:stackFromBottom="true"
-        android:transcriptMode="normal"
+        android:divider="@color/orange"
+
+
+        android:clipToPadding="false"
+
+
+        app:stackFromEnd="true"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/divider4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider3">
 
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/loadingLayout"

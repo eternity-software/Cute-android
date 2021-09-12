@@ -15,6 +15,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/messageContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -22,18 +23,26 @@
             android:orientation="vertical">
 
 
-            <ru.etysoft.cute.components.MessageTextView
+            <ru.etysoft.cute.components.LeftMessageTextView
                 android:id="@+id/message_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:autoLink="all"
                 android:fontFamily="@font/montserrat"
-                android:text="Message text"
+                android:text="самса по 60р с рыбой и капустой"
                 android:textColor="#fff"
                 android:textColorLink="@color/colorTextLink"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/messageText" />
+
+            <TextView
+                android:id="@+id/emojiView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🐈"
+                android:textColor="@color/colorText"
+                android:textSize="60sp"/>
 
             <ru.etysoft.cute.components.Attachments
                 android:id="@+id/attachments"

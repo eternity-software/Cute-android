@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginRight="10dp"
                 android:nestedScrollingEnabled="true"
-                android:numColumns="4"
+                android:numColumns="3"
                 android:gravity="center"
                 android:horizontalSpacing="2dp"
                 android:stretchMode="columnWidth"

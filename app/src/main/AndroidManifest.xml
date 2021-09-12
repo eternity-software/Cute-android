@@ -29,6 +29,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.imagesend.ImageSendActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppSlideTheme"
+            android:exported="true" />
+        <activity
             android:name=".activities.ImageEdit.ImageEdit"
             android:exported="true" />
         <activity
@@ -69,8 +75,9 @@
         <activity
             android:name=".activities.MessagingActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppSlideTheme"
-            android:windowSoftInputMode="stateHidden" />
+          />
         <activity
             android:name=".activities.CreateChatActivity"
             android:theme="@style/AppSlideTheme"
