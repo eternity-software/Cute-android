@@ -134,7 +134,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         AttachmentData attachmentData = message.getAttachmentData();
-        if(message.getText() != null && isEmoji(message.getText()) && message.getText().length() < 3 && attachmentData == null)
+        if(message.getText() != null && isEmoji(message.getText()) && message.getText().length() < 4 && attachmentData == null)
         {
             basicMessageHolder.emoji.setText(message.getText());
             basicMessageHolder.emoji.setVisibility(View.VISIBLE);
@@ -351,9 +351,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void addItem(Message message)
     {
         boolean scrollToBottom = false;
-        if (!recyclerView.canScrollVertically(1)) {
+        final int offset = recyclerView.computeVerticalScrollOffset();
+        final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
+        System.out.println("offset " + offset + ", range " + range);
+        if (range - offset < (recyclerView.getHeight() / 2)) {
             scrollToBottom = true;
-
         }
         list.add(message);
         if(scrollToBottom)

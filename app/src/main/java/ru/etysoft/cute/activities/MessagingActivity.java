@@ -303,9 +303,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
                                         if (!ids.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
                                             adapter.addItem(sendMessageResponse.getMessage());
-
+                                            ids.put(String.valueOf(sendMessageResponse.getMessage().getId()), sendMessageResponse.getMessage());
                                         }
-                                        ids.put(String.valueOf(sendMessageResponse.getMessage().getId()), sendMessageResponse.getMessage());
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -799,7 +798,10 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                     } catch (Exception ignored) {
                                     }
 
-                                    ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
+                                    if (!ids.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
+                                        ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
+                                    }
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     runOnUiThread(new Runnable() {
