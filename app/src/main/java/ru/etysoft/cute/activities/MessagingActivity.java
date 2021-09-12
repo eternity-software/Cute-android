@@ -302,8 +302,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                     try {
 
                                         if (!ids.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
-                                            messageList.add(sendMessageResponse.getMessage());
-                                            adapter.notifyDataSetChanged();
+                                            adapter.addItem(sendMessageResponse.getMessage());
+
                                         }
                                         ids.put(String.valueOf(sendMessageResponse.getMessage().getId()), sendMessageResponse.getMessage());
                                     } catch (Exception e) {
