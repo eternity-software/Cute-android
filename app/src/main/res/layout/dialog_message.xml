@@ -21,7 +21,7 @@
             android:layout_weight="50"
             android:background="@drawable/dialog_message"
             android:orientation="vertical">
-            <ru.etysoft.cute.components.MessageTextView
+            <ru.etysoft.cute.components.LeftMessageTextView
                 android:id="@+id/message_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

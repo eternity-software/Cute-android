@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/square_rounded_corners_gray"
+        android:background="@drawable/square_element_background"
         android:padding="8dp">
         <ru.etysoft.cute.components.Avatar
             android:id="@+id/avatarView"

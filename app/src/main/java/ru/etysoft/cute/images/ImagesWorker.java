@@ -1,4 +1,4 @@
-package ru.etysoft.cute.utils;
+package ru.etysoft.cute.images;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -14,6 +14,8 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
+import ru.etysoft.cute.utils.Numbers;
 
 public class ImagesWorker {
 

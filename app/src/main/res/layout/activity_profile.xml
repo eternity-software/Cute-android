@@ -77,6 +77,7 @@
                     android:onClick="openImage"
                     android:background="?actionBarItemBackground"
                     android:scaleType="fitXY"
+                    android:transitionName="@string/transition_profile"
                     app:srcCompat="@drawable/circle_gray" />
 
 
@@ -160,6 +161,7 @@
                     android:background="@drawable/button_active_enabled"
                     android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:onClick="openPrivateChat"
                     android:fontFamily="@font/montserratalternates_medium"
                     android:textAllCaps="false"
                     android:text="@string/message" />

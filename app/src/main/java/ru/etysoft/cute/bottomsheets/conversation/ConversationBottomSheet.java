@@ -53,14 +53,12 @@ import java.util.List;
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImagePreview;
-import ru.etysoft.cute.activities.Profile;
-import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.images.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
@@ -68,8 +66,6 @@ import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberRequest;
 import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberResponse;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarRequest;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarResponse;
-import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverRequest;
-import ru.etysoft.cuteframework.methods.account.ChangeCover.ChangeCoverResponse;
 import ru.etysoft.cuteframework.methods.chat.ChatMember;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryRequest;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryResponse;
@@ -126,8 +122,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         super.onPause();
     }
 
-    public void addMember()
-    {
+    public void addMember() {
         final String[] text = new String[1];
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
         builder.setTitle("Invite member by id");
@@ -147,8 +142,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                     public void run() {
                         try {
                             AddMemberResponse addMemberResponse = (new AddMemberRequest(CachedValues.getSessionKey(getActivity()), cid, input.getText().toString())).execute();
-                            if(addMemberResponse.isSuccess())
-                            {
+                            if (addMemberResponse.isSuccess()) {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -237,7 +231,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         });
                         animation.start();
                     }
-                } else if (newState == BottomSheetBehavior.STATE_HIDDEN){
+                } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
 
 
                     // cardView.setRadius(Numbers.dpToPx(20, getContext()));
@@ -293,8 +287,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                             try {
                                 Avatar avatar = view.findViewById(R.id.icon);
 
-                                if(chatInfoResponse.getChat().getAvatar() != null)
-                                {
+                                if (chatInfoResponse.getChat().getAvatar() != null) {
                                     Picasso.get().load(chatInfoResponse.getChat().getAvatar()).transform(new CircleTransform()).into(avatar.getPictureView());
                                     avatar.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -346,12 +339,9 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                     e.printStackTrace();
                 } catch (NotCachedException e) {
                     e.printStackTrace();
-                }
-                catch (final Exception e)
-                {
+                } catch (final Exception e) {
                     e.printStackTrace();
-                    if(getActivity() != null)
-                    {
+                    if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -516,217 +506,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         setContent();
 
 
-        ImageView icon2 = view.findViewById(R.id.icon_edit);
-
-        ImagesWorker.setGradient(icon2, Integer.parseInt(cid));
-
-        icon2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectPhoto();
-            }
-        });
-
-
-        ImageButton edit = v.findViewById(R.id.buttonEdit);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CardView cardView = view.findViewById(R.id.appBar);
-
-                if (!isEditing) {
-                    isEditing = true;
-                    Animation fadeIn = new AlphaAnimation(1, 0);
-                    fadeIn.setDuration(200);
-                    fadeIn.setFillAfter(true);
-                    fadeIn.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-
-                            LinearLayout edit = view.findViewById(R.id.edit);
-                            Animation fadeOut = new AlphaAnimation(0, 1);
-                            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-                            params.setMargins(Numbers.dpToPx(15, getContext()), 0, Numbers.dpToPx(15, getContext()), 0);
-                            edit.setLayoutParams(params);
-                            fadeOut.setDuration(200);
-                            fadeOut.setFillAfter(true);
-                            edit.startAnimation(fadeOut);
-                            edit.setVisibility(View.VISIBLE);
-                            ((LinearLayout) view.findViewById(R.id.content)).removeAllViews();
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                    params.setMargins(0, 0, 0, Numbers.dpToPx(-20, getContext()));
-                    view.findViewById(R.id.appBar).setLayoutParams(params);
-                    bottomSheetBehavior.setDraggable(false);
-                    view.findViewById(R.id.content).startAnimation(fadeIn);
-                    bottomSheetBehavior.setFitToContents(false);
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    cardView.setRadius(Numbers.dpToPx(0, getContext()));
-
-
-                    //TODO: нормальные названгея
-
-
-                }
-
-
-//                    Intent intent = new Intent(getActivity(), EditChat.class);
-//
-//
-//                    ImageButton deleteBtn = view.findViewById(R.id.conv_delete);
-//                    ImageButton exitBtn = view.findViewById(R.id.conv_exit);
-//                    TextView acr = view.findViewById(R.id.conv_acronym);
-//
-//
-//                    Pair<View, String> p1 = Pair.create((View) imageView, "editchat");
-//                    Pair<View, String> p2 = Pair.create((View) deleteBtn, "delbtn");
-//                    Pair<View, String> p3 = Pair.create((View) exitBtn, "exitbtn");
-//                    Pair<View, String> p4 = Pair.create((View) acr, "acronym");
-//
-//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p1, p2, p3, p4);
-//                    startActivity(intent, options.toBundle());
-            }
-        });
-
         return v;
-    }
-
-    private ImageFile createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        ImageFile image = new ImageFile(File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        ).getAbsolutePath());
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    public void selectPhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, REQUEST_TAKE_PHOTO_FROM_GALLERY);
-    }
-
-    public void apply(View v) {
-        HashMap<String, String> params = new HashMap<String, String>();
-
-        TextView nameView = view.findViewById(R.id.nameview);
-        TextView descriptionView = view.findViewById(R.id.description);
-
-        final Button applyButton = view.findViewById(R.id.applybtn);
-        final ProgressBar wait = view.findViewById(R.id.loadingApply);
-        applyButton.setVisibility(View.INVISIBLE);
-        wait.setVisibility(View.VISIBLE);
-
-
-        params.put("cid", cid);
-
-        if (image != null) {
-            // params.put("photo", image);
-        }
-
-        if (!String.valueOf(nameView.getText()).equals(name)) {
-            params.put("name", String.valueOf(nameView.getText()));
-        }
-
-        if (!String.valueOf(descriptionView.getText()).equals(descriptionText)) {
-            params.put("description", String.valueOf(descriptionView.getText()));
-        }
-
-        // TODO: edit
-
-
-    }
-
-
-    @Override
-    public void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
-            try {
-                // Creating file
-                ImageFile photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-                    Log.d("ACTIVITYRES", "Error occurred while creating the file");
-                }
-
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
-                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
-                // Copying
-                copyStream(inputStream, fileOutputStream);
-                fileOutputStream.close();
-                inputStream.close();
-                ImageView imageView = view.findViewById(R.id.icon_edit);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
-                image = photoFile;
-                int dp = Numbers.dpToPx(150, getContext());
-                imageView.setImageBitmap(ImagesWorker.getCircleCroppedBitmap(bitmap, dp, dp));
-                TextView acronymview2 = view.findViewById(R.id.acronym_edit);
-                acronymview2.setVisibility(View.INVISIBLE);
-                Thread upload = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-
-                            UploadImageResponse uploadImageResponse = (new UploadImageRequest(image, CachedValues.getSessionKey(getActivity()))).execute();
-                            String mediaId = uploadImageResponse.getMediaId();
-                            if(requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY) {
-                                ChangeAvatarResponse changeAvatarResponse = (new ChangeAvatarRequest(CachedValues.getSessionKey(getActivity()), mediaId, cid)).execute();
-                                if (changeAvatarResponse.isSuccess()) {
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            CuteToast.showSuccess("uspeshno!", getActivity());
-                                        }
-                                    });
-                                }
-                            }
-
-                        } catch (ResponseException | NotCachedException e) {
-                            e.printStackTrace();
-                        }
-                        catch (final Exception e)
-                        {
-                            e.printStackTrace();
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CuteToast.showError(e.getMessage(), getActivity());
-                                    dismiss();
-                                }
-                            });
-
-
-                        }
-                    }
-                });
-                upload.start();
-
-            } catch (Exception e) {
-                Log.d("ACTIVITYRES", "onActivityResult: " + e.toString());
-            }
-        }
     }
 
 

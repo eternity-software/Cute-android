@@ -14,7 +14,7 @@ import java.util.List;
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.MessagingActivity;
-import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.images.ImagesWorker;
 
 public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
     private final Activity context;
@@ -61,7 +61,7 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
                             intent.putExtra("isd", false);
                             intent.putExtra("name", info.getName());
                             intent.putExtra("cover", "null");
-                            MessagingActivity.openActivity(getContext(), info.getCid(), false, info.getName(), null);
+                            MessagingActivity.openActivityForChat(getContext(), info.getCid(), info.getName(), null);
                         } else {
 
 

@@ -169,10 +169,13 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                             ViewGroup parent) {
             final SmartImageView picturesView;
 
-            picturesView = new SmartImageView(context.getContext());
-            picturesView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            final LayoutInflater layoutInflater = getLayoutInflater();
+            picturesView = (SmartImageView) layoutInflater.inflate(R.layout.file_picker_image, null);
+
             picturesView
                     .setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+
+
             picturesView.setImagePath(images.get(position));
 
             try {
@@ -197,27 +200,36 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
          * @return ArrayList with images Path
          */
         private ArrayList<String> getAllShownImagesPath(FrameLayout activity) {
-            Uri uri;
-            Cursor cursor;
-            int column_index_data, column_index_folder_name;
+//            Uri uri;
+//            Cursor cursor;
+//            int column_index_data, column_index_folder_name;
+//
+//            String absolutePathOfImage = null;
+//            uri = MediaStore.Images.Media.E;
+//
+//
+//
+//            cursor = activity.getContext().getContentResolver().query(uri, projection, null,
+//                    null, null);
+//
+//            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+//            column_index_folder_name = cursor
+//                    .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+//            while (cursor.moveToNext()) {
+//                absolutePathOfImage = cursor.getString(column_index_data);
+//
+//                listOfAllImages.add(absolutePathOfImage);
+//            }
+//
             ArrayList<String> listOfAllImages = new ArrayList<String>();
-            String absolutePathOfImage = null;
-            uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-            String[] projection = {MediaStore.MediaColumns.DATA,
-                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-
-            cursor = activity.getContext().getContentResolver().query(uri, projection, null,
-                    null, null);
-
-            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            column_index_folder_name = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            String[] projection = {MediaStore.MediaColumns.DATA};
+            Cursor cursor = activity.getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,null, null);
             while (cursor.moveToNext()) {
-                absolutePathOfImage = cursor.getString(column_index_data);
+                String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
 
                 listOfAllImages.add(absolutePathOfImage);
             }
+            cursor.close();
             return listOfAllImages;
         }
     }

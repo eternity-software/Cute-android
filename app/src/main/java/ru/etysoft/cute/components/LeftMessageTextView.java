@@ -8,15 +8,12 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 public class LeftMessageTextView extends AppCompatTextView {
 
-    // Выгглядит норм, но сжимается
     public LeftMessageTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-
         if(getLayout() != null)
         {
             int width = (int) Math.ceil(getMaxLineWidth(getLayout()));
@@ -29,13 +26,13 @@ public class LeftMessageTextView extends AppCompatTextView {
     }
 
     private float getMaxLineWidth(Layout layout) {
-        float max_width = 0f;
+        float maxWidth = 0f;
         int lines = layout.getLineCount();
         for (int i = 0; i < lines; i++) {
-            if (layout.getLineWidth(i) > max_width) {
-                max_width = layout.getLineWidth(i);
+            if (layout.getLineWidth(i) > maxWidth) {
+                maxWidth = layout.getLineWidth(i);
             }
         }
-        return max_width;
+        return maxWidth;
     }
 }

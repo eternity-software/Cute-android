@@ -22,13 +22,7 @@
             android:layout_marginLeft="4dp" />
 
 
-        <ImageView
-            android:id="@+id/statusView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="-60dp"
-            android:layout_marginTop="42dp"
-            android:background="@drawable/circle_offline" />
+
 
         <TextView
             android:id="@+id/readed"
@@ -36,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="-20dp"
             android:layout_marginTop="-20dp"
 
 

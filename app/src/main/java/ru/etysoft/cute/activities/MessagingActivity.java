@@ -1,13 +1,11 @@
 package ru.etysoft.cute.activities;
 
-import android.animation.Animator;
 import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +20,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,17 +31,14 @@ import android.view.WindowInsetsAnimation;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.math.MathUtils;
-import com.r0adkll.slidr.util.ViewDragHelper;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,10 +53,12 @@ import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ErrorPanel;
+import ru.etysoft.cute.components.InfoPanel;
+import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.ImagesWorker;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.data.APIKeys;
@@ -85,34 +83,37 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private MessagesAdapter adapter;
     private MessagesSocket messagesSocket;
 
-    private int chatId = 1;
+    private long chatId = 1;
+    private long accountId = -1;
     private String name = "42";
     private String avatar = null;
     private final String countMembers = "42";
     private boolean isDialog = false;
     private ErrorPanel errorPanel;
+    private InfoPanel infoPanel;
     public boolean isVoice = true;
     private String mediaIdToSend;
-    private String mediaPathToSend;
+    private Runnable onResume;
+    private Avatar avatarView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation);
-        chatId = getIntent().getIntExtra(APIKeys.CHAT_ID, 0);
+        setContentView(R.layout.activity_messaging);
+        chatId = getIntent().getLongExtra(APIKeys.CHAT_ID, 0);
         name = getIntent().getStringExtra(APIKeys.NAME);
         avatar = getIntent().getStringExtra(APIKeys.AVATAR);
         isDialog = getIntent().getBooleanExtra("isd", false);
 
-        Avatar picture = findViewById(R.id.avatar);
-        picture.generateIdPicture(chatId);
+        avatarView = findViewById(R.id.avatar);
+
 
         if (avatar != null) {
-            Picasso.get().load(avatar).transform(new CircleTransform()).into(picture.getPictureView());
+            Picasso.get().load(avatar).transform(new CircleTransform()).into(avatarView.getPictureView());
         }
 
-        picture.setAcronym((name), Avatar.Size.SMALL);
+        avatarView.setAcronym((name), Avatar.Size.SMALL);
 
         final RecyclerView recyclerView = findViewById(R.id.messages);
         adapter = new MessagesAdapter(this, messageList, isDialog, recyclerView);
@@ -121,13 +122,24 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         TextView subtitle = findViewById(R.id.subtitle);
         if (!isDialog) {
             subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
+            loadChatInfo();
+            avatarView.generateIdPicture(chatId);
+        } else {
+            accountId = getIntent().getLongExtra(APIKeys.ACCOUNT_ID, -1L);
+            avatarView.generateIdPicture(accountId);
+
         }
 
+
         errorPanel = findViewById(R.id.error_panel);
+        infoPanel = findViewById(R.id.info_panel);
         errorPanel.getRootView().setVisibility(View.INVISIBLE);
+        infoPanel.getRootView().setVisibility(View.INVISIBLE);
+
+        final LinearLayout info = findViewById(R.id.info);
+        info.setVisibility(View.INVISIBLE);
 
         final LinearLayout error = findViewById(R.id.error);
-
         error.setVisibility(View.INVISIBLE);
         errorPanel.setReloadAction(new Runnable() {
             @Override
@@ -153,7 +165,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
         processListUpdate();
-        loadChatInfo();
+
         registerSocket();
 
         final ViewGroup rootView = (ViewGroup) findViewById(R.id.rootView);
@@ -245,23 +257,40 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (onResume != null) {
+            onResume.run();
+        }
     }
 
-    public static void openActivity(Context context, int chatId, boolean isDialog, String name,
-                                    String avatarPath) {
+    public static void openActivityForChat(Context context, long chatId, String name,
+                                           String avatarPath) {
         Intent intent = new Intent(context, MessagingActivity.class);
         intent.putExtra(APIKeys.CHAT_ID, chatId);
-        intent.putExtra("isd", isDialog);
+        intent.putExtra("isd", false);
         intent.putExtra(APIKeys.NAME, name);
         intent.putExtra(APIKeys.AVATAR, avatarPath);
         context.startActivity(intent);
     }
+
+    public static void openActivityForDialog(Context context, long chatId, long accountId, String name,
+                                             String avatarPath) {
+        Intent intent = new Intent(context, MessagingActivity.class);
+        intent.putExtra(APIKeys.CHAT_ID, chatId);
+        intent.putExtra("isd", true);
+        intent.putExtra(APIKeys.NAME, name);
+        intent.putExtra(APIKeys.ACCOUNT_ID, accountId);
+        intent.putExtra(APIKeys.AVATAR, avatarPath);
+        context.startActivity(intent);
+    }
+
 
     public void back(View v) {
         onBackPressed();
     }
 
     private FilePickerBottomSheet filePickerBottomSheet;
+
     public void pickFiles(View v) {
         final EditText messageView = findViewById(R.id.message_box);
 
@@ -270,7 +299,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         filePickerBottomSheet.setRunnable(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getImages().get(position), messageView.getText().toString());
+                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getImages().get(position), messageView.getText().toString(),
+                        (SmartImageView) view);
 
             }
         });
@@ -278,14 +308,34 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
     public void showInfo(View v) {
-        final ConversationBottomSheet conversationBottomSheet = new ConversationBottomSheet();
-        conversationBottomSheet.setCid(String.valueOf(chatId));
-        conversationBottomSheet.show(getSupportFragmentManager(), "blocked");
-        conversationBottomSheet.setCancelable(true);
+        if (isDialog) {
+            Intent intent = new Intent(MessagingActivity.this, Profile.class);
+            intent.putExtra("id", accountId);
+            intent.putExtra(Profile.ALLOW_OPEN_CHAT, false);
+            if (avatar != null) {
+                intent.putExtra(Profile.AVATAR, avatar);
+            }
+
+            Bundle bundle = Transitions.makeOneViewTransition(avatarView, MessagingActivity.this, intent, getResources().getString(R.string.transition_profile));
+            if (bundle == null) {
+                startActivity(intent);
+            } else {
+                startActivity(intent, bundle);
+            }
+        } else {
+            final ConversationBottomSheet conversationBottomSheet = new ConversationBottomSheet();
+            conversationBottomSheet.setCid(String.valueOf(chatId));
+            conversationBottomSheet.show(getSupportFragmentManager(), "blocked");
+            conversationBottomSheet.setCancelable(true);
+        }
     }
 
 
     public boolean isrecording = false;
+
+    public void setOnResume(Runnable runnable) {
+        onResume = runnable;
+    }
 
 
     public void registerSocket() {
@@ -365,7 +415,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         @Override
                         public void run() {
                             try {
-
                                 TextView membersView = findViewById(R.id.subtitle);
                                 membersView.setText(chatInfoResponse.getMembers().size() + " " + getResources().getString(R.string.members));
                             } catch (ResponseException e) {
@@ -401,9 +450,15 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             public void run() {
 
                 try {
-                    GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId))).execute();
+                    final GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId))).execute();
                     if (getMessageListResponse.isSuccess()) {
                         List<Message> messages = getMessageListResponse.getMessages();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.setFirstMessageId(getMessageListResponse.getFirstMessageId());
+                            }
+                        });
                         for (final Message message : messages) {
 
 
@@ -455,7 +510,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     public void run() {
 
 
-                        System.out.println("hmmm");
+                        if (ids.size() == 0) {
+                            final LinearLayout info = findViewById(R.id.info);
+                            info.setVisibility(View.VISIBLE);
+                            infoPanel.setVisibility(View.VISIBLE);
+                            infoPanel.show();
+                        } else {
+                            final LinearLayout info = findViewById(R.id.info);
+                            info.setVisibility(View.INVISIBLE);
+                            infoPanel.setVisibility(View.INVISIBLE);
+                        }
                         final RecyclerView recyclerView = findViewById(R.id.messages);
                         adapter = new MessagesAdapter(MessagingActivity.this, messageList, isDialog, recyclerView);
                         recyclerView.setAdapter(adapter);
@@ -675,8 +739,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
@@ -692,21 +756,18 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         if (data == null) return;
 
         if (resultCode == ImageSendActivity.CODE) {
-            if(filePickerBottomSheet != null)
-            {
+            if (filePickerBottomSheet != null) {
                 filePickerBottomSheet.dismiss();
             }
             final String message = data.getStringExtra("text");
             String imageUri = data.getStringExtra("uri");
             System.out.println(imageUri);
 
-           ImageFile imageFile;
+            ImageFile imageFile;
 
             try {
                 imageFile = new ImageFile(getRealPathFromURI(this, Uri.parse(imageUri)));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 imageFile = new ImageFile(imageUri);
             }
 
@@ -728,7 +789,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         } else {
 
                             mediaIdToSend = uploadImageResponse.getMediaId();
-                            mediaPathToSend = uploadImageResponse.getPath();
+
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -748,13 +809,15 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
     public void sendMessageWithPreview(final String message) {
+        final LinearLayout info = findViewById(R.id.info);
+        info.setVisibility(View.INVISIBLE);
+        infoPanel.setVisibility(View.INVISIBLE);
         final Message messagePreview;
         try {
             EditText messageView = findViewById(R.id.message_box);
             messageView.setText("");
             String placegolderText = message;
-            if(mediaIdToSend != null)
-            {
+            if (mediaIdToSend != null) {
                 placegolderText += "(Изображение)";
             }
             messagePreview = new Message(-1, 1, false, placegolderText, null, null, null, null, null, null, null,
@@ -802,15 +865,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                         ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
                                     }
 
+                                    
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            messagePreview.setId(-2);
-                                            messagePreview.notifyDataChanged();
-                                        }
-                                    });
+
+                                    messagePreview.setId(-2);
+                                    messagePreview.notifyDataChanged();
+
                                 }
 
                             }
@@ -850,6 +912,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }

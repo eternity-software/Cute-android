@@ -66,17 +66,19 @@
                         app:srcCompat="@drawable/icon_photo_camera" />
                 </ru.etysoft.cute.components.Avatar>
 
-<!--                <TextView-->
-<!--                    android:id="@+id/button"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_marginLeft="12dp"-->
-<!--                    android:background="@drawable/square_rounded_corners_gray"-->
-<!--                    android:fontFamily="@font/montserratalternates_medium"-->
-<!--                    android:gravity="center"-->
-<!--                    android:onClick="updateCover"-->
-<!--                    android:text="Изменить шапку"-->
-<!--                    android:textSize="18sp" />-->
+
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/square_rounded_corners_gray"
+                    android:fontFamily="@font/montserratalternates_medium"
+                    android:gravity="center"
+                    android:onClick="updateCover"
+                    android:text="Изменить шапку"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 

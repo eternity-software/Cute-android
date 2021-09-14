@@ -1,6 +1,8 @@
 package ru.etysoft.cute.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,6 +22,8 @@ import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.Creation.ChatCreateResponse;
+import ru.etysoft.cuteframework.methods.chat.Creation.DialogCreateRequest;
 import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendRequest;
 import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendResponse;
 
@@ -33,13 +37,26 @@ public class Profile extends AppCompatActivity {
     private long id;
     private String url;
     private String coverUrl;
+    private String name;
+    private String avatar;
+    private boolean allowOpenPrivateChat;
+
+    public static final String ALLOW_OPEN_CHAT = "allowOpenChat";
+    public static final String AVATAR = "avatarPath";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         id = getIntent().getLongExtra("id", -1);
+
+        if(getIntent().hasExtra(AVATAR))
+        {
+           Avatar avatarView = findViewById(R.id.icon);
+            Picasso.get().load(getIntent().getStringExtra(AVATAR)).transform(new CircleTransform()).into(avatarView.getPictureView());
+        }
         loadData();
+        allowOpenPrivateChat = getIntent().getBooleanExtra(ALLOW_OPEN_CHAT, true);
         Slidr.attach(this);
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
@@ -58,10 +75,11 @@ public class Profile extends AppCompatActivity {
                 try {
                     final GetUserResponse getUserResponse = (new GetUserRequest(CachedValues.getSessionKey(Profile.this), String.valueOf(id))).execute();
                     if(getUserResponse.isSuccess()) {
-                        final String name = getUserResponse.getUser().getDisplayName();
+                        name = getUserResponse.getUser().getDisplayName();
                         final String bio = getUserResponse.getUser().getBioText();
                         final String status = getUserResponse.getUser().getStatusText();
                         url = getUserResponse.getUser().getAvatar();
+                        Profile.this.avatar = getUserResponse.getUser().getAvatar();
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -143,6 +161,58 @@ public class Profile extends AppCompatActivity {
         });
         loadInfo.start();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    public void openPrivateChat(View v)
+    {
+        if(allowOpenPrivateChat)
+        {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        final ChatCreateResponse chatCreateResponse = new DialogCreateRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(id)).execute();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(name != null)
+                                {
+                                    try {
+                                        MessagingActivity.openActivityForDialog(Profile.this, Integer.parseInt(chatCreateResponse.getChatId()),
+                                                id, name, avatar);
+                                    } catch (ResponseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        }
+        else
+        {
+
+            finish();
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        }
+    }
+
 
     public void openImage(View v) {
         if(url != null) {

@@ -8,12 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.transition.ChangeBounds;
+import android.transition.Transition;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +28,10 @@ import com.r0adkll.slidr.Slidr;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
+import ru.etysoft.cute.activities.MessagingActivity;
+import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.transition.Transitions;
+import ru.etysoft.cute.utils.SliderActivity;
 
 public class ImageSendActivity extends AppCompatActivity {
 
@@ -43,13 +52,59 @@ public class ImageSendActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.photoView);
         imageView.setImageURI(Uri.parse(imageUri));
 
-        Slidr.attach(this);
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().getSharedElementEnterTransition().setDuration(300);
+            LinearLayout layout = findViewById(R.id.linearLayout3);
+            layout.setVisibility(View.INVISIBLE);
+            getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
+            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    showBottomBar();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+
+                }
+            });
+        }
+        else
+        {
+            showBottomBar();
+        }
+
 
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+
+    }
+
+
+    private void showBottomBar() {
         LinearLayout layout = findViewById(R.id.linearLayout3);
+        layout.setVisibility(View.VISIBLE);
         Animation appearAnimation = AnimationUtils.loadAnimation(this,
                 R.anim.appear_from_bottom);
-        layout.startAnimation(appearAnimation );
+        appearAnimation.setFillAfter(true);
+        layout.startAnimation(appearAnimation);
     }
 
     public void editImageButtonClick(View v)
@@ -57,12 +112,15 @@ public class ImageSendActivity extends AppCompatActivity {
         ImageEdit.openForResult(Uri.parse(finalImageUri), this);
     }
 
-    public static void open(Activity from, String imageUri, String text)
+    public static void open(Activity from, String imageUri, String text, SmartImageView smartImageView)
     {
         Intent intent = new Intent(from, ImageSendActivity.class);
         intent.putExtra("uri", imageUri);
         intent.putExtra("text", text);
-        from.startActivityForResult(intent, CODE);
+
+        from.startActivityForResult(intent, CODE,
+                Transitions.makeOneViewTransition(smartImageView, from, intent, from.getResources().getString(R.string.transition_image_send)));
+
     }
 
     @Override

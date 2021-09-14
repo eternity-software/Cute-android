@@ -1,6 +1,8 @@
 package ru.etysoft.cute.components;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +13,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.utils.ImagesWorker;
+import ru.etysoft.cute.images.ImagesWorker;
+import ru.etysoft.cute.utils.Numbers;
 
-public class Avatar extends RelativeLayout {
+public class Avatar extends RelativeLayout implements Parcelable {
 
     private TextView acronymView;
     private ImageView generatedPictureView;
     private ImageView pictureView;
     private ImageView onlineView;
     private View rootView;
+    private int size;
 
     public Avatar(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -79,6 +83,11 @@ public class Avatar extends RelativeLayout {
         setSize(size);
     }
 
+    private int coverPixelToDP (int dps) {
+        final float scale = this.getResources().getDisplayMetrics().density;
+        return (int) (dps * scale);
+    }
+
     public void showAnimate()
     {
         Animation bottomDown = AnimationUtils.loadAnimation(getContext(),
@@ -91,20 +100,43 @@ public class Avatar extends RelativeLayout {
     {
         if(size == Size.SMALL)
         {
-            acronymView.setTextSize(getContext().getResources().getDimension(R.dimen.acronym_small));
+            onlineView.getLayoutParams().width = Numbers.dpToPx(14, getContext());
+            onlineView.getLayoutParams().height = Numbers.dpToPx(14, getContext());
+            acronymView.setTextSize(coverPixelToDP(6));
         }
         else if(size == Size.MEDIUM)
         {
-            acronymView.setTextSize(getContext().getResources().getDimension(R.dimen.acronym_medium));
+            onlineView.getLayoutParams().width = Numbers.dpToPx(18, getContext());
+            onlineView.getLayoutParams().height = Numbers.dpToPx(18, getContext());
+            acronymView.setTextSize(coverPixelToDP(8));
         }
         else if(size == Size.LARGE)
         {
-            acronymView.setTextSize(getContext().getResources().getDimension(R.dimen.acronym_large));
+            acronymView.setTextSize(coverPixelToDP(12));
         }
+        this.size = size;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public TextView getAcronymView() {
+        return acronymView;
     }
 
     public void generateIdPicture(long id) {
         ImagesWorker.setGradient(generatedPictureView, id);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 
     public static class Size

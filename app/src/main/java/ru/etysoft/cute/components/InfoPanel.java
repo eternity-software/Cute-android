@@ -45,7 +45,7 @@ public class InfoPanel extends RelativeLayout {
             }
         }
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(R.layout.error_panel, this);
+        rootView = inflater.inflate(R.layout.info_panel, this);
 
 
         titleView = findViewById(R.id.error_title);

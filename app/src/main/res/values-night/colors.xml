@@ -51,7 +51,7 @@
     <color name="colorSupportButton">#FFFF</color>
 
 
-    <color name="colorUnreadBackground">@color/colorAccent10</color>
+    <color name="colorUnreadBackground">#B7293449</color>
 
     <color name="colorNavigationUnfocused">#5C6A87</color>
     <color name="colorNavigationFocused">#FFFFFF</color>
@@ -97,12 +97,13 @@
 
     <color name="colorOnline">@color/state_green</color>
     <color name="colorOnlineOutLine">@color/colorBackground</color>
-
+    <color name="colorCloud">@color/colorBackgroundElements</color>
     <color name="colorSupportText">@color/colorPrimaryGray</color>
     <color name="colorButtonTrans">@color/text_soft_gray</color>
 
     <color name="colorProgressBar">@color/accent_blue</color>
     <color name="colorTitle">#FFF</color>
+    <color name="colorBackgroundElement">@color/colorBackgroundElements</color>
 
 
     <color name="colorAltSupport">#FFFFFF</color>
@@ -116,7 +117,7 @@
 
 
     <color name="colorOffline">#707070</color>
-    <color name="colorOfflineOutLine">#FFFF</color>
+    <color name="colorOfflineOutLine">@color/colorBackground</color>
 
     <color name="colorTransparent">#00C1C1C1</color>
     <color name="colorTooltip">#B0000000</color>

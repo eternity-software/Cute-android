@@ -159,11 +159,26 @@
         app:srcCompat="@drawable/icon_microphone" />
 
 
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerCrop"
+        android:alpha="0"
+        android:src="@drawable/houses"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/messages"
+       />
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:divider="@color/orange"
 
 
         android:clipToPadding="false"
@@ -225,6 +240,38 @@
             android:textSize="24sp"
             app:text="@string/err_messages_text"
             app:title="@string/err_messages_title" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingHorizontal="40dp"
+        android:layout_weight="1"
+        android:background="@color/colorBackground"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/messages">
+
+
+        <ru.etysoft.cute.components.InfoPanel
+            android:id="@+id/info_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center"
+            android:text="@string/dialog_empty_title"
+            android:textColor="@color/colorText"
+            android:textSize="24sp"
+            app:text="@string/dialog_empty_text"
+            app:title="@string/dialog_empty_title" />
 
 
     </LinearLayout>

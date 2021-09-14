@@ -1,10 +1,15 @@
 package ru.etysoft.cute.activities.messages;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +34,7 @@ import java.util.Set;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImagePreview;
+import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
@@ -44,26 +50,33 @@ import ru.etysoft.cuteframework.methods.messages.AttachmentData;
 import ru.etysoft.cuteframework.methods.messages.Message;
 
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final Activity context;
+    private final MessagingActivity context;
     private final List<Message> list;
     private final LayoutInflater inflater;
     private boolean isDialog;
     private RecyclerView recyclerView;
 
-    public MessagesAdapter(Activity context, List<Message> values, boolean isDialog, RecyclerView recyclerView) {
+    private long firstmessageId;
+
+    public MessagesAdapter(MessagingActivity context, List<Message> values, boolean isDialog, RecyclerView recyclerView) {
         this.context = context;
         this.list = values;
         this.isDialog = isDialog;
         this.inflater = LayoutInflater.from(context);
+        this.firstmessageId = firstmessageId;
         this.recyclerView = recyclerView;
 
     }
+
+    public void setFirstMessageId(long firstmessageId) {
+        this.firstmessageId = firstmessageId;
+    }
+
     private Set<Integer> animated = new HashSet<>();
-    private void setAnimation(View viewToAnimate, final int position)
-    {
+
+    private void setAnimation(View viewToAnimate, final int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position == getItemCount() - 1 && !animated.contains(position))
-        {
+        if (position == getItemCount() - 1 && !animated.contains(position)) {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_slide_from_bottom);
             viewToAnimate.startAnimation(animation);
             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -107,13 +120,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case Types.MINE:
                 viewHolder = new ViewHolder.MyMessage(inflater.inflate(R.layout.conv_mymessage, parent, false));
                 break;
+            case Types.CLOUD:
+                viewHolder = new ViewHolder.Clouds(inflater.inflate(R.layout.chat_beggining, parent, false));
+                break;
         }
 
         return viewHolder;
 
     }
 
-    private static boolean isEmoji(String message){
+    private static boolean isEmoji(String message) {
         return message.matches("(?:[\uD83C\uDF00-\uD83D\uDDFF]|[\uD83E\uDD00-\uD83E\uDDFF]|" +
                 "[\uD83D\uDE00-\uD83D\uDE4F]|[\uD83D\uDE80-\uD83D\uDEFF]|" +
                 "[\u2600-\u26FF]\uFE0F?|[\u2700-\u27BF]\uFE0F?|\u24C2\uFE0F?|" +
@@ -127,25 +143,24 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 "[\u231A\u231B\u2328\u23CF\u23E9-\u23F3\u23F8-\u23FA]\uFE0F?)+");
     }
 
-    private void setBasicInfo(final Message message, ViewHolder.BasicMessageHolder basicMessageHolder, int type)
-    {
+    private void setBasicInfo(final Message message, final ViewHolder.BasicMessageHolder basicMessageHolder, int type) {
         basicMessageHolder.text.setVisibility(View.GONE);
         basicMessageHolder.emoji.setVisibility(View.GONE);
 
+        if (message.isRead()) {
+            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+        } else {
+            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+        }
 
-        AttachmentData attachmentData = message.getAttachmentData();
-        if(message.getText() != null && isEmoji(message.getText()) && message.getText().length() < 4 && attachmentData == null)
-        {
+        final AttachmentData attachmentData = message.getAttachmentData();
+        if (message.getText() != null && isEmoji(message.getText()) && message.getText().length() < 8 && attachmentData == null) {
             basicMessageHolder.emoji.setText(message.getText());
             basicMessageHolder.emoji.setVisibility(View.VISIBLE);
             basicMessageHolder.messageContainer.setBackground(null);
-        }
-        else
-        {
-            if(message.getText() != null)
-            {
-                if(message.getText().length() > 0)
-                {
+        } else {
+            if (message.getText() != null) {
+                if (message.getText().length() > 0) {
                     basicMessageHolder.text.setText(message.getText());
                     basicMessageHolder.text.setVisibility(View.VISIBLE);
                 }
@@ -155,9 +170,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 );
                 params.setMargins(0, Numbers.dpToPx(-8, context), 0, 0);
                 basicMessageHolder.attachments.setLayoutParams(params);
-            }
-            else
-            {
+            } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
@@ -167,17 +180,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
 
-            if(Types.MINE == type)
-            {
+            if (Types.MINE == type) {
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.mymessage));
-            }
-            else
-            {
+            } else {
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.dialog_message));
             }
         }
-
-
 
 
         if (attachmentData != null) {
@@ -192,45 +200,74 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             basicMessageHolder.attachments.getImageView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    Bundle bundle = null;
                     Intent intent = new Intent(context, ImagePreview.class);
                     intent.putExtra("url", message.getAttachmentPath());
-                    context.startActivity(intent);
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        final View imageView = basicMessageHolder.attachments.findViewById(R.id.imageContainer);
+                        String transitionName = context.getString(R.string.transition_image_preview);
+                        imageView.setTransitionName(transitionName);
+
+                        // This part is important. We first need to clip this view to only its visible part.
+                        // We will also clip the corresponding view in the SecondActivity using shared element
+                        // callbacks.
+                        Rect localVisibleRect = new Rect();
+                        imageView.getLocalVisibleRect(localVisibleRect);
+                        imageView.setClipBounds(localVisibleRect);
+
+
+
+                        intent.putExtra(context.getResources().getString(R.string.transition_image_preview), transitionName);
+                        intent.putExtra(ImagePreview.EXTRA_CLIP_RECT, localVisibleRect);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                                context,
+                                Pair.create(imageView, transitionName));
+
+                        context.setOnResume(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (imageView != null) {
+                                    imageView.setClipBounds(null);
+                                }
+                                context.setOnResume(null);
+                            }
+                        });
+
+                        context.startActivity(intent, options.toBundle());
+
+                    } else {
+
+                        context.startActivity(intent);
+
+                    }
+
+
                 }
             });
             basicMessageHolder.attachments.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             basicMessageHolder.attachments.setVisibility(View.GONE);
         }
-        try
-        {
+        try {
 
             basicMessageHolder.time.setText(String.valueOf(Numbers.getTimeFromTimestamp(message.getTime() + "000", context)));
 
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
 
         }
 
     }
 
-    public void updateMessageStatus(Message message, ViewHolder.MyMessage myMessage)
-    {
+    public void updateMessageStatus(Message message, ViewHolder.MyMessage myMessage) {
         myMessage.state.setVisibility(View.VISIBLE);
-        if(message.getId() == -2)
-        {
+        if (message.getId() == -2) {
             myMessage.state.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_error));
             myMessage.basicMessageHolder.time.setText("");
-        }
-        else if(message.getId() == -1)
-        {
+        } else if (message.getId() == -1) {
             myMessage.state.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_clock));
             myMessage.basicMessageHolder.time.setText("");
-        }
-        else if(message.getId() >= 0)
-        {
+        } else if (message.getId() >= 0) {
             myMessage.state.setVisibility(View.GONE);
             setBasicInfo(message, myMessage.basicMessageHolder, Types.MINE);
         }
@@ -240,87 +277,93 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final Message message = list.get(position);
 
-        switch (getItemViewType(position)) {
-            case Types.SERVICE:
-                ViewHolder.Service serviceMessage = (ViewHolder.Service) holder;
-                String messageText = "";
-                try {
-                    ServiceData serviceData = message.getServiceData();
-                    if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
+        if (message != null) {
 
-                        messageText = StringsRepository.getOrDefault(R.string.chat_created, inflater.getContext())
-                                .replace("%s", serviceData.getChatName());
 
-                    } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
-                        messageText = StringsRepository.getOrDefault(R.string.add_member, inflater.getContext())
-                                .replace("%s", serviceData.getDisplayName());
-                    } else {
-                        messageText = message.getText();
-                    }
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                }
-                serviceMessage.text.setText(messageText);
-                break;
-            case Types.CONV_PREVIEW:
-                ViewHolder.ChatExpandedMessage chatExpandedMessage = (ViewHolder.ChatExpandedMessage) holder;
-                setBasicInfo(message, chatExpandedMessage.basicMessageHolder, Types.CONV_PREVIEW);
-                chatExpandedMessage.avatar.setAcronym(message.getSender().getDisplayName(), Avatar.Size.SMALL);
-                chatExpandedMessage.displayName.setText(message.getSender().getDisplayName());
-                chatExpandedMessage.avatar.generateIdPicture((int) message.getSender().getId());
-                if (message.getSender().getAvatar() != null) {
-                    Picasso.get().load(message.getSender().getAvatar()).transform(new CircleTransform()).into(((ViewHolder.ChatExpandedMessage) holder).avatar.getPictureView());
-                }
-                ((ViewHolder.ChatExpandedMessage) holder).avatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, Profile.class);
-                        intent.putExtra("id", message.getSender().getId());
-                        context.startActivity(intent);
-                    }
-                });
-                break;
-            case Types.DIALOG:
-                ViewHolder.DialogMessage dialogMessage = (ViewHolder.DialogMessage) holder;
-                setBasicInfo(message, dialogMessage.basicMessageHolder, Types.DIALOG);
-                break;
-            case Types.CONV:
-                ViewHolder.ChatMessage chatMessage = (ViewHolder.ChatMessage) holder;
-                setBasicInfo(message, chatMessage.basicMessageHolder, Types.CONV);
-                break;
-            case Types.MINE:
-               final ViewHolder.MyMessage myMessage = (ViewHolder.MyMessage) holder;
-                setBasicInfo(message, myMessage.basicMessageHolder, Types.MINE);
-                message.setMessageDataHandler(new Message.MessageDataHandler() {
-                    @Override
-                    public void onDataUpdated(Message message) {
-                       updateMessageStatus(message, myMessage);
-                    }
-                });
-                myMessage.basicMessageHolder.rootView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myMessage.basicMessageHolder.text.setText("id " + message.getId());
-                        updateMessageStatus(message, myMessage);
-                    }
-                });
-                updateMessageStatus(message, myMessage);
-                break;
+            switch (getItemViewType(position)) {
+                case Types.SERVICE:
+                    ViewHolder.Service serviceMessage = (ViewHolder.Service) holder;
+                    String messageText = "";
+                    try {
+                        ServiceData serviceData = message.getServiceData();
+                        if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
 
+                            messageText = StringsRepository.getOrDefault(R.string.chat_created, inflater.getContext())
+                                    .replace("%s", serviceData.getChatName());
+
+                        } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
+                            messageText = StringsRepository.getOrDefault(R.string.add_member, inflater.getContext())
+                                    .replace("%s", serviceData.getDisplayName());
+                        } else {
+                            messageText = message.getText();
+                        }
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                    }
+                    serviceMessage.text.setText(messageText);
+                    break;
+                case Types.CONV_PREVIEW:
+                    ViewHolder.ChatExpandedMessage chatExpandedMessage = (ViewHolder.ChatExpandedMessage) holder;
+                    setBasicInfo(message, chatExpandedMessage.basicMessageHolder, Types.CONV_PREVIEW);
+                    chatExpandedMessage.avatar.setAcronym(message.getSender().getDisplayName(), Avatar.Size.SMALL);
+                    chatExpandedMessage.displayName.setText(message.getSender().getDisplayName());
+                    chatExpandedMessage.avatar.generateIdPicture((int) message.getSender().getId());
+                    if (message.getSender().getAvatar() != null) {
+                        Picasso.get().load(message.getSender().getAvatar()).transform(new CircleTransform()).into(((ViewHolder.ChatExpandedMessage) holder).avatar.getPictureView());
+                    }
+                    ((ViewHolder.ChatExpandedMessage) holder).avatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, Profile.class);
+                            intent.putExtra("id", message.getSender().getId());
+                            context.startActivity(intent);
+                        }
+                    });
+                    break;
+                case Types.DIALOG:
+                    ViewHolder.DialogMessage dialogMessage = (ViewHolder.DialogMessage) holder;
+                    setBasicInfo(message, dialogMessage.basicMessageHolder, Types.DIALOG);
+                    break;
+                case Types.CONV:
+                    ViewHolder.ChatMessage chatMessage = (ViewHolder.ChatMessage) holder;
+                    setBasicInfo(message, chatMessage.basicMessageHolder, Types.CONV);
+                    break;
+                case Types.MINE:
+                    final ViewHolder.MyMessage myMessage = (ViewHolder.MyMessage) holder;
+                    setBasicInfo(message, myMessage.basicMessageHolder, Types.MINE);
+                    message.setMessageDataHandler(new Message.MessageDataHandler() {
+                        @Override
+                        public void onDataUpdated(Message message) {
+                            updateMessageStatus(message, myMessage);
+                        }
+                    });
+                    myMessage.basicMessageHolder.rootView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myMessage.basicMessageHolder.text.setText("id " + message.getId());
+                            updateMessageStatus(message, myMessage);
+                        }
+                    });
+                    updateMessageStatus(message, myMessage);
+                    break;
+
+            }
+
+            setAnimation(holder.itemView, position);
         }
-
-        setAnimation(holder.itemView, position);
     }
 
     @Override
     public int getItemViewType(int position) {
         Message message = list.get(position);
         try {
-            if(message.getId() < 0)
-            {
-                return Types.MINE;
+            if (message == null) {
+                tempClouds = true;
+                return Types.CLOUD;
             }
-            else if (message.getType().equals(Message.Type.SERVICE)) {
+            if (message.getId() < 0) {
+                return Types.MINE;
+            } else if (message.getType().equals(Message.Type.SERVICE)) {
                 return Types.SERVICE;
             } else if (message.getSender().getId() == Integer.parseInt(CachedValues.getId(context))) {
                 return Types.MINE;
@@ -342,34 +385,40 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-
     @Override
     public int getItemCount() {
         return list.size();
     }
 
-    public void addItem(Message message)
-    {
-        boolean scrollToBottom = false;
-        final int offset = recyclerView.computeVerticalScrollOffset();
-        final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
-        System.out.println("offset " + offset + ", range " + range);
-        if (range - offset < (recyclerView.getHeight() / 2)) {
-            scrollToBottom = true;
-        }
-        list.add(message);
-        if(scrollToBottom)
-        {
-            recyclerView.smoothScrollToPosition(getItemCount() - 1);
-        }
+    boolean tempClouds = false;
 
-        notifyItemInserted(getItemCount() - 1);
+    public void addItem(Message message) {
+        if (!tempClouds && message.getId() - firstmessageId == 0) {
+            tempClouds = true;
+            addItem(null);
+        }
+        if (message == null) {
+            list.add(null);
+            notifyItemInserted(getItemCount() - 1);
+        } else {
+            boolean scrollToBottom = false;
+            final int offset = recyclerView.computeVerticalScrollOffset();
+            final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
+            System.out.println("offset " + offset + ", range " + range);
+            if (range - offset < (recyclerView.getHeight())) {
+                scrollToBottom = true;
+            }
+            list.add(message);
+            if (scrollToBottom) {
+                recyclerView.smoothScrollToPosition(getItemCount() - 1);
+            }
+
+            notifyItemInserted(getItemCount() - 1);
+        }
     }
 
 
-
-
-    // Держим информацию
+    // Держим вьюшки
     static class ViewHolder {
         static class Service extends RecyclerView.ViewHolder {
             final TextView text;
@@ -392,6 +441,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 displayName = itemView.findViewById(R.id.displayNameView);
                 avatar = itemView.findViewById(R.id.avatarView);
                 basicMessageHolder = new BasicMessageHolder(itemView);
+            }
+        }
+
+        static class Clouds extends RecyclerView.ViewHolder {
+
+            public Clouds(@NonNull View itemView) {
+                super(itemView);
             }
         }
 
@@ -426,7 +482,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
 
-        static class BasicMessageHolder  {
+        static class BasicMessageHolder {
             final TextView text;
             final TextView time;
             final TextView emoji;
@@ -455,5 +511,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public static final int CONV_PREVIEW = 2;
         public static final int CONV = 3;
         public static final int DIALOG = 4;
+        public static final int CLOUD = 5;
     }
 }

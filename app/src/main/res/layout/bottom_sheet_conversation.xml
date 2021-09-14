@@ -25,9 +25,9 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+
             android:layout_marginTop="12dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="20dp"
             android:orientation="vertical"
             android:visibility="visible">
@@ -35,13 +35,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:orientation="horizontal">
 
 
                 <ru.etysoft.cute.components.Avatar
                     android:id="@+id/icon"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+
                     android:transitionName="editchat"
                     app:srcCompat="@drawable/circle_gray" />
 
@@ -52,6 +54,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="8dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -63,7 +67,7 @@
                         style="@style/autoscroll"
                         android:ellipsize="marquee"
                         android:focusable="true"
-                        android:text=""
+                        android:text="Сute Cummunity"
                         android:textColor="@color/colorTextAccent"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
@@ -73,121 +77,108 @@
                         android:id="@+id/conv_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat"
+                        android:fontFamily="@font/montserratalternates_medium"
                         android:maxLines="3"
-                        android:text=""
+                        android:paddingVertical="10dp"
+                        android:text="Описание этой беседы. Не пиду в армию ооууоо не пиду в армиюю Что? Бебра. Бебросня. Занюхнул беброчки конкретно)))"
                         android:textColor="@color/colorSupportText"
                         android:textSize="14sp" />
 
-                    <LinearLayout
-                        android:id="@+id/motherButtons"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="horizontal">
 
-
-                        <ImageButton
-                            android:id="@+id/notification_button"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/button_active_mini"
-                            android:fontFamily="@font/montserrat"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:scaleType="centerInside"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="14sp"
-                            app:srcCompat="@drawable/icon_notifications" />
-
-                        <ImageButton
-                            android:id="@+id/buttonEdit"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/button_active_mini"
-                            android:fontFamily="@font/montserrat"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:scaleType="centerInside"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="14sp"
-                            app:srcCompat="@drawable/icon_edit" />
-
-
-                        <ImageButton
-                            android:id="@+id/conv_delete"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="50dp"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="5dp"
-                            android:background="@drawable/button_passive_mini"
-                            android:fontFamily="@font/montserrat"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:scaleType="centerInside"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="14sp"
-                            android:tint="@color/colorFrontElements"
-                            android:backgroundTint="@color/colorBackgroundElements"
-                            android:transitionName="delbtn"
-                            app:srcCompat="@drawable/icon_delete" />
-
-                        <ImageButton
-                            android:id="@+id/conv_exit"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="50dp"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/button_passive_mini"
-                            android:fontFamily="@font/montserrat"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:scaleType="centerInside"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="14sp"
-                            android:tint="@color/colorFrontElements"
-                            android:backgroundTint="@color/colorBackgroundElements"
-                            android:transitionName="exitbtn"
-                            app:srcCompat="@drawable/icon_exit" />
-                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/buttonAdd"
-                style="?android:attr/borderlessButtonStyle"
+            <LinearLayout
+                android:id="@+id/motherButtons"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_passive_mini"
-                android:fontFamily="@font/montserrat"
-                android:gravity="center"
-                android:maxLines="1"
-                android:scaleType="centerInside"
-                android:textColor="@color/colorWhite"
-                android:textSize="14sp"
-                android:backgroundTint="@color/colorBackgroundElements"
-                android:tint="@color/colorFrontElements"
-                app:srcCompat="@drawable/icon_convcreate" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+
+                <ImageButton
+                    android:id="@+id/notification_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_active_mini"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:scaleType="centerInside"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    app:srcCompat="@drawable/icon_notifications" />
+
+                <ImageButton
+                    android:id="@+id/buttonAdd"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_active_mini"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:scaleType="centerInside"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    app:srcCompat="@drawable/icon_add" />
+
+
+                <ImageButton
+                    android:id="@+id/conv_delete"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/button_passive_mini"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:scaleType="centerInside"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    android:tint="@color/colorFrontElements"
+                    android:backgroundTint="@color/colorBackgroundElements"
+                    android:transitionName="delbtn"
+                    app:srcCompat="@drawable/icon_delete" />
+
+                <ImageButton
+                    android:id="@+id/conv_exit"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_passive_mini"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:scaleType="centerInside"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    android:tint="@color/colorFrontElements"
+                    android:backgroundTint="@color/colorBackgroundElements"
+                    android:transitionName="exitbtn"
+                    app:srcCompat="@drawable/icon_exit" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/membersCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
-                android:fontFamily="@font/montserrat"
+                android:fontFamily="@font/montserratalternates_medium"
                 android:gravity="center"
                 android:maxLines="1"
 
@@ -216,136 +207,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/colorBackground"
+                android:dividerHeight="8dp"
                 android:paddingBottom="20dp">
 
             </ListView>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/edit"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="15dp"
-            android:orientation="vertical"
-            android:visibility="invisible">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <ImageView
-                    android:id="@+id/backButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackground"
-
-                    android:paddingHorizontal="12dp"
-                    app:srcCompat="@drawable/icon_back" />
-
-                <TextView
-                    android:id="@+id/loginView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/montserrat"
-                    android:gravity="center"
-                    android:text="@string/edit_conv"
-                    android:textColor="@color/colorText"
-                    android:textSize="22sp" />
-            </LinearLayout>
-
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="7dp"
-
-                android:background="@color/colorDivider" />
-
-            <ImageView
-                android:id="@+id/icon_edit"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-
-                app:srcCompat="@drawable/circle_gray" />
-
-            <TextView
-                android:id="@+id/acronym_edit"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="-150dp"
-                android:fontFamily="@font/montserrat"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/colorWhite"
-                android:textSize="56sp" />
-
-            <EditText
-                android:id="@+id/nameview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/edit_text_passive"
-                android:drawableLeft="@drawable/icon_account"
-                android:drawablePadding="10dp"
-                android:drawableTint="@color/colorEditTextIcon"
-                android:ems="10"
-                android:fontFamily="@font/montserrat"
-                android:foregroundGravity="left|clip_horizontal"
-                android:hint="@string/create_conv_text"
-                android:inputType="textPersonName"
-                android:paddingLeft="10dp"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp" />
-
-            <EditText
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edit_text_passive"
-                android:drawableLeft="@drawable/icon_account"
-                android:drawablePadding="10dp"
-                android:drawableTint="@color/colorEditTextIcon"
-                android:ems="10"
-                android:fontFamily="@font/montserrat"
-                android:foregroundGravity="left|clip_horizontal"
-                android:hint="@string/create_conv_description"
-                android:inputType="textPersonName"
-                android:paddingLeft="10dp"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp" />
-
-            <Button
-                android:id="@+id/applybtn"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button_active_enabled"
-                android:fontFamily="@font/montserratmedium"
-                android:textAllCaps="false"
-                android:text="@string/save_profile"
-                android:textColor="@color/colorButtonText"
-                android:textSize="18sp" />
-
-            <ProgressBar
-                android:id="@+id/loadingApply"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginTop="-35dp"
-                android:paddingVertical="7dp"
-                android:visibility="invisible" />
-
-        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

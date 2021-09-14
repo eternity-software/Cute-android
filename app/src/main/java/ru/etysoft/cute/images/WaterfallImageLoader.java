@@ -1,25 +1,20 @@
 package ru.etysoft.cute.images;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.view.View;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.SmartImageView;
-import ru.etysoft.cute.utils.ImageRotationFix;
 
 public class WaterfallImageLoader {
 

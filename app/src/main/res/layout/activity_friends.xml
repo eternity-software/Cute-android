@@ -44,7 +44,7 @@
             android:gravity="right"
             android:layout_marginRight="10dp"
             android:orientation="horizontal">
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/requestCountView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,10 +54,12 @@
 
                 android:background="@drawable/text_outline_shape"
                 android:fontFamily="@font/montserratalternates_medium"
+                app:localizableKey="friends_requests"
 
                 android:onClick="openRequests"
-                android:text="+99"
-                android:padding="4dp"
+                android:text="@string/friends_requests"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
                 android:textColor="@color/colorButtonText" />
         </LinearLayout>
 

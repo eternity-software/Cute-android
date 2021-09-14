@@ -1,4 +1,4 @@
-package ru.etysoft.cute.utils;
+package ru.etysoft.cute.images;
 
 
 import android.content.Context;

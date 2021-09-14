@@ -90,6 +90,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+
     </style>
 
     <style name="MeetTheme" parent="Theme.AppCompat.DayNight.NoActionBar">

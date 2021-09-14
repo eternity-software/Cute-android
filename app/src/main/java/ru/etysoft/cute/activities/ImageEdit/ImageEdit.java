@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.DrawingView;
-import ru.etysoft.cute.utils.ImageRotationFix;
+import ru.etysoft.cute.images.ImageRotationFix;
 
 public class ImageEdit extends AppCompatActivity {
 

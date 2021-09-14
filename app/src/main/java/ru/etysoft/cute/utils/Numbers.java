@@ -22,6 +22,10 @@ public class Numbers {
         return (int) px;
     }
 
+    public static int spToPx(float sp, Context context) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
+    }
+
     public static int getColorById(long id, Context context) {
         int color1 = Color.parseColor("#B83ADE");
         int color2 = Color.parseColor("#3a8fde");

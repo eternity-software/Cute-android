@@ -19,6 +19,7 @@
         android:fontFamily="@font/montserratalternates_medium"
         android:gravity="center"
         android:text=" "
+        android:maxLines="1"
 
 
         android:textColor="@color/colorWhite"

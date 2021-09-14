@@ -117,4 +117,10 @@
     <string name="outgoing">Исходящие</string>
     <string name="add_member">%s присоединился к чату</string>
     <string name="unknown_service_message">Неизвестное сервисное сообщение</string>
+    <string name="dialog_empty_title">Начало чата</string>
+    <string name="dialog_empty_text">У Вас нет сообщений в этом чате. Начните с приветствия, но будьте осторожны, остерегайтесь мошенников!</string>
+    <string name="chat_beginning_title">Это начало.</string>
+    <string name="chat_beginning_text">Да будет свет!</string>
+    <string name="you">Вы</string>
+    <string name="image">Изображение</string>
 </resources>

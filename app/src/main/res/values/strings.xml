@@ -54,6 +54,8 @@
     <string name="create_conv_description">Description</string>
     <string name="create_conv_title">Create a conversation</string>
     <string name="create_conv_button">Create</string>
+    <string name="dialog_empty_title">The beginning...</string>
+    <string name="dialog_empty_text">You don\'t have any messages in this chat. Start with a greeting, but be careful, beware of scammers!</string>
     <string name="chat_create_success">New conversation created</string>
     <string name="your_message">Your message</string>
     <string name="wait_for_record">Hold your finger to record a voice message</string>
@@ -61,7 +63,11 @@
     <string name="chat_join_title">Join %s%</string>
     <string name="chat_join_text">Are you sure you want to join this chat?</string>
     <string name="members">members</string>
+    <string name="image">Image</string>
     <string name="edit">edit</string>
+    <string name="transition_image_preview">IMAGE_PREVIEW_TRANSITION</string>
+    <string name="transition_profile">PROFILE_TRANSITION</string>
+    <string name="transition_image_send">IMAGE_SEND_TRANSITION</string>
     <string name="on_notif">Enable notifications</string>
     <string name="leave_title">Leave the conversation</string>
     <string name="leave_text">Do you want to leave the conversation?</string>
@@ -137,4 +143,7 @@
     <string name="add_member">%s joined chat</string>
     <string name="about">About</string>
     <string name="unknown_service_message">Unknown service message</string>
+    <string name="chat_beginning_title">The Begining.</string>
+    <string name="chat_beginning_text">Let there be light</string>
+    <string name="you">You</string>
 </resources>

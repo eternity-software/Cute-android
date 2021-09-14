@@ -5,7 +5,6 @@
     android:id="@+id/messageback"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorBackground"
     android:paddingVertical="6dp"
     android:paddingLeft="60dp"
     android:paddingRight="15dp">

@@ -3,7 +3,6 @@ package ru.etysoft.cute.components;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.media.Image;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.lang.StringsRepository;
-import ru.etysoft.cute.utils.ImagesWorker;
 
 public class LightToolbar extends RelativeLayout {
 

@@ -52,11 +52,13 @@
 
     <color name="colorTitle">@color/accent_blue</color>
     <color name="colorMessageState">@color/accent_blue</color>
+    <color name="colorBackgroundElement">@color/colorLightLGray</color>
 
 
 
 
-    <color name="colorUnreadBackground">@color/colorAccent10</color>
+    <color name="colorUnreadBackground">#A1FAFAFA</color>
+
 
     <color name="colorNavigationUnfocused">@color/achromatic_75</color>
     <color name="colorNavigationFocused">@color/accent_blue</color>
@@ -73,6 +75,7 @@
 
     <color name="colorIconTint">@color/accent_support</color>
     <color name="colorIconSupportTint">@color/colorPrimaryGray</color>
+    <color name="colorCloud">@color/colorMainLight</color>
     <color name="colorPanelGray">@color/colorLightLGray</color>
     <color name="splashLogo">@color/accent_blue</color>
 

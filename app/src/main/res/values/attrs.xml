@@ -18,5 +18,8 @@
         <attr name="caption" format="string" />
         <attr name="captionLocId" format="string" />
     </declare-styleable>
-
+    <declare-styleable name="ChangeOutlineRadius">
+        <attr name="startRadius" format="dimension" />
+        <attr name="endRadius" format="dimension" />
+    </declare-styleable>
 </resources>

@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.cardview.widget.CardView
+        android:id="@+id/imageContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -12,12 +13,14 @@
         app:cardElevation="0dp"
         android:maxHeight="100dp"
         android:adjustViewBounds="true"
+        android:transitionName="@string/transition_image_preview"
        >
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
             android:layout_height="wrap_content"
 
             android:adjustViewBounds="true"

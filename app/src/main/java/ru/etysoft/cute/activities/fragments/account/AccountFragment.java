@@ -143,10 +143,6 @@ public class AccountFragment extends Fragment implements AccountContact.View {
         if (photo != null) {
             Picasso.get().load(photo).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(userimage.getPictureView());
         }
-        else
-        {
-            System.out.println("aaaa where is my pipi!?");
-        }
     }
 
     @Override
