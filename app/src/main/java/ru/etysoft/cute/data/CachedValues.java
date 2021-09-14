@@ -37,8 +37,15 @@ public class CachedValues {
         if (!cacheUtils.hasKey(CacheKeys.AVATAR, context)) throw new NotCachedException();
         return cacheUtils.getString(CacheKeys.AVATAR, context);
     }
-
-
+    public static void setCover(Context context, String urlPhoto) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.setString(CacheKeys.COVER, urlPhoto, context);
+    }
+    public static String getCover(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.COVER, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.COVER, context);
+    }
     public static String getId(Context context) throws NotCachedException {
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (!cacheUtils.hasKey(CacheKeys.ID, context)) throw new NotCachedException();
@@ -120,6 +127,7 @@ public class CachedValues {
         public final static String DISPLAY_NAME = "display_name";
         public final static String CUSTOM_LANG = "custom_lang";
         public final static String AVATAR = "avatar";
+        public static final String COVER = "cover";
     }
 }
 

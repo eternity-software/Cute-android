@@ -46,6 +46,7 @@ public class AccountPresenter implements AccountContact.Presenter {
                         @Override
                         public void run() {
                             if (getAccountResponse.isSuccess()) {
+                                CachedValues.setCover(context, getAccountResponse.getCover());
                                 CachedValues.setStatus(context, getAccountResponse.getStatus());
                                 CachedValues.setBio(context, getAccountResponse.getBio());
                                 CachedValues.setAvatar(context, getAccountResponse.getAvatar());

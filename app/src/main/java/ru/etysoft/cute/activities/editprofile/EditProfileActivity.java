@@ -1,6 +1,5 @@
 package ru.etysoft.cute.activities.editprofile;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,13 +7,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.r0adkll.slidr.Slidr;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -29,7 +27,6 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.LightToolbar;
-import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
@@ -50,12 +47,13 @@ public class EditProfileActivity extends AppCompatActivity implements EditProfil
 
     private final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 1;
     private final int REQUEST_TAKE_COVER_FROM_GALLERY = 2;
-    private String id, name, login, urlPhoto;
+    private String id, name, login, urlPhoto, urlcover;
     private LightToolbar toolbar;
     private String mCurrentPhotoPath;
     private ImageFile image = null;
     private Avatar avatar;
-    private TextView nameView, statusView, bioView, loginView;
+    private ImageView cover;
+    private TextView nameView, statusView, bioView, loginView, changeCover;
     private EditProfilePresenter editProfilePresenter;
 
     private final boolean isImageUpdated = false;
@@ -84,6 +82,8 @@ public class EditProfileActivity extends AppCompatActivity implements EditProfil
         toolbar.animateAppear(findViewById(R.id.toolbarContainer));
         loginView = findViewById(R.id.editTextAccountLogin);
         avatar = findViewById(R.id.avatarView);
+        changeCover = findViewById(R.id.changeCover);
+        cover = findViewById(R.id.coverView);
     }
 
     @Override
@@ -94,9 +94,15 @@ public class EditProfileActivity extends AppCompatActivity implements EditProfil
             nameView.setText(CachedValues.getDisplayName(this));
             bioView.setText(CachedValues.getBio(this));
             statusView.setText(CachedValues.getStatus(this));
-
+            urlcover = CachedValues.getCover(this);
             if (urlPhoto != null){
                 Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(avatar.getPictureView());
+            }
+            if (urlcover != null){
+                Picasso.get().load(urlcover).into(cover);
+            }
+            if (urlcover == null){
+                changeCover.setBackground(getResources().getDrawable(R.drawable.square_rounded_corners_gray));
             }
         }catch (NotCachedException e){
             e.printStackTrace();

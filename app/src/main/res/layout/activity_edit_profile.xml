@@ -67,18 +67,29 @@
                 </ru.etysoft.cute.components.Avatar>
 
 
-
-                <TextView
-
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="12dp"
-                    android:background="@drawable/square_rounded_corners_gray"
-                    android:fontFamily="@font/montserratalternates_medium"
-                    android:gravity="center"
-                    android:onClick="updateCover"
-                    android:text="Изменить шапку"
-                    android:textSize="18sp" />
+                    app:cardElevation="0dp"
+                    app:cardCornerRadius="16dp"
+                    android:layout_marginLeft="12dp">
+                    <ImageView
+                        android:id="@+id/coverView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"/>
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
+                        android:id="@+id/changeCover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/montserratalternates_medium"
+                        android:gravity="center"
+                        android:onClick="updateCover"
+                        android:text="@string/change_cover"
+                        android:textSize="18sp" />
+                </androidx.cardview.widget.CardView>
+
 
             </LinearLayout>
 
