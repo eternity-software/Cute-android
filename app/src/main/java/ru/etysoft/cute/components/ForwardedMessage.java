@@ -28,9 +28,10 @@ public class ForwardedMessage extends RelativeLayout {
     }
 
     public boolean wasInitialized = false;
+
     public void initComponent(Context context, AttributeSet attrs, boolean isWhite) {
 
-        if(!wasInitialized) {
+        if (!wasInitialized) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (isWhite) {
                 rootView = inflater.inflate(R.layout.forwarded_message_white, this);
@@ -46,42 +47,33 @@ public class ForwardedMessage extends RelativeLayout {
     }
 
 
+    public void setContent(Message forwardedMessage, Context context) {
+        try {
+            messageView = findViewById(R.id.forwardedMessageText);
+            senderTextView = findViewById(R.id.senderDisplayName);
+            String fwdMessage;
 
+            if (forwardedMessage.getText() == null) {
+                if (forwardedMessage.getAttachmentData() != null) {
+                    fwdMessage = StringsRepository.getOrDefault(R.string.image, context);
+                } else {
+                    if (forwardedMessage.getForwardedMessage() != null) {
+                        fwdMessage = StringsRepository.getOrDefault(R.string.fwd_message, context);
+                    } else {
+                        fwdMessage = StringsRepository.getOrDefault(R.string.empty_message, context);
+                    }
 
-
-
-    public void setContent(Message forwardedMessage, Context context)
-    {
-        String fwdMessage;
-
-        if(forwardedMessage.getText() == null)
-        {
-            if(forwardedMessage.getAttachmentData() != null)
-            {
-                fwdMessage = StringsRepository.getOrDefault(R.string.image, context);
-            }
-            else
-            {
-                if(forwardedMessage.getForwardedMessage() != null)
-                {
-                    fwdMessage = StringsRepository.getOrDefault(R.string.fwd_message, context);
                 }
-                else
-                {
-                    fwdMessage = StringsRepository.getOrDefault(R.string.empty_message, context);
-                }
-
+            } else {
+                fwdMessage = forwardedMessage.getText();
             }
-        }
-        else
+            messageView.setText(fwdMessage);
+            senderTextView.setText(forwardedMessage.getSender().getDisplayName());
+        } catch (Exception e)
         {
-            fwdMessage = forwardedMessage.getText();
+            e.printStackTrace();
         }
-        messageView.setText(fwdMessage);
-        senderTextView.setText(forwardedMessage.getSender().getDisplayName());
     }
-
-
 
 
     @Override

@@ -169,26 +169,23 @@ public class ImageEdit extends AppCompatActivity {
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
                 }
-                if (fromX == 0)
-                {
+                if (fromX == 0) {
                     fromX = event.getX();
                 }
                 int def = (int) event.getX() - (int) fromX;
                 int newSize = startWidth + def;
-                if(newSize > 200)
-                {
+                if (newSize > 200) {
                     v.getLayoutParams().width = newSize;
+                } else {
+
+
+                    // fromX = event.getX();
+                    v.requestLayout();
+
                 }
-                else
-                {
-
-
-
-
-               // fromX = event.getX();
-                v.requestLayout();
                 return true;
             }
+
         });
 
 

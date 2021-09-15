@@ -245,7 +245,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         final AttachmentData attachmentData = message.getAttachmentData();
-        if (message.getText() != null && isEmoji(message.getText()) && message.getText().length() < 8 && attachmentData == null) {
+        if (message.getText() != null && isEmoji(message.getText()) && message.getText().length() < 8 && attachmentData == null && message.getForwardedMessage() == null) {
             basicMessageHolder.emoji.setText(message.getText());
             basicMessageHolder.emoji.setVisibility(View.VISIBLE);
             basicMessageHolder.messageContainer.setBackground(null);
