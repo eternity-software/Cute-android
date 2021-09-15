@@ -1,6 +1,5 @@
 package ru.etysoft.cute.activities.messages;
 
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,11 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,9 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import ru.etysoft.cute.R;
@@ -38,13 +34,13 @@ import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
-import ru.etysoft.cute.components.MessageTextView;
 import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
+import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
 import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.messages.AttachmentData;
 import ru.etysoft.cuteframework.methods.messages.Message;
@@ -56,20 +52,47 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean isDialog;
     private RecyclerView recyclerView;
 
-    private long firstmessageId;
+    private long firstLoadedMessage;
 
-    public MessagesAdapter(MessagingActivity context, List<Message> values, boolean isDialog, RecyclerView recyclerView) {
+    private long firstMessageId = 0;
+
+    public MessagesAdapter(MessagingActivity context, List<Message> values, boolean isDialog, final RecyclerView recyclerView) {
         this.context = context;
         this.list = values;
         this.isDialog = isDialog;
         this.inflater = LayoutInflater.from(context);
-        this.firstmessageId = firstmessageId;
-        this.recyclerView = recyclerView;
 
+        this.recyclerView = recyclerView;
+        firstLoadedMessage = -1;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    final int offset = recyclerView.computeVerticalScrollOffset();
+
+                    if (offset == 0) {
+                        loadUpperMessages();
+                    }
+                }
+            });
+        } else {
+            recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    final int offset = recyclerView.computeVerticalScrollOffset();
+
+                    if (offset < 300) {
+                        loadUpperMessages();
+                    }
+                }
+            });
+        }
     }
 
     public void setFirstMessageId(long firstmessageId) {
-        this.firstmessageId = firstmessageId;
+        this.firstMessageId = firstmessageId;
     }
 
     private Set<Integer> animated = new HashSet<>();
@@ -125,8 +148,76 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 break;
         }
 
+
         return viewHolder;
 
+    }
+
+    private void loadUpperMessages() {
+        long firstId = 0;
+        if (list.get(0) != null) {
+            firstId = list.get(0).getId();
+        }
+        final long finalFirstId = firstId;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    final GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(context), String.valueOf(context.chatId),
+                            String.valueOf(finalFirstId))).execute();
+                    if (getMessageListResponse.isSuccess()) {
+                        List<Message> messages = getMessageListResponse.getMessages();
+                        Collections.reverse(messages);
+                        firstMessageId = getMessageListResponse.getFirstMessageId();
+                        final int[] countAdded = {0};
+                        final boolean[] hasClouds = {false};
+                        for (final Message message : messages) {
+
+
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if (!context.ids.containsKey(String.valueOf(message.getId()))) {
+
+                                        context.ids.put(String.valueOf(message.getId()), message);
+
+                                        list.add(0, message);
+                                        countAdded[0]++;
+                                        if (message.getId() == firstMessageId) {
+                                            hasClouds[0] = true;
+                                        }
+
+                                    } else {
+                                        // Если сообщение уже есть проверяем не изменился ли статус прочитанности
+                                    }
+                                    LinearLayout loadingLayot = context.findViewById(R.id.loadingLayout);
+                                    loadingLayot.setVisibility(View.INVISIBLE);
+                                }
+                            });
+
+                        }
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (hasClouds[0] && list.get(0) != null) {
+                                    list.add(0, null);
+                                    countAdded[0]++;
+                                }
+                                notifyItemRangeInserted(0, countAdded[0]);
+                                notifyItemChanged(countAdded[0]);
+
+                            }
+                        });
+                    }
+
+                } catch (Exception e) {
+
+                }
+            }
+        });
+        thread.start();
     }
 
     private static boolean isEmoji(String message) {
@@ -181,11 +272,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             if (Types.MINE == type) {
+                basicMessageHolder.attachments.getForwardedMessage().initComponent(null, null, false);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.mymessage));
             } else {
+                basicMessageHolder.attachments.getForwardedMessage().initComponent(null, null, true);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.dialog_message));
             }
         }
+
+
 
 
         if (attachmentData != null) {
@@ -217,7 +312,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         imageView.setClipBounds(localVisibleRect);
 
 
-
                         intent.putExtra(context.getResources().getString(R.string.transition_image_preview), transitionName);
                         intent.putExtra(ImagePreview.EXTRA_CLIP_RECT, localVisibleRect);
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
@@ -247,7 +341,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
             basicMessageHolder.attachments.setVisibility(View.VISIBLE);
         } else {
+            basicMessageHolder.attachments.getImageView().setImageBitmap(null);
+            basicMessageHolder.attachments.hideImage();
             basicMessageHolder.attachments.setVisibility(View.GONE);
+        }
+
+        if (message.getForwardedMessage() != null) {
+            Message forwardedMessage = message.getForwardedMessage();
+            basicMessageHolder.attachments.setVisibility(View.VISIBLE);
+
+            basicMessageHolder.attachments.setForwardedMessageContent(forwardedMessage, context);
+        } else {
+            basicMessageHolder.attachments.hideForwardedMessage();
         }
         try {
 
@@ -256,6 +361,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } catch (Exception ignored) {
 
         }
+
 
     }
 
@@ -358,7 +464,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Message message = list.get(position);
         try {
             if (message == null) {
-                tempClouds = true;
                 return Types.CLOUD;
             }
             if (message.getId() < 0) {
@@ -390,31 +495,51 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return list.size();
     }
 
-    boolean tempClouds = false;
 
-    public void addItem(Message message) {
-        if (!tempClouds && message.getId() - firstmessageId == 0) {
-            tempClouds = true;
-            addItem(null);
+    public void addItem(Message message, boolean isReverse) {
+
+        if (list.size() == 0 && message.getId() == firstMessageId) {
+            list.add(0, null);
         }
+
+
         if (message == null) {
+            if (isReverse) {
+                list.add(0, null);
+            } else {
+                list.add(null);
+            }
             list.add(null);
             notifyItemInserted(getItemCount() - 1);
         } else {
+            if (firstLoadedMessage == -1 | firstLoadedMessage > message.getId()) {
+
+                firstLoadedMessage = message.getId();
+
+            }
             boolean scrollToBottom = false;
             final int offset = recyclerView.computeVerticalScrollOffset();
             final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
-            System.out.println("offset " + offset + ", range " + range);
+
             if (range - offset < (recyclerView.getHeight())) {
                 scrollToBottom = true;
             }
-            list.add(message);
+            if (isReverse) {
+                list.add(0, message);
+            } else {
+                list.add(message);
+            }
+
             if (scrollToBottom) {
                 recyclerView.smoothScrollToPosition(getItemCount() - 1);
             }
 
             notifyItemInserted(getItemCount() - 1);
         }
+    }
+
+    public void addItem(Message message) {
+        addItem(message, false);
     }
 
 

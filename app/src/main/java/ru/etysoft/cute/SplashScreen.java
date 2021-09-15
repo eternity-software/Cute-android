@@ -22,6 +22,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         CacheUtils cacheUtils = CacheUtils.getInstance();
+     
 
         try {
             CustomLanguage.loadExisting(this);

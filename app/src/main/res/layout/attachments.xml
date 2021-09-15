@@ -4,11 +4,19 @@
     android:layout_gravity="center_horizontal"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ru.etysoft.cute.components.ForwardedMessage
+        android:id="@+id/forwardedMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/imageContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_below="@id/forwardedMessage"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         android:maxHeight="100dp"

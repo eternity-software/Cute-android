@@ -38,7 +38,7 @@ public class MessageTextView extends AppCompatTextView {
             setMeasuredDimension(width, height);
 
             setWidth(width);
-            System.out.println("setted " + width + " to " + getText());
+
 
         }
         catch (Exception e)

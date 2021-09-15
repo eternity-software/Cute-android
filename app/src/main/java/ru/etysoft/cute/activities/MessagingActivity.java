@@ -5,7 +5,9 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import android.view.WindowInsetsAnimation;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.math.MathUtils;
@@ -53,14 +56,18 @@ import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ErrorPanel;
+import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.components.InfoPanel;
 import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.CircleTransform;
+import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
+import ru.etysoft.cute.utils.SocketHolder;
 import ru.etysoft.cuteframework.data.APIKeys;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
@@ -74,16 +81,19 @@ import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.methods.user.User;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
-import ru.etysoft.cuteframework.sockets.methods.Messages.MessagesSocket;
+import ru.etysoft.cuteframework.sockets.Event;
+import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
+import ru.etysoft.cuteframework.sockets.events.NewMessageEvent;
+import ru.etysoft.cuteframework.sockets.paradigm.Chat.ChatSocket;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
 
     private final List<Message> messageList = new ArrayList<>();
-    private final Map<String, Message> ids = new HashMap<String, Message>();
+    public final Map<String, Message> ids = new HashMap<String, Message>();
     private MessagesAdapter adapter;
-    private MessagesSocket messagesSocket;
 
-    private long chatId = 1;
+
+    public long chatId = 1;
     private long accountId = -1;
     private String name = "42";
     private String avatar = null;
@@ -91,10 +101,15 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private boolean isDialog = false;
     private ErrorPanel errorPanel;
     private InfoPanel infoPanel;
+    private TextView statusView;
     public boolean isVoice = true;
     private String mediaIdToSend;
     private Runnable onResume;
+    public String forwardedMessageId = null;
     private Avatar avatarView;
+    private NetworkStateReceiver networkStateReceiver;
+    private ForwardedMessage forwardedMessagePreview;
+    private LinearLayout forwardedMessageContainer;
 
 
     @Override
@@ -108,6 +123,33 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         avatarView = findViewById(R.id.avatar);
 
+        networkStateReceiver = new NetworkStateReceiver(new Runnable() {
+            @Override
+            public void run() {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            subscribeToEvents();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                thread.start();
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
+        networkStateReceiver.register(this);
+        forwardedMessagePreview = findViewById(R.id.forwardedMessagePreview);
+        forwardedMessageContainer = findViewById(R.id.fwdContainer);
+        forwardedMessagePreview.initComponent(null, null, false);
+
 
         if (avatar != null) {
             Picasso.get().load(avatar).transform(new CircleTransform()).into(avatarView.getPictureView());
@@ -119,9 +161,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         adapter = new MessagesAdapter(this, messageList, isDialog, recyclerView);
         recyclerView.setAdapter(adapter);
 
-        TextView subtitle = findViewById(R.id.subtitle);
+        statusView = findViewById(R.id.subtitle);
         if (!isDialog) {
-            subtitle.setText(countMembers + " " + getResources().getString(R.string.members));
+            statusView.setText(countMembers + " " + getResources().getString(R.string.members));
             loadChatInfo();
             avatarView.generateIdPicture(chatId);
         } else {
@@ -251,8 +293,69 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
+
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public float getSwipeEscapeVelocity(float defaultValue) {
+                return 2.0f;
+            }
+
+            @Override
+            public float getSwipeVelocityThreshold(float defaultValue) {
+                return 0.1f;
+            }
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.1f;
+            }
+
+
+
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                Message message = messageList.get(viewHolder.getAdapterPosition());
+                if(message != null && message.getType().equals(Message.Type.USER) && dX > -(recyclerView.getWidth() / 4))
+                {
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX / 2, dY, actionState, isCurrentlyActive);
+                }
+            }
+
+
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+                Message message = messageList.get(viewHolder.getAdapterPosition());
+                if(message != null && message.getType().equals(Message.Type.USER)) {
+                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                    forwardedMessageId = String.valueOf(message.getId());
+                    forwardedMessageContainer.setVisibility(View.VISIBLE);
+                    forwardedMessagePreview.setContent(message, MessagingActivity.this);
+                    SendorsControl.vibrate(MessagingActivity.this, 50);
+                }
+            }
+
+
+        };
+
+
+        new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
     }
 
+
+    public void clearForwardMessage()
+    {
+        forwardedMessageId = "";
+        forwardedMessageContainer.setVisibility(View.GONE);
+    }
 
     @Override
     protected void onResume() {
@@ -337,35 +440,66 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         onResume = runnable;
     }
 
+    public void subscribeToEvents() {
+        final ChatSocket.EventReceiveHandler eventReceiveHandler = new ChatSocket.EventReceiveHandler() {
+            @Override
+            public void onEventReceived(final Event event) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            if (event instanceof NewMessageEvent) {
+                                NewMessageEvent newMessageEvent = (NewMessageEvent) event;
+                                if (!ids.containsKey(String.valueOf(newMessageEvent.getMessage().getId()))) {
+                                    adapter.addItem(newMessageEvent.getMessage());
+                                    ids.put(String.valueOf(newMessageEvent.getMessage().getId()), newMessageEvent.getMessage());
+                                }
+                            } else if (event instanceof MemberStateChangedEvent) {
+                                MemberStateChangedEvent memberStateChangedEvent = (MemberStateChangedEvent) event;
+                                if (memberStateChangedEvent.getState().equals(MemberStateChangedEvent.States.TYPING)) {
+                                    if (isDialog) {
+                                        statusView.setText(getResources().getString(R.string.typing).replace("%s", name));
+                                    } else {
+                                        statusView.setText(getResources().getString(R.string.typing).replace("%s",
+                                                String.valueOf(memberStateChangedEvent.getAccountId())));
+                                    }
+                                } else {
+                                    if(isDialog) {
+                                        if (memberStateChangedEvent.getState().equals(MemberStateChangedEvent.States.OFFLINE)) {
+                                            statusView.setText(StringsRepository.getOrDefault(R.string.offline, MessagingActivity.this));
+                                        } else if (memberStateChangedEvent.getState().equals(MemberStateChangedEvent.States.ONLINE)) {
+                                            statusView.setText(StringsRepository.getOrDefault(R.string.online, MessagingActivity.this));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        statusView.setText(countMembers + " " + getResources().getString(R.string.members));
+                                    }
+                                }
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+        };
+
+        SocketHolder.getChatSocket().subscribeToEvents(chatId, eventReceiveHandler);
+    }
+
 
     public void registerSocket() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    messagesSocket = new MessagesSocket(CachedValues.getSessionKey(MessagingActivity.this), String.valueOf(chatId), new MessagesSocket.MessageReceiveHandler() {
-                        @Override
-                        public void onMessageReceive(final SendMessageResponse sendMessageResponse) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
+                    subscribeToEvents();
 
-                                        if (!ids.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
-                                            adapter.addItem(sendMessageResponse.getMessage());
-                                            ids.put(String.valueOf(sendMessageResponse.getMessage().getId()), sendMessageResponse.getMessage());
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            });
-                        }
-                    });
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -384,19 +518,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        Thread closeThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    messagesSocket.getWebSocket().getUserSession().close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        closeThread.start();
-
         ChatsListAdapter.isMessagingActivityOpened = true;
     }
 
@@ -633,7 +754,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                                     fadeOut.setAnimationListener(new Animation.AnimationListener() {
                                                         @Override
                                                         public void onAnimationStart(Animation animation) {
-                                                            System.out.println("FADEOUT!");
+
                                                         }
 
                                                         @Override
@@ -690,10 +811,33 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     }
 
+    private Thread onTypingWaiter;
+    private long lastTime = 0;
+    private boolean isTyping = false;
+
     public void setupOnTextInput() {
         final ImageView sendBtn = findViewById(R.id.sendButton);
         final ImageView voiceBtn = findViewById(R.id.sendVoice);
         final EditText editText = findViewById(R.id.message_box);
+        onTypingWaiter = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+
+                        Thread.sleep(1000);
+                        if (System.currentTimeMillis() > lastTime + 1000 && isTyping) {
+                            isTyping = false;
+                            SocketHolder.getChatSocket().sendStatus(chatId, MemberStateChangedEvent.States.ONLINE);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        onTypingWaiter.start();
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -708,6 +852,31 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 ScaleAnimation decreaseAnimation = new ScaleAnimation(1.0f, 0, 1.0f, 0, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
                 decreaseAnimation.setDuration(duration);
                 decreaseAnimation.setFillAfter(true);
+
+                lastTime = System.currentTimeMillis();
+
+                if (!isTyping) {
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+                                SocketHolder.getChatSocket().sendStatus(chatId, MemberStateChangedEvent.States.TYPING);
+
+
+                            } catch (Exception e) {
+                                try {
+                                    SocketHolder.initialize(CachedValues.getSessionKey(MessagingActivity.this));
+                                } catch (Exception ignored) {
+
+                                }
+                            }
+                        }
+                    });
+                    thread.start();
+
+                    isTyping = true;
+                }
 
                 ScaleAnimation scaleAnimation = new ScaleAnimation(0, 1.0f, 0, 1.0f, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
                 scaleAnimation.setDuration(duration);
@@ -761,7 +930,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             }
             final String message = data.getStringExtra("text");
             String imageUri = data.getStringExtra("uri");
-            System.out.println(imageUri);
+
 
             ImageFile imageFile;
 
@@ -808,7 +977,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public void clearFwd(View v)
+    {
+        clearForwardMessage();
+    }
+
     public void sendMessageWithPreview(final String message) {
+
+
         final LinearLayout info = findViewById(R.id.info);
         info.setVisibility(View.INVISIBLE);
         infoPanel.setVisibility(View.INVISIBLE);
@@ -828,22 +1004,28 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             Thread sendThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    isTyping = false;
+                    try {
+                        SocketHolder.getChatSocket().sendStatus(chatId, MemberStateChangedEvent.States.ONLINE);
+                    } catch (Exception e) {
 
+                    }
 
                     try {
 
                         final SendMessageResponse sendMessageResponse;
                         if (mediaIdToSend == null) {
-                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message)).execute();
+                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, forwardedMessageId)).execute();
                         } else {
-                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend)).execute();
+                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend, forwardedMessageId)).execute();
                         }
+
                         mediaIdToSend = null;
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
+                                clearForwardMessage();
                                 try {
 
 
@@ -852,9 +1034,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                     messagePreview.setTime(newMessage.getTime());
                                     messagePreview.setText(newMessage.getText());
                                     messagePreview.setType(newMessage.getType());
+                                    messagePreview.setSender(newMessage.getSender());
                                     messagePreview.setAttachmentData(newMessage.getAttachmentData());
                                     messagePreview.setAttachmentPath(newMessage.getCleanAttachmentPath());
                                     messagePreview.setAttachmentType(newMessage.getAttachmentType());
+                                    messagePreview.setForwardedMessage(newMessage.getForwardedMessage());
                                     try {
 
                                         messagePreview.notifyDataChanged();
@@ -865,7 +1049,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                         ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
                                     }
 
-                                    
 
                                 } catch (Exception e) {
                                     e.printStackTrace();

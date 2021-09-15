@@ -1,10 +1,14 @@
 package ru.etysoft.cute.utils;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+import java.nio.channels.AcceptPendingException;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
 
@@ -17,6 +21,13 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     public NetworkStateReceiver(Runnable onlineRunnable, Runnable offlineRunnable) {
         this.offlineRunnable = offlineRunnable;
         this.onlineRunnable = onlineRunnable;
+    }
+
+    public void register(Activity activity)
+    {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        activity.registerReceiver(this, filter);
     }
 
     @Override

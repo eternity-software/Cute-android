@@ -8,6 +8,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,11 +26,15 @@ import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.components.CuteToast;
+import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.utils.Permissions;
+import ru.etysoft.cute.utils.SocketHolder;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
+import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
 
-public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener, MainContract.View {
+public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener, MainContract.View, LifecycleObserver {
 
     public static final boolean isDev = true;
 
@@ -57,6 +65,28 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         }
     };
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    public void onAppBackgrounded() {
+        try {
+            SocketHolder.getChatSocket().sendStatus(0, MemberStateChangedEvent.States.OFFLINE);
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    public void onAppForegrounded() {
+        try {
+            SocketHolder.getChatSocket().sendStatus(0, MemberStateChangedEvent.States.ONLINE);
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +100,22 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
         setupNavigation();
         Permissions.requestAll(this);
+
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                    SocketHolder.initialize(CachedValues.getSessionKey(MainActivity.this));
+                    ProcessLifecycleOwner.get().getLifecycle().addObserver(MainActivity.this);
+                    } catch (NotCachedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+
+
     }
 
     @Override
@@ -84,6 +130,19 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        SocketHolder.clear();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SocketHolder.initialize(CachedValues.getSessionKey(MainActivity.this));
+                } catch (NotCachedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
     }
 
     @Override
@@ -139,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
             }
         });
-        CuteToast.show("Тестовое сообщение. Пук-пук", R.drawable.icon_success, this);
+
 
         setupViewPager(viewPager);
 

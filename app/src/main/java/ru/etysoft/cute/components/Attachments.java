@@ -18,11 +18,13 @@ import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cuteframework.methods.messages.Message;
 
 public class Attachments extends RelativeLayout {
 
 
     private ImageView imageView;
+    private ForwardedMessage forwardedMessage;
     private View rootView;
 
 
@@ -37,7 +39,28 @@ public class Attachments extends RelativeLayout {
         rootView = inflater.inflate(R.layout.attachments, this);
 
         imageView = findViewById(R.id.imageView);
+        forwardedMessage = findViewById(R.id.forwardedMessage);
+        imageView.setVisibility(VISIBLE);
+        hideForwardedMessage();
 
+    }
+
+    public void hideForwardedMessage()
+    {
+        forwardedMessage.setVisibility(GONE);
+    }
+
+    public void hideImage()
+    {
+        imageView.setVisibility(GONE);
+    }
+
+
+
+    public void setForwardedMessageContent(Message message, Context context)
+    {
+        forwardedMessage.setVisibility(VISIBLE);
+        forwardedMessage.setContent(message, context);
     }
 
     public void show() {
@@ -76,6 +99,9 @@ public class Attachments extends RelativeLayout {
         rootView.startAnimation(fadeOut);
     }
 
+    public ForwardedMessage getForwardedMessage() {
+        return forwardedMessage;
+    }
 
     @Override
     public View getRootView() {
@@ -83,6 +109,7 @@ public class Attachments extends RelativeLayout {
     }
 
     public ImageView getImageView() {
+        imageView.setVisibility(VISIBLE);
         return imageView;
     }
 }

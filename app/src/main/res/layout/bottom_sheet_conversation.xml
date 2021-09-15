@@ -207,8 +207,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/colorBackground"
+                android:scrollbars="none"
+                android:nestedScrollingEnabled="true"
                 android:dividerHeight="8dp"
-                android:paddingBottom="20dp">
+               >
 
             </ListView>
 

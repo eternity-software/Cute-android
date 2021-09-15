@@ -118,9 +118,10 @@ public class ConfirmationPresenter implements ConfirmationContract.Presenter {
             }
         };
 
+
+        networkStateReceiver = new NetworkStateReceiver(onlineRunnable, offlineRunnable);
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        networkStateReceiver = new NetworkStateReceiver(onlineRunnable, offlineRunnable);
         context.registerReceiver(networkStateReceiver, filter);
     }
 

@@ -23,14 +23,13 @@ import ru.etysoft.cuteframework.methods.chat.ChatList.ChatListResponse;
 import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
 import ru.etysoft.cuteframework.methods.chat.ServiceData;
 import ru.etysoft.cuteframework.methods.messages.Message;
-import ru.etysoft.cuteframework.sockets.methods.ChatList.ChatListSocket;
-import ru.etysoft.cuteframework.sockets.methods.Messages.MessagesSocket;
+
 
 public class ChatsListPresenter implements ChatsListContact.Presenter {
 
     private final Activity context;
     private final ChatsListContact.View view;
-    private ChatListSocket chatListSocket;
+
 
     private boolean updateListLock = false;
 
@@ -45,25 +44,7 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    chatListSocket = new ChatListSocket(CachedValues.getSessionKey(context), new ChatListSocket.ChatReceiveHandler() {
-                        @Override
-                        public void onMessageReceive(ChatSnippet chatSnippet) {
-                            context.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    view.updateChatList();
-                                }
-                            });
 
-                        }
-                    });
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         });
         thread.start();
@@ -135,16 +116,5 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
 
     @Override
     public void onDestroy() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    chatListSocket.getWebSocket().getUserSession().close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
     }
 }

@@ -163,9 +163,7 @@ public class ImageEdit extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 getWindow().getDecorView().clearFocus();
                 container.requestFocus();
-                System.out.println(event.getX());
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    System.out.println("fyck");
                     fromX = event.getX();
                     startWidth = v.getWidth();
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -183,8 +181,8 @@ public class ImageEdit extends AppCompatActivity {
                 }
                 else
                 {
-                    System.out.println("oh " + def);
-                }
+
+
 
 
                // fromX = event.getX();

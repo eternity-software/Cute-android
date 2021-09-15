@@ -256,7 +256,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        System.out.println("closed!");
+
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(getActivity());
     }

@@ -24,6 +24,8 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/custom_toast.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/dialog_message.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/file_image_preview.xml" value="0.37864583333333335" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/forwarded_message_divider.xml" value="0.21875" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/forwarded_message_divider_white.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/icon_image.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/image_edit_buttons_background.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/image_placeholder.xml" value="0.37864583333333335" />
@@ -57,7 +59,7 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_profile.xml" value="0.33" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_signin.xml" value="0.2828125" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_signup.xml" value="0.2828125" />
-        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/attachments.xml" value="0.37439846005774785" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/attachments.xml" value="0.24512534818941503" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/avatar.xml" value="0.2901208837015423" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/bottom_sheet_conversation.xml" value="0.3625" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/bottom_sheet_filespicker.xml" value="0.33" />
@@ -71,6 +73,8 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/error_panel.xml" value="0.27314814814814814" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/file_image_preview.xml" value="1.0" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/file_picker_image.xml" value="0.20260416666666667" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/forwarded_message.xml" value="0.7471590909090909" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/forwarded_message_white.xml" value="0.8708609271523179" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/friend_element.xml" value="0.33" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/friend_request_fragment.xml" value="0.3625" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/friend_snippet.xml" value="0.3625" />

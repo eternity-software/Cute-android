@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp"
+
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/forwardedMessageDivider"
+        android:layout_width="2dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="6dp"
+
+        android:background="@drawable/forwarded_message_divider_white"
+        />
+
+    <TextView
+        android:id="@+id/senderDisplayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:layout_alignTop="@+id/forwardedMessageDivider"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/forwardedMessageDivider"
+        android:fontFamily="@font/montserratalternates_medium"
+        android:maxLines="1"
+        android:text="Вы"
+        android:textColor="#fff"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/forwardedMessageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/senderDisplayName"
+        android:layout_alignBottom="@+id/forwardedMessageDivider"
+
+
+        android:layout_toEndOf="@+id/forwardedMessageDivider"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+
+        android:text="Блин пипец какой-то. Почините уже"
+        android:textColor="#fff"
+        android:textSize="12sp" />
+
+</RelativeLayout>

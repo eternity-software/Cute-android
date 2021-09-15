@@ -27,7 +27,7 @@ public class SliderActivity {
 
     public static void setAppTheme(Activity activity, int state) {
 
-        System.out.println("Invoked!");
+
         if (state == ViewDragHelper.STATE_SETTLING) {
             return;
         }
@@ -65,20 +65,18 @@ public class SliderActivity {
 
             @Override
             public void onSlideStateChanged(int state) {
-                System.out.println("www");
+
 
                 setAppTheme(activity, state);
             }
 
             @Override
             public void onSlideChange(float percent) {
-                System.out.println("wafww");
                 SliderActivity.this.percent = percent;
             }
 
             @Override
             public void onSlideOpened() {
-                System.out.println("waww");
             }
 
             @Override

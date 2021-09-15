@@ -124,4 +124,9 @@
     <string name="you">Вы</string>
     <string name="image">Изображение</string>
     <string name="change_cover">Изменить шапку</string>
+    <string name="typing">%s печатает...</string>
+    <string name="online">в сети</string>
+    <string name="offline">не в сети</string>
+    <string name="fwd_message">Пересланное сообщение</string>
+    <string name="empty_message">Пустое сообщение</string>
 </resources>

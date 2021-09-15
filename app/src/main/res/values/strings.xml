@@ -64,7 +64,12 @@
     <string name="chat_join_text">Are you sure you want to join this chat?</string>
     <string name="members">members</string>
     <string name="image">Image</string>
+    <string name="typing">%s typing...</string>
+    <string name="online">online</string>
+    <string name="offline">offline</string>
     <string name="edit">edit</string>
+    <string name="fwd_message">Forwarded message</string>
+    <string name="empty_message">Empty message</string>
     <string name="transition_image_preview">IMAGE_PREVIEW_TRANSITION</string>
     <string name="transition_profile">PROFILE_TRANSITION</string>
     <string name="transition_image_send">IMAGE_SEND_TRANSITION</string>
