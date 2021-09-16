@@ -24,8 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ru.etysoft.cute.R;
@@ -49,7 +51,9 @@ import ru.etysoft.cuteframework.methods.messages.Message;
 
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final MessagingActivity context;
-    private final List<Message> list;
+    public final List<Message> list;
+    private Map<Long, Integer> positionList = new HashMap<>();
+    private int posDiff;
     private final LayoutInflater inflater;
     private boolean isDialog;
     private long requestBlinkId;
@@ -66,17 +70,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public MessagesAdapter(MessagingActivity context, List<Message> values, boolean isDialog, final RecyclerView recyclerView, final LinearLayout scrollToBottom,
                            final TextView dateView) {
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-//        linearLayoutManager.setReverseLayout(true);
-//        linearLayoutManager.setStackFromEnd(false);
-//        recyclerView.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(false);
+        recyclerView.setLayoutManager(linearLayoutManager);
         this.context = context;
         this.list = values;
         this.isDialog = isDialog;
         this.inflater = LayoutInflater.from(context);
         isCurrentlyLoadingMessages = false;
+        posDiff = 0;
         this.recyclerView = recyclerView;
         firstLoadedMessage = -1;
+        positionList = new HashMap<>();
         scrollToBottomButton = scrollToBottom;
         this.dateView = dateView;
 
@@ -100,13 +106,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    public int getPositionById(long id)
+    {
+        System.out.println(positionList.get(id) + " ff " + id);
+        return positionList.get(id) + posDiff - 1;
+    }
+
     private long lastTimeDateShown;
 
     public void scrollCheck() {
         final int offset = recyclerView.computeVerticalScrollOffset();
 
-        if (offset < recyclerView.getHeight() * 2) {
-            if (list.get(0) != null) {
+        if (offset < recyclerView.getHeight()) {
+            if (list.get(list.size() - 1) != null) {
                 loadUpperMessages();
             }
 
@@ -114,8 +126,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
 
-        System.out.println("range " + range);
-        System.out.println("offset " + offset);
+
         if (range - offset < 30) {
             scrollToBottomButton.setVisibility(View.GONE);
         } else {
@@ -163,6 +174,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setFirstMessageId(long firstmessageId) {
         this.firstMessageId = firstmessageId;
+    }
+
+    public Map<Long, Integer> getPositionList() {
+        return positionList;
     }
 
     private Set<Integer> animated = new HashSet<>();
@@ -228,12 +243,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         loadUpperMessages(null);
     }
 
-    private void loadUpperMessages(final Runnable onSuccess) {
+    public void loadUpperMessages(final Runnable onSuccess) {
         if (!isCurrentlyLoadingMessages) {
             isCurrentlyLoadingMessages = true;
             long firstId = 0;
-            if (list.get(0) != null) {
-                firstId = list.get(0).getId();
+            if (list.get(list.size() - 1) != null) {
+                firstId = list.get(list.size() - 1).getId();
             }
             final long finalFirstId = firstId;
             Thread thread = new Thread(new Runnable() {
@@ -260,7 +275,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                             context.loadedMessagesIds.put(String.valueOf(message.getId()), message);
 
-                                            list.add(0, message);
+                                            list.add( message);
+                                            positionList.put((long) message.getId(), list.indexOf(message) - posDiff + 1);
                                             countAdded[0]++;
                                             if (message.getId() == firstMessageId) {
                                                 hasClouds[0] = true;
@@ -269,8 +285,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         } else {
                                             // Если сообщение уже есть проверяем не изменился ли статус прочитанности
                                         }
-                                        LinearLayout loadingLayot = context.findViewById(R.id.loadingLayout);
-                                        loadingLayot.setVisibility(View.INVISIBLE);
+                                        LinearLayout loadingLayout = context.findViewById(R.id.loadingLayout);
+                                        loadingLayout.setVisibility(View.INVISIBLE);
                                     }
                                 });
 
@@ -278,16 +294,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (hasClouds[0] && list.get(0) != null) {
-                                        list.add(0, null);
+                                    if (hasClouds[0] && list.get(list.size() - 1) != null) {
+                                        list.add(null);
                                         countAdded[0]++;
                                     }
-                                    notifyItemRangeInserted(0, countAdded[0]);
+                                    notifyItemRangeInserted(list.size() - 1, countAdded[0]);
                                     notifyItemChanged(countAdded[0]);
 
                                 }
                             });
-                            if(onSuccess != null)
+                            if(onSuccess != null && messages.size() > 0)
                             {
                                 isCurrentlyLoadingMessages = false;
                                 context.runOnUiThread(onSuccess);
@@ -345,6 +361,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             basicMessageHolder.emoji.setText(message.getText());
             basicMessageHolder.emoji.setVisibility(View.VISIBLE);
             basicMessageHolder.messageContainer.setBackground(null);
+
         } else {
             if (message.getText() != null) {
                 if (message.getText().length() > 0) {
@@ -365,28 +382,41 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 params.setMargins(0, 0, 0, 0);
                 basicMessageHolder.attachments.setLayoutParams(params);
             }
-
             if (Types.MINE == type) {
-                if (message.isRead()) {
-                    basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
-                } else {
-                    basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
-                }
                 forwardedMessageView.initComponent(false);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.mymessage));
             } else {
-                sendRead(message.getId());
+                if(!message.isRead())
+                {
+                    sendRead(message.getId());
+                }
                 forwardedMessageView.initComponent( true);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.dialog_message));
             }
+
         }
 
-
+        if (Types.MINE == type) {
+            if (message.isRead()) {
+                basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+            } else {
+                basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+            }
+        }
+        else
+        {
+            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+        }
 
         forwardedMessageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scrollToForwardedMessage(message);
+
+                if (message.getForwardedMessage() != null) {
+                    Message fwdMessage = message.getForwardedMessage();
+                    scrollToMessageId(fwdMessage.getId());
+                }
+
             }
         });
 
@@ -443,13 +473,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 }
             });
+
             basicMessageHolder.attachments.setVisibility(View.VISIBLE);
         } else {
             basicMessageHolder.attachments.getImageView().setImageBitmap(null);
             basicMessageHolder.attachments.hideImage();
             basicMessageHolder.attachments.setVisibility(View.GONE);
         }
-
+        final int pos = basicMessageHolder.getAdapterPosition();
+        basicMessageHolder.rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("posDiff " + posDiff);
+                System.out.println("pos " + pos );
+                System.out.println("getPos " + getPositionById(message.getId()));
+            }
+        });
         if (message.getForwardedMessage() != null) {
             Message forwardedMessage = message.getForwardedMessage();
             forwardedMessageView.setVisibility(View.VISIBLE);
@@ -505,30 +544,31 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return recyclerView;
     }
 
-    public void scrollToForwardedMessage(final Message message)
+    public void scrollToMessageId(final long from)
     {
-        int position = list.indexOf(message);
 
-
-        if (message.getForwardedMessage() != null) {
-            Message fwdMessage = message.getForwardedMessage();
-            if (list.get(0) == null || fwdMessage.getId() >= list.get(0).getId()) {
-                requestBlinkId = fwdMessage.getId();
-                int fwdPos = position - (message.getId() - fwdMessage.getId());
-
-                recyclerView.scrollToPosition(fwdPos);
+            if (list.get(list.size() - 1) == null || from >= list.get(list.size() - 1).getId()) {
+                requestBlinkId = from;
+                int fwdPos = getPositionById(from);
                 notifyItemChanged(fwdPos);
+
+                dateView.setVisibility(View.INVISIBLE);
+                recyclerView.smoothScrollToPosition(fwdPos);
+                System.out.println("Scroll to " + fwdPos);
+
             }
             else
             {
+                dateView.setVisibility(View.VISIBLE);
+                dateView.setText(context.getResources().getString(R.string.loading_history));
                 loadUpperMessages(new Runnable() {
                     @Override
                     public void run() {
-                        scrollToForwardedMessage(message);
+                        scrollToMessageId(from);
                     }
                 });
             }
-        }
+
     }
 
     public void updateMessageStatus(Message message, ViewHolder.MyMessage myMessage) {
@@ -640,10 +680,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else if (message.getSender().getId() == Integer.parseInt(CachedValues.getId(context))) {
                 return Types.MINE;
             } else if (!isDialog) {
-                if (list.get(position - 1).getSender().getId() != message.getSender().getId() | list.get(position - 1).getType().equals(Message.Type.SERVICE)) {
+                try {
+                    if (list.size() - 1 > position && list.get(position) == list.get(list.size() - 1) | list.get(position + 1).getSender().getId() != message.getSender().getId() | list.get(position + 1).getType().equals(Message.Type.SERVICE)) {
+                        return Types.CONV_PREVIEW;
+                    } else {
+                        return Types.CONV;
+                    }
+                }
+                catch (Exception e)
+                {
                     return Types.CONV_PREVIEW;
-                } else {
-                    return Types.CONV;
                 }
             } else {
                 return Types.DIALOG;
@@ -666,18 +712,30 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void addItem(Message message, boolean isReverse) {
 
         if (list.size() == 0 && message.getId() == firstMessageId) {
-            list.add(0, null);
+            //list.add(0, null);
+          //  posDiff++;
         }
 
 
         if (message == null) {
+
             if (isReverse) {
                 list.add(0, null);
+
+                posDiff++;
             } else {
                 list.add(null);
             }
             list.add(null);
-            notifyItemInserted(getItemCount() - 1);
+            if(isReverse)
+            {
+                notifyItemInserted(0);
+            }
+            else
+            {
+                notifyItemInserted(getItemCount() - 1);
+            }
+
         } else {
             if (firstLoadedMessage == -1 | firstLoadedMessage > message.getId()) {
 
@@ -693,15 +751,31 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             if (isReverse) {
                 list.add(0, message);
+                positionList.put((long) message.getId(), list.indexOf(message) - posDiff);
+                posDiff++;
             } else {
                 list.add(message);
+                positionList.put((long) message.getId(), list.indexOf(message));
             }
+
 
             if (scrollToBottom) {
-                recyclerView.smoothScrollToPosition(getItemCount() - 1);
+                if(isReverse)
+                {
+                    recyclerView.smoothScrollToPosition(0);
+                }
+                else
+                {
+                    recyclerView.smoothScrollToPosition(getItemCount() - 1);
+
+                }
             }
 
-            notifyItemInserted(getItemCount() - 1);
+            if(isReverse)
+            {
+                notifyItemInserted(0);
+            }
+
         }
     }
 

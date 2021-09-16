@@ -105,6 +105,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private LinearLayout forwardedMessageContainer;
     private RecyclerView messageRecyclerView;
     private ViewGroup rootView;
+    private List<Long> readIds;
 
     private MessagingContract.Presenter presenter;
 
@@ -136,7 +137,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             @Override
             public void run() {
                 presenter.registerChatSocket();
-            }}, new Runnable() {
+            }
+        }, new Runnable() {
             @Override
             public void run() {
 
@@ -215,6 +217,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     @Override
     public String getChatName() {
         return String.valueOf(titleView.getText());
+    }
+
+    @Override
+    public String getAccountId() {
+        try {
+            return  CachedValues.getId(this);
+        } catch (NotCachedException e) {
+            e.printStackTrace();
+            return "-1";
+        }
     }
 
     @Override
@@ -368,7 +380,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     @Override
     public void addMessage(Message message) {
-        adapter.addItem(message);
+        adapter.addItem(message, true);
     }
 
     @Override
@@ -531,7 +543,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
                                         loadedMessagesIds.put(String.valueOf(message.getId()), message);
 
-                                        adapter.addItem(message);
+                                        adapter.addItem(message, true);
 
                                     } else {
                                         // Если сообщение уже есть проверяем не изменился ли статус прочитанности
@@ -581,11 +593,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             info.setVisibility(View.INVISIBLE);
                             infoPanel.setVisibility(View.INVISIBLE);
                         }
-                        final RecyclerView recyclerView = findViewById(R.id.messages);
-                        adapter = new MessagesAdapter(MessagingActivity.this, messageList, presenter.isDialog(), recyclerView,
-                                (LinearLayout) MessagingActivity.this.findViewById(R.id.bottom_scroll_button),
-                                (TextView) MessagingActivity.this.findViewById(R.id.timeView));
-                        recyclerView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
                         findViewById(R.id.loadingLayout).setVisibility(View.INVISIBLE);
                     }
                 });
@@ -596,6 +604,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
     }
+
+
+
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -753,6 +764,19 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     }
 
+    public void setMessageRead(final long messageId)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Notify read " + messageId);
+                adapter.list.get(adapter.getPositionById(messageId)).setRead(true);
+                adapter.notifyItemChanged(adapter.getPositionById(messageId));
+            }
+        });
+
+    }
+
     private Thread onTypingWaiter;
     private long lastTime = 0;
     private boolean isTyping = false;
@@ -863,7 +887,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
     public void scrollToBottom(View v) {
-        adapter.getRecyclerView().smoothScrollToPosition(messageList.size() - 1);
+        adapter.getRecyclerView().smoothScrollToPosition(0);
     }
 
     @Override
@@ -935,6 +959,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         clearForwardMessage();
     }
 
+    private long imaginaryMessageId = -2;
     public void sendMessageWithPreview(final String message) {
 
         final LinearLayout info = findViewById(R.id.info);
@@ -942,15 +967,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         infoPanel.setVisibility(View.INVISIBLE);
         final Message messagePreview;
         try {
+            final long localId = imaginaryMessageId - 1;
             EditText messageView = findViewById(R.id.message_box);
             messageView.setText("");
             String placegolderText = message;
             if (mediaIdToSend != null) {
                 placegolderText += "(Изображение)";
             }
-            messagePreview = new Message(-1, 1, false, placegolderText, null, null, null, null, null, null, null,
+            messagePreview = new Message((int) localId, 1, false, placegolderText, null, null, null, null, null, null, null,
                     new User(null, null, null, null, CachedValues.getId(this), null, null, null, false));
-            adapter.addItem(messagePreview);
+            adapter.addItem(messagePreview, true);
             adapter.getRecyclerView().scrollToPosition(messageList.indexOf(messagePreview));
 
             Thread sendThread = new Thread(new Runnable() {
@@ -992,7 +1018,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                     messagePreview.setAttachmentType(newMessage.getAttachmentType());
                                     messagePreview.setForwardedMessage(newMessage.getForwardedMessage());
                                     try {
-
+                                        int position = adapter.getPositionList().get(localId);
+                                        adapter.getPositionList().remove(localId);
+                                        adapter.getPositionList().put((long) newMessage.getId(), position);
                                         messagePreview.notifyDataChanged();
                                     } catch (Exception ignored) {
                                     }

@@ -70,6 +70,7 @@
     <string name="edit">edit</string>
     <string name="fwd_message">Forwarded message</string>
     <string name="empty_message">Empty message</string>
+    <string name="loading_history" translatable="false">Loading history...</string>
     <string name="transition_image_preview">IMAGE_PREVIEW_TRANSITION</string>
     <string name="transition_profile">PROFILE_TRANSITION</string>
     <string name="transition_image_send">IMAGE_SEND_TRANSITION</string>

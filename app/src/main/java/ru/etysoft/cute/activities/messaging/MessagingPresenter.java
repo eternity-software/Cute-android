@@ -12,8 +12,10 @@ import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.Chat;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
 import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
+import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.sockets.Event;
 import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
+import ru.etysoft.cuteframework.sockets.events.MessageReadEvent;
 import ru.etysoft.cuteframework.sockets.events.NewMessageEvent;
 import ru.etysoft.cuteframework.sockets.paradigm.Chat.ChatSocket;
 
@@ -83,6 +85,10 @@ public class MessagingPresenter implements MessagingContract.Presenter {
                                     String statusText = "";
                                     if (event instanceof NewMessageEvent) {
                                         NewMessageEvent newMessageEvent = (NewMessageEvent) event;
+                                        if(newMessageEvent.getMessage().getSender().getId() == Long.parseLong(view.getAccountId()))
+                                        {
+                                            view.setMessageRead(newMessageEvent.getMessage().getId());
+                                        }
                                         if (!view.getMessagesIds().containsKey(String.valueOf(newMessageEvent.getMessage().getId()))) {
                                             view.addMessage(newMessageEvent.getMessage());
                                             view.getMessagesIds().put(String.valueOf(newMessageEvent.getMessage().getId()), newMessageEvent.getMessage());
@@ -107,6 +113,11 @@ public class MessagingPresenter implements MessagingContract.Presenter {
                                                 statusText = membersCount + " " + view.getResources().getString(R.string.members);
                                             }
                                         }
+                                    }
+                                    else if(event instanceof MessageReadEvent)
+                                    {
+                                        MessageReadEvent messageReadEvent = (MessageReadEvent) event;
+                                        view.setMessageRead(messageReadEvent.getMessageId());
                                     }
                                     view.setStatus(statusText);
 

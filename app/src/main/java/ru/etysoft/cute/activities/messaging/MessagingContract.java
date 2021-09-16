@@ -20,7 +20,11 @@ public interface MessagingContract {
 
         Resources getResources();
 
+        String getAccountId();
+
         String getStringsRepositoryResult(int resId);
+
+        void setMessageRead(long messageId);
 
         void onSendMessageButtonClick(android.view.View view);
 

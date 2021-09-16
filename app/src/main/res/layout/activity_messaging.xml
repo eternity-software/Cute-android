@@ -287,7 +287,10 @@
             android:layout_width="match_parent"
             android:layout_height="33dp"
             android:theme="@style/progressBarBlue" />
+
     </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/error"

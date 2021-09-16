@@ -129,4 +129,5 @@
     <string name="offline">не в сети</string>
     <string name="fwd_message">Пересланное сообщение</string>
     <string name="empty_message">Пустое сообщение</string>
+    <string name="loading_history">Загружаем историю...</string>
 </resources>
