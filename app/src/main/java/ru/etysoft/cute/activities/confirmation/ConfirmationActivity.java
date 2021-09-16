@@ -61,8 +61,14 @@ public class ConfirmationActivity extends AppCompatActivity implements Confirmat
     }
 
     @Override
-    public void showError(String text) {
-        ErrorViewUtils.show(text, errorView, errorText);
+    public void showError(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ErrorViewUtils.show(text, errorView, errorText);
+            }
+        });
+
     }
 
     @Override

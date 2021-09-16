@@ -29,7 +29,7 @@ public class ForwardedMessage extends RelativeLayout {
 
     public boolean wasInitialized = false;
 
-    public void initComponent(Context context, AttributeSet attrs, boolean isWhite) {
+    public void initComponent(boolean isWhite) {
 
         if (!wasInitialized) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

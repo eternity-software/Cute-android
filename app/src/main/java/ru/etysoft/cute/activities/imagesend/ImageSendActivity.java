@@ -11,11 +11,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.transition.ChangeBounds;
 import android.transition.Transition;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -24,11 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.r0adkll.slidr.Slidr;
-
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
-import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.SliderActivity;

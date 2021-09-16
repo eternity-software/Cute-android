@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onAppBackgrounded() {
         try {
-            SocketHolder.getChatSocket().sendStatus(0, MemberStateChangedEvent.States.OFFLINE);
+            SocketHolder.getChatSocket().sendRequest(0, MemberStateChangedEvent.States.OFFLINE);
         }
         catch (Exception e)
         {
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onAppForegrounded() {
         try {
-            SocketHolder.getChatSocket().sendStatus(0, MemberStateChangedEvent.States.ONLINE);
+            SocketHolder.getChatSocket().sendRequest(0, MemberStateChangedEvent.States.ONLINE);
         }
         catch (Exception e)
         {

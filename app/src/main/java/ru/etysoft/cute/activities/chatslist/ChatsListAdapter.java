@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.MessagingActivity;
+import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;

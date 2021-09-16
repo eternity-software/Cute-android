@@ -24,7 +24,7 @@ public class Attachments extends RelativeLayout {
 
 
     private ImageView imageView;
-    private ForwardedMessage forwardedMessage;
+
     private View rootView;
 
 
@@ -39,16 +39,12 @@ public class Attachments extends RelativeLayout {
         rootView = inflater.inflate(R.layout.attachments, this);
 
         imageView = findViewById(R.id.imageView);
-        forwardedMessage = findViewById(R.id.forwardedMessage);
         imageView.setVisibility(VISIBLE);
-        hideForwardedMessage();
+
 
     }
 
-    public void hideForwardedMessage()
-    {
-        forwardedMessage.setVisibility(GONE);
-    }
+
 
     public void hideImage()
     {
@@ -57,11 +53,7 @@ public class Attachments extends RelativeLayout {
 
 
 
-    public void setForwardedMessageContent(Message message, Context context)
-    {
-        forwardedMessage.setVisibility(VISIBLE);
-        forwardedMessage.setContent(message, context);
-    }
+
 
     public void show() {
         rootView.setVisibility(View.VISIBLE);
@@ -99,9 +91,7 @@ public class Attachments extends RelativeLayout {
         rootView.startAnimation(fadeOut);
     }
 
-    public ForwardedMessage getForwardedMessage() {
-        return forwardedMessage;
-    }
+
 
     @Override
     public View getRootView() {

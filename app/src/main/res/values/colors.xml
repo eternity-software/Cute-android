@@ -50,14 +50,17 @@
     <color name="colorMessageText">@color/colorPrimaryDark</color>
     <color name="colorSupportButton">@color/colorPrimaryDark</color>
 
+
+
     <color name="colorTitle">@color/accent_blue</color>
+    <color name="colorTextBackground">#D7FFFFFF</color>
     <color name="colorMessageState">@color/accent_blue</color>
     <color name="colorBackgroundElement">@color/colorLightLGray</color>
 
 
 
 
-    <color name="colorUnreadBackground">#A1FAFAFA</color>
+    <color name="colorUnreadBackground">#A1F3F3F3</color>
 
 
     <color name="colorNavigationUnfocused">@color/achromatic_75</color>

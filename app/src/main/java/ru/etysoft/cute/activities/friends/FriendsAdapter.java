@@ -2,15 +2,10 @@ package ru.etysoft.cute.activities.friends;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,20 +14,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.activities.Profile;
-import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.components.Avatar;
-import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.NotCachedException;
-import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.Numbers;
-import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
-import ru.etysoft.cuteframework.methods.chat.ServiceData;
-import ru.etysoft.cuteframework.methods.friend.Friend;
-import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.methods.user.User;
 
 public class FriendsAdapter extends ArrayAdapter<User> {

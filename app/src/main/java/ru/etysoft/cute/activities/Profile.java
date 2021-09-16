@@ -1,8 +1,6 @@
 package ru.etysoft.cute.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,6 +13,7 @@ import com.r0adkll.slidr.Slidr;
 import com.squareup.picasso.Picasso;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;

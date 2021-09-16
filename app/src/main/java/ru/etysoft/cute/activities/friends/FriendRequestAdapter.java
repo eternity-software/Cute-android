@@ -5,30 +5,22 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.r0adkll.slidr.Slidr;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.MessagingActivity;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 
-import ru.etysoft.cuteframework.methods.friend.Friend;
 import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendRequest;
 import ru.etysoft.cuteframework.methods.friend.Remove.RemoveFriendResponse;
 import ru.etysoft.cuteframework.methods.friend.SendRequest.AddFriendRequest;

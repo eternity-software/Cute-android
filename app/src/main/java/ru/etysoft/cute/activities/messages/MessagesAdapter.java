@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -30,14 +30,16 @@ import java.util.Set;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImagePreview;
-import ru.etysoft.cute.activities.MessagingActivity;
+import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cute.utils.SocketHolder;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
@@ -50,30 +52,41 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final List<Message> list;
     private final LayoutInflater inflater;
     private boolean isDialog;
+    private long requestBlinkId;
     private RecyclerView recyclerView;
+
+    private boolean isCurrentlyLoadingMessages;
 
     private long firstLoadedMessage;
 
+    private LinearLayout scrollToBottomButton;
+    private TextView dateView;
+    private String lastTimeStamp;
     private long firstMessageId = 0;
 
-    public MessagesAdapter(MessagingActivity context, List<Message> values, boolean isDialog, final RecyclerView recyclerView) {
+    public MessagesAdapter(MessagingActivity context, List<Message> values, boolean isDialog, final RecyclerView recyclerView, final LinearLayout scrollToBottom,
+                           final TextView dateView) {
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+//        linearLayoutManager.setReverseLayout(true);
+//        linearLayoutManager.setStackFromEnd(false);
+//        recyclerView.setLayoutManager(linearLayoutManager);
         this.context = context;
         this.list = values;
         this.isDialog = isDialog;
         this.inflater = LayoutInflater.from(context);
-
+        isCurrentlyLoadingMessages = false;
         this.recyclerView = recyclerView;
         firstLoadedMessage = -1;
+        scrollToBottomButton = scrollToBottom;
+        this.dateView = dateView;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    final int offset = recyclerView.computeVerticalScrollOffset();
+                    scrollCheck();
 
-                    if (offset == 0) {
-                        loadUpperMessages();
-                    }
+
                 }
             });
         } else {
@@ -81,15 +94,72 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-                    final int offset = recyclerView.computeVerticalScrollOffset();
-
-                    if (offset < 300) {
-                        loadUpperMessages();
-                    }
+                    scrollCheck();
                 }
             });
         }
     }
+
+    private long lastTimeDateShown;
+
+    public void scrollCheck() {
+        final int offset = recyclerView.computeVerticalScrollOffset();
+
+        if (offset < recyclerView.getHeight() * 2) {
+            if (list.get(0) != null) {
+                loadUpperMessages();
+            }
+
+        }
+
+        final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
+
+        System.out.println("range " + range);
+        System.out.println("offset " + offset);
+        if (range - offset < 30) {
+            scrollToBottomButton.setVisibility(View.GONE);
+        } else {
+            scrollToBottomButton.setVisibility(View.VISIBLE);
+        }
+
+        try {
+            String lastText = String.valueOf(dateView.getText());
+            String date = Numbers.getDateFromTimestamp(lastTimeStamp, context);
+            if (!lastText.equals(date)) {
+                dateView.setVisibility(View.VISIBLE);
+                lastTimeDateShown = System.currentTimeMillis();
+                dateView.setText(date);
+                final Thread dateHide = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(3000);
+                            if (lastTimeDateShown + 3000 < System.currentTimeMillis()) {
+                                context.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dateView.setVisibility(View.GONE);
+                                    }
+                                });
+                            }
+
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                dateHide.start();
+            }
+
+        } catch (Exception e)
+        {
+
+        }
+
+    }
+
+
 
     public void setFirstMessageId(long firstmessageId) {
         this.firstMessageId = firstmessageId;
@@ -153,71 +223,86 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    private void loadUpperMessages() {
-        long firstId = 0;
-        if (list.get(0) != null) {
-            firstId = list.get(0).getId();
-        }
-        final long finalFirstId = firstId;
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
+    private void loadUpperMessages()
+    {
+        loadUpperMessages(null);
+    }
 
-                    final GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(context), String.valueOf(context.chatId),
-                            String.valueOf(finalFirstId))).execute();
-                    if (getMessageListResponse.isSuccess()) {
-                        List<Message> messages = getMessageListResponse.getMessages();
-                        Collections.reverse(messages);
-                        firstMessageId = getMessageListResponse.getFirstMessageId();
-                        final int[] countAdded = {0};
-                        final boolean[] hasClouds = {false};
-                        for (final Message message : messages) {
+    private void loadUpperMessages(final Runnable onSuccess) {
+        if (!isCurrentlyLoadingMessages) {
+            isCurrentlyLoadingMessages = true;
+            long firstId = 0;
+            if (list.get(0) != null) {
+                firstId = list.get(0).getId();
+            }
+            final long finalFirstId = firstId;
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        final GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(context), String.valueOf(context.chatId),
+                                String.valueOf(finalFirstId))).execute();
+                        if (getMessageListResponse.isSuccess()) {
+                            List<Message> messages = getMessageListResponse.getMessages();
+                            Collections.reverse(messages);
+                            firstMessageId = getMessageListResponse.getFirstMessageId();
+                            final int[] countAdded = {0};
+                            final boolean[] hasClouds = {false};
+                            for (final Message message : messages) {
 
 
+                                context.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        if (!context.loadedMessagesIds.containsKey(String.valueOf(message.getId()))) {
+
+                                            context.loadedMessagesIds.put(String.valueOf(message.getId()), message);
+
+                                            list.add(0, message);
+                                            countAdded[0]++;
+                                            if (message.getId() == firstMessageId) {
+                                                hasClouds[0] = true;
+                                            }
+
+                                        } else {
+                                            // Если сообщение уже есть проверяем не изменился ли статус прочитанности
+                                        }
+                                        LinearLayout loadingLayot = context.findViewById(R.id.loadingLayout);
+                                        loadingLayot.setVisibility(View.INVISIBLE);
+                                    }
+                                });
+
+                            }
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
-                                    if (!context.ids.containsKey(String.valueOf(message.getId()))) {
-
-                                        context.ids.put(String.valueOf(message.getId()), message);
-
-                                        list.add(0, message);
+                                    if (hasClouds[0] && list.get(0) != null) {
+                                        list.add(0, null);
                                         countAdded[0]++;
-                                        if (message.getId() == firstMessageId) {
-                                            hasClouds[0] = true;
-                                        }
-
-                                    } else {
-                                        // Если сообщение уже есть проверяем не изменился ли статус прочитанности
                                     }
-                                    LinearLayout loadingLayot = context.findViewById(R.id.loadingLayout);
-                                    loadingLayot.setVisibility(View.INVISIBLE);
+                                    notifyItemRangeInserted(0, countAdded[0]);
+                                    notifyItemChanged(countAdded[0]);
+
                                 }
                             });
-
-                        }
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (hasClouds[0] && list.get(0) != null) {
-                                    list.add(0, null);
-                                    countAdded[0]++;
-                                }
-                                notifyItemRangeInserted(0, countAdded[0]);
-                                notifyItemChanged(countAdded[0]);
+                            if(onSuccess != null)
+                            {
+                                isCurrentlyLoadingMessages = false;
+                                context.runOnUiThread(onSuccess);
 
                             }
-                        });
+                        }
+
+                    } catch (Exception e) {
+
                     }
-
-                } catch (Exception e) {
-
+                    isCurrentlyLoadingMessages = false;
                 }
-            }
-        });
-        thread.start();
+            });
+            thread.start();
+        }
     }
 
     private static boolean isEmoji(String message) {
@@ -234,15 +319,26 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 "[\u231A\u231B\u2328\u23CF\u23E9-\u23F3\u23F8-\u23FA]\uFE0F?)+");
     }
 
+    public void sendRead(int messageId)
+    {
+        try
+        {
+            SocketHolder.getChatSocket().readMessage(context.chatId, messageId);
+        }
+        catch (Exception ignored)
+        {
+            /*
+            Socket not initialized
+             */
+        }
+    }
+
     private void setBasicInfo(final Message message, final ViewHolder.BasicMessageHolder basicMessageHolder, int type) {
         basicMessageHolder.text.setVisibility(View.GONE);
         basicMessageHolder.emoji.setVisibility(View.GONE);
+        ForwardedMessage forwardedMessageView = basicMessageHolder.messageContainer.findViewById(R.id.forwardedMessage);
 
-        if (message.isRead()) {
-            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
-        } else {
-            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
-        }
+
 
         final AttachmentData attachmentData = message.getAttachmentData();
         if (message.getText() != null && isEmoji(message.getText()) && message.getText().length() < 8 && attachmentData == null && message.getForwardedMessage() == null) {
@@ -270,17 +366,29 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 basicMessageHolder.attachments.setLayoutParams(params);
             }
 
-
             if (Types.MINE == type) {
-                basicMessageHolder.attachments.getForwardedMessage().initComponent(null, null, false);
+                if (message.isRead()) {
+                    basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+                } else {
+                    basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+                }
+                forwardedMessageView.initComponent(false);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.mymessage));
             } else {
-                basicMessageHolder.attachments.getForwardedMessage().initComponent(null, null, true);
+                sendRead(message.getId());
+                forwardedMessageView.initComponent( true);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.dialog_message));
             }
         }
 
 
+
+        forwardedMessageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollToForwardedMessage(message);
+            }
+        });
 
 
         if (attachmentData != null) {
@@ -296,7 +404,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
 
-                    Bundle bundle = null;
                     Intent intent = new Intent(context, ImagePreview.class);
                     intent.putExtra("url", message.getAttachmentPath());
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -304,9 +411,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         String transitionName = context.getString(R.string.transition_image_preview);
                         imageView.setTransitionName(transitionName);
 
-                        // This part is important. We first need to clip this view to only its visible part.
-                        // We will also clip the corresponding view in the SecondActivity using shared element
-                        // callbacks.
                         Rect localVisibleRect = new Rect();
                         imageView.getLocalVisibleRect(localVisibleRect);
                         imageView.setClipBounds(localVisibleRect);
@@ -348,21 +452,83 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (message.getForwardedMessage() != null) {
             Message forwardedMessage = message.getForwardedMessage();
-            basicMessageHolder.attachments.setVisibility(View.VISIBLE);
-
-            basicMessageHolder.attachments.setForwardedMessageContent(forwardedMessage, context);
+            forwardedMessageView.setVisibility(View.VISIBLE);
+            forwardedMessageView.setContent(forwardedMessage, context);
         } else {
-            basicMessageHolder.attachments.hideForwardedMessage();
+            forwardedMessageView.setVisibility(View.GONE);
         }
         try {
 
+            lastTimeStamp = message.getTime() + "000";
             basicMessageHolder.time.setText(String.valueOf(Numbers.getTimeFromTimestamp(message.getTime() + "000", context)));
 
         } catch (Exception ignored) {
 
         }
 
+        if (requestBlinkId == message.getId()) {
+            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorAccent10));
+            requestBlinkId = -10;
 
+            Thread disableBlink = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(1000);
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if (message.isRead()) {
+                                        basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+                                    } else {
+                                        basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+                                    }
+                                    notifyItemChanged(basicMessageHolder.getAdapterPosition());
+                                } catch (Exception ignored) {
+                                }
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            disableBlink.start();
+
+        }
+
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public void scrollToForwardedMessage(final Message message)
+    {
+        int position = list.indexOf(message);
+
+
+        if (message.getForwardedMessage() != null) {
+            Message fwdMessage = message.getForwardedMessage();
+            if (list.get(0) == null || fwdMessage.getId() >= list.get(0).getId()) {
+                requestBlinkId = fwdMessage.getId();
+                int fwdPos = position - (message.getId() - fwdMessage.getId());
+
+                recyclerView.scrollToPosition(fwdPos);
+                notifyItemChanged(fwdPos);
+            }
+            else
+            {
+                loadUpperMessages(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollToForwardedMessage(message);
+                    }
+                });
+            }
+        }
     }
 
     public void updateMessageStatus(Message message, ViewHolder.MyMessage myMessage) {
@@ -382,6 +548,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final Message message = list.get(position);
+
 
         if (message != null) {
 
@@ -410,7 +577,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     break;
                 case Types.CONV_PREVIEW:
                     ViewHolder.ChatExpandedMessage chatExpandedMessage = (ViewHolder.ChatExpandedMessage) holder;
-                    setBasicInfo(message, chatExpandedMessage.basicMessageHolder, Types.CONV_PREVIEW);
+
                     chatExpandedMessage.avatar.setAcronym(message.getSender().getDisplayName(), Avatar.Size.SMALL);
                     chatExpandedMessage.displayName.setText(message.getSender().getDisplayName());
                     chatExpandedMessage.avatar.generateIdPicture((int) message.getSender().getId());
@@ -425,6 +592,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             context.startActivity(intent);
                         }
                     });
+                    setBasicInfo(message, chatExpandedMessage.basicMessageHolder, Types.CONV_PREVIEW);
                     break;
                 case Types.DIALOG:
                     ViewHolder.DialogMessage dialogMessage = (ViewHolder.DialogMessage) holder;
@@ -436,21 +604,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     break;
                 case Types.MINE:
                     final ViewHolder.MyMessage myMessage = (ViewHolder.MyMessage) holder;
+
+                    if (requestBlinkId != message.getId()) {
+                        message.setMessageDataHandler(new Message.MessageDataHandler() {
+                            @Override
+                            public void onDataUpdated(Message message) {
+                                updateMessageStatus(message, myMessage);
+                            }
+                        });
+
+                        updateMessageStatus(message, myMessage);
+                    } else {
+                        myMessage.state.setVisibility(View.GONE);
+                    }
                     setBasicInfo(message, myMessage.basicMessageHolder, Types.MINE);
-                    message.setMessageDataHandler(new Message.MessageDataHandler() {
-                        @Override
-                        public void onDataUpdated(Message message) {
-                            updateMessageStatus(message, myMessage);
-                        }
-                    });
-                    myMessage.basicMessageHolder.rootView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            myMessage.basicMessageHolder.text.setText("id " + message.getId());
-                            updateMessageStatus(message, myMessage);
-                        }
-                    });
-                    updateMessageStatus(message, myMessage);
                     break;
 
             }
@@ -607,7 +774,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
 
-        static class BasicMessageHolder {
+        static class BasicMessageHolder extends RecyclerView.ViewHolder {
             final TextView text;
             final TextView time;
             final TextView emoji;
@@ -616,6 +783,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final View messageContainer;
 
             public BasicMessageHolder(@NonNull View itemView) {
+                super(itemView);
                 text = itemView.findViewById(R.id.message_body);
 
                 time = itemView.findViewById(R.id.timeview);

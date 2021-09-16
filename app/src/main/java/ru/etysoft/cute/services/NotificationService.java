@@ -22,7 +22,7 @@ import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.CrashReportActivity;
-import ru.etysoft.cute.activities.MessagingActivity;
+import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.utils.SendorsControl;
 

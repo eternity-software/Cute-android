@@ -8,7 +8,7 @@
     android:background="@color/colorBackground"
     android:animateLayoutChanges="true"
     style="@style/AppSlideTheme"
-    tools:context=".activities.MessagingActivity">
+    tools:context=".activities.messaging.MessagingActivity">
 
     <View
         android:id="@+id/divider4"
@@ -36,7 +36,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:onClick="showInfo"
+        android:onClick="showEmptyChatPanel"
         app:layout_constraintBottom_toTopOf="@+id/divider3"
         app:layout_constraintStart_toEndOf="@+id/menuButton2"
         app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +64,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/montserratalternates_medium"
         android:maxLines="1"
-        android:onClick="showInfo"
+        android:onClick="showEmptyChatPanel"
         android:paddingTop="4dp"
         android:text=".."
         android:textColor="@color/colorTitle"
@@ -81,13 +81,53 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/montserrat"
         android:maxLines="1"
-        android:onClick="showInfo"
+        android:onClick="showEmptyChatPanel"
         android:text=".."
         android:textColor="@color/colorSupportText"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/timeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:elevation="10dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/colorTextDark"
+        android:paddingHorizontal="8dp"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text="2 апреля, 2022"
+        android:fontFamily="@font/montserratalternates_medium"
+        android:background="@drawable/square_text_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage" />
+
+    <LinearLayout
+        android:id="@+id/bottom_scroll_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/circle_bottom_scroll"
+        android:elevation="2dp"
+
+
+        android:onClick="scrollToBottom"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent" >
+        <ImageView
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:layout_height="match_parent"
+            android:background="?actionBarItemBackground"
+            app:srcCompat="@drawable/icon_popup_arrow"
+            app:tint="@color/colorAccentIcon" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -110,7 +150,8 @@
             <ru.etysoft.cute.components.ForwardedMessage
                 android:id="@+id/forwardedMessagePreview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:layout_marginRight="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
@@ -172,7 +213,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="7dp"
             android:background="@drawable/circle_button_accent"
-            android:onClick="sendMessage"
+            android:onClick="onSendMessageButtonClick"
             android:padding="8dp"
             app:srcCompat="@drawable/icon_send" />
         </LinearLayout>
@@ -257,7 +298,7 @@
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -289,7 +330,8 @@
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible"
+
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

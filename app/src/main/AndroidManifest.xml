@@ -73,7 +73,7 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".activities.MessagingActivity"
+            android:name=".activities.messaging.MessagingActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppSlideTheme"

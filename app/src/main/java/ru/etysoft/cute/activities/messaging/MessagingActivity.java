@@ -1,11 +1,10 @@
-package ru.etysoft.cute.activities;
+package ru.etysoft.cute.activities.messaging;
 
 import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.net.Uri;
@@ -39,15 +38,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.math.MathUtils;
 import com.squareup.picasso.Picasso;
 
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.activities.imagesend.ImageSendActivity;
 import ru.etysoft.cute.activities.messages.MessagesAdapter;
@@ -69,11 +66,9 @@ import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cute.utils.SocketHolder;
 import ru.etysoft.cuteframework.data.APIKeys;
-import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.chat.Chat;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
-import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
-import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
 import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageRequest;
 import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageResponse;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
@@ -81,35 +76,39 @@ import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.methods.user.User;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
-import ru.etysoft.cuteframework.sockets.Event;
 import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
-import ru.etysoft.cuteframework.sockets.events.NewMessageEvent;
-import ru.etysoft.cuteframework.sockets.paradigm.Chat.ChatSocket;
 
-public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener {
+public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener, MessagingContract.View {
 
     private final List<Message> messageList = new ArrayList<>();
-    public final Map<String, Message> ids = new HashMap<String, Message>();
+    public final Map<String, Message> loadedMessagesIds = new HashMap<String, Message>();
     private MessagesAdapter adapter;
-
 
     public long chatId = 1;
     private long accountId = -1;
     private String name = "42";
-    private String avatar = null;
-    private final String countMembers = "42";
-    private boolean isDialog = false;
+    private String mediaIdToSend;
+    public String forwardedMessageId = null;
+
+    public boolean isVoice = true;
+    private boolean isRecordingVoiceMessage = false;
+
+    private LinearLayout infoContainer;
+    private LinearLayout errorContainer;
     private ErrorPanel errorPanel;
     private InfoPanel infoPanel;
     private TextView statusView;
-    public boolean isVoice = true;
-    private String mediaIdToSend;
-    private Runnable onResume;
-    public String forwardedMessageId = null;
+    private TextView titleView;
     private Avatar avatarView;
     private NetworkStateReceiver networkStateReceiver;
     private ForwardedMessage forwardedMessagePreview;
     private LinearLayout forwardedMessageContainer;
+    private RecyclerView messageRecyclerView;
+    private ViewGroup rootView;
+
+    private MessagingContract.Presenter presenter;
+
+    private Runnable onResume;
 
 
     @Override
@@ -118,27 +117,26 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         setContentView(R.layout.activity_messaging);
         chatId = getIntent().getLongExtra(APIKeys.CHAT_ID, 0);
         name = getIntent().getStringExtra(APIKeys.NAME);
-        avatar = getIntent().getStringExtra(APIKeys.AVATAR);
-        isDialog = getIntent().getBooleanExtra("isd", false);
+        String type = getIntent().getStringExtra(APIKeys.TYPE);
+        String avatar = getIntent().getStringExtra(APIKeys.AVATAR);
 
-        avatarView = findViewById(R.id.avatar);
+        try {
+            presenter = new MessagingPresenter(this, type, avatar, CachedValues.getSessionKey(this), String.valueOf(chatId));
+        } catch (NotCachedException e) {
+            e.printStackTrace();
+            finish();
+        }
+
+        presenter.registerChatSocket();
+
+        initViews();
+
 
         networkStateReceiver = new NetworkStateReceiver(new Runnable() {
             @Override
             public void run() {
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            subscribeToEvents();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
-            }
-        }, new Runnable() {
+                presenter.registerChatSocket();
+            }}, new Runnable() {
             @Override
             public void run() {
 
@@ -146,25 +144,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         });
 
         networkStateReceiver.register(this);
-        forwardedMessagePreview = findViewById(R.id.forwardedMessagePreview);
-        forwardedMessageContainer = findViewById(R.id.fwdContainer);
-        forwardedMessagePreview.initComponent(null, null, false);
 
-
-        if (avatar != null) {
-            Picasso.get().load(avatar).transform(new CircleTransform()).into(avatarView.getPictureView());
-        }
+        setAvatarImage(avatar);
 
         avatarView.setAcronym((name), Avatar.Size.SMALL);
 
-        final RecyclerView recyclerView = findViewById(R.id.messages);
-        adapter = new MessagesAdapter(this, messageList, isDialog, recyclerView);
-        recyclerView.setAdapter(adapter);
-
-        statusView = findViewById(R.id.subtitle);
-        if (!isDialog) {
-            statusView.setText(countMembers + " " + getResources().getString(R.string.members));
-            loadChatInfo();
+        if (!presenter.isDialog()) {
+            presenter.loadChatInfo();
             avatarView.generateIdPicture(chatId);
         } else {
             accountId = getIntent().getLongExtra(APIKeys.ACCOUNT_ID, -1L);
@@ -172,17 +158,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         }
 
-
-        errorPanel = findViewById(R.id.error_panel);
-        infoPanel = findViewById(R.id.info_panel);
-        errorPanel.getRootView().setVisibility(View.INVISIBLE);
-        infoPanel.getRootView().setVisibility(View.INVISIBLE);
-
-        final LinearLayout info = findViewById(R.id.info);
-        info.setVisibility(View.INVISIBLE);
-
-        final LinearLayout error = findViewById(R.id.error);
-        error.setVisibility(View.INVISIBLE);
         errorPanel.setReloadAction(new Runnable() {
             @Override
             public void run() {
@@ -190,28 +165,125 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     @Override
                     public void run() {
                         processListUpdate();
-                        error.setVisibility(View.INVISIBLE);
+                        errorContainer.setVisibility(View.INVISIBLE);
 
                     }
                 });
             }
         });
 
-        TextView title = findViewById(R.id.title);
-        title.setText(name);
+        titleView.setText(name);
+
         setupVoiceButton();
-
-
         setupOnTextInput();
-        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
-
 
         processListUpdate();
 
-        registerSocket();
 
-        final ViewGroup rootView = (ViewGroup) findViewById(R.id.rootView);
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
 
+        overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+
+    }
+
+    @Override
+    public void initViews() {
+        rootView = findViewById(R.id.rootView);
+        avatarView = findViewById(R.id.avatar);
+        forwardedMessagePreview = findViewById(R.id.forwardedMessagePreview);
+        forwardedMessageContainer = findViewById(R.id.fwdContainer);
+        forwardedMessagePreview.initComponent(false);
+        errorPanel = findViewById(R.id.error_panel);
+        infoPanel = findViewById(R.id.info_panel);
+        errorPanel.getRootView().setVisibility(View.INVISIBLE);
+        infoPanel.getRootView().setVisibility(View.INVISIBLE);
+        infoContainer = findViewById(R.id.info);
+        infoContainer.setVisibility(View.INVISIBLE);
+        errorContainer = findViewById(R.id.error);
+        errorContainer.setVisibility(View.INVISIBLE);
+        titleView = findViewById(R.id.title);
+        statusView = findViewById(R.id.subtitle);
+        setupRecyclerView();
+    }
+
+    @Override
+    public String getStatusText() {
+        return String.valueOf(statusView.getText());
+    }
+
+    @Override
+    public String getChatName() {
+        return String.valueOf(titleView.getText());
+    }
+
+    @Override
+    public String getStringsRepositoryResult(int resId) {
+        return StringsRepository.getOrDefault(R.string.offline, MessagingActivity.this);
+    }
+
+    @Override
+    public void setupRecyclerView() {
+        messageRecyclerView = findViewById(R.id.messages);
+        adapter = new MessagesAdapter(this, messageList, presenter.isDialog(), messageRecyclerView,
+                (LinearLayout) MessagingActivity.this.findViewById(R.id.bottom_scroll_button),
+                (TextView) MessagingActivity.this.findViewById(R.id.timeView));
+        messageRecyclerView.setAdapter(adapter);
+
+        ItemTouchHelper.SimpleCallback swipeForForwardMessageCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public float getSwipeEscapeVelocity(float defaultValue) {
+                return 2.0f;
+            }
+
+            @Override
+            public float getSwipeVelocityThreshold(float defaultValue) {
+                return 0.1f;
+            }
+
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.1f;
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                Message message = messageList.get(viewHolder.getAdapterPosition());
+                if (message != null) {
+                    if (message.getType() != null && message.getType().equals(Message.Type.USER) && dX > -(recyclerView.getWidth() / 4)) {
+                        super.onChildDraw(c, recyclerView, viewHolder, dX / 2, dY, actionState, isCurrentlyActive);
+                    }
+                }
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+                Message message = messageList.get(viewHolder.getAdapterPosition());
+                if (message != null && message.getType().equals(Message.Type.USER)) {
+                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                    forwardedMessageId = String.valueOf(message.getId());
+                    forwardedMessageContainer.setVisibility(View.VISIBLE);
+                    forwardedMessagePreview.setContent(message, MessagingActivity.this);
+                    SendorsControl.vibrate(MessagingActivity.this, 50);
+                }
+            }
+        };
+
+        new ItemTouchHelper(swipeForForwardMessageCallback).attachToRecyclerView(messageRecyclerView);
+
+        /*
+          Keyboard appear animation
+
+          In Android API >= 30 we can animate layout resize in realtime
+          At API < 30 we emulate layout resizing after keyboard appearing
+         */
         if (Build.VERSION.SDK_INT >= 30) {
             rootView.setWindowInsetsAnimationCallback(new WindowInsetsAnimation.Callback(WindowInsetsAnimation.Callback.DISPATCH_MODE_STOP) {
                 float startBottom = 0;
@@ -253,16 +325,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             });
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
-            LinearLayout editTextContainer = findViewById(R.id.linearLayout3);
-
-            final ValueAnimator anim = ValueAnimator.ofInt(recyclerView.getMeasuredHeight(), -100);
+            final ValueAnimator anim = ValueAnimator.ofInt(messageRecyclerView.getMeasuredHeight(), -100);
             anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     int val = (Integer) valueAnimator.getAnimatedValue();
-                    ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();
+                    ViewGroup.LayoutParams layoutParams = messageRecyclerView.getLayoutParams();
                     layoutParams.height = val;
-                    recyclerView.setLayoutParams(layoutParams);
+                    messageRecyclerView.setLayoutParams(layoutParams);
                 }
             });
             anim.setDuration(500);
@@ -289,70 +359,24 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             layoutTransition.setInterpolator(LayoutTransition.CHANGING, new DecelerateInterpolator(6.5f));
 
         }
-
-
-        SliderActivity sliderActivity = new SliderActivity();
-        sliderActivity.attachSlider(this);
-
-        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public float getSwipeEscapeVelocity(float defaultValue) {
-                return 2.0f;
-            }
-
-            @Override
-            public float getSwipeVelocityThreshold(float defaultValue) {
-                return 0.1f;
-            }
-            @Override
-            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-                return 0.1f;
-            }
-
-
-
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                Message message = messageList.get(viewHolder.getAdapterPosition());
-                if(message != null && message.getType().equals(Message.Type.USER) && dX > -(recyclerView.getWidth() / 4))
-                {
-
-                    super.onChildDraw(c, recyclerView, viewHolder, dX / 2, dY, actionState, isCurrentlyActive);
-                }
-            }
-
-
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-                Message message = messageList.get(viewHolder.getAdapterPosition());
-                if(message != null && message.getType().equals(Message.Type.USER)) {
-                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                    forwardedMessageId = String.valueOf(message.getId());
-                    forwardedMessageContainer.setVisibility(View.VISIBLE);
-                    forwardedMessagePreview.setContent(message, MessagingActivity.this);
-                    SendorsControl.vibrate(MessagingActivity.this, 50);
-                }
-            }
-
-
-        };
-
-
-        new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
     }
 
+    @Override
+    public void showErrorToast(String message) {
+        CuteToast.showError(message, this);
+    }
 
-    public void clearForwardMessage()
-    {
+    @Override
+    public void addMessage(Message message) {
+        adapter.addItem(message);
+    }
+
+    @Override
+    public Map<String, Message> getMessagesIds() {
+        return loadedMessagesIds;
+    }
+
+    public void clearForwardMessage() {
         forwardedMessageId = "";
         forwardedMessageContainer.setVisibility(View.GONE);
     }
@@ -370,7 +394,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                            String avatarPath) {
         Intent intent = new Intent(context, MessagingActivity.class);
         intent.putExtra(APIKeys.CHAT_ID, chatId);
-        intent.putExtra("isd", false);
+        intent.putExtra(APIKeys.TYPE, Chat.Types.CONVERSATION);
         intent.putExtra(APIKeys.NAME, name);
         intent.putExtra(APIKeys.AVATAR, avatarPath);
         context.startActivity(intent);
@@ -380,7 +404,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                              String avatarPath) {
         Intent intent = new Intent(context, MessagingActivity.class);
         intent.putExtra(APIKeys.CHAT_ID, chatId);
-        intent.putExtra("isd", true);
+        intent.putExtra(APIKeys.TYPE, Chat.Types.PRIVATE);
         intent.putExtra(APIKeys.NAME, name);
         intent.putExtra(APIKeys.ACCOUNT_ID, accountId);
         intent.putExtra(APIKeys.AVATAR, avatarPath);
@@ -391,6 +415,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public void back(View v) {
         onBackPressed();
     }
+
 
     private FilePickerBottomSheet filePickerBottomSheet;
 
@@ -410,13 +435,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
 
-    public void showInfo(View v) {
-        if (isDialog) {
+    @Override
+    public void showEmptyChatPanel(View v) {
+        if (presenter.isDialog()) {
             Intent intent = new Intent(MessagingActivity.this, Profile.class);
             intent.putExtra("id", accountId);
             intent.putExtra(Profile.ALLOW_OPEN_CHAT, false);
-            if (avatar != null) {
-                intent.putExtra(Profile.AVATAR, avatar);
+            if (presenter.getAvatarUrl() != null) {
+                intent.putExtra(Profile.AVATAR, presenter.getAvatarUrl());
             }
 
             Bundle bundle = Transitions.makeOneViewTransition(avatarView, MessagingActivity.this, intent, getResources().getString(R.string.transition_profile));
@@ -433,79 +459,31 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
+    @Override
+    public void setHeaderInfo(String avatarUrl, String title, String status) {
 
-    public boolean isrecording = false;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        statusView.setText(status);
+    }
+
+    @Override
+    public void setChatName(String chatName) {
+        titleView.setText(chatName);
+    }
+
+    @Override
+    public void setAvatarImage(String avatarUrl) {
+        if (avatarUrl != null) {
+            Picasso.get().load(avatarUrl).transform(new CircleTransform()).into(avatarView.getPictureView());
+        }
+    }
+
 
     public void setOnResume(Runnable runnable) {
         onResume = runnable;
-    }
-
-    public void subscribeToEvents() {
-        final ChatSocket.EventReceiveHandler eventReceiveHandler = new ChatSocket.EventReceiveHandler() {
-            @Override
-            public void onEventReceived(final Event event) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-
-                            if (event instanceof NewMessageEvent) {
-                                NewMessageEvent newMessageEvent = (NewMessageEvent) event;
-                                if (!ids.containsKey(String.valueOf(newMessageEvent.getMessage().getId()))) {
-                                    adapter.addItem(newMessageEvent.getMessage());
-                                    ids.put(String.valueOf(newMessageEvent.getMessage().getId()), newMessageEvent.getMessage());
-                                }
-                            } else if (event instanceof MemberStateChangedEvent) {
-                                MemberStateChangedEvent memberStateChangedEvent = (MemberStateChangedEvent) event;
-                                if (memberStateChangedEvent.getState().equals(MemberStateChangedEvent.States.TYPING)) {
-                                    if (isDialog) {
-                                        statusView.setText(getResources().getString(R.string.typing).replace("%s", name));
-                                    } else {
-                                        statusView.setText(getResources().getString(R.string.typing).replace("%s",
-                                                String.valueOf(memberStateChangedEvent.getAccountId())));
-                                    }
-                                } else {
-                                    if(isDialog) {
-                                        if (memberStateChangedEvent.getState().equals(MemberStateChangedEvent.States.OFFLINE)) {
-                                            statusView.setText(StringsRepository.getOrDefault(R.string.offline, MessagingActivity.this));
-                                        } else if (memberStateChangedEvent.getState().equals(MemberStateChangedEvent.States.ONLINE)) {
-                                            statusView.setText(StringsRepository.getOrDefault(R.string.online, MessagingActivity.this));
-                                        }
-                                    }
-                                    else
-                                    {
-                                        statusView.setText(countMembers + " " + getResources().getString(R.string.members));
-                                    }
-                                }
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-            }
-        };
-
-        SocketHolder.getChatSocket().subscribeToEvents(chatId, eventReceiveHandler);
-    }
-
-
-    public void registerSocket() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    subscribeToEvents();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
     }
 
 
@@ -525,43 +503,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public boolean isRecordPanelShown = false;
     private Thread recordWaiter;
 
-    private void loadChatInfo() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final ChatInfoResponse chatInfoResponse = (new ChatInfoRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId))).execute();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                TextView membersView = findViewById(R.id.subtitle);
-                                membersView.setText(chatInfoResponse.getMembers().size() + " " + getResources().getString(R.string.members));
-                            } catch (ResponseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
-                } catch (final Exception e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            CuteToast.showError(e.getMessage(), MessagingActivity.this);
-
-                        }
-                    });
-                }
-            }
-        });
-        thread.start();
-    }
 
     private void processListUpdate() {
 
@@ -586,9 +527,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (!ids.containsKey(String.valueOf(message.getId()))) {
+                                    if (!loadedMessagesIds.containsKey(String.valueOf(message.getId()))) {
 
-                                        ids.put(String.valueOf(message.getId()), message);
+                                        loadedMessagesIds.put(String.valueOf(message.getId()), message);
 
                                         adapter.addItem(message);
 
@@ -630,8 +571,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     @Override
                     public void run() {
 
-
-                        if (ids.size() == 0) {
+                        if (loadedMessagesIds.size() == 0) {
                             final LinearLayout info = findViewById(R.id.info);
                             info.setVisibility(View.VISIBLE);
                             infoPanel.setVisibility(View.VISIBLE);
@@ -642,7 +582,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             infoPanel.setVisibility(View.INVISIBLE);
                         }
                         final RecyclerView recyclerView = findViewById(R.id.messages);
-                        adapter = new MessagesAdapter(MessagingActivity.this, messageList, isDialog, recyclerView);
+                        adapter = new MessagesAdapter(MessagingActivity.this, messageList, presenter.isDialog(), recyclerView,
+                                (LinearLayout) MessagingActivity.this.findViewById(R.id.bottom_scroll_button),
+                                (TextView) MessagingActivity.this.findViewById(R.id.timeView));
                         recyclerView.setAdapter(adapter);
                         findViewById(R.id.loadingLayout).setVisibility(View.INVISIBLE);
                     }
@@ -680,7 +622,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                isrecording = true;
+                                                isRecordingVoiceMessage = true;
                                                 SendorsControl.vibrate(getApplicationContext(), 100);
                                                 ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, max, 1.0f, max, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
                                                 scaleAnimation.setDuration(duration);
@@ -707,14 +649,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
 
-                        if (isrecording) {
+                        if (isRecordingVoiceMessage) {
                             ScaleAnimation dscaleAnimation = new ScaleAnimation(max, 1.0f, max, 1.0f, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
                             dscaleAnimation.setDuration(duration);
                             dscaleAnimation.setFillAfter(true);
 
 
                             microphone.startAnimation(dscaleAnimation);// отпускание
-                            isrecording = false;
+                            isRecordingVoiceMessage = false;
 
                         } else {
                             if (!isRecordPanelShown) {
@@ -828,7 +770,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         Thread.sleep(1000);
                         if (System.currentTimeMillis() > lastTime + 1000 && isTyping) {
                             isTyping = false;
-                            SocketHolder.getChatSocket().sendStatus(chatId, MemberStateChangedEvent.States.ONLINE);
+                            SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
                         }
 
                     } catch (Exception e) {
@@ -861,7 +803,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         public void run() {
                             try {
 
-                                SocketHolder.getChatSocket().sendStatus(chatId, MemberStateChangedEvent.States.TYPING);
+                                SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.TYPING);
 
 
                             } catch (Exception e) {
@@ -920,13 +862,25 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
+    public void scrollToBottom(View v) {
+        adapter.getRecyclerView().smoothScrollToPosition(messageList.size() - 1);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (data == null) return;
 
         if (resultCode == ImageSendActivity.CODE) {
             if (filePickerBottomSheet != null) {
-                filePickerBottomSheet.dismiss();
+
+                /**
+                 * Throws an java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+                 * on some devices (tested on Android 5.1)
+                 */
+                try {
+                    filePickerBottomSheet.dismiss();
+                } catch (Exception ignored) {
+                }
             }
             final String message = data.getStringExtra("text");
             String imageUri = data.getStringExtra("uri");
@@ -977,13 +931,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void clearFwd(View v)
-    {
+    public void clearFwd(View v) {
         clearForwardMessage();
     }
 
     public void sendMessageWithPreview(final String message) {
-
 
         final LinearLayout info = findViewById(R.id.info);
         info.setVisibility(View.INVISIBLE);
@@ -999,14 +951,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             messagePreview = new Message(-1, 1, false, placegolderText, null, null, null, null, null, null, null,
                     new User(null, null, null, null, CachedValues.getId(this), null, null, null, false));
             adapter.addItem(messagePreview);
-
+            adapter.getRecyclerView().scrollToPosition(messageList.indexOf(messagePreview));
 
             Thread sendThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     isTyping = false;
                     try {
-                        SocketHolder.getChatSocket().sendStatus(chatId, MemberStateChangedEvent.States.ONLINE);
+                        SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
                     } catch (Exception e) {
 
                     }
@@ -1045,8 +997,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                     } catch (Exception ignored) {
                                     }
 
-                                    if (!ids.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
-                                        ids.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
+                                    if (!loadedMessagesIds.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
+                                        loadedMessagesIds.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
                                     }
 
 
@@ -1080,17 +1032,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
-    public void sendMessage(View view) {
-
+    @Override
+    public void onSendMessageButtonClick(View v) {
         EditText messageView = findViewById(R.id.message_box);
-
         final String message = String.valueOf(messageView.getText());
         messageView.setText("");
-
         sendMessageWithPreview(message);
-
-
     }
+
 
     @Override
     public void onBackPressed() {
@@ -1099,4 +1048,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
+
+
 }

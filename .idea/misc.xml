@@ -17,7 +17,9 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/button_passive_enabled.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/button_passive_mini.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/button_passive_selector.xml" value="0.21875" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_bottom_scroll.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_button_accent.xml" value="0.21875" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_colored.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_offline.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/circle_online.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/crop_square.xml" value="0.21875" />
@@ -32,7 +34,9 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_elemt_background.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_rounded_corners.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_rounded_corners_gray.xml" value="0.37864583333333335" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_rounded_top.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_rounded_top_gray.xml" value="0.37864583333333335" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/square_text_background.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/text_outline_shape.xml" value="0.21875" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/drawable/tooltip.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout-h650dp/activity_signin.xml" value="0.22" />
@@ -55,7 +59,7 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_image_send.xml" value="0.3625" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_main.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_meet.xml" value="0.20260416666666667" />
-        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_messaging.xml" value="0.3625" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_messaging.xml" value="0.5" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_profile.xml" value="0.33" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_signin.xml" value="0.2828125" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_signup.xml" value="0.2828125" />
@@ -85,6 +89,7 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/request_element.xml" value="0.3625" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/toast.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/toolbar.xml" value="0.75" />
+        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3625" />
       </map>
     </option>
   </component>

@@ -35,7 +35,7 @@
     <color name="colorPrimaryDark">#4E4E4E</color>
 
 
-
+    <color name="colorTextBackground">#BE263959</color>
     <color name="colorLightGray">#D9D9D9</color>
     <color name="colorUnderWhite">#F9F9F9</color>
     <color name="colorMainLight">#7D93FF</color>

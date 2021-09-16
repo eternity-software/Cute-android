@@ -13,7 +13,7 @@ import java.util.List;
 
 import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.MessagingActivity;
+import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.images.ImagesWorker;
 
 public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
