@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities.editprofile;
+package ru.etysoft.cute.activities.EditProfile;
 
 import android.app.Activity;
 

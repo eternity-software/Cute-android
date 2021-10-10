@@ -1,5 +1,6 @@
 package ru.etysoft.cute.activities;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -36,20 +38,59 @@ public class ImagePreview extends AppCompatActivity {
     public static final String EXTRA_CLIP_RECT = "rect";
     private CardView card;
     private boolean isShown = false;
+    private boolean isSliding = false;
+    private float y = -1;
+    private float lastRawY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
-        String photo = String.valueOf(getIntent().getExtras().get("url"));
-        PhotoView photoView = findViewById(R.id.photoView);
-        Picasso.get().load(photo).into(photoView);
-        photoView.setOnOutsidePhotoTapListener(new OnOutsidePhotoTapListener() {
+        final String photo = String.valueOf(getIntent().getExtras().get("url"));
+        final ImageView photoView = findViewById(R.id.photoView);
+        card = findViewById(R.id.imageContainer);
+        final float fromY = photoView.getY();
+
+        photoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onOutsidePhotoTap(ImageView imageView) {
-                onBackPressed();
+            public boolean onTouch(View v, final MotionEvent event) {
+                float delta = (y - event.getY());
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN: // нажатие
+                        y = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE: // движение
+
+                                card.setY((card.getY() - delta) / 1.5f);
+
+
+
+                       // y = photoView.getY();
+                        break;
+                    case MotionEvent.ACTION_UP: // отпускание
+
+
+                            if (Math.abs(y - event.getRawY()) > photoView.getHeight() / 8) {
+                                onBackPressed();
+
+                            } else {
+                                card.animate().y(fromY).setDuration(600).setInterpolator(new DecelerateInterpolator(5f)).start();
+                            }
+
+
+                    case MotionEvent.ACTION_CANCEL:
+
+                        break;
+                }
+
+                return true;
+
             }
         });
+
+        Picasso.get().load(photo).into(photoView);
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -96,7 +137,7 @@ public class ImagePreview extends AppCompatActivity {
                     super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
                 }
             });
-            card = findViewById(R.id.imageContainer);
+
             getWindow().getSharedElementEnterTransition()
                     .addListener(new Transition.TransitionListener() {
                         @Override
@@ -160,7 +201,7 @@ public class ImagePreview extends AppCompatActivity {
     }
 
     public void exit(View v) {
-        onBackPressed();
+
     }
 
     @Override

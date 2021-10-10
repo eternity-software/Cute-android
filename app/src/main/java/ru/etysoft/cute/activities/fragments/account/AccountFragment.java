@@ -1,19 +1,10 @@
 package ru.etysoft.cute.activities.fragments.account;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,24 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.activities.SettingsActivity;
-import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
+import ru.etysoft.cute.activities.EditProfile.EditProfileActivity;
 import ru.etysoft.cute.activities.friends.FriendsActivity;
 import ru.etysoft.cute.components.Avatar;
-import ru.etysoft.cute.components.CuteToast;
-import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.utils.CircleTransform;
-import ru.etysoft.cuteframework.methods.friend.Friend;
-import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListRequest;
-import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListResponse;
 import ru.etysoft.cuteframework.methods.user.User;
 
 public class AccountFragment extends Fragment implements AccountContact.View {

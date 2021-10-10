@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 
 import ru.etysoft.cute.activities.ImagePreview;
-import ru.etysoft.cute.activities.Profile;
-import ru.etysoft.cute.activities.editprofile.EditProfileActivity;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;

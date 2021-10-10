@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:theme="@style/AppSlideTheme"
     android:background="@color/colorBackgroundElements"
-    tools:context=".activities.imagesend.ImageSendActivity">
+    tools:context=".activities.ImageSend.ImageSendActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

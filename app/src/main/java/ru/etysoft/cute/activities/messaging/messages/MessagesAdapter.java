@@ -1,4 +1,4 @@
-package ru.etysoft.cute.activities.messages;
+package ru.etysoft.cute.activities.messaging.messages;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
