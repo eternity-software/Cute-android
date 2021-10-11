@@ -30,6 +30,7 @@ import java.util.Objects;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.CuteToast;
+import ru.etysoft.cute.components.PreviewImageView;
 import ru.etysoft.cute.images.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 
@@ -38,56 +39,42 @@ public class ImagePreview extends AppCompatActivity {
     public static final String EXTRA_CLIP_RECT = "rect";
     private CardView card;
     private boolean isShown = false;
-    private boolean isSliding = false;
-    private float y = -1;
-    private float lastRawY = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
         final String photo = String.valueOf(getIntent().getExtras().get("url"));
-        final ImageView photoView = findViewById(R.id.photoView);
+        final PreviewImageView photoView = findViewById(R.id.photoView);
         card = findViewById(R.id.imageContainer);
-        final float fromY = photoView.getY();
 
-        photoView.setOnTouchListener(new View.OnTouchListener() {
+
+        photoView.setImageContainer(card);
+        photoView.setActionsListener(new PreviewImageView.ImageActionsListener() {
+
+
             @Override
-            public boolean onTouch(View v, final MotionEvent event) {
-                float delta = (y - event.getY());
-                switch (event.getAction()) {
+            public void onSlideDown() {
+                onBackPressed();
+            }
 
-                    case MotionEvent.ACTION_DOWN: // нажатие
-                        y = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE: // движение
+            @Override
+            public void onSlideUp() {
+                onBackPressed();
+            }
 
-                                card.setY((card.getY() - delta) / 1.5f);
+            @Override
+            public void onZoom(float i) {
 
+            }
 
-
-                       // y = photoView.getY();
-                        break;
-                    case MotionEvent.ACTION_UP: // отпускание
-
-
-                            if (Math.abs(y - event.getRawY()) > photoView.getHeight() / 8) {
-                                onBackPressed();
-
-                            } else {
-                                card.animate().y(fromY).setDuration(600).setInterpolator(new DecelerateInterpolator(5f)).start();
-                            }
-
-
-                    case MotionEvent.ACTION_CANCEL:
-
-                        break;
-                }
-
-                return true;
+            @Override
+            public void onExitZoom() {
 
             }
         });
+
 
         Picasso.get().load(photo).into(photoView);
 
@@ -206,9 +193,16 @@ public class ImagePreview extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
+        final PreviewImageView photoView = findViewById(R.id.photoView);
         overridePendingTransition(R.anim.fade_out, R.anim.fade_out);
+        if(photoView.isZoomed())
+        {
+            photoView.returnToDefaultPos();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
 
-        super.onBackPressed();
     }
 }

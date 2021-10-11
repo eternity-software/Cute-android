@@ -9,6 +9,7 @@
     tools:context=".activities.ImageSend.ImageSendActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.github.chrisbanes.photoview.PhotoView
+        <ru.etysoft.cute.components.PreviewImageView
             android:id="@+id/photoView"
             android:layout_width="0dp"
             android:layout_height="0dp"

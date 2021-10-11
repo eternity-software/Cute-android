@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
+import ru.etysoft.cute.components.PreviewImageView;
 import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.SliderActivity;
@@ -33,6 +34,7 @@ public class ImageSendActivity extends AppCompatActivity {
     private String imageUri;
 
     private String finalImageUri;
+    private PreviewImageView imageView;
     public static final int CODE = 11;
 
     @Override
@@ -44,11 +46,34 @@ public class ImageSendActivity extends AppCompatActivity {
         EditText editText = findViewById(R.id.message_box);
         editText.setText(getIntent().getExtras().getString("text"));
         finalImageUri = imageUri;
-        ImageView imageView = findViewById(R.id.photoView);
+        imageView = findViewById(R.id.photoView);
+        imageView.setImageContainer(findViewById(R.id.imageContainer));
+        imageView.setActionsListener(new PreviewImageView.ImageActionsListener() {
+
+
+            @Override
+            public void onSlideDown() {
+                imageView.returnToDefaultPos();
+            }
+
+            @Override
+            public void onSlideUp() {
+                onBackPressed();
+            }
+
+            @Override
+            public void onZoom(float increase) {
+
+            }
+
+            @Override
+            public void onExitZoom() {
+
+            }
+        });
         imageView.setImageURI(Uri.parse(imageUri));
 
-        SliderActivity sliderActivity = new SliderActivity();
-        sliderActivity.attachSlider(this);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getSharedElementEnterTransition().setDuration(300);
@@ -120,12 +145,20 @@ public class ImageSendActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        LinearLayout layout = findViewById(R.id.linearLayout3);
-        Animation appearAnimation = AnimationUtils.loadAnimation(this,
-                R.anim.hide_to_bottom);
-        layout.startAnimation(appearAnimation );
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        if(!imageView.isZoomed())
+        {
+            super.onBackPressed();
+            LinearLayout layout = findViewById(R.id.linearLayout3);
+            Animation appearAnimation = AnimationUtils.loadAnimation(this,
+                    R.anim.hide_to_bottom);
+            layout.startAnimation(appearAnimation );
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        }
+        else
+        {
+            imageView.returnToDefaultPos();
+        }
+
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
