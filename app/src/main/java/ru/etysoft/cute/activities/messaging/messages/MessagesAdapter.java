@@ -58,11 +58,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean isDialog;
     private long requestBlinkId;
     private RecyclerView recyclerView;
-
     private boolean isCurrentlyLoadingMessages;
-
     private long firstLoadedMessage;
-
     private LinearLayout scrollToBottomButton;
     private TextView dateView;
     private String lastTimeStamp;
@@ -91,8 +88,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                     scrollCheck();
-
-
                 }
             });
         } else {
@@ -108,7 +103,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public int getPositionById(long id)
     {
-        System.out.println(positionList.get(id) + " ff " + id);
         return positionList.get(id) + posDiff - 1;
     }
 
@@ -172,8 +166,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-    public void setFirstMessageId(long firstmessageId) {
-        this.firstMessageId = firstmessageId;
+    public void setFirstMessageId(long firstMessageId) {
+        this.firstMessageId = firstMessageId;
     }
 
     public Map<Long, Integer> getPositionList() {
@@ -414,7 +408,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 if (message.getForwardedMessage() != null) {
                     Message fwdMessage = message.getForwardedMessage();
-                    scrollToMessageId(fwdMessage.getId());
+                    scrollToMessage(fwdMessage.getId());
                 }
 
             }
@@ -481,14 +475,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             basicMessageHolder.attachments.setVisibility(View.GONE);
         }
         final int pos = basicMessageHolder.getAdapterPosition();
-        basicMessageHolder.rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("posDiff " + posDiff);
-                System.out.println("pos " + pos );
-                System.out.println("getPos " + getPositionById(message.getId()));
-            }
-        });
+
         if (message.getForwardedMessage() != null) {
             Message forwardedMessage = message.getForwardedMessage();
             forwardedMessageView.setVisibility(View.VISIBLE);
@@ -544,9 +531,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return recyclerView;
     }
 
-    public void scrollToMessageId(final long from)
+    public void scrollToMessage(final long from)
     {
-
             if (list.get(list.size() - 1) == null || from >= list.get(list.size() - 1).getId()) {
                 requestBlinkId = from;
                 int fwdPos = getPositionById(from);
@@ -564,7 +550,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 loadUpperMessages(new Runnable() {
                     @Override
                     public void run() {
-                        scrollToMessageId(from);
+                        scrollToMessage(from);
                     }
                 });
             }
@@ -589,9 +575,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final Message message = list.get(position);
 
-
         if (message != null) {
-
 
             switch (getItemViewType(position)) {
                 case Types.SERVICE:
@@ -709,7 +693,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    public void addItem(Message message, boolean isReverse) {
+    public void addItem(Message message, boolean fromBottom) {
 
         if (list.size() == 0 && message.getId() == firstMessageId) {
             //list.add(0, null);
@@ -719,7 +703,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (message == null) {
 
-            if (isReverse) {
+            if (fromBottom) {
                 list.add(0, null);
 
                 posDiff++;
@@ -727,7 +711,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 list.add(null);
             }
             list.add(null);
-            if(isReverse)
+            if(fromBottom)
             {
                 notifyItemInserted(0);
             }
@@ -749,7 +733,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (range - offset < (recyclerView.getHeight())) {
                 scrollToBottom = true;
             }
-            if (isReverse) {
+            if (fromBottom) {
                 list.add(0, message);
                 positionList.put((long) message.getId(), list.indexOf(message) - posDiff);
                 posDiff++;
@@ -760,7 +744,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             if (scrollToBottom) {
-                if(isReverse)
+                if(fromBottom)
                 {
                     recyclerView.smoothScrollToPosition(0);
                 }
@@ -771,7 +755,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
 
-            if(isReverse)
+            if(fromBottom)
             {
                 notifyItemInserted(0);
             }
@@ -783,8 +767,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         addItem(message, false);
     }
 
-
-    // Держим вьюшки
     static class ViewHolder {
         static class Service extends RecyclerView.ViewHolder {
             final TextView text;

@@ -90,7 +90,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private String mediaIdToSend;
     public String forwardedMessageId = null;
 
-    public boolean isVoice = true;
+    public boolean isVoiceButtonShowed = true;
     private boolean isRecordingVoiceMessage = false;
 
     private LinearLayout infoContainer;
@@ -140,15 +140,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             }
         }, new Runnable() {
             @Override
-            public void run() {
-
-            }
-        });
+            public void run() { }});
 
         networkStateReceiver.register(this);
 
         setAvatarImage(avatar);
-
         avatarView.setAcronym((name), Avatar.Size.SMALL);
 
         if (!presenter.isDialog()) {
@@ -177,7 +173,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         titleView.setText(name);
 
         setupVoiceButton();
-        setupOnTextInput();
+        setupMessageInputHandler();
 
         processListUpdate();
 
@@ -222,7 +218,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     @Override
     public String getAccountId() {
         try {
-            return  CachedValues.getId(this);
+            return CachedValues.getId(this);
         } catch (NotCachedException e) {
             e.printStackTrace();
             return "-1";
@@ -473,7 +469,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     @Override
     public void setHeaderInfo(String avatarUrl, String title, String status) {
-
+        setAvatarImage(avatarUrl);
+        setChatName(title);
+        setStatus(status);
     }
 
     @Override
@@ -606,9 +604,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
 
-
-
-
     @SuppressLint("ClickableViewAccessibility")
     public void setupVoiceButton() {
         final ImageView microphone = findViewById(R.id.sendVoice);
@@ -655,7 +650,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         recordWaiter.start();
 
                         break;
-                    case MotionEvent.ACTION_MOVE: // движение
+                    case MotionEvent.ACTION_MOVE:
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
@@ -666,7 +661,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                             dscaleAnimation.setFillAfter(true);
 
 
-                            microphone.startAnimation(dscaleAnimation);// отпускание
+                            microphone.startAnimation(dscaleAnimation);
                             isRecordingVoiceMessage = false;
 
                         } else {
@@ -764,12 +759,10 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     }
 
-    public void setMessageRead(final long messageId)
-    {
+    public void setMessageRead(final long messageId) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Notify read " + messageId);
                 adapter.list.get(adapter.getPositionById(messageId)).setRead(true);
                 adapter.notifyItemChanged(adapter.getPositionById(messageId));
             }
@@ -777,22 +770,22 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     }
 
-    private Thread onTypingWaiter;
-    private long lastTime = 0;
+    private long lastTypingTime = 0;
     private boolean isTyping = false;
 
-    public void setupOnTextInput() {
+
+    public void setupMessageInputHandler() {
         final ImageView sendBtn = findViewById(R.id.sendButton);
         final ImageView voiceBtn = findViewById(R.id.sendVoice);
         final EditText editText = findViewById(R.id.message_box);
-        onTypingWaiter = new Thread(new Runnable() {
+        Thread typingWaiter = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     try {
 
                         Thread.sleep(1000);
-                        if (System.currentTimeMillis() > lastTime + 1000 && isTyping) {
+                        if (System.currentTimeMillis() > lastTypingTime + 1000 && isTyping) {
                             isTyping = false;
                             SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
                         }
@@ -803,7 +796,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 }
             }
         });
-        onTypingWaiter.start();
+        typingWaiter.start();
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -819,7 +812,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 decreaseAnimation.setDuration(duration);
                 decreaseAnimation.setFillAfter(true);
 
-                lastTime = System.currentTimeMillis();
+                lastTypingTime = System.currentTimeMillis();
 
                 if (!isTyping) {
                     Thread thread = new Thread(new Runnable() {
@@ -848,14 +841,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 scaleAnimation.setDuration(duration);
                 scaleAnimation.setFillAfter(true);
                 if (String.valueOf(editText.getText()).equals("")) {
-                    isVoice = true;
+                    isVoiceButtonShowed = true;
                     voiceBtn.startAnimation(scaleAnimation);
                     sendBtn.startAnimation(decreaseAnimation);
                     sendBtn.setEnabled(false);
                     voiceBtn.setEnabled(true);
                 } else {
-                    if (isVoice == true) {
-                        isVoice = false;
+                    if (isVoiceButtonShowed) {
+                        isVoiceButtonShowed = false;
                         sendBtn.setEnabled(true);
                         voiceBtn.setEnabled(false);
                         voiceBtn.startAnimation(decreaseAnimation);
@@ -960,6 +953,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
     private long imaginaryMessageId = -2;
+
     public void sendMessageWithPreview(final String message) {
 
         final LinearLayout info = findViewById(R.id.info);
