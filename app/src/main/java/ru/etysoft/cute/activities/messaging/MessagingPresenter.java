@@ -87,7 +87,7 @@ public class MessagingPresenter implements MessagingContract.Presenter {
                                         NewMessageEvent newMessageEvent = (NewMessageEvent) event;
                                         if(newMessageEvent.getMessage().getSender().getId() == Long.parseLong(view.getAccountId()))
                                         {
-                                            view.setMessageRead(newMessageEvent.getMessage().getId());
+                                            //view.setMessageRead(newMessageEvent.getMessage().getId());
                                         }
                                         if (!view.getMessagesIds().containsKey(String.valueOf(newMessageEvent.getMessage().getId()))) {
                                             view.addMessage(newMessageEvent.getMessage());
