@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
  *
  * @author Mikahil Karlov
  */
-public class PreviewImageView extends androidx.appcompat.widget.AppCompatImageView {
+public class PreviewImageView extends SmartImageView {
 
     private View imageContainer;
     private boolean isZoomed = false;

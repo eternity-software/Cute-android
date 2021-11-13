@@ -442,12 +442,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
-        filePickerBottomSheet.setRunnable(new AdapterView.OnItemClickListener() {
+        filePickerBottomSheet.setRunnable(new FilePickerBottomSheet.ItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getImages().get(position), messageView.getText().toString(),
+            public void onItemClick(int pos, View view) {
+                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getImages().get(pos), messageView.getText().toString(),
                         (SmartImageView) view);
-
             }
         });
     }

@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,10 +24,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
+
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
 import ru.etysoft.cute.components.PreviewImageView;
 import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.images.ImageRotationFix;
 import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.SliderActivity;
 
@@ -34,6 +43,8 @@ public class ImageSendActivity extends AppCompatActivity {
     private String imageUri;
 
     private String finalImageUri;
+    private static Bitmap imageBuffer;
+    private Bitmap imageToSend;
     private PreviewImageView imageView;
     public static final int CODE = 11;
 
@@ -46,8 +57,20 @@ public class ImageSendActivity extends AppCompatActivity {
         EditText editText = findViewById(R.id.message_box);
         editText.setText(getIntent().getExtras().getString("text"));
         finalImageUri = imageUri;
+        Bitmap bitmap = (Bitmap) getIntent().getParcelableExtra("bitmap");
+
+
+
+
         imageView = findViewById(R.id.photoView);
         imageView.setImageContainer(findViewById(R.id.imageContainer));
+
+
+        if(imageBuffer != null)
+        {
+            imageView.setImageBitmap(imageBuffer);
+        }
+
         imageView.setActionsListener(new PreviewImageView.ImageActionsListener() {
 
 
@@ -71,14 +94,18 @@ public class ImageSendActivity extends AppCompatActivity {
 
             }
         });
-        imageView.setImageURI(Uri.parse(imageUri));
+
+
 
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getSharedElementEnterTransition().setDuration(300);
+
             LinearLayout layout = findViewById(R.id.linearLayout3);
             layout.setVisibility(View.INVISIBLE);
+
+
             getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
             getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
                 @Override
@@ -88,7 +115,14 @@ public class ImageSendActivity extends AppCompatActivity {
 
                 @Override
                 public void onTransitionEnd(Transition transition) {
+
                     showBottomBar();
+                    try {
+                        final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(ImageSendActivity.this, Uri.fromFile(new File(imageUri)));
+                        imageView.setImageBitmap(fixedBitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -132,11 +166,17 @@ public class ImageSendActivity extends AppCompatActivity {
         ImageEdit.openForResult(Uri.parse(finalImageUri), this);
     }
 
+    public static void setImageBuffer(Bitmap imageBuffer) {
+        ImageSendActivity.imageBuffer = imageBuffer;
+    }
+
     public static void open(Activity from, String imageUri, String text, SmartImageView smartImageView)
     {
         Intent intent = new Intent(from, ImageSendActivity.class);
         intent.putExtra("uri", imageUri);
         intent.putExtra("text", text);
+
+        setImageBuffer(smartImageView.getBitmap());
 
         from.startActivityForResult(intent, CODE,
                 Transitions.makeOneViewTransition(smartImageView, from, intent, from.getResources().getString(R.string.transition_image_send)));
