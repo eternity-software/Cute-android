@@ -45,15 +45,28 @@
                     android:paddingBottom="10dp">
 
                     <ImageView
+                        android:id="@+id/openCamera"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/button_circle_gray"
+                        android:paddingHorizontal="8dp"
+                        app:srcCompat="@drawable/icon_camera"
+                        app:tint="@color/colorIconTint" />
+
+                    <ImageView
                         android:id="@+id/convCreateButton"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_image"
                         app:tint="@color/colorIconTint" />
                 </LinearLayout>
+
+
             </HorizontalScrollView>
 
             <androidx.cardview.widget.CardView

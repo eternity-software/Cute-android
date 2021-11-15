@@ -181,7 +181,7 @@ public class ImagePreview extends AppCompatActivity {
     }
 
     public void save(View v) {
-        PhotoView photoView = findViewById(R.id.photoView);
+        PreviewImageView photoView = findViewById(R.id.photoView);
         Bitmap bitmap = ((BitmapDrawable) photoView.getDrawable()).getBitmap();
         ImagesWorker.saveBitmapToGallery(bitmap, this);
         CuteToast.show(getResources().getString(R.string.saved_to_gallery), R.drawable.icon_success, this);

@@ -124,9 +124,10 @@ public class WaterfallImageLoader {
                                                     CuteToast.showError(e.getMessage(), activity);
                                                     if (MainActivity.isDev) {
                                                         imageView.setBackgroundColor(Color.RED);
-                                                        if (waterfallCallback != null) {
-                                                            waterfallCallback.onImageProcessedError(imageView);
-                                                        }
+
+                                                    }
+                                                    if (waterfallCallback != null) {
+                                                        waterfallCallback.onImageProcessedError(imageView);
                                                     }
                                                 }
                                             });

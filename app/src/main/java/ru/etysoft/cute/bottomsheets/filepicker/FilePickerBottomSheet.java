@@ -2,6 +2,7 @@ package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import java.util.Collections;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
+import ru.etysoft.cute.activities.camera.CameraActivity;
 import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.images.WaterfallBalancer;
 import ru.etysoft.cute.utils.Logger;
@@ -69,6 +71,16 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
         View v = inflater.inflate(R.layout.bottom_sheet_filespicker, container, true);
         view = v;
+
+        v.findViewById(R.id.openCamera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CameraActivity.class);
+
+                getActivity().startActivity(intent);
+
+            }
+        });
 
         return v;
     }

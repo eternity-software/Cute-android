@@ -23,6 +23,7 @@
     <color name="light_green">#7AE097</color>
     <color name="light_red">#F08294</color>
     <color name="light_yellow">#FFD685</color>
+    <color name="debug">#8B226CFF</color>
     <color name="light_blue">#9AA9F4</color>
     <color name="light_sky_blue">#9AA9F4</color>
     <color name="background_red">#FFEFF5</color>
