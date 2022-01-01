@@ -39,6 +39,7 @@ import ru.etysoft.cute.activities.camera.CameraActivity;
 import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.images.WaterfallBalancer;
 import ru.etysoft.cute.utils.Logger;
+import ru.etysoft.cute.utils.Numbers;
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private View view;
@@ -110,8 +111,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
 
 
-        getDialog().getWindow()
-                .getAttributes().windowAnimations = R.style.DialogAnimation;
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
 
@@ -125,38 +126,27 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                final CardView cardView = view.findViewById(R.id.appBar);
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
-
-                    if (cardView.getRadius() != 0) {
-                        Thread animation = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (int radius = 20; radius >= 0; radius = radius - 1) {
-                                    System.out.print(radius);
-                                    final int finalRadius = radius;
-                                    try {
-                                        Thread.sleep(10);
-
-
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                            }
-                        });
-                        animation.start();
-                    }
-                } else {
-
-                    // cardView.setRadius(Numbers.dpToPx(20, getContext()));
-                }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                final CardView cardView = view.findViewById(R.id.appBar);
+
+
+                float pix = Numbers.dpToPx(20, getContext()) * (1 - slideOffset);
+                float maxPix = Numbers.dpToPx(20, getContext());
+
+                if(pix < maxPix)
+                {
+                    cardView.setRadius(pix);
+                }
+                else
+                {
+                    cardView.setRadius(maxPix);
+                }
+
+
 
             }
         });

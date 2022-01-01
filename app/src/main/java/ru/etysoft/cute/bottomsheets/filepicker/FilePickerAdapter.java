@@ -53,7 +53,7 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         this.context = context;
         images = getAllShownImagesPath();
         Collections.reverse(images);
-        waterfallBalancer = new WaterfallBalancer(context, 30, recyclerView);
+        waterfallBalancer = new WaterfallBalancer(context, 20, recyclerView);
     }
 
     // Inflates the cell layout from xml when needed

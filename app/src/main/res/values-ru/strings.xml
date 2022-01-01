@@ -104,7 +104,7 @@
     <string name="sign_up_display_name_hint">Имя</string>
     <string name="chats">Чаты</string>
     <string name="updating">Обновление...</string>
-    <string name="crashed_title">Вы напугали деда!</string>
+    <string name="crashed_title">Никогда не было и вот опять</string>
     <string name="crashed_text">Cute крашнулся, такого явно не должно было произойти... Съешьте что-нибудь вкусное и, пожалуйста, дайте нам знать о своей ошибке.</string>
     <string name="edit_account">Редактировать</string>
     <string name="chat_created">Чат %s создан</string>

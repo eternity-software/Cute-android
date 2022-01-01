@@ -6,41 +6,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="@color/colorBlack"
+    android:background="@color/colorTransparent"
     tools:context=".activities.ImagePreview">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="exit">
+        android:onClick="exit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/backgroundImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBlack" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imageContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
             android:background="@color/colorTransparent"
-            app:cardBackgroundColor="@color/colorTransparent"
-
             android:transitionName="@string/transition_image_preview"
+            app:cardBackgroundColor="@color/colorTransparent"
+            app:cardCornerRadius="12dp"
+
+            app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            app:layout_constraintTop_toTopOf="parent">
+
             <ru.etysoft.cute.components.PreviewImageView
                 android:id="@+id/photoView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+
                 android:layout_gravity="center"
+                android:adjustViewBounds="true"
 
                 android:scaleType="fitCenter"
-                android:src="@drawable/houses"
-               />
+                android:src="@drawable/houses" />
         </androidx.cardview.widget.CardView>
-
 
 
         <ImageButton
@@ -50,14 +60,14 @@
             android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:alpha="1"
             android:background="@drawable/image_edit_buttons_background"
+            android:elevation="10dp"
             android:fontFamily="@font/montserrat"
             android:gravity="center"
-            android:elevation="10dp"
-            android:padding="12dp"
-            android:alpha="1"
             android:maxLines="1"
             android:onClick="save"
+            android:padding="12dp"
             android:paddingVertical="7dp"
             android:scaleType="centerInside"
 
@@ -66,6 +76,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/stat_sys_download" />
+
+        <TextView
+            android:id="@+id/debugText"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PreviewImageView Debug"
+            android:textColor="#5A5A5A"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

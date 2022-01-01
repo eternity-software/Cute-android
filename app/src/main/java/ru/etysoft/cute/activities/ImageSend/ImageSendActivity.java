@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.transition.Transition;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -85,7 +86,22 @@ public class ImageSendActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onReturn() {
+
+            }
+
+            @Override
             public void onZoom(float increase) {
+
+            }
+
+            @Override
+            public void onSlide(float percent) {
+
+            }
+
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
 
             }
 
