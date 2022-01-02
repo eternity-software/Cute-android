@@ -4,20 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.Debug;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-
-import java.math.BigDecimal;
 
 /**
  * Easy-to-implement zoomable and slidable ImageView
@@ -29,7 +22,7 @@ import java.math.BigDecimal;
  *
  * @author Mikahil Karlov
  */
-public class PreviewImageView extends SmartImageView {
+public class PreviewImageView extends FileParingImageView {
 
     private View imageContainer;
     private boolean isZoomed = false;

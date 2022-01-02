@@ -128,8 +128,8 @@ public class ImagePreview extends AppCompatActivity {
             Transition transition =
                     TransitionInflater.from(this)
                             .inflateTransition(R.transition.shared_element_transition);
-            transition.setDuration(300);
-            transition.setInterpolator(new DecelerateInterpolator(3f));
+            transition.setDuration(200);
+            transition.setInterpolator(new DecelerateInterpolator(2f));
 
             getResources().getString(R.string.transition_image_preview);
             getWindow().setSharedElementEnterTransition(transition);
@@ -183,7 +183,7 @@ public class ImagePreview extends AppCompatActivity {
 
                                 }
 
-                                animator.setDuration(250);
+                                animator.setDuration(100);
                                 animator.start();
                             }
                         }

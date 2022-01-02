@@ -3,16 +3,19 @@ package ru.etysoft.cute.activities.messaging;
 import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +25,6 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.activities.ImageSend.ImageSendActivity;
@@ -56,9 +59,10 @@ import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ErrorPanel;
+import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.components.InfoPanel;
-import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.components.FileParingImageView;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.MessageNotFoundException;
 import ru.etysoft.cute.exceptions.NotCachedException;
@@ -445,8 +449,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         filePickerBottomSheet.setRunnable(new FilePickerBottomSheet.ItemClickListener() {
             @Override
             public void onItemClick(int pos, View view) {
-                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getImages().get(pos), messageView.getText().toString(),
-                        (SmartImageView) view);
+                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), messageView.getText().toString(),
+                        (FilePreview) view);
+
             }
         });
     }

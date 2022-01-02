@@ -1,28 +1,18 @@
 package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,12 +21,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
 import ru.etysoft.cute.activities.camera.CameraActivity;
-import ru.etysoft.cute.components.SmartImageView;
 import ru.etysoft.cute.images.WaterfallBalancer;
 import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.Numbers;
@@ -48,7 +35,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
     private FilePickerAdapter filePickerAdapter;
 
-    public ArrayList<String> getImages() {
+    public ArrayList<FileInfo> getMedia() {
         return filePickerAdapter.getImages();
     }
 
@@ -154,7 +141,20 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         RecyclerView gallery = bottomSheet.findViewById(R.id.gridView);
         gallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
+
+        final TextView debugText = view.findViewById(R.id.debugText);
         filePickerAdapter = new FilePickerAdapter(getActivity(), onItemClickListener, gallery);
+        filePickerAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
+            @Override
+            public void onActiveWaterfallsCountChange(final int count) {
+              getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        debugText.setText("Active waterfalls: " + count);
+                    }
+                });
+            }
+        });
 
         gallery.setAdapter(filePickerAdapter);
 

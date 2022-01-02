@@ -18,11 +18,12 @@ import java.util.List;
 
 import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.components.CuteToast;
-import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.components.FileParingImageView;
+import ru.etysoft.cute.components.FilePreview;
 
 public class WaterfallImageLoader {
 
-    private List<SmartImageView> imagesQueue = new ArrayList<>();
+    private List<FilePreview> imagesQueue = new ArrayList<>();
     private boolean isRunning;
     private boolean isDataUpdated;
     private Activity activity;
@@ -41,6 +42,7 @@ public class WaterfallImageLoader {
     public void start() {
         if (!isRunning) {
             isRunning = true;
+            waterfallCallback.onStarted();
             Thread worker = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -48,68 +50,72 @@ public class WaterfallImageLoader {
                         try {
 
                             WaterfallLogger.log("Starting worker...");
-                            List<SmartImageView> localList = (new ArrayList<>());
+                            List<FilePreview> localList = (new ArrayList<>());
                             localList.addAll(imagesQueue);
-                            for (final SmartImageView imageView : localList) {
+                            for (final FilePreview imageView : localList) {
                                 final boolean[] isCancelled = {false};
-                                    WaterfallLogger.log("Loading " + imageView.getImagePath());
+                                    WaterfallLogger.log("Loading " + imageView.getFileInfo());
 
                                         try {
-                                            final Bitmap bitmap = decodeFile(new File(imageView.getImagePath()));
+                                            final Bitmap bitmap;
+                                            if(imageView.getFileInfo().isImage())
+                                            {
+                                               bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
+                                            }
+                                            else
+                                            {
+                                                bitmap = imageView.getFileInfo().getVideoThumbnail();
+                                            }
+
 
                                             if (bitmap != null) {
-                                                final String oldUri = imageView.getImagePath();
-                                                final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmap(activity, Uri.fromFile(new File(imageView.getImagePath())));
+                                                final Bitmap fixedBitmap;
+                                                final String oldUri = imageView.getFileInfo().getFilePath();
+                                                if(imageView.getFileInfo().isImage()) {
+                                                    fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmap(activity, Uri.fromFile(new File(imageView.getFileInfo().getFilePath())));
+                                                }
+                                                else
+                                                {
+                                                    fixedBitmap = bitmap;
+                                                }
                                                 activity.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
 
 
-                                                            //  Glide.with(activity).load(imageView.getImagePath()).into(imageView);
-                                                            // Old trivial way
+                                                        //  Glide.with(activity).load(imageView.getImagePath()).into(imageView);
+                                                        // Old trivial way
+
+                                                        try {
 
 
-                                                            Animation fadeOut = new AlphaAnimation(1, 0);
-                                                            fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-                                                            fadeOut.setDuration(200);
-                                                            fadeOut.setAnimationListener(new Animation.AnimationListener() {
-                                                                @Override
-                                                                public void onAnimationStart(Animation animation) {
-
+                                                            if (imageView.getFileInfo().getFilePath().equals(oldUri)) {
+                                                                imageView.getFileParingImageView().setImageBitmap(fixedBitmap);
+                                                                if (waterfallCallback != null) {
+                                                                    waterfallCallback.onImageProcessedSuccess(imageView);
                                                                 }
+                                                                Animation fadeIn = new AlphaAnimation(0, 1);
+                                                                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+                                                                fadeIn.setDuration(400);
 
-                                                                @Override
-                                                                public void onAnimationEnd(Animation animation) {
-                                                                    if(imageView.getImagePath().equals(oldUri)) {
-                                                                        imageView.setImageBitmap(fixedBitmap);
+                                                                imageView.getFileParingImageView().startAnimation(fadeIn);
+                                                            } else {
 
-                                                                        Animation fadeIn = new AlphaAnimation(0, 1);
-                                                                        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-                                                                        fadeIn.setDuration(400);
 
-                                                                        imageView.startAnimation(fadeIn);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        waterfallCallback.onImageReplaced(imageView);
-                                                                        if(MainActivity.isDev)
-                                                                        {
-                                                                            imageView.setBackgroundColor(Color.MAGENTA);
-                                                                            imageView.setImageBitmap(null);
-                                                                        }
-                                                                    }
+                                                                if (MainActivity.isDev) {
+                                                                    imageView.setBackgroundColor(Color.MAGENTA);
+                                                                  //  imageView.getFileParingImageView().setImageBitmap(null);
                                                                 }
-
-                                                                @Override
-                                                                public void onAnimationRepeat(Animation animation) {
-
-                                                                }
-                                                            });
-
-                                                            imageView.startAnimation(fadeOut);
-                                                            if (waterfallCallback != null) {
-                                                                waterfallCallback.onImageProcessedSuccess(imageView);
+                                                                waterfallCallback.onImageReplaced(imageView);
                                                             }
+                                                        } catch (Exception e)
+                                                        {
+                                                            e.printStackTrace();
+                                                        }
+
+
+
+
 
 
 
@@ -143,6 +149,7 @@ public class WaterfallImageLoader {
                             if (!isDataUpdated) {
                                 WaterfallLogger.log("Data update isn't detected");
                                 isRunning = false;
+                                waterfallCallback.onFinishedAllTasks();
                             } else {
                                 isDataUpdated = false;
                                 WaterfallLogger.log("Updated data detected!");
@@ -159,7 +166,7 @@ public class WaterfallImageLoader {
         }
     }
 
-    public void add(SmartImageView imageView) {
+    public void add(FilePreview imageView) {
         imagesQueue.add(imageView);
         if (isRunning) {
             isDataUpdated = true;
@@ -201,9 +208,11 @@ public class WaterfallImageLoader {
 
     public interface WaterfallCallback
     {
-        void onImageProcessedSuccess(SmartImageView smartImageView);
-        void onImageProcessedError(SmartImageView smartImageView);
-        void onImageReplaced(SmartImageView smartImageView);
+        void onImageProcessedSuccess(FilePreview filePreview);
+        void onImageProcessedError(FilePreview filePreview);
+        void onImageReplaced(FilePreview filePreview);
+        void onFinishedAllTasks();
+        void onStarted();
 
     }
 

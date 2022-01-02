@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/AppSlideTheme"
+
     android:background="@color/colorBackgroundElements"
+
     tools:context=".activities.ImageSend.ImageSendActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,13 +18,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <VideoView
+            android:id="@+id/videoView"
+            android:visibility="visible"
+            android:layout_width="0dp"
+
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="20dp"
+
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
 
         <ru.etysoft.cute.components.PreviewImageView
-            android:id="@+id/photoView"
+            android:id="@+id/fileImageView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:transitionName="@string/transition_image_send"
+
 
             android:layout_marginBottom="20dp"
             android:adjustViewBounds="true"
@@ -33,6 +49,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

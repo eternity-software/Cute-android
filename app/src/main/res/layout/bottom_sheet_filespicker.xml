@@ -9,6 +9,7 @@
     android:theme="@style/AppTheme">
 
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -93,6 +94,15 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/debugText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="10dp"
+            android:text="debug_info"
+            android:textColor="#292929" />
 
     </androidx.cardview.widget.CardView>
 

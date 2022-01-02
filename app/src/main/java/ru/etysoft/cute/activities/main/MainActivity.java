@@ -36,7 +36,7 @@ import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
 
 public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener, MainContract.View, LifecycleObserver {
 
-    public static final boolean isDev = false;
+    public static final boolean isDev = true;
 
     private MainPresenter mainPresenter;
 
