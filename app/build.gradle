@@ -32,12 +32,15 @@ android {
             debuggable true
         }
     }
-
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.mlkit:face-detection:16.1.2'
     api 'com.otaliastudios:cameraview:2.7.2'

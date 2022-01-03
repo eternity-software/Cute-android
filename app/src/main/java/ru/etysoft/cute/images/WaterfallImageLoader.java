@@ -17,6 +17,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import ru.etysoft.cute.activities.main.MainActivity;
+import ru.etysoft.cute.bottomsheets.filepicker.FileInfo;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.FileParingImageView;
 import ru.etysoft.cute.components.FilePreview;
@@ -78,6 +79,14 @@ public class WaterfallImageLoader {
                                                 {
                                                     fixedBitmap = bitmap;
                                                 }
+                                                final String subtitle;
+                                                if(imageView.getFileInfo().isVideo()) {
+                                                   subtitle = FileInfo.getFormattedVideoDuration(activity, imageView.getFileInfo().getFilePath());
+                                                }
+                                                else
+                                                {
+                                                    subtitle = "";
+                                                }
                                                 activity.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -91,6 +100,8 @@ public class WaterfallImageLoader {
 
                                                             if (imageView.getFileInfo().getFilePath().equals(oldUri)) {
                                                                 imageView.getFileParingImageView().setImageBitmap(fixedBitmap);
+                                                                imageView.setSubtitle(subtitle);
+
                                                                 if (waterfallCallback != null) {
                                                                     waterfallCallback.onImageProcessedSuccess(imageView);
                                                                 }
@@ -110,6 +121,9 @@ public class WaterfallImageLoader {
                                                             }
                                                         } catch (Exception e)
                                                         {
+                                                            if (waterfallCallback != null) {
+                                                                waterfallCallback.onImageProcessedError(imageView);
+                                                            }
                                                             e.printStackTrace();
                                                         }
 
@@ -123,18 +137,25 @@ public class WaterfallImageLoader {
                                                     }
                                                 });
                                             }
+                                            else
+                                            {
+                                                if (waterfallCallback != null) {
+                                                    waterfallCallback.onImageProcessedError(imageView);
+                                                }
+                                            }
                                         } catch (final Exception e) {
                                             activity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    if (waterfallCallback != null) {
+                                                        waterfallCallback.onImageProcessedError(imageView);
+                                                    }
                                                     CuteToast.showError(e.getMessage(), activity);
                                                     if (MainActivity.isDev) {
                                                         imageView.setBackgroundColor(Color.RED);
 
                                                     }
-                                                    if (waterfallCallback != null) {
-                                                        waterfallCallback.onImageProcessedError(imageView);
-                                                    }
+
                                                 }
                                             });
                                             e.printStackTrace();

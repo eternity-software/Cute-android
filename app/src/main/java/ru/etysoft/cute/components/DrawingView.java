@@ -19,21 +19,26 @@ public class DrawingView  extends View {
 
     public int width;
     public  int height;
-    private Bitmap mBitmap;
-    private Canvas mCanvas;
-    private Path mPath;
-    private Paint mBitmapPaint;
+    private Bitmap bitmap;
+    private Canvas canvas;
+    private Path path;
+    private Paint bitmapPaint;
     Context context;
     private Paint circlePaint;
     private Path circlePath;
-    private Paint mPaint;
+    private Paint paint;
+    private boolean isErasing = false;
+    private int size = 20;
+    private int color = Color.BLACK;
+    private int maxSize = 30;
     public PorterDuffXfermode clear = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
+
 
     public DrawingView(Context c) {
         super(c);
         context=c;
-        mPath = new Path();
-        mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+        path = new Path();
+        bitmapPaint = new Paint(Paint.DITHER_FLAG);
         circlePaint = new Paint();
         circlePath = new Path();
         circlePaint.setAntiAlias(true);
@@ -41,69 +46,87 @@ public class DrawingView  extends View {
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setStrokeJoin(Paint.Join.MITER);
         circlePaint.setStrokeWidth(4f);
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(Color.GREEN);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(12);
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setColor(Color.GREEN);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeWidth(12);
     }
-
-    private boolean isErase = false;
 
     public DrawingView(Context c, AttributeSet attributeSet) {
         super(c, attributeSet);
         context = c;
-        mPath = new Path();
-        mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+        path = new Path();
+        bitmapPaint = new Paint(Paint.DITHER_FLAG);
         circlePaint = new Paint();
         circlePath = new Path();
         circlePaint.setAntiAlias(true);
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setStrokeJoin(Paint.Join.MITER);
         circlePaint.setStrokeWidth(0f);
-        setPaint();
+        setBrush();
     }
 
     public void setEraser() {
         // The most important
-        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        isErase = true;
+        paint.setMaskFilter(null);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        isErasing = true;
     }
 
-    public void setPaint() {
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(Color.BLACK);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(36);
-        isErase = false;
+    public void setMaxSize(int size) {
+        this.size = size;
     }
 
-    public void setmPaint(Paint mPaint) {
-        this.mPaint = mPaint;
+    public void setSizePercentage(double percent) {
+
+        int newSize = (int) (maxSize * (1 + percent));
+        System.out.println("new size " + newSize);
+        this.size = newSize;
+        setBrush();
     }
+
+    public void setMinSize(int size) {
+        this.size = size;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        setBrush();
+    }
+
+    public void setBrush() {
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeWidth(size);
+        isErasing = false;
+    }
+
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
+        bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawColor(Color.TRANSPARENT);
-        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-        if (!isErase) {
-            canvas.drawPath(mPath, mPaint);
+        canvas.drawBitmap(bitmap, 0, 0, bitmapPaint);
+        if (!isErasing) {
+            canvas.drawPath(path, paint);
         } else {
 
         }
@@ -112,35 +135,36 @@ public class DrawingView  extends View {
     private float mX, mY;
     private static final float TOUCH_TOLERANCE = 4;
 
-    private void touch_start(float x, float y) {
-        mPath.reset();
-        mPath.moveTo(x, y);
+    private void onTouchStart(float x, float y) {
+        path.reset();
+        path.moveTo(x, y);
         mX = x;
         mY = y;
     }
 
-    private void touch_move(float x, float y) {
+    private void onTouchMove(float x, float y) {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
+            path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
-            if (isErase) {
-                // mCanvas.drawCircle(x, y,10, mPaint);
+            if (isErasing) {
+                path.lineTo(mX, mY);
+                canvas.drawPath(path, paint);
             }
             circlePath.reset();
             circlePath.addCircle(mX, mY, 30, Path.Direction.CW);
         }
     }
 
-    private void touch_up() {
-        mPath.lineTo(mX, mY);
+    private void onTouchUp() {
+        path.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
-        mCanvas.drawPath(mPath,  mPaint);
+        canvas.drawPath(path, paint);
         // kill this so we don't double draw
-        mPath.reset();
+        path.reset();
     }
 
     @Override
@@ -150,15 +174,15 @@ public class DrawingView  extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                touch_start(x, y);
+                onTouchStart(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
-                touch_move(x, y);
+                onTouchMove(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                touch_up();
+                onTouchUp();
                 invalidate();
                 break;
         }

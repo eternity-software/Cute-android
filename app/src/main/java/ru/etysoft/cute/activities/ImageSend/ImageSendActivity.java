@@ -1,18 +1,15 @@
 package ru.etysoft.cute.activities.ImageSend;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.SharedElementCallback;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +17,6 @@ import android.provider.MediaStore;
 import android.transition.Transition;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -29,17 +25,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
-import android.widget.VideoView;
+
+import com.google.android.exoplayer2.MediaItem;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
 import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.components.PreviewImageView;
-import ru.etysoft.cute.components.FileParingImageView;
+import ru.etysoft.cute.components.VideoPlayer;
 import ru.etysoft.cute.images.ImageRotationFix;
 import ru.etysoft.cute.transition.Transitions;
 
@@ -52,25 +50,38 @@ public class ImageSendActivity extends AppCompatActivity {
     private Bitmap imageToSend;
     private PreviewImageView imageView;
     private boolean isShown = false;
+    private VideoPlayer videoPlayer;
+    private boolean isVideo;
     public static final int CODE = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageUri = getIntent().getExtras().getString("uri");
         setContentView(R.layout.activity_image_send);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        imageUri = getIntent().getExtras().getString("uri");
         final String type = getIntent().getExtras().getString("type");
         EditText editText = findViewById(R.id.message_box);
-        final VideoView videoView = findViewById(R.id.videoView);
+        ImageView editButton = findViewById(R.id.editButton);
+
+        videoPlayer = findViewById(R.id.videoView);
         editText.setText(getIntent().getExtras().getString("text"));
         finalImageUri = imageUri;
         Bitmap bitmap = (Bitmap) getIntent().getParcelableExtra("bitmap");
 
 
-        videoView.setZOrderOnTop(true);
+        if(!type.startsWith("image"))
+        {
+            editButton.setEnabled(false);
+            isVideo = true;
+            editButton.setVisibility(View.GONE);
+            videoPlayer.setLoadingLayerEnabled(false);
+        }
+        else
+        {
 
-
+            videoPlayer.setVisibility(View.INVISIBLE);
+        }
 
         imageView = findViewById(R.id.fileImageView);
         imageView.setImageContainer(findViewById(R.id.imageContainer));
@@ -91,19 +102,7 @@ public class ImageSendActivity extends AppCompatActivity {
 
             @Override
             public void onSlideUp() {
-                imageView.setAlpha(1f);
-                videoView.setAlpha(0f);
-
-
-                videoView.setVisibility(View.GONE);
                 onBackPressed();
-
-
-
-
-
-
-
             }
 
             @Override
@@ -162,38 +161,30 @@ public class ImageSendActivity extends AppCompatActivity {
                         {
                             final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(ImageSendActivity.this, Uri.fromFile(new File(imageUri)));
                             imageView.setImageBitmap(fixedBitmap);
-
                         }
                         else
                         {
-
-
-
-
-
-                            videoView.setVideoPath(imageUri);
-
-                            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            videoPlayer.play(imageUri);
+                            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
                                 @Override
-                                public void onPrepared(MediaPlayer mp) {
-                                  mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                                      @Override
-                                      public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                                          if(what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START)
-                                          {
-                                              imageView.setAlpha(0f);
-                                              return true;
-                                          }
-                                          return false;
-                                      }
-                                  });
+                                public void onStarted() {
+                                 //   imageView.setVisibility(View.INVISIBLE);
+                                }
+
+                                @Override
+                                public void onPaused() {
 
                                 }
+
+                                @Override
+                                public void onReleased() {
+                                    imageView.setVisibility(View.VISIBLE);
+                                }
                             });
-                            videoView.start();
+
                         }
 
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -220,10 +211,56 @@ public class ImageSendActivity extends AppCompatActivity {
         }
 
 
+        setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                for (int i = 0; i < sharedElementNames.size(); i++) {
+                    if (Objects.equals(getResources().getString(R.string.transition_image_send), sharedElementNames.get(i))) {
+                        View view = sharedElements.get(i);
+
+                        if(view instanceof FilePreview)
+                        {
+                            FilePreview filePreview = (FilePreview) view;
+                            filePreview.appearContorllers();
+                        }
+                    }
+                }
+                super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
+            }
+
+            @Override
+            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                for (int i = 0; i < sharedElementNames.size(); i++) {
+
+                        View view = sharedElements.get(i);
+
+                        if(view instanceof FilePreview)
+                        {
+                            FilePreview filePreview = (FilePreview) view;
+                            filePreview.appearContorllers();
+                        }
+
+
+                }
+                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+            }
+        });
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+        // Checks whether a hardware keyboard is available
+        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+         //   adjustAspectRatio();
+        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+           // adjustAspectRatio();
+        }
+    }
 
     private void showBottomBar() {
         LinearLayout layout = findViewById(R.id.linearLayout3);
@@ -269,10 +306,16 @@ public class ImageSendActivity extends AppCompatActivity {
         if(!imageView.isZoomed())
         {
             super.onBackPressed();
+
+
+            if(isVideo)
+            {
+                videoPlayer.release();
+            }
             LinearLayout layout = findViewById(R.id.linearLayout3);
-            Animation appearAnimation = AnimationUtils.loadAnimation(this,
+            Animation disappearAnimation = AnimationUtils.loadAnimation(this,
                     R.anim.hide_to_bottom);
-            layout.startAnimation(appearAnimation );
+            layout.startAnimation(disappearAnimation );
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
         else
@@ -303,8 +346,8 @@ public class ImageSendActivity extends AppCompatActivity {
         if(resultCode == ImageEdit.RESULT_CODE)
         {
             finalImageUri = getRealPathFromURI(this, Uri.parse(data.getStringExtra("uri")));
-            ImageView imageView = findViewById(R.id.photoView);
-           // imageView.setImageURI(Uri.parse(finalImageUri));
+            ImageView imageView = findViewById(R.id.fileImageView);
+            imageView.setImageURI(Uri.parse(finalImageUri));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -321,4 +364,10 @@ public class ImageSendActivity extends AppCompatActivity {
         setResult(CODE, intent);
         finish();
     }
+
+
+
+
+
+
 }

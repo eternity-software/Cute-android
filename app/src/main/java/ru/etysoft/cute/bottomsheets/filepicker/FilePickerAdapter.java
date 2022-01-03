@@ -1,19 +1,27 @@
 package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.app.Activity;
+import android.app.SharedElementCallback;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.transition.Transition;
+import android.transition.TransitionListenerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
 import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.FileParingImageView;
@@ -31,8 +39,7 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
     private Activity context;
     private FilePickerBottomSheet.ItemClickListener itemClickListener;
 
-    public void setBalancerCallback(WaterfallBalancer.BalancerCallback balancerCallback)
-    {
+    public void setBalancerCallback(WaterfallBalancer.BalancerCallback balancerCallback) {
         waterfallBalancer.setBalancerCallback(balancerCallback);
     }
 
@@ -42,9 +49,10 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         this.itemClickListener = itemClickListener;
         this.context = context;
         images = getAllShownImagesPath();
-     //   Collections.reverse(images);
+        //   Collections.reverse(images);
         waterfallBalancer = new WaterfallBalancer(context, 10, recyclerView);
 
+        registerTransitionListener();
     }
 
     // Inflates the cell layout from xml when needed
@@ -90,8 +98,7 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
             FilePreview picturesView = (FilePreview) itemView;
 
 
-
-          //  picturesView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+            //  picturesView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
 
             fileParingImageView = picturesView;
             picturesView.setOnClickListener(this);
@@ -115,10 +122,41 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
     }
 
     // Method that executes your code for the action received
-    public void onItemClick(View view, int position) {
+    public void onItemClick(final View view, int position) {
         Log.i("TAG", "You clicked number " + getItem(position).toString() + ", which is at cell position " + position);
         itemClickListener.onItemClick(position, view);
 
+        transitionReenter = new Runnable() {
+            @Override
+            public void run() {
+                if(((FilePreview) view).getFileInfo().isVideo()) {
+                    ((FilePreview) view).appearContorllers();
+                }
+            }
+        };
+
+
+
+    }
+
+    private Runnable transitionReenter;
+
+    public void registerTransitionListener()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final Transition sharedElementEnterTransition = context.getWindow().getSharedElementReenterTransition();
+            sharedElementEnterTransition.addListener(new TransitionListenerAdapter() {
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    super.onTransitionEnd(transition);
+                    if(transitionReenter != null) {
+                        transitionReenter.run();
+                    }
+
+                }
+            });
+
+        }
     }
 
     private ArrayList<FileInfo> getAllShownImagesPath() {
@@ -187,9 +225,8 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
             String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
 
-            if(mimeType.startsWith("image") || mimeType.startsWith("video"))
-            {
-                listOfAllMedia.add(new FileInfo(title, absolutePathOfImage, mimeType));
+            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
+                listOfAllMedia.add(new FileInfo(title, absolutePathOfImage, mimeType, context));
             }
         }
         cursor.close();

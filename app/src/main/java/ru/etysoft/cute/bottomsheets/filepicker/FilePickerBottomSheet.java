@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,9 +23,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.camera.CameraActivity;
+import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.images.WaterfallBalancer;
 import ru.etysoft.cute.utils.Logger;
 import ru.etysoft.cute.utils.Numbers;
@@ -137,7 +142,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
             }
         });
-
+        setAllowReturnTransitionOverlap(false);
+        setAllowEnterTransitionOverlap(false);
         RecyclerView gallery = bottomSheet.findViewById(R.id.gridView);
         gallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 

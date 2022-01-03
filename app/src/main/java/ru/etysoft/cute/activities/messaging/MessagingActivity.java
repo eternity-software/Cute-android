@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Transition;
+import android.transition.TransitionListenerAdapter;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -448,9 +450,10 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
         filePickerBottomSheet.setRunnable(new FilePickerBottomSheet.ItemClickListener() {
             @Override
-            public void onItemClick(int pos, View view) {
+            public void onItemClick(int pos, final View view) {
                 ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), messageView.getText().toString(),
                         (FilePreview) view);
+
 
             }
         });

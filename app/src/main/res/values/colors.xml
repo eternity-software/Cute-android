@@ -33,6 +33,17 @@
     <color name="text_white">#FFFFFF</color>
     <color name="gray">#4E596E</color>
     <color name="soft_gray">#999999</color>
+
+    <color name="paintBlack">#131313</color>
+    <color name="paintWhite">#F3F3F3</color>
+    <color name="paintGreen">#84E63D</color>
+    <color name="paintBlue">#3D75E6</color>
+    <color name="paintLightBlue">#6A92E4</color>
+    <color name="paintRed">#CF3441</color>
+    <color name="paintOrange">#CF8434</color>
+    <color name="paintYellow">#F6E055</color>
+    <color name="paintPurple">#962DCD</color>
+
     <color name="colorPrimaryDark">#4E4E4E</color>
 
 

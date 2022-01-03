@@ -13,44 +13,37 @@
         android:id="@+id/imageContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <VideoView
-            android:id="@+id/videoView"
-            android:visibility="visible"
-            android:layout_width="0dp"
-
-            android:adjustViewBounds="true"
-            android:layout_marginBottom="20dp"
-
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
 
 
         <ru.etysoft.cute.components.PreviewImageView
             android:id="@+id/fileImageView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:transitionName="@string/transition_image_send"
-
-
-            android:layout_marginBottom="20dp"
             android:adjustViewBounds="true"
+
+
             android:scaleType="fitCenter"
             android:src="@drawable/houses"
+            android:transitionName="@string/transition_image_send"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ru.etysoft.cute.components.VideoPlayer
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

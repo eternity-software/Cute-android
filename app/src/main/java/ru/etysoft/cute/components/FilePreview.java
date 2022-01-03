@@ -40,6 +40,13 @@ public class FilePreview extends RelativeLayout {
 
     }
 
+    public void appearContorllers()
+    {
+        videoInfoView.setVisibility(VISIBLE);
+        videoInfoView.setAlpha(0f);
+        videoInfoView.animate().alpha(1f).setDuration(200).start();
+    }
+
     public FileParingImageView getFileParingImageView() {
         initComponent();
         return fileParingImageView;
@@ -52,12 +59,18 @@ public class FilePreview extends RelativeLayout {
         if(fileInfo.isVideo())
         {
             videoInfoView.setVisibility(VISIBLE);
-            durationView.setText(fileInfo.getFormattedVideoDuration(getContext()));
+            setSubtitle("");
         }
         else
         {
             videoInfoView.setVisibility(INVISIBLE);
         }
+    }
+
+    public void setSubtitle(String text)
+    {
+
+        durationView.setText(text);
     }
 
 

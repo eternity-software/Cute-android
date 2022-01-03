@@ -14,10 +14,12 @@ public class FileInfo {
     private final String filePath;
     private final String mimeType;
 
-    public FileInfo(String name, String filePath, String mimeType) {
+
+    public FileInfo(String name, String filePath, String mimeType, Context context) {
         this.name = name;
         this.filePath = filePath;
         this.mimeType = mimeType;
+        //this.duration = getFormattedVideoDuration(context);
     }
 
     public String getMimeType() {
@@ -34,8 +36,9 @@ public class FileInfo {
         return mimeType.startsWith("video");
     }
 
-    public String getFormattedVideoDuration(Context context)
+    public static String getFormattedVideoDuration(Context context, String filePath)
     {
+
         MediaPlayer mp = MediaPlayer.create(context, Uri.parse(filePath));
         int duration = mp.getDuration();
         mp.release();
@@ -48,6 +51,8 @@ public class FileInfo {
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration));
         return getFormattedNumber(minutes) + ":" + getFormattedNumber(seconds);
     }
+
+
 
     private static String getFormattedNumber(long num)
     {

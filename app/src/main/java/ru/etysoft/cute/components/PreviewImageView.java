@@ -104,7 +104,7 @@ public class PreviewImageView extends FileParingImageView {
                         }
 
                         imageContainer.setY(newY);
-                        Log.d("Preview imageview ", "new Y " + newY);
+                    //    Log.d("Preview imageview ", "new Y " + newY);
                         float delta = Math.abs((float) deltaY / (height / 2f));
 
 

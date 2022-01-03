@@ -17,6 +17,8 @@
 
         app:layout_constraintTop_toTopOf="parent">
 
+
+
         <ImageView
             android:id="@+id/mainImageView"
             android:layout_width="wrap_content"
@@ -39,7 +41,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ru.etysoft.cute.components.DrawingView
-                android:id="@+id/draw_view"
+                android:id="@+id/drawingView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -66,9 +68,30 @@
 
 
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <LinearLayout
+        android:id="@+id/brushEditor"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginBottom="10dp"
+        android:adjustViewBounds="true"
+
+
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout8"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout8"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/image_edit_buttons_background" >
+        <ImageView
+            android:id="@+id/colorPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/color_circle"
+            android:layout_margin="3dp"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/linearLayout8"
         android:layout_width="wrap_content"
@@ -99,17 +122,18 @@
             app:srcCompat="@drawable/icon_text" />
 
         <ImageView
+            android:id="@+id/changeBrushButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="6dp"
             android:layout_weight="1"
-            android:onClick="brush"
+            android:onClick="changeBrush"
             app:srcCompat="@drawable/icon_clean" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout9"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
