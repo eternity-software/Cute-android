@@ -43,19 +43,17 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         waterfallBalancer.setBalancerCallback(balancerCallback);
     }
 
-    // Data is passed into the constructor
     public FilePickerAdapter(final Activity context, FilePickerBottomSheet.ItemClickListener itemClickListener, RecyclerView recyclerView) {
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
         this.context = context;
         images = getAllShownImagesPath();
         //   Collections.reverse(images);
-        waterfallBalancer = new WaterfallBalancer(context, 10, recyclerView);
+        waterfallBalancer = new WaterfallBalancer(context, 1, recyclerView);
 
         registerTransitionListener();
     }
 
-    // Inflates the cell layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.file_picker_image, parent, false);
@@ -64,7 +62,6 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         return viewHolder;
     }
 
-    // Binds the data to the textview in each cell
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         FilePreview picturesView = holder.fileParingImageView;
@@ -82,13 +79,11 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         }
     }
 
-    // Total number of cells
     @Override
     public int getItemCount() {
         return images.size();
     }
 
-    // Stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public FilePreview fileParingImageView;

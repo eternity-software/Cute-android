@@ -6,18 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.BorderScaleView;
 import ru.etysoft.cute.components.DrawingView;
 import ru.etysoft.cute.images.ImageRotationFix;
 import ru.etysoft.cute.utils.Numbers;
@@ -34,7 +36,9 @@ import ru.etysoft.cute.utils.Numbers;
 public class ImageEdit extends AppCompatActivity {
 
     private boolean isEraser = false;
+    private boolean isCropping = false;
     public final static int RESULT_CODE = 10;
+    private Bitmap imageBitmap;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -46,7 +50,8 @@ public class ImageEdit extends AppCompatActivity {
         String uri = getIntent().getExtras().getString("uri");
         final ImageView imageView = findViewById(R.id.mainImageView);
         try {
-            imageView.setImageBitmap(ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(this, Uri.fromFile(new File(uri))));
+            imageBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(this, Uri.fromFile(new File(uri)));
+            imageView.setImageBitmap(imageBitmap);
         } catch (IOException e) {
             e.printStackTrace();
             finish();
@@ -54,6 +59,7 @@ public class ImageEdit extends AppCompatActivity {
 
 
         setupBrushEditor();
+        setupCrop();
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -90,7 +96,65 @@ public class ImageEdit extends AppCompatActivity {
     float downY;
     boolean wasSliding = false;
     int[] colors;
+    RelativeLayout cropContainer;
     int currentColor = 0;
+
+    private ScaleGestureDetector mScaleDetector;
+    private float mScaleFactor = 1.f;
+
+    private class ScaleListener
+            extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            mScaleFactor *= detector.getScaleFactor();
+
+            // Don't let the object get too small or too large.
+            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
+
+            cropContainer.invalidate();
+            return true;
+        }
+    }
+
+    public void setupCrop()
+    {
+
+        final ImageView cropContainer = findViewById(R.id.cropShade);
+        final ConstraintLayout bitmapContainer = findViewById(R.id.bitmapContainer);
+        BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
+        borderScaleView.setContainerHeight(bitmapContainer.getHeight());
+        borderScaleView.setContainerWidth(bitmapContainer.getWidth());
+        borderScaleView.setBorderScaleViewListener(new BorderScaleView.BorderScaleViewListener() {
+            @Override
+            public void onCordsChanged(float x, float y) {
+                cropContainer.setX(x);
+                cropContainer.setY(y);
+            }
+
+            @Override
+            public void onSizeChanged(int width, int height) {
+                cropContainer.getLayoutParams().width = width;
+                cropContainer.getLayoutParams().height = height;
+                cropContainer.requestLayout();
+            }
+        });
+
+
+
+
+
+    }
+
+
+
+    public void enablePaintingMode()
+    {
+        if(!isCropping)
+        {
+            final DrawingView drawingView = findViewById(R.id.drawingView);
+            drawingView.setActive(true);
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     public void setupBrushEditor() {
@@ -118,7 +182,10 @@ public class ImageEdit extends AppCompatActivity {
                         if (startY == 0) {
                             startY = brushEditor.getTop();
                         }
+
+
                         downY = event.getRawY();
+                        enablePaintingMode();
                         wasSliding = false;
 
                         break;
@@ -188,6 +255,7 @@ public class ImageEdit extends AppCompatActivity {
         final EditText editText = findViewById(R.id.text);
         editText.clearFocus();
         editText.setCursorVisible(false);
+        enablePaintingMode();
         getWindow().getDecorView().clearFocus();
 
 
@@ -228,6 +296,28 @@ public class ImageEdit extends AppCompatActivity {
         activity.startActivity(intent);
     }
 
+    public void crop()
+    {
+        ImageView mainImageView = findViewById(R.id.mainImageView);
+        ImageView shadedView = findViewById(R.id.cropShade);
+        DrawingView drawingView = findViewById(R.id.drawingView);
+        BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
+
+        int x = (int) (imageBitmap.getWidth() * (borderScaleView.getX() / mainImageView.getWidth()));
+        int y = (int) (imageBitmap.getHeight() * (borderScaleView.getY() / mainImageView.getHeight()));
+
+        float factor = (float) imageBitmap.getWidth() / (float) mainImageView.getWidth();
+
+        int width = (int) (borderScaleView.getWidth() * factor);
+        int height = (int) (borderScaleView.getHeight()* factor);
+
+        Log.d("CROP", "x= " + x + "; width=" + imageBitmap.getWidth() + " factor " + (borderScaleView.getX() / mainImageView.getWidth()));
+        Bitmap croppedBitmap = Bitmap.createBitmap(imageBitmap, x, y, width, height);
+        mainImageView.setImageBitmap(croppedBitmap);
+        borderScaleView.center();
+        imageBitmap = croppedBitmap;
+    }
+
     public static void openForResult(Uri uri, Activity activity) {
         Intent intent = new Intent(activity, ImageEdit.class);
         intent.putExtra("uri", uri.getPath());
@@ -264,41 +354,38 @@ public class ImageEdit extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
-    public void crop(View v) {
-        final ConstraintLayout container = findViewById(R.id.bitmapContainer);
-        final EditText editText = findViewById(R.id.text);
+    public void toggleCrop(View v) {
+        ImageView mainImageView = findViewById(R.id.mainImageView);
+        ImageView shadedView = findViewById(R.id.cropShade);
+        DrawingView drawingView = findViewById(R.id.drawingView);
+        BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
+        if(isCropping)
+        {
+            mainImageView.setAlpha(1f);
+            borderScaleView.setEnabled(false);
+            borderScaleView.setVisibility(View.INVISIBLE);
+            shadedView.setAlpha(0f);
+            drawingView.setActive(true);
+            drawingView.setEnabled(true);
+            isCropping = false;
+            crop();
+        }
+        else
+        {
+            final ConstraintLayout bitmapContainer = findViewById(R.id.bitmapContainer);
 
-        startWidth = container.getLayoutParams().width;
-        container.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                getWindow().getDecorView().clearFocus();
-                container.requestFocus();
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    fromX = event.getX();
-                    startWidth = v.getWidth();
-                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            borderScaleView.setContainerHeight(bitmapContainer.getHeight());
+            borderScaleView.setContainerWidth(bitmapContainer.getWidth());
+            mainImageView.setAlpha(0.7f);
+            borderScaleView.setEnabled(true);
+            borderScaleView.center();
+            borderScaleView.setVisibility(View.VISIBLE);
+            shadedView.setAlpha(1f);
+            drawingView.setActive(false);
+            drawingView.setEnabled(false);
+            isCropping = true;
 
-                }
-                if (fromX == 0) {
-                    fromX = event.getX();
-                }
-                int def = (int) event.getX() - (int) fromX;
-                int newSize = startWidth + def;
-                if (newSize > 200) {
-                    v.getLayoutParams().width = newSize;
-                } else {
-
-
-                    // fromX = event.getX();
-                    v.requestLayout();
-
-                }
-                return true;
-            }
-
-        });
-
+        }
 
 //        CropImageView cropImageView = findViewById(R.id.crop_view);
 //        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();

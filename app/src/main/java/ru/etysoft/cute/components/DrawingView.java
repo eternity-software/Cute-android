@@ -31,8 +31,13 @@ public class DrawingView  extends View {
     private int size = 20;
     private int color = Color.BLACK;
     private int maxSize = 30;
+    private boolean isActive = false;
     public PorterDuffXfermode clear = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
 
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     public DrawingView(Context c) {
         super(c);
@@ -123,6 +128,7 @@ public class DrawingView  extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if(!isActive) return;
         canvas.drawColor(Color.TRANSPARENT);
         canvas.drawBitmap(bitmap, 0, 0, bitmapPaint);
         if (!isErasing) {
@@ -136,6 +142,7 @@ public class DrawingView  extends View {
     private static final float TOUCH_TOLERANCE = 4;
 
     private void onTouchStart(float x, float y) {
+        if(!isActive) return;
         path.reset();
         path.moveTo(x, y);
         mX = x;
@@ -143,6 +150,7 @@ public class DrawingView  extends View {
     }
 
     private void onTouchMove(float x, float y) {
+        if(!isActive) return;
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
@@ -159,6 +167,7 @@ public class DrawingView  extends View {
     }
 
     private void onTouchUp() {
+        if(!isActive) return;
         path.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
