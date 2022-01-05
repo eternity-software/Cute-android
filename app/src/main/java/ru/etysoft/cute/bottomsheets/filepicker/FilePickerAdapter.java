@@ -49,7 +49,7 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         this.context = context;
         images = getAllShownImagesPath();
         //   Collections.reverse(images);
-        waterfallBalancer = new WaterfallBalancer(context, 1, recyclerView);
+        waterfallBalancer = new WaterfallBalancer(context, 10, recyclerView);
 
         registerTransitionListener();
     }

@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,7 @@ public class BorderScaleView extends RelativeLayout {
     private int containerWidth = -1;
     private int containerHeight = -1;
     private View rootView;
+    private View container;
     private String TAG = "BorderScaleView";
     private BorderScaleViewListener borderScaleViewListener;
 
@@ -28,10 +32,27 @@ public class BorderScaleView extends RelativeLayout {
         this.borderScaleViewListener = borderScaleViewListener;
     }
 
+    public void setContainer(View container) {
+        this.container = container;
+    }
+
+
+    public float getRawContainerX()
+    {
+        return getX() - container.getX();
+    }
+
+    public float getRawContainerY()
+    {
+        return getY() - container.getY();
+    }
+
     public interface BorderScaleViewListener {
         void onCordsChanged(float x, float y);
 
         void onSizeChanged(int width, int height);
+
+        void onTouchUp(MotionEvent event);
     }
 
     public void setContainerWidth(int containerWidth) {
@@ -132,6 +153,7 @@ public class BorderScaleView extends RelativeLayout {
     public void setY(float y) {
 
 
+
             super.setY(y);
             if (borderScaleViewListener != null)
                 borderScaleViewListener.onSizeChanged(getLayoutParams().width, getLayoutParams().height);
@@ -139,30 +161,16 @@ public class BorderScaleView extends RelativeLayout {
 
     }
 
-    public boolean canTranslateX(float x)
-    {
-        return canTranslate(x, getY(), getLayoutParams().height, getLayoutParams().width);
-    }
 
-    public boolean canTranslateY(float y)
-    {
-        return canTranslate(getX(), y, getLayoutParams().height, getLayoutParams().width);
-    }
-
-    public boolean canTranslate(float x, float y, int height, int width) {
-        if (y > containerHeight - height) return false;
-        if (x > containerWidth - width) return false;
-        if (x < 0) return false;
-        if (y < 0) return false;
-        return true;
-    }
 
     public void center()
     {
         if(containerHeight > 0 && containerWidth > 0)
         {
-            setX(containerWidth / 2 - getWidth() / 2);
-            setY(containerHeight / 2 - getHeight() / 2);
+            setX(containerWidth / 2f - getWidth() / 2f);
+            setY(containerHeight / 2f- getHeight() / 2f);
+            setWidth(container.getWidth() / 2);
+            setHeight(container.getHeight() / 2);
         }
     }
 
@@ -242,25 +250,20 @@ public class BorderScaleView extends RelativeLayout {
         } else {
             float x = deltaRawX + startX;
             float y = deltaRawY + startY;
-
-
-
-            if(canTranslateX(x))
-            {
                 setX(x);
-            }
-
-            if(canTranslateY(y))
-            {
                 setY(y);
-            }
-
 
         }
     }
 
+    public void setText(String text)
+    {
+        ((TextView) findViewById(R.id.debugText)).setText(text);
+    }
+
     private void onTouchUp(MotionEvent event) {
 
+        if(borderScaleViewListener != null) borderScaleViewListener.onTouchUp(event);
     }
 
     public final int RIGHT_BORDER = 0;

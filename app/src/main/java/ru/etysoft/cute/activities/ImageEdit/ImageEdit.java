@@ -1,5 +1,6 @@
 package ru.etysoft.cute.activities.ImageEdit;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -115,15 +117,29 @@ public class ImageEdit extends AppCompatActivity {
             return true;
         }
     }
+    long lastTimeSizeChanged = 0;
+    float realX;
+    float realY;
+    float goodX;
+    float goodY;
+    int goodHeight;
+    int goodWeight;
+
+    float bitmapContainerX;
+    float bitmapContainerY;
 
     public void setupCrop()
     {
 
+
         final ImageView cropContainer = findViewById(R.id.cropShade);
         final ConstraintLayout bitmapContainer = findViewById(R.id.bitmapContainer);
-        BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
-        borderScaleView.setContainerHeight(bitmapContainer.getHeight());
-        borderScaleView.setContainerWidth(bitmapContainer.getWidth());
+        final ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
+        final ImageView imageView = findViewById(R.id.mainImageView);
+        final BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
+        borderScaleView.setContainerHeight(mainContainer.getHeight());
+        borderScaleView.setContainerWidth(mainContainer.getWidth());
+        borderScaleView.setContainer(bitmapContainer);
         borderScaleView.setBorderScaleViewListener(new BorderScaleView.BorderScaleViewListener() {
             @Override
             public void onCordsChanged(float x, float y) {
@@ -136,6 +152,57 @@ public class ImageEdit extends AppCompatActivity {
                 cropContainer.getLayoutParams().width = width;
                 cropContainer.getLayoutParams().height = height;
                 cropContainer.requestLayout();
+
+            }
+
+            @Override
+            public void onTouchUp(MotionEvent event) {
+                float centerBorderX = mainContainer.getWidth() / 2f - borderScaleView.getWidth() / 2f;
+                float centerBorderY = mainContainer.getHeight() / 2f - borderScaleView.getHeight() / 2f;
+
+
+
+
+                float pathX =  borderScaleView.getX() - centerBorderX;
+                float pathY = borderScaleView.getY() - centerBorderY;
+
+
+
+
+
+                    realX = borderScaleView.getRawContainerX();
+                    realY = borderScaleView.getRawContainerY();
+
+
+
+
+
+                borderScaleView.setText("realX=" + realX + "\nrealY=" + realY);
+                if(borderScaleView.getRawContainerX() > 0 && borderScaleView.getRawContainerY() > 0 && borderScaleView.getRawContainerX() + borderScaleView.getWidth() <= bitmapContainer.getWidth() && borderScaleView.getRawContainerY() + borderScaleView.getHeight() <= bitmapContainer.getHeight())
+                {
+                    goodWeight = borderScaleView.getWidth();
+                    goodX = borderScaleView.getRawContainerX();
+                    goodHeight = borderScaleView.getHeight();
+                    goodY = borderScaleView.getRawContainerY();
+
+                    bitmapContainer.animate().x(bitmapContainer.getX() - pathX).y(bitmapContainer.getY() - pathY).setInterpolator(new DecelerateInterpolator(2f)).setDuration(500).start();
+
+                }
+                else
+                {
+                    cropContainer.getLayoutParams().width = goodWeight;
+                    cropContainer.getLayoutParams().height = goodHeight;
+                    cropContainer.requestLayout();
+
+                    borderScaleView.getLayoutParams().width = goodWeight;
+                    borderScaleView.getLayoutParams().height = goodHeight;
+                    borderScaleView.requestLayout();
+                }
+
+                borderScaleView.animate().x(centerBorderX).y(centerBorderY).setDuration(500).setInterpolator(new DecelerateInterpolator(2f)).start();
+                cropContainer.animate().x(centerBorderX).y(centerBorderY).setDuration(500).setInterpolator(new DecelerateInterpolator(2f)).start();
+
+                lastTimeSizeChanged = System.currentTimeMillis();
             }
         });
 
@@ -303,8 +370,8 @@ public class ImageEdit extends AppCompatActivity {
         DrawingView drawingView = findViewById(R.id.drawingView);
         BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
 
-        int x = (int) (imageBitmap.getWidth() * (borderScaleView.getX() / mainImageView.getWidth()));
-        int y = (int) (imageBitmap.getHeight() * (borderScaleView.getY() / mainImageView.getHeight()));
+        int x = (int) (imageBitmap.getWidth() * (borderScaleView.getRawContainerX() / mainImageView.getWidth()));
+        int y = (int) (imageBitmap.getHeight() * (borderScaleView.getRawContainerY() / mainImageView.getHeight()));
 
         float factor = (float) imageBitmap.getWidth() / (float) mainImageView.getWidth();
 
@@ -312,9 +379,22 @@ public class ImageEdit extends AppCompatActivity {
         int height = (int) (borderScaleView.getHeight()* factor);
 
         Log.d("CROP", "x= " + x + "; width=" + imageBitmap.getWidth() + " factor " + (borderScaleView.getX() / mainImageView.getWidth()));
-        Bitmap croppedBitmap = Bitmap.createBitmap(imageBitmap, x, y, width, height);
-        mainImageView.setImageBitmap(croppedBitmap);
+        Bitmap croppedBitmap = imageBitmap;
+                try {
+
+
+                    croppedBitmap = Bitmap.createBitmap(imageBitmap, x, y, width, height);
+                }
+                catch (Exception ignored){}
+
         borderScaleView.center();
+        final ConstraintLayout bitmapContainer = findViewById(R.id.bitmapContainer);
+        bitmapContainer.setX(bitmapContainerX);
+        bitmapContainer.setY(bitmapContainerY);
+        bitmapContainer.requestLayout();
+
+        mainImageView.setImageBitmap(croppedBitmap);
+        bitmapContainer.requestLayout();
         imageBitmap = croppedBitmap;
     }
 
@@ -359,12 +439,36 @@ public class ImageEdit extends AppCompatActivity {
         ImageView shadedView = findViewById(R.id.cropShade);
         DrawingView drawingView = findViewById(R.id.drawingView);
         BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
+        final ConstraintLayout bitmapContainer = findViewById(R.id.bitmapContainer);
+        final ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
+
         if(isCropping)
         {
-            mainImageView.setAlpha(1f);
+            bitmapContainer.animate().alpha(1f).setDuration(300).start();
             borderScaleView.setEnabled(false);
-            borderScaleView.setVisibility(View.INVISIBLE);
-            shadedView.setAlpha(0f);
+            borderScaleView.animate().alpha(0f).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    borderScaleView.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            }).setDuration(300).start();
+
+            shadedView.animate().alpha(0).setDuration(300).start();
             drawingView.setActive(true);
             drawingView.setEnabled(true);
             isCropping = false;
@@ -372,17 +476,45 @@ public class ImageEdit extends AppCompatActivity {
         }
         else
         {
-            final ConstraintLayout bitmapContainer = findViewById(R.id.bitmapContainer);
 
-            borderScaleView.setContainerHeight(bitmapContainer.getHeight());
-            borderScaleView.setContainerWidth(bitmapContainer.getWidth());
-            mainImageView.setAlpha(0.7f);
+
+            bitmapContainerX = bitmapContainer.getX();
+            bitmapContainerY = bitmapContainer.getY();
+            borderScaleView.setContainerHeight(mainContainer.getHeight());
+            borderScaleView.setContainerWidth(mainContainer.getWidth());
+            bitmapContainer.setAlpha(0.7f);
             borderScaleView.setEnabled(true);
             borderScaleView.center();
+            goodWeight = borderScaleView.getWidth();
+            goodX = borderScaleView.getRawContainerX();
+            goodHeight = borderScaleView.getHeight();
+            goodY = borderScaleView.getRawContainerY();
             borderScaleView.setVisibility(View.VISIBLE);
-            shadedView.setAlpha(1f);
+            borderScaleView.setAlpha(0f);
+            borderScaleView.animate().alpha(1f).setDuration(300).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            }).start();
+            shadedView.animate().alpha(1f).setDuration(300).start();
             drawingView.setActive(false);
-            drawingView.setEnabled(false);
+            drawingView.setEnabled(true);
             isCropping = true;
 
         }
