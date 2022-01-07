@@ -20,7 +20,7 @@
             android:layout_height="300dp"
             app:srcCompat="@drawable/icon_uber" />
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:id="@+id/textView10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +29,8 @@
             android:padding="10dp"
             android:text="Ой, ты что тут делаешь?"
             android:textColor="@color/accent_blue"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            app:themeColor="colorTextAccent"/>
 
         <TextView
 

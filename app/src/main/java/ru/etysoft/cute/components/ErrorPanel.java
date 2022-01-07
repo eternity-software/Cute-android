@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 
 public class ErrorPanel extends RelativeLayout {
@@ -52,8 +53,8 @@ public class ErrorPanel extends RelativeLayout {
         textView = findViewById(R.id.error_text);
         reloadButton = findViewById(R.id.reload);
         try {
-            String customText = StringsRepository.getValue(String.valueOf(locTextId));
-            String customTitle = StringsRepository.getValue(String.valueOf(locTitleId));
+            String customText = CustomLanguage.getStringsRepository().getValue(String.valueOf(locTextId));
+            String customTitle = CustomLanguage.getStringsRepository().getValue(String.valueOf(locTitleId));
             titleView.setText(customTitle);
             textView.setText(customText);
         } catch (NoSuchValueException e) {

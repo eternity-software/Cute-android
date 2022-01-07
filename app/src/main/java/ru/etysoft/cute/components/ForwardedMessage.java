@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cuteframework.methods.messages.Message;
 
@@ -55,12 +56,12 @@ public class ForwardedMessage extends RelativeLayout {
 
             if (forwardedMessage.getText() == null) {
                 if (forwardedMessage.getAttachmentData() != null) {
-                    fwdMessage = StringsRepository.getOrDefault(R.string.image, context);
+                    fwdMessage = CustomLanguage.getStringsRepository().getOrDefault(R.string.image, context);
                 } else {
                     if (forwardedMessage.getForwardedMessage() != null) {
-                        fwdMessage = StringsRepository.getOrDefault(R.string.fwd_message, context);
+                        fwdMessage = CustomLanguage.getStringsRepository().getOrDefault(R.string.fwd_message, context);
                     } else {
-                        fwdMessage = StringsRepository.getOrDefault(R.string.empty_message, context);
+                        fwdMessage = CustomLanguage.getStringsRepository().getOrDefault(R.string.empty_message, context);
                     }
 
                 }

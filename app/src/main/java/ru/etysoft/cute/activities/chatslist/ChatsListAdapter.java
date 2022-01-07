@@ -22,6 +22,7 @@ import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
@@ -143,7 +144,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                         }
 
                     } else {
-                        holder.accentView.setText(StringsRepository.getOrDefault(R.string.you, context) + ": ");
+                        holder.accentView.setText(CustomLanguage.getStringsRepository().getOrDefault(R.string.you, context) + ": ");
                     }
                 } catch (NotCachedException e) {
                     holder.accentView.setText(info.getMessage().getSender().getDisplayName() + ": ");
@@ -154,7 +155,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                 ServiceData serviceData = info.getMessage().getServiceData();
                 if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
                     try {
-                        String messageText = StringsRepository.getOrDefault(R.string.chat_created, getContext())
+                        String messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.chat_created, getContext())
                                 .replace("%s", serviceData.getChatName());
                         holder.accentView.setText(messageText);
                         holder.messageView.setText("");
@@ -163,7 +164,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                     }
                 } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
                     try {
-                        String messageText = StringsRepository.getOrDefault(R.string.add_member, getContext())
+                        String messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.add_member, getContext())
                                 .replace("%s", serviceData.getDisplayName());
                         holder.accentView.setText(messageText);
                         holder.messageView.setText("");
@@ -172,7 +173,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                     }
                 } else {
 
-                    String messageText = StringsRepository.getOrDefault(R.string.unknown_service_message, getContext());
+                    String messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.unknown_service_message, getContext());
                     holder.accentView.setText(messageText);
                     holder.messageView.setText("");
 
@@ -188,7 +189,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             if(info.getMessage().getAttachmentData() != null)
             {
                 holder.messageView.setText("");
-                holder.accentView.setText(holder.accentView.getText() + StringsRepository.getOrDefault(R.string.image, getContext()));
+                holder.accentView.setText(holder.accentView.getText() + CustomLanguage.getStringsRepository().getOrDefault(R.string.image, getContext()));
             }
 
             holder.container.startAnimation(fadeIn);

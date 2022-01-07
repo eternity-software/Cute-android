@@ -1,5 +1,7 @@
 package ru.etysoft.cute.activities.ImageEdit;
 
+import static java.security.AccessController.getContext;
+
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -33,6 +35,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.BorderScaleView;
 import ru.etysoft.cute.components.DrawingView;
 import ru.etysoft.cute.images.ImageRotationFix;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Numbers;
 
 public class ImageEdit extends AppCompatActivity {
@@ -225,15 +228,15 @@ public class ImageEdit extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     public void setupBrushEditor() {
-        colors = new int[]{getResources().getColor(R.color.paintWhite),
-                getResources().getColor(R.color.paintBlack),
-                getResources().getColor(R.color.paintRed),
-                getResources().getColor(R.color.paintOrange),
-                getResources().getColor(R.color.paintYellow),
-                getResources().getColor(R.color.paintGreen),
-                getResources().getColor(R.color.paintLightBlue),
-                getResources().getColor(R.color.paintBlue),
-                getResources().getColor(R.color.paintPurple)};
+        colors = new int[]{Theme.getColor(this, R.color.paintWhite),
+                Theme.getColor(this, R.color.paintBlack),
+                Theme.getColor(this, R.color.paintRed),
+                Theme.getColor(this, R.color.paintOrange),
+                Theme.getColor(this, R.color.paintYellow),
+                Theme.getColor(this, R.color.paintGreen),
+                Theme.getColor(this, R.color.paintLightBlue),
+                Theme.getColor(this, R.color.paintBlue),
+                Theme.getColor(this, R.color.paintPurple)};
         final LinearLayout brushEditor = findViewById(R.id.brushEditor);
         final ImageView colorPreview = findViewById(R.id.colorPreview);
         final DrawingView drawingView = findViewById(R.id.drawingView);

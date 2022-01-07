@@ -154,7 +154,7 @@
                     android:fontFamily="@font/montserratalternates_medium"
                     android:textAllCaps="false"
                     app:srcCompat="@drawable/icon_add" />
-                <Button
+                <ru.etysoft.cute.lang.components.LocalizableButton
                     android:id="@+id/button4"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
@@ -168,29 +168,31 @@
             </LinearLayout>
 
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/montserratalternates_medium"
             android:gravity="left"
             android:text="@string/about"
-            android:textColor="@color/colorSupportText"
+
+            app:themeColor="colorSupportText"
             android:textIsSelectable="true"
             android:textSize="16sp" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="86dp">
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/bioView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserratmedium"
                 android:gravity="left"
+                app:themeColor="colorSupportText"
                 android:text="Ребята, не стоит вскрывать эту тему. Вы молодые, шутливые, вам все легко. Это не то. Это не Чикатило и даже не архивы спецслужб. Сюда лучше не лезть. Серьезно, любой из вас будет жалеть.  Лучше..."
-                android:textColor="@color/colorSupportText"
+
                 android:textIsSelectable="true"
                 android:textSize="12sp" />
         </ScrollView>

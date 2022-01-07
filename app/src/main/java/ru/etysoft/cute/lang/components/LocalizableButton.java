@@ -3,6 +3,11 @@ package ru.etysoft.cute.lang.components;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -14,7 +19,9 @@ import org.jetbrains.annotations.NotNull;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.themes.Theme;
 
 public class LocalizableButton extends AppCompatButton {
     @StyleableRes
@@ -40,8 +47,10 @@ public class LocalizableButton extends AppCompatButton {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
         CharSequence locId = typedArray.getText(localizableKey);
         localId = locId;
+        Drawable backgroundShape = getBackground();
+        backgroundShape.setColorFilter(Theme.getColor(getContext(), R.color.colorButton), PorterDuff.Mode.SRC);
         try {
-            setText(StringsRepository.getValue(String.valueOf(locId)));
+            setText(CustomLanguage.getStringsRepository().getValue(String.valueOf(locId)));
         } catch (NoSuchValueException ignored) {
         }
         typedArray.recycle();

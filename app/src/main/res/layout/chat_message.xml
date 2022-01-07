@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/messageback"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,7 +28,7 @@
 
             android:orientation="vertical">
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/displayNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,6 +39,7 @@
                 android:paddingVertical="5dp"
                 android:text="Author"
                 android:textSize="12sp"
+                app:themeColor="colorTitle"
                 android:textColor="@color/colorTitle" />
 
             <LinearLayout
@@ -46,12 +48,12 @@
                 android:layout_height="wrap_content">
 
 
-                <LinearLayout
+                <ru.etysoft.cute.components.ThemeLinearLayout
                     android:id="@+id/messageContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
+                    app:themeBackgroundColor="colorMessage"
                     android:background="@drawable/dialog_message"
                     android:orientation="vertical">
 
@@ -72,6 +74,8 @@
                         android:textIsSelectable="true"
                         android:text="самса по 60р с рыбой и капустой"
                         android:textColor="#fff"
+                        app:themeColorLink="colorChatMessageTextLink"
+                        app:themeColor="colorChatMessageText"
                         android:textColorLink="@color/colorTextLink"
                         android:textSize="@dimen/messageText" />
 
@@ -92,10 +96,10 @@
                         android:padding="4dp"
                         />
 
-                </LinearLayout>
+                </ru.etysoft.cute.components.ThemeLinearLayout>
 
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/timeview"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -107,6 +111,7 @@
                     android:paddingBottom="5dp"
                     android:text="00:00"
                     android:textColor="@color/colorSupportText"
+                    app:themeColor="colorSupportText"
                     android:textSize="12sp" />
             </LinearLayout>
 

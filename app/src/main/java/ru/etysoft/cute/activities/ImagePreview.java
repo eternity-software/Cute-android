@@ -37,6 +37,7 @@ import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.PreviewImageView;
 import ru.etysoft.cute.images.ImagesWorker;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Numbers;
 
 public class ImagePreview extends AppCompatActivity {
@@ -59,7 +60,7 @@ public class ImagePreview extends AppCompatActivity {
 
         if(MainActivity.isDev)
         {
-            card.setBackgroundColor(getResources().getColor(R.color.debug));
+            card.setBackgroundColor(Theme.getColor(this, R.color.debug));
         }
         photoView.setImageContainer(card);
         photoView.setActionsListener(new PreviewImageView.ImageActionsListener() {

@@ -9,13 +9,17 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.themes.Theme;
 
 
 public class LocalizableTextView extends AppCompatTextView {
 
     @StyleableRes
     int localizableKey = 0;
+    @StyleableRes
+    int themeColor = 0;
     private CharSequence localId;
 
     public LocalizableTextView(Context context) {
@@ -33,12 +37,27 @@ public class LocalizableTextView extends AppCompatTextView {
     }
 
     private void initialize(Context context, AttributeSet attrs) {
-        int[] sets = {R.attr.localizableKey};
+        int[] sets = {R.attr.localizableKey, R.attr.themeColor, R.attr.themeColorLink};
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
-        CharSequence locId = typedArray.getText(localizableKey);
+        CharSequence locId = typedArray.getText(0);
+        CharSequence textColor = typedArray.getString(1);
+        CharSequence textLinkColor = typedArray.getString(2);
         localId = locId;
         try {
-            setText(StringsRepository.getValue(String.valueOf(locId)));
+            setTextColor(Theme.getColor(String.valueOf(textColor)));
+        } catch (NoSuchValueException e) {
+            e.printStackTrace();
+            setTextColor(Theme.getColor(getContext(), Theme.getResId(String.valueOf(textColor), R.color.class)));
+        }
+
+        try {
+            setLinkTextColor(Theme.getColor(String.valueOf(textLinkColor)));
+        } catch (NoSuchValueException e) {
+            e.printStackTrace();
+            setLinkTextColor(Theme.getColor(getContext(), Theme.getResId(String.valueOf(textLinkColor), R.color.class)));
+        }
+        try {
+            setText(CustomLanguage.getStringsRepository().getValue(String.valueOf(locId)));
         } catch (NoSuchValueException ignored) {
         }
         typedArray.recycle();

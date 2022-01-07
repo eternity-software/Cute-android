@@ -15,6 +15,7 @@ import com.r0adkll.slidr.model.SlidrInterface;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.LightToolbar;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.methods.friend.GetRequests.FriendRequestsResponse;
@@ -131,7 +132,7 @@ public class FriendRequestActivity extends AppCompatActivity {
         }
         @Override
         public CharSequence getPageTitle(int position) {
-            return StringsRepository.getOrDefault(tabTitles[position], context);
+            return CustomLanguage.getStringsRepository().getOrDefault(tabTitles[position], context);
         }
     }
 

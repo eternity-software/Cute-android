@@ -65,6 +65,7 @@
 
 
     <color name="colorTitle">@color/accent_blue</color>
+    <color name="colorButton">@color/accent_blue</color>
     <color name="colorTextBackground">#D7FFFFFF</color>
     <color name="colorMessageState">@color/accent_blue</color>
     <color name="colorBackgroundElement">@color/colorLightLGray</color>
@@ -133,7 +134,11 @@
     <color name="colorNotReaded">#F4F4F4</color>
     <color name="colorNoMessagesPlanet">@color/accent_blue</color>
     <color name="colorMyMessage">#E6E6E6</color>
-    <color name="colorMessage">#E6E6E6</color>
+    <color name="colorMessage">@color/accent_blue</color>
+    <color name="colorChatMessageText">#FFFFFF</color>
+    <color name="colorChatMessageLink">#FFFFFF</color>
+    <color name="colorMyMessageText">#171717</color>
+    <color name="colorMyMessageLink">@color/accent_blue</color>
     <color name="colorTextLink">#BABABA</color>
 
     <color name="colorTextPanel">@color/colorLightLGray</color>

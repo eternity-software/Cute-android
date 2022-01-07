@@ -68,7 +68,9 @@ import ru.etysoft.cute.components.FileParingImageView;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.MessageNotFoundException;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
@@ -213,6 +215,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         errorContainer.setVisibility(View.INVISIBLE);
         titleView = findViewById(R.id.title);
         statusView = findViewById(R.id.subtitle);
+        Theme.applyBackground(rootView);
         setupRecyclerView();
     }
 
@@ -238,7 +241,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     @Override
     public String getStringsRepositoryResult(int resId) {
-        return StringsRepository.getOrDefault(R.string.offline, MessagingActivity.this);
+        return CustomLanguage.getStringsRepository().getOrDefault(R.string.offline, MessagingActivity.this);
     }
 
     @Override

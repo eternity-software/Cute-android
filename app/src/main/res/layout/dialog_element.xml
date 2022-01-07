@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="8dp"
     android:paddingVertical="4dp">
 
@@ -66,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -74,6 +75,7 @@
                         android:singleLine="true"
                         android:text="Знаешь, Таня"
                         android:textColor="@color/colorText"
+                        app:themeColor="colorText"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -91,7 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
-                    <TextView
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/message_accent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -102,10 +104,11 @@
 
                         android:paddingRight="1dp"
                         android:text="Таня:"
+                        app:themeColor="colorTextAccent"
                         android:textColor="@color/colorTextAccent"
                         android:textSize="14sp" />
 
-                    <TextView
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -114,7 +117,9 @@
                         android:paddingRight="6dp"
                         android:singleLine="true"
                         android:text="не передать словами то, как я люблю снюс"
-                        android:textColor="@color/colorMessageText"
+
+                        app:themeColor="colorMessageText"
+                        app:themeColorLink="colorMyMessageLink"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -127,7 +132,7 @@
                     android:orientation="horizontal">
 
 
-                    <TextView
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -136,6 +141,7 @@
                         android:minWidth="10dp"
                         android:text="9:41"
                         android:textColor="@color/colorText"
+                        app:themeColor="colorText"
                         android:textSize="14sp" />
 
 

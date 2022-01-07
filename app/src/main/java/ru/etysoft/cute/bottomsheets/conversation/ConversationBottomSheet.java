@@ -364,9 +364,11 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         final String token;
         try {
             token = CachedValues.getSessionKey(getActivity());
-            Runnable toRun = new Runnable() {
+
+
+            AlertDialog leaveDialog = new AlertDialog(getActivity(), getResources().getString(R.string.leave_title), getString(R.string.leave_text), new AlertDialog.DialogHandler() {
                 @Override
-                public void run() {
+                public void onPositiveClicked(String input) {
                     try {
                         Thread thread = new Thread(new Runnable() {
                             @Override
@@ -397,16 +399,17 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                     }
 
                 }
-            };
-            Runnable cancel = new Runnable() {
-                @Override
-                public void run() {
 
+                @Override
+                public void onNegativeClicked(String input) {
 
                 }
-            };
 
-            AlertDialog leaveDialog = new AlertDialog(getActivity(), getResources().getString(R.string.leave_title), getString(R.string.leave_text), toRun, cancel);
+                @Override
+                public void onClosed(String input) {
+
+                }
+            });
             leaveDialog.show();
             dismiss();
         } catch (NotCachedException e) {
@@ -421,12 +424,11 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         try {
             token = CachedValues.getSessionKey(getActivity());
 
-            Runnable toRun = new Runnable() {
-                @Override
-                public void run() {
-                    Thread thread = new Thread(new Runnable() {
+            dismiss();
+            AlertDialog deleteDialog = new AlertDialog(getActivity(), getResources().getString(R.string.clear_title), getString(R.string.clear_text),
+                    new AlertDialog.DialogHandler() {
                         @Override
-                        public void run() {
+                        public void onPositiveClicked(String input) {
                             try {
                                 ClearHistoryResponse clearHistoryResponse = (new ClearHistoryRequest(token, cid)).execute();
                                 if (clearHistoryResponse.isSuccess()) {
@@ -441,21 +443,18 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                             } catch (ResponseException e) {
                                 e.printStackTrace();
                             }
+                        }
+
+                        @Override
+                        public void onNegativeClicked(String input) {
+
+                        }
+
+                        @Override
+                        public void onClosed(String input) {
 
                         }
                     });
-                    thread.start();
-                }
-            };
-            Runnable cancel = new Runnable() {
-                @Override
-                public void run() {
-
-
-                }
-            };
-            dismiss();
-            AlertDialog deleteDialog = new AlertDialog(getActivity(), getResources().getString(R.string.clear_title), getString(R.string.clear_text), toRun, cancel);
             deleteDialog.show();
         } catch (NotCachedException e) {
             e.printStackTrace();

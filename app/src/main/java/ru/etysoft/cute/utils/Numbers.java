@@ -7,6 +7,7 @@ import android.text.format.DateFormat;
 import android.util.TypedValue;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.themes.Theme;
 
 public class Numbers {
 
@@ -45,10 +46,10 @@ public class Numbers {
 
 
         try {
-            return context.getResources().getColor(context.getResources().getIdentifier("avatar" + secondNum + "" + firstNum, "color", context.getPackageName()));
+            return Theme.getColor(context, context.getResources().getIdentifier("avatar" + secondNum + "" + firstNum, "color", context.getPackageName()));
 
         } catch (Exception e) {
-            return context.getResources().getColor(R.color.avatar05);
+            return Theme.getColor(context, R.color.avatar05);
         }
     }
 

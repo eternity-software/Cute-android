@@ -9,12 +9,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <ru.etysoft.cute.components.ThemeLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:background="@drawable/text_panel"
             android:gravity="center"
+            app:themeBackgroundColor="colorTextPanel"
             android:orientation="horizontal">
 
             <ImageView
@@ -29,7 +30,7 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/error_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -37,23 +38,24 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/montserratmedium"
                     android:text="Test title"
-                    android:textColor="@color/colorTextDark"
+
+                    app:themeColor="colorTextDark"
                     android:textSize="16sp" />
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/error_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:fontFamily="@font/montserrat"
                     android:text="test error"
-                    android:textColor="@color/colorTextDark"
+                    app:themeColor="colorTextDark"
                     android:textSize="12sp" />
 
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ru.etysoft.cute.components.ThemeLinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

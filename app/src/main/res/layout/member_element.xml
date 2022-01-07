@@ -42,25 +42,27 @@
                 android:gravity="center_vertical"
                 android:paddingRight="30dp">
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratalternates_medium"
                     android:singleLine="true"
                     android:text="Member Name"
-                    android:textColor="@color/colorTextDark"
+
+                    app:themeColor="colorTextDark"
 
                     android:textSize="18sp" />
 
-                <ImageView
+                <ru.etysoft.cute.components.ThemeImageView
                     android:id="@+id/creator"
                     android:layout_width="20dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:padding="3dp"
                     app:srcCompat="@drawable/icon_star"
-                    app:tint="@color/colorAccentIcon" />
+                    app:themeImageColor="colorAccentIcon"
+                   />
             </LinearLayout>
 
             <ImageView

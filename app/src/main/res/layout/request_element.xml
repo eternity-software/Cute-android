@@ -4,12 +4,13 @@
     android:layout_height="wrap_content"
     android:padding="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
+    <ru.etysoft.cute.components.ThemeLinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/square_element_background"
+        app:themeBackgroundColor="colorBackgroundElement"
         android:padding="8dp">
         <ru.etysoft.cute.components.Avatar
             android:id="@+id/avatarView"
@@ -24,26 +25,28 @@
             android:paddingLeft="8dp"
             android:layout_weight="1"
             android:orientation="vertical">
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/displayNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username"
-                android:textColor="@color/colorTextDark"
+
+                app:themeColor="colorTextDark"
                 android:fontFamily="@font/montserratalternates_medium"
                 />
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/onlineView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="online"
                 android:paddingTop="4dp"
                 android:textSize="12sp"
-                android:textColor="@color/state_green"
+                app:themeColor="state_green"
+
                 android:fontFamily="@font/montserratalternates_medium"
                 />
         </LinearLayout>
-        <ImageView
+        <ru.etysoft.cute.components.ThemeImageView
             android:id="@+id/declineButton"
             android:layout_width="32dp"
             android:layout_height="match_parent"
@@ -51,8 +54,8 @@
             android:scaleType="centerInside"
             android:padding="8dp"
             app:srcCompat="@drawable/icon_deny"
-            app:tint="@color/colorIconTint" />
-        <ImageView
+            app:themeImageColor="colorAccentIcon"  />
+        <ru.etysoft.cute.components.ThemeImageView
             android:id="@+id/acceptButton"
             android:layout_width="32dp"
             android:layout_height="match_parent"
@@ -60,7 +63,7 @@
             android:scaleType="centerInside"
             android:padding="6dp"
             app:srcCompat="@drawable/icon_add"
-            app:tint="@color/colorIconTint" />
-    </LinearLayout>
+            app:themeImageColor="colorAccentIcon" />
+    </ru.etysoft.cute.components.ThemeLinearLayout>
 
 </RelativeLayout>

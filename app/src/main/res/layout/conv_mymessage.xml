@@ -20,7 +20,7 @@
         android:orientation="horizontal"
         >
 
-        <ImageView
+        <ru.etysoft.cute.components.ThemeImageView
             android:id="@+id/state"
             android:layout_width="16dp"
             android:layout_height="wrap_content"
@@ -30,11 +30,12 @@
             android:fontFamily="@font/montserrat"
 
             android:gravity="bottom"
-            android:textColor="@color/colorSupportText"
+
             android:textSize="12sp"
+            app:themeImageColor="colorIconTint"
             app:srcCompat="@drawable/icon_clock" />
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:id="@+id/timeview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -44,15 +45,18 @@
             android:text=""
             android:fontFamily="@font/montserrat"
             android:textColor="@color/colorSupportText"
+            app:themeColor="colorSupportText"
             android:textSize="12sp" />
 
 
-        <LinearLayout
+        <ru.etysoft.cute.components.ThemeLinearLayout
             android:id="@+id/messageContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+
             android:background="@drawable/mymessage"
+            app:themeBackgroundColor="colorMyMessage"
             android:orientation="vertical">
 
             <ru.etysoft.cute.components.ForwardedMessage
@@ -72,7 +76,9 @@
                 android:textIsSelectable="true"
                 android:text="самса по 60р с рыбой и капустой"
                 android:fontFamily="@font/montserrat"
-                android:textColor="@color/colorText"
+                android:textColor="@color/colorMyMessageText"
+                app:themeColor="colorMyMessageText"
+                app:themeColorLink="colorMyMessageLink"
                 android:includeFontPadding="false"
                 android:textSize="@dimen/messageText"
               />
@@ -95,7 +101,7 @@
                 android:layout_weight="1"
                 android:layout_marginTop="-8dp"
                 />
-        </LinearLayout>
+        </ru.etysoft.cute.components.ThemeLinearLayout>
 
     </LinearLayout>
 

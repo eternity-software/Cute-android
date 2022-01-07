@@ -1,5 +1,6 @@
 package ru.etysoft.cute.lang;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -15,9 +16,9 @@ import ru.etysoft.cute.exceptions.NoSuchValueException;
 
 public class StringsRepository {
 
-    private static final HashMap<String, String> values = new HashMap<>();
+    private final HashMap<String, String> values = new HashMap<>();
 
-    public static void applyXml(String xmlString) throws LanguageParsingException {
+    public void applyXml(String xmlString) throws LanguageParsingException {
         try {
 
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -29,6 +30,7 @@ public class StringsRepository {
             String key = null;
             String value = null;
             boolean lastStartTag = false;
+            values.clear();
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
@@ -43,7 +45,7 @@ public class StringsRepository {
                     }
                 }
                 if (key != null && value != null) {
-                    Log.d("LANG", "Added " + key + " with " + value);
+                    Log.d("STRINGS REPO", "Added " + key + " with " + value);
                     values.put(key, value);
                     key = null;
                     value = null;
@@ -56,17 +58,19 @@ public class StringsRepository {
         }
     }
 
-    public static String getOrDefault(int resId, Context context) {
-        String resourceName = context.getResources().getResourceName(R.string.chats);
+    public String getOrDefault(int resId, Context context) {
+        String resourceName = context.getResources().getResourceName(resId);
         try {
-            return StringsRepository.getValue(resourceName);
+            return getValue(resourceName);
         } catch (NoSuchValueException e) {
             return context.getResources().getString(resId);
         }
     }
 
-    public static String getValue(String key) throws NoSuchValueException {
-        if (!values.containsKey(key)) throw new NoSuchValueException();
+    public String getValue(String key) throws NoSuchValueException {
+        if (!values.containsKey(key)) throw new NoSuchValueException(key);
         return values.get(key);
     }
+
+
 }

@@ -19,6 +19,11 @@ import ru.etysoft.cute.utils.Numbers;
 
 public class BorderScaleView extends RelativeLayout {
 
+    public final int RIGHT_BORDER = 0;
+    public final int LEFT_BORDER = 1;
+    public final int TOP_BORDER = 2;
+    public final int BOTTOM_BORDER = 3;
+
     private int borderDp = 20;
     private int borderPx;
     private int containerWidth = -1;
@@ -37,17 +42,16 @@ public class BorderScaleView extends RelativeLayout {
     }
 
 
-    public float getRawContainerX()
-    {
+    public float getRawContainerX() {
         return getX() - container.getX();
     }
 
-    public float getRawContainerY()
-    {
+    public float getRawContainerY() {
         return getY() - container.getY();
     }
 
     public interface BorderScaleViewListener {
+
         void onCordsChanged(float x, float y);
 
         void onSizeChanged(int width, int height);
@@ -125,27 +129,27 @@ public class BorderScaleView extends RelativeLayout {
 
     public void setHeight(int height) {
 
-            if (containerHeight != -1 && containerHeight < height) return;
-            getLayoutParams().height = height;
-            requestLayout();
+        if (containerHeight != -1 && containerHeight < height) return;
+        getLayoutParams().height = height;
+        requestLayout();
 
     }
 
     public void setWidth(int width) {
 
-            if (containerWidth != -1 && containerWidth < width) return;
-            getLayoutParams().width = width;
-            requestLayout();
+        if (containerWidth != -1 && containerWidth < width) return;
+        getLayoutParams().width = width;
+        requestLayout();
 
     }
 
     @Override
     public void setX(float x) {
 
-            super.setX(x);
-            if (borderScaleViewListener != null)
-                borderScaleViewListener.onSizeChanged(getLayoutParams().width, getLayoutParams().height);
-            if (borderScaleViewListener != null) borderScaleViewListener.onCordsChanged(x, getY());
+        super.setX(x);
+        if (borderScaleViewListener != null)
+            borderScaleViewListener.onSizeChanged(getLayoutParams().width, getLayoutParams().height);
+        if (borderScaleViewListener != null) borderScaleViewListener.onCordsChanged(x, getY());
 
     }
 
@@ -153,22 +157,18 @@ public class BorderScaleView extends RelativeLayout {
     public void setY(float y) {
 
 
-
-            super.setY(y);
-            if (borderScaleViewListener != null)
-                borderScaleViewListener.onSizeChanged(getLayoutParams().width, getLayoutParams().height);
-            if (borderScaleViewListener != null) borderScaleViewListener.onCordsChanged(getX(), y);
+        super.setY(y);
+        if (borderScaleViewListener != null)
+            borderScaleViewListener.onSizeChanged(getLayoutParams().width, getLayoutParams().height);
+        if (borderScaleViewListener != null) borderScaleViewListener.onCordsChanged(getX(), y);
 
     }
 
 
-
-    public void center()
-    {
-        if(containerHeight > 0 && containerWidth > 0)
-        {
+    public void center() {
+        if (containerHeight > 0 && containerWidth > 0) {
             setX(containerWidth / 2f - getWidth() / 2f);
-            setY(containerHeight / 2f- getHeight() / 2f);
+            setY(containerHeight / 2f - getHeight() / 2f);
             setWidth(container.getWidth() / 2);
             setHeight(container.getHeight() / 2);
         }
@@ -250,24 +250,20 @@ public class BorderScaleView extends RelativeLayout {
         } else {
             float x = deltaRawX + startX;
             float y = deltaRawY + startY;
-                setX(x);
-                setY(y);
+            setX(x);
+            setY(y);
 
         }
     }
 
-    public void setText(String text)
-    {
+    public void setText(String text) {
         ((TextView) findViewById(R.id.debugText)).setText(text);
     }
 
     private void onTouchUp(MotionEvent event) {
 
-        if(borderScaleViewListener != null) borderScaleViewListener.onTouchUp(event);
+        if (borderScaleViewListener != null) borderScaleViewListener.onTouchUp(event);
     }
 
-    public final int RIGHT_BORDER = 0;
-    public final int LEFT_BORDER = 1;
-    public final int TOP_BORDER = 2;
-    public final int BOTTOM_BORDER = 3;
+
 }

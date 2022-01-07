@@ -102,8 +102,10 @@
     <color name="colorButtonTrans">@color/text_soft_gray</color>
 
     <color name="colorProgressBar">@color/accent_blue</color>
+    <color name="colorButton">@color/accent_blue</color>
     <color name="colorTitle">#FFF</color>
     <color name="colorBackgroundElement">@color/colorBackgroundElements</color>
+
 
 
     <color name="colorAltSupport">#FFFFFF</color>
@@ -111,6 +113,8 @@
     <color name="colorNoMessagesPlanet">#FFFFFF</color>
     <color name="colorMyMessage">@color/colorBackgroundElements</color>
     <color name="colorMessage">@color/accent_blue</color>
+    <color name="colorChatMessageText">#FFFFFF</color>
+    <color name="colorChatMessageLink">#FFFFFF</color>
     <color name="colorTextLink">#FFFFFF</color>
 
     <color name="colorTextPanel">@color/colorBackgroundElements</color>

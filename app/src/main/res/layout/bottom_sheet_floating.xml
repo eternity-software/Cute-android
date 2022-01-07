@@ -40,7 +40,7 @@
                 android:padding="20dp"
                 app:srcCompat="@drawable/logo_outlined" />
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/BottomTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,9 +48,10 @@
                 android:gravity="center"
                 android:text="Title"
                 android:textColor="@color/colorText"
+                app:themeColor="colorText"
                 android:textSize="24sp" />
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/BottomText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,6 +60,7 @@
                 android:gravity="center"
                 android:text="Text. I like cute and hope you like it)"
                 android:textColor="@color/colorText"
+                app:themeColor="colorText"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -85,7 +87,7 @@
                     android:textColor="@color/colorText"
                     android:textSize="14sp" />
 
-                <Button
+                <ru.etysoft.cute.lang.components.LocalizableButton
                     android:id="@+id/ButtonActive"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"

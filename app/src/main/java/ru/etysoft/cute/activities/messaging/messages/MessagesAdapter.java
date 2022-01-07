@@ -1,5 +1,7 @@
 package ru.etysoft.cute.activities.messaging.messages;
 
+import static java.security.AccessController.getContext;
+
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -40,7 +42,9 @@ import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.MessageNotFoundException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SocketHolder;
@@ -387,12 +391,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (Types.MINE == type) {
             if (message.isRead()) {
-                basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+                basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorTransparent));
             } else {
-                basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+                basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorUnreadBackground));
             }
         } else {
-            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+            basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorTransparent));
         }
 
         forwardedMessageView.setOnClickListener(new View.OnClickListener() {
@@ -412,7 +416,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
             Bitmap bmp = Bitmap.createBitmap(attachmentData.getWidth(), attachmentData.getHeight(), conf); // this creates a MUTABLE bitmap
 
-            bmp.eraseColor(context.getResources().getColor(R.color.colorPlaceholder));
+            bmp.eraseColor(Theme.getColor(context, R.color.colorPlaceholder));
             basicMessageHolder.attachments.getImageView().setImageBitmap(bmp);
 
             Drawable drawable = new BitmapDrawable(context.getResources(), bmp);
@@ -486,7 +490,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (requestBlinkId == message.getId()) {
-            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorAccent10));
+            basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorAccent10));
             requestBlinkId = -10;
 
             Thread disableBlink = new Thread(new Runnable() {
@@ -499,9 +503,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             public void run() {
                                 try {
                                     if (message.isRead()) {
-                                        basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+                                        basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorTransparent));
                                     } else {
-                                        basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+                                        basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorUnreadBackground));
                                     }
                                     notifyItemChanged(basicMessageHolder.getAdapterPosition());
                                 } catch (Exception ignored) {
@@ -587,11 +591,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         ServiceData serviceData = message.getServiceData();
                         if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
 
-                            messageText = StringsRepository.getOrDefault(R.string.chat_created, inflater.getContext())
+                            messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.chat_created, inflater.getContext())
                                     .replace("%s", serviceData.getChatName());
 
                         } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
-                            messageText = StringsRepository.getOrDefault(R.string.add_member, inflater.getContext())
+                            messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.add_member, inflater.getContext())
                                     .replace("%s", serviceData.getDisplayName());
                         } else {
                             messageText = message.getText();

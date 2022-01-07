@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/messageback"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -41,6 +42,8 @@
                 android:layout_margin="10dp"
                 android:text="1111"
                 android:textColor="#fff"
+                app:themeColorLink="colorChatMessageTextLink"
+                app:themeColor="colorChatMessageText"
                 android:textSize="@dimen/messageText" />
 
             <TextView
@@ -63,7 +66,7 @@
 
 
 
-        <TextView
+        <ru.etysoft.cute.lang.components.LocalizableTextView
             android:id="@+id/timeview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -75,6 +78,7 @@
             android:text="00:00"
             android:fontFamily="@font/montserrat"
             android:textColor="@color/colorSupportText"
+            app:themeColor="colorSupportText"
             android:textSize="12sp" />
 
 

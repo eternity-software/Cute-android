@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 
 public class LightToolbar extends RelativeLayout {
@@ -55,7 +56,7 @@ public class LightToolbar extends RelativeLayout {
         }
 
         try {
-            captionView.setText(StringsRepository.getValue(
+            captionView.setText(CustomLanguage.getStringsRepository().getValue(
                     String.valueOf(locCaptionId)));
         } catch (Exception e)
         {

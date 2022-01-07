@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <ImageView
+    <ru.etysoft.cute.components.ThemeImageView
         android:id="@+id/menuButton2"
         android:layout_width="30dp"
         android:paddingHorizontal="6dp"
@@ -51,12 +51,12 @@
         android:layout_weight="1"
         android:background="?actionBarItemBackground"
         android:onClick="back"
-        android:tint="@color/colorBackButton"
+        app:themeImageColor="colorBackButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_back_arrow" />
 
-    <TextView
+    <ru.etysoft.cute.lang.components.LocalizableTextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -67,13 +67,14 @@
         android:onClick="showEmptyChatPanel"
         android:paddingTop="4dp"
         android:text=".."
-        android:textColor="@color/colorTitle"
+
         android:textSize="18sp"
+        app:themeColor="colorTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <ru.etysoft.cute.lang.components.LocalizableTextView
         android:id="@+id/subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -85,6 +86,7 @@
         android:text=".."
         android:textColor="@color/colorSupportText"
         android:textSize="12sp"
+        app:themeColor="colorSupportText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toBottomOf="@+id/title" />
@@ -202,9 +204,10 @@
             android:maxHeight="150dp"
             android:backgroundTint="@color/colorBackground"
             android:textColorHint="@color/colorSupportText"
+            app:themeColor="colorMessageText"
             android:textSize="16sp" />
 
-        <ImageView
+        <ru.etysoft.cute.components.ThemeImageView
             android:id="@+id/sendButton"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -215,7 +218,9 @@
             android:background="@drawable/circle_button_accent"
             android:onClick="onSendMessageButtonClick"
             android:padding="8dp"
-            app:srcCompat="@drawable/icon_send" />
+            app:srcCompat="@drawable/icon_send"
+
+             />
         </LinearLayout>
     </LinearLayout>
 

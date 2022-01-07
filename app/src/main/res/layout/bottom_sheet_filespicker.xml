@@ -45,7 +45,7 @@
                     android:orientation="horizontal"
                     android:paddingBottom="10dp">
 
-                    <ImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:id="@+id/openCamera"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -53,9 +53,10 @@
                         android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_camera"
-                        app:tint="@color/colorIconTint" />
+                        app:themeImageColor="colorIconTint"
+                       />
 
-                    <ImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:id="@+id/convCreateButton"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -64,7 +65,8 @@
                         android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_image"
-                        app:tint="@color/colorIconTint" />
+                        app:themeImageColor="colorIconTint"
+                        />
                 </LinearLayout>
 
 
