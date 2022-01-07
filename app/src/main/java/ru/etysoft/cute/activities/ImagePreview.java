@@ -10,11 +10,15 @@ import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -29,9 +33,11 @@ import java.util.List;
 import java.util.Objects;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.PreviewImageView;
 import ru.etysoft.cute.images.ImagesWorker;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Numbers;
 
 public class ImagePreview extends AppCompatActivity {
@@ -50,6 +56,12 @@ public class ImagePreview extends AppCompatActivity {
         card = findViewById(R.id.imageContainer);
 
 
+        final ImageView background = findViewById(R.id.backgroundImage);
+
+        if(MainActivity.isDev)
+        {
+            card.setBackgroundColor(Theme.getColor(this, R.color.debug));
+        }
         photoView.setImageContainer(card);
         photoView.setActionsListener(new PreviewImageView.ImageActionsListener() {
 
@@ -65,8 +77,35 @@ public class ImagePreview extends AppCompatActivity {
             }
 
             @Override
+            public void onReturn() {
+                //Log.d("govno1", 1  + " -11 !");
+
+                background.animate().alphaBy(1).setDuration(200).start();
+            }
+
+            @Override
             public void onZoom(float i) {
 
+            }
+
+            @Override
+            public void onSlide(float percent) {
+
+
+                   Log.d("ImagePreview", 1 - percent + " - new background alpha");
+                    background.setAlpha(1 - percent);
+
+            }
+
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
+                if(MainActivity.isDev)
+                {
+                    TextView debugView = findViewById(R.id.debugText);
+                    String debugText = "x: " + card.getX() + " y:" + card.getY();
+                    debugView.setText(debugText);
+                    debugView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -90,7 +129,7 @@ public class ImagePreview extends AppCompatActivity {
             Transition transition =
                     TransitionInflater.from(this)
                             .inflateTransition(R.transition.shared_element_transition);
-            transition.setDuration(400);
+            transition.setDuration(200);
             transition.setInterpolator(new DecelerateInterpolator(2f));
 
             getResources().getString(R.string.transition_image_preview);
@@ -145,7 +184,7 @@ public class ImagePreview extends AppCompatActivity {
 
                                 }
 
-                                animator.setDuration(250);
+                                animator.setDuration(100);
                                 animator.start();
                             }
                         }
@@ -181,7 +220,7 @@ public class ImagePreview extends AppCompatActivity {
     }
 
     public void save(View v) {
-        PhotoView photoView = findViewById(R.id.photoView);
+        PreviewImageView photoView = findViewById(R.id.photoView);
         Bitmap bitmap = ((BitmapDrawable) photoView.getDrawable()).getBitmap();
         ImagesWorker.saveBitmapToGallery(bitmap, this);
         CuteToast.show(getResources().getString(R.string.saved_to_gallery), R.drawable.icon_success, this);

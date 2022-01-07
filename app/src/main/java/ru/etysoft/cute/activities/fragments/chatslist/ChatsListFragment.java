@@ -25,7 +25,9 @@ import ru.etysoft.cute.activities.ChatsSearch;
 import ru.etysoft.cute.activities.CreateChatActivity;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.components.ErrorPanel;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
 
 
@@ -45,6 +47,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.activity_chats, container, false);
         view = root;
+        Theme.applyBackground(view);
         presenter = new ChatsListPresenter(getActivity(), this);
         initViews();
         presenter.updateChatsList(adapter);
@@ -70,10 +73,16 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
         adapter = new ChatsListAdapter(getActivity(), new ArrayList<ChatSnippet>());
         listView.setAdapter(adapter);
         errorContainer = view.findViewById(R.id.error);
+
         progressBar = view.findViewById(R.id.loading);
         errorPanel = view.findViewById(R.id.error_panel);
         errorPanel.getRootView().setVisibility(View.INVISIBLE);
         noChats = view.findViewById(R.id.empty);
+
+        Theme.applyBackground(toolbar);
+        Theme.applyBackground(noChats);
+        Theme.applyBackground(listView);
+
         final LinearLayout error = view.findViewById(R.id.error);
         error.setVisibility(View.INVISIBLE);
         errorPanel.setReloadAction(new Runnable() {
@@ -123,7 +132,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     @Override
     public void showUpdateViews() {
         progressBar.setVisibility(View.VISIBLE);
-        setStatusMessage(StringsRepository.getOrDefault(R.string.updating, getActivity()));
+        setStatusMessage(CustomLanguage.getStringsRepository().getOrDefault(R.string.updating, getActivity()));
         progressBar.setVisibility(View.VISIBLE);
         noChats.setVisibility(View.INVISIBLE);
     }
@@ -162,7 +171,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
     public void hideUpdateViews() {
         if(getActivity() != null)
         {
-            setStatusMessage(StringsRepository.getOrDefault(R.string.chats, getActivity()));
+            setStatusMessage(CustomLanguage.getStringsRepository().getOrDefault(R.string.chats, getActivity()));
         }
 
         progressBar.setVisibility(View.INVISIBLE);

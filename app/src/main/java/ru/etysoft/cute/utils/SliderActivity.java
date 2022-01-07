@@ -15,6 +15,7 @@ import com.r0adkll.slidr.util.ViewDragHelper;
 import java.util.Locale;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.themes.Theme;
 
 public class SliderActivity {
 
@@ -35,7 +36,7 @@ public class SliderActivity {
         final @ColorRes int color = getWindowColor(state);
         ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(activity, color));
       //  activity.getWindow().setBackgroundDrawable(colorDrawable);
-        activity.getWindow().getDecorView().setBackgroundColor(activity.getResources().getColor(color));
+        activity.getWindow().getDecorView().setBackgroundColor(Theme.getColor(activity, color));
 
     }
 

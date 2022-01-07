@@ -28,12 +28,12 @@ public class ImageRotationFix {
      */
     public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
             throws IOException {
-        return handleSamplingAndRotationBitmap(context, selectedImage, 512, 512);
+        return handleSamplingAndRotationBitmap(context, selectedImage, 500, 500);
     }
 
     public static Bitmap handleSamplingAndRotationBitmapNoCropping(Context context, Uri selectedImage)
             throws IOException {
-        return handleSamplingAndRotationBitmap(context, selectedImage, 5012, 5012);
+        return handleSamplingAndRotationBitmap(context, selectedImage, 2500, 2500);
     }
 
 
@@ -117,7 +117,7 @@ public class ImageRotationFix {
      * @param selectedImage Image URI
      * @return The resulted Bitmap after manipulation
      */
-    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+    public static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
 
         InputStream input = context.getContentResolver().openInputStream(selectedImage);
         ExifInterface ei;

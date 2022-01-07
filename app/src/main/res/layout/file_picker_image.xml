@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ru.etysoft.cute.components.SmartImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
+
+<ru.etysoft.cute.components.FilePreview xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:scaleType="centerCrop"
-    android:id="@+id/smartImageView"
-    android:transitionName="@string/transition_image_send" />
+    android:layout_gravity="center"
+    android:id="@+id/filePreview"
+    android:background="@color/colorBackground"
+    android:layout_weight="1"
+    android:layout_margin="2dp"
+    android:transitionName="@string/transition_image_send"
+
+
+    app:shapeAppearanceOverlay="@style/roundedCorners" />
 

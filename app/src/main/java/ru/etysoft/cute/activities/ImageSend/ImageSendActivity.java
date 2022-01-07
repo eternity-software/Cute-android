@@ -2,16 +2,20 @@ package ru.etysoft.cute.activities.ImageSend;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.SharedElementCallback;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.transition.Transition;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -22,32 +26,72 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.exoplayer2.MediaItem;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
+import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.components.PreviewImageView;
-import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.components.VideoPlayer;
+import ru.etysoft.cute.images.ImageRotationFix;
 import ru.etysoft.cute.transition.Transitions;
-import ru.etysoft.cute.utils.SliderActivity;
 
 public class ImageSendActivity extends AppCompatActivity {
 
     private String imageUri;
 
     private String finalImageUri;
+    private static Bitmap imageBuffer;
+    private Bitmap imageToSend;
     private PreviewImageView imageView;
+    private boolean isShown = false;
+    private VideoPlayer videoPlayer;
+    private boolean isVideo;
     public static final int CODE = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageUri = getIntent().getExtras().getString("uri");
         setContentView(R.layout.activity_image_send);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        imageUri = getIntent().getExtras().getString("uri");
+        final String type = getIntent().getExtras().getString("type");
         EditText editText = findViewById(R.id.message_box);
+        ImageView editButton = findViewById(R.id.editButton);
+
+        videoPlayer = findViewById(R.id.videoView);
         editText.setText(getIntent().getExtras().getString("text"));
         finalImageUri = imageUri;
-        imageView = findViewById(R.id.photoView);
+        Bitmap bitmap = (Bitmap) getIntent().getParcelableExtra("bitmap");
+
+
+        if(!type.startsWith("image"))
+        {
+            editButton.setEnabled(false);
+            isVideo = true;
+            editButton.setVisibility(View.GONE);
+            videoPlayer.setLoadingLayerEnabled(false);
+        }
+        else
+        {
+
+            videoPlayer.setVisibility(View.INVISIBLE);
+        }
+
+        imageView = findViewById(R.id.fileImageView);
         imageView.setImageContainer(findViewById(R.id.imageContainer));
+
+
+        if(imageBuffer != null)
+        {
+                imageView.setImageBitmap(imageBuffer);
+        }
+
         imageView.setActionsListener(new PreviewImageView.ImageActionsListener() {
 
 
@@ -62,7 +106,22 @@ public class ImageSendActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onReturn() {
+
+            }
+
+            @Override
             public void onZoom(float increase) {
+
+            }
+
+            @Override
+            public void onSlide(float percent) {
+
+            }
+
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
 
             }
 
@@ -71,14 +130,18 @@ public class ImageSendActivity extends AppCompatActivity {
 
             }
         });
-        imageView.setImageURI(Uri.parse(imageUri));
+
+
 
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getSharedElementEnterTransition().setDuration(300);
+
             LinearLayout layout = findViewById(R.id.linearLayout3);
             layout.setVisibility(View.INVISIBLE);
+
+
             getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
             getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
                 @Override
@@ -88,7 +151,42 @@ public class ImageSendActivity extends AppCompatActivity {
 
                 @Override
                 public void onTransitionEnd(Transition transition) {
+
+                    if(isShown) return;
+                    isShown = true;
                     showBottomBar();
+                    try {
+
+                        if(type.startsWith("image"))
+                        {
+                            final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(ImageSendActivity.this, Uri.fromFile(new File(imageUri)));
+                            imageView.setImageBitmap(fixedBitmap);
+                        }
+                        else
+                        {
+                            videoPlayer.play(imageUri);
+                            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
+                                @Override
+                                public void onStarted() {
+                                 //   imageView.setVisibility(View.INVISIBLE);
+                                }
+
+                                @Override
+                                public void onPaused() {
+
+                                }
+
+                                @Override
+                                public void onReleased() {
+                                    imageView.setVisibility(View.VISIBLE);
+                                }
+                            });
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -113,10 +211,56 @@ public class ImageSendActivity extends AppCompatActivity {
         }
 
 
+        setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                for (int i = 0; i < sharedElementNames.size(); i++) {
+                    if (Objects.equals(getResources().getString(R.string.transition_image_send), sharedElementNames.get(i))) {
+                        View view = sharedElements.get(i);
+
+                        if(view instanceof FilePreview)
+                        {
+                            FilePreview filePreview = (FilePreview) view;
+                            filePreview.appearContorllers();
+                        }
+                    }
+                }
+                super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
+            }
+
+            @Override
+            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                for (int i = 0; i < sharedElementNames.size(); i++) {
+
+                        View view = sharedElements.get(i);
+
+                        if(view instanceof FilePreview)
+                        {
+                            FilePreview filePreview = (FilePreview) view;
+                            filePreview.appearContorllers();
+                        }
+
+
+                }
+                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+            }
+        });
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+        // Checks whether a hardware keyboard is available
+        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+         //   adjustAspectRatio();
+        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+           // adjustAspectRatio();
+        }
+    }
 
     private void showBottomBar() {
         LinearLayout layout = findViewById(R.id.linearLayout3);
@@ -132,14 +276,28 @@ public class ImageSendActivity extends AppCompatActivity {
         ImageEdit.openForResult(Uri.parse(finalImageUri), this);
     }
 
-    public static void open(Activity from, String imageUri, String text, SmartImageView smartImageView)
+    public static void setImageBuffer(Bitmap imageBuffer) {
+        ImageSendActivity.imageBuffer = imageBuffer;
+    }
+
+    public static void open(final Activity from, String imageUri, String text, final FilePreview fileParingImageView)
     {
         Intent intent = new Intent(from, ImageSendActivity.class);
         intent.putExtra("uri", imageUri);
         intent.putExtra("text", text);
+        intent.putExtra("type", fileParingImageView.getFileInfo().getMimeType());
+
+        if(fileParingImageView.getFileInfo().isImage()) {
+            setImageBuffer(fileParingImageView.getFileParingImageView().getBitmap());
+        }
+        else
+        {
+            setImageBuffer(fileParingImageView.getFileInfo().getVideoThumbnail());
+        }
+
 
         from.startActivityForResult(intent, CODE,
-                Transitions.makeOneViewTransition(smartImageView, from, intent, from.getResources().getString(R.string.transition_image_send)));
+                Transitions.makeOneViewTransition(fileParingImageView.getFileParingImageView(), from, intent, from.getResources().getString(R.string.transition_image_send)));
 
     }
 
@@ -148,10 +306,16 @@ public class ImageSendActivity extends AppCompatActivity {
         if(!imageView.isZoomed())
         {
             super.onBackPressed();
+
+
+            if(isVideo)
+            {
+                videoPlayer.release();
+            }
             LinearLayout layout = findViewById(R.id.linearLayout3);
-            Animation appearAnimation = AnimationUtils.loadAnimation(this,
+            Animation disappearAnimation = AnimationUtils.loadAnimation(this,
                     R.anim.hide_to_bottom);
-            layout.startAnimation(appearAnimation );
+            layout.startAnimation(disappearAnimation );
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
         else
@@ -182,7 +346,7 @@ public class ImageSendActivity extends AppCompatActivity {
         if(resultCode == ImageEdit.RESULT_CODE)
         {
             finalImageUri = getRealPathFromURI(this, Uri.parse(data.getStringExtra("uri")));
-            ImageView imageView = findViewById(R.id.photoView);
+            ImageView imageView = findViewById(R.id.fileImageView);
             imageView.setImageURI(Uri.parse(finalImageUri));
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -200,4 +364,10 @@ public class ImageSendActivity extends AppCompatActivity {
         setResult(CODE, intent);
         finish();
     }
+
+
+
+
+
+
 }

@@ -1,5 +1,7 @@
 package ru.etysoft.cute.activities.messaging.messages;
 
+import static java.security.AccessController.getContext;
+
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,9 +38,13 @@ import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.MessageNotFoundException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SocketHolder;
@@ -51,7 +57,7 @@ import ru.etysoft.cuteframework.methods.messages.Message;
 
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final MessagingActivity context;
-    public final List<Message> list;
+    public final List<RecyclerObject> list;
     private Map<Long, Integer> positionList = new HashMap<>();
     private int posDiff;
     private final LayoutInflater inflater;
@@ -63,9 +69,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private LinearLayout scrollToBottomButton;
     private TextView dateView;
     private String lastTimeStamp;
-    private long firstMessageId = 0;
+    private long firstMessageId;
+    private boolean hasBeginningClouds;
 
-    public MessagesAdapter(MessagingActivity context, List<Message> values, boolean isDialog, final RecyclerView recyclerView, final LinearLayout scrollToBottom,
+    public MessagesAdapter(MessagingActivity context, List<RecyclerObject> values, boolean isDialog, final RecyclerView recyclerView, final LinearLayout scrollToBottom,
                            final TextView dateView) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setReverseLayout(true);
@@ -74,11 +81,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.context = context;
         this.list = values;
         this.isDialog = isDialog;
+        hasBeginningClouds = false;
+        hasBeginningClouds = false;
         this.inflater = LayoutInflater.from(context);
         isCurrentlyLoadingMessages = false;
         posDiff = 0;
         this.recyclerView = recyclerView;
         firstLoadedMessage = -1;
+
         positionList = new HashMap<>();
         scrollToBottomButton = scrollToBottom;
         this.dateView = dateView;
@@ -87,7 +97,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    scrollCheck();
+                    handleScroll();
                 }
             });
         } else {
@@ -95,20 +105,23 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-                    scrollCheck();
+                    handleScroll();
                 }
             });
         }
     }
 
-    public int getPositionById(long id)
-    {
+    public List<RecyclerObject> getMessagesList() {
+        return list;
+    }
+
+    public int getPositionById(long id) {
         return positionList.get(id) + posDiff - 1;
     }
 
     private long lastTimeDateShown;
 
-    public void scrollCheck() {
+    public void handleScroll() {
         final int offset = recyclerView.computeVerticalScrollOffset();
 
         if (offset < recyclerView.getHeight()) {
@@ -120,8 +133,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
 
-
-        if (range - offset < 30) {
+        if (range - offset < 30 | range == 0) {
             scrollToBottomButton.setVisibility(View.GONE);
         } else {
             scrollToBottomButton.setVisibility(View.VISIBLE);
@@ -157,13 +169,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 dateHide.start();
             }
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
 
     }
-
 
 
     public void setFirstMessageId(long firstMessageId) {
@@ -232,30 +242,25 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    private void loadUpperMessages()
-    {
+    private void loadUpperMessages() {
         loadUpperMessages(null);
     }
 
     public void loadUpperMessages(final Runnable onSuccess) {
         if (!isCurrentlyLoadingMessages) {
             isCurrentlyLoadingMessages = true;
-            long firstId = 0;
-            if (list.get(list.size() - 1) != null) {
-                firstId = list.get(list.size() - 1).getId();
-            }
-            final long finalFirstId = firstId;
+
+
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
 
                         final GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(context), String.valueOf(context.chatId),
-                                String.valueOf(finalFirstId))).execute();
+                                String.valueOf(firstLoadedMessage))).execute();
                         if (getMessageListResponse.isSuccess()) {
                             List<Message> messages = getMessageListResponse.getMessages();
                             Collections.reverse(messages);
-                            firstMessageId = getMessageListResponse.getFirstMessageId();
                             final int[] countAdded = {0};
                             final boolean[] hasClouds = {false};
                             for (final Message message : messages) {
@@ -268,9 +273,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         if (!context.loadedMessagesIds.containsKey(String.valueOf(message.getId()))) {
 
                                             context.loadedMessagesIds.put(String.valueOf(message.getId()), message);
-
-                                            list.add( message);
-                                            positionList.put((long) message.getId(), list.indexOf(message) - posDiff + 1);
+                                            MessageObject messageObject = new MessageObject(getRecyclerView(), message);
+                                            list.add(messageObject);
+                                            handleAddedMessage(message);
+                                            positionList.put((long) message.getId(), list.indexOf(messageObject) - posDiff + 1);
                                             countAdded[0]++;
                                             if (message.getId() == firstMessageId) {
                                                 hasClouds[0] = true;
@@ -288,8 +294,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (hasClouds[0] && list.get(list.size() - 1) != null) {
-                                        list.add(null);
+                                    if (hasClouds[0] && !((list.get(list.size() - 1) instanceof BeginningView))) {
+                                        list.add(new BeginningView(recyclerView));
                                         countAdded[0]++;
                                     }
                                     notifyItemRangeInserted(list.size() - 1, countAdded[0]);
@@ -297,8 +303,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                 }
                             });
-                            if(onSuccess != null && messages.size() > 0)
-                            {
+                            if (onSuccess != null && messages.size() > 0) {
                                 isCurrentlyLoadingMessages = false;
                                 context.runOnUiThread(onSuccess);
 
@@ -329,14 +334,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 "[\u231A\u231B\u2328\u23CF\u23E9-\u23F3\u23F8-\u23FA]\uFE0F?)+");
     }
 
-    public void sendRead(int messageId)
-    {
-        try
-        {
+    public void sendRead(int messageId) {
+        try {
             SocketHolder.getChatSocket().readMessage(context.chatId, messageId);
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
             /*
             Socket not initialized
              */
@@ -347,7 +348,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         basicMessageHolder.text.setVisibility(View.GONE);
         basicMessageHolder.emoji.setVisibility(View.GONE);
         ForwardedMessage forwardedMessageView = basicMessageHolder.messageContainer.findViewById(R.id.forwardedMessage);
-
 
 
         final AttachmentData attachmentData = message.getAttachmentData();
@@ -380,11 +380,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 forwardedMessageView.initComponent(false);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.mymessage));
             } else {
-                if(!message.isRead())
-                {
+                if (!message.isRead()) {
                     sendRead(message.getId());
                 }
-                forwardedMessageView.initComponent( true);
+                forwardedMessageView.initComponent(true);
                 basicMessageHolder.messageContainer.setBackground(context.getResources().getDrawable(R.drawable.dialog_message));
             }
 
@@ -392,14 +391,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (Types.MINE == type) {
             if (message.isRead()) {
-                basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+                basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorTransparent));
             } else {
-                basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+                basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorUnreadBackground));
             }
-        }
-        else
-        {
-            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+        } else {
+            basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorTransparent));
         }
 
         forwardedMessageView.setOnClickListener(new View.OnClickListener() {
@@ -419,7 +416,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
             Bitmap bmp = Bitmap.createBitmap(attachmentData.getWidth(), attachmentData.getHeight(), conf); // this creates a MUTABLE bitmap
 
-            bmp.eraseColor(context.getResources().getColor(R.color.colorPlaceholder));
+            bmp.eraseColor(Theme.getColor(context, R.color.colorPlaceholder));
             basicMessageHolder.attachments.getImageView().setImageBitmap(bmp);
 
             Drawable drawable = new BitmapDrawable(context.getResources(), bmp);
@@ -493,7 +490,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (requestBlinkId == message.getId()) {
-            basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorAccent10));
+            basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorAccent10));
             requestBlinkId = -10;
 
             Thread disableBlink = new Thread(new Runnable() {
@@ -506,9 +503,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             public void run() {
                                 try {
                                     if (message.isRead()) {
-                                        basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+                                        basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorTransparent));
                                     } else {
-                                        basicMessageHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.colorUnreadBackground));
+                                        basicMessageHolder.rootView.setBackgroundColor(Theme.getColor(context, R.color.colorUnreadBackground));
                                     }
                                     notifyItemChanged(basicMessageHolder.getAdapterPosition());
                                 } catch (Exception ignored) {
@@ -531,20 +528,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return recyclerView;
     }
 
-    public void scrollToMessage(final long from)
-    {
-            if (list.get(list.size() - 1) == null || from >= list.get(list.size() - 1).getId()) {
+    public void scrollToMessage(final long from) {
+        try {
+            if (list.get(list.size() - 1) == null || from >= firstMessageId) {
                 requestBlinkId = from;
                 int fwdPos = getPositionById(from);
+                System.out.println("Scroll to " + fwdPos);
                 notifyItemChanged(fwdPos);
 
                 dateView.setVisibility(View.INVISIBLE);
                 recyclerView.smoothScrollToPosition(fwdPos);
-                System.out.println("Scroll to " + fwdPos);
 
-            }
-            else
-            {
+
+            } else {
                 dateView.setVisibility(View.VISIBLE);
                 dateView.setText(context.getResources().getString(R.string.loading_history));
                 loadUpperMessages(new Runnable() {
@@ -554,6 +550,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 });
             }
+        } catch (Exception e) {
+            dateView.setVisibility(View.VISIBLE);
+            dateView.setText(context.getResources().getString(R.string.loading_history));
+            loadUpperMessages(new Runnable() {
+                @Override
+                public void run() {
+                    scrollToMessage(from);
+                }
+            });
+        }
 
     }
 
@@ -573,10 +579,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        final Message message = list.get(position);
+        final RecyclerObject recyclerObject = list.get(position);
 
-        if (message != null) {
-
+        if (recyclerObject instanceof MessageObject) {
+            final Message message = ((MessageObject) recyclerObject).getMessage();
             switch (getItemViewType(position)) {
                 case Types.SERVICE:
                     ViewHolder.Service serviceMessage = (ViewHolder.Service) holder;
@@ -585,11 +591,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         ServiceData serviceData = message.getServiceData();
                         if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
 
-                            messageText = StringsRepository.getOrDefault(R.string.chat_created, inflater.getContext())
+                            messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.chat_created, inflater.getContext())
                                     .replace("%s", serviceData.getChatName());
 
                         } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
-                            messageText = StringsRepository.getOrDefault(R.string.add_member, inflater.getContext())
+                            messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.add_member, inflater.getContext())
                                     .replace("%s", serviceData.getDisplayName());
                         } else {
                             messageText = message.getText();
@@ -652,31 +658,32 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        Message message = list.get(position);
+        RecyclerObject recyclerObject = list.get(position);
+
         try {
-            if (message == null) {
-                return Types.CLOUD;
-            }
-            if (message.getId() < 0) {
-                return Types.MINE;
-            } else if (message.getType().equals(Message.Type.SERVICE)) {
-                return Types.SERVICE;
-            } else if (message.getSender().getId() == Integer.parseInt(CachedValues.getId(context))) {
-                return Types.MINE;
-            } else if (!isDialog) {
-                try {
-                    if (list.size() - 1 > position && list.get(position) == list.get(list.size() - 1) | list.get(position + 1).getSender().getId() != message.getSender().getId() | list.get(position + 1).getType().equals(Message.Type.SERVICE)) {
+            if (recyclerObject instanceof MessageObject) {
+                Message message = ((MessageObject) recyclerObject).getMessage();
+                if (message.getId() < 0) {
+                    return Types.MINE;
+                } else if (message.getType().equals(Message.Type.SERVICE)) {
+                    return Types.SERVICE;
+                } else if (message.getSender().getId() == Integer.parseInt(CachedValues.getId(context))) {
+                    return Types.MINE;
+                } else if (!isDialog) {
+                    try {
+                        if (list.size() - 1 > position && list.get(position) == list.get(list.size() - 1) | getMessage(position + 1).getSender().getId() != message.getSender().getId() | getMessage(position + 1).getType().equals(Message.Type.SERVICE)) {
+                            return Types.CONV_PREVIEW;
+                        } else {
+                            return Types.CONV;
+                        }
+                    } catch (Exception e) {
                         return Types.CONV_PREVIEW;
-                    } else {
-                        return Types.CONV;
                     }
-                }
-                catch (Exception e)
-                {
-                    return Types.CONV_PREVIEW;
+                } else {
+                    return Types.DIALOG;
                 }
             } else {
-                return Types.DIALOG;
+                return Types.CLOUD;
             }
         } catch (Exception e) {
             System.out.println("Error processing " + position);
@@ -686,46 +693,55 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
+    public Message getMessage(int id) throws MessageNotFoundException {
+        if (list.get(id) instanceof MessageObject) {
+            return ((MessageObject) list.get(id)).getMessage();
+        }
+        throw new MessageNotFoundException();
+    }
+
 
     @Override
     public int getItemCount() {
         return list.size();
     }
 
+    private void handleAddedMessage(Message message) {
+        if (firstLoadedMessage == -1 | firstLoadedMessage > message.getId()) {
 
-    public void addItem(Message message, boolean fromBottom) {
+            firstLoadedMessage = message.getId();
+            System.out.println("Set firstLoadedMessage to " + message.getId());
 
-        if (list.size() == 0 && message.getId() == firstMessageId) {
-            //list.add(0, null);
-          //  posDiff++;
+        } else {
+            System.out.println("firstLoadedMessage is " + firstLoadedMessage);
         }
+    }
+
+    public void addItem(RecyclerObject recyclerObject, boolean fromBottom) {
 
 
-        if (message == null) {
+        if (!(recyclerObject instanceof MessageObject)) {
+            if (recyclerObject instanceof BeginningView) {
+                if (hasBeginningClouds) return;
+                hasBeginningClouds = true;
+
+                if (fromBottom) {
+                    notifyItemInserted(0);
+                } else {
+                    notifyItemInserted(getItemCount() - 1);
+                }
+            }
 
             if (fromBottom) {
-                list.add(0, null);
-
+                list.add(0, recyclerObject);
                 posDiff++;
             } else {
-                list.add(null);
-            }
-            list.add(null);
-            if(fromBottom)
-            {
-                notifyItemInserted(0);
-            }
-            else
-            {
-                notifyItemInserted(getItemCount() - 1);
+                list.add(recyclerObject);
             }
 
         } else {
-            if (firstLoadedMessage == -1 | firstLoadedMessage > message.getId()) {
-
-                firstLoadedMessage = message.getId();
-
-            }
+            Message message = ((MessageObject) recyclerObject).getMessage();
+            handleAddedMessage(message);
             boolean scrollToBottom = false;
             final int offset = recyclerView.computeVerticalScrollOffset();
             final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
@@ -734,37 +750,33 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 scrollToBottom = true;
             }
             if (fromBottom) {
-                list.add(0, message);
-                positionList.put((long) message.getId(), list.indexOf(message) - posDiff);
+                list.add(0, recyclerObject);
+                positionList.put((long) message.getId(), list.indexOf(recyclerObject) - posDiff);
                 posDiff++;
             } else {
-                list.add(message);
-                positionList.put((long) message.getId(), list.indexOf(message));
+                list.add(recyclerObject);
+                positionList.put((long) message.getId(), list.indexOf(recyclerObject));
             }
 
 
             if (scrollToBottom) {
-                if(fromBottom)
-                {
+                if (fromBottom) {
                     recyclerView.smoothScrollToPosition(0);
-                }
-                else
-                {
+                } else {
                     recyclerView.smoothScrollToPosition(getItemCount() - 1);
 
                 }
             }
 
-            if(fromBottom)
-            {
+            if (fromBottom) {
                 notifyItemInserted(0);
             }
 
         }
     }
 
-    public void addItem(Message message) {
-        addItem(message, false);
+    public void addItem(RecyclerObject recyclerObject) {
+        addItem(recyclerObject, false);
     }
 
     static class ViewHolder {

@@ -1,6 +1,8 @@
 <resources>
     <declare-styleable name="LocalizableTextView">
         <attr name="localizableKey" format="string" />
+        <attr name="themeColor" format="string" />
+        <attr name="themeColorLink" format="string" />
     </declare-styleable>
     <declare-styleable name="LocalizableButton">
         <attr name="localizableButtonKey" format="string" />
@@ -21,5 +23,11 @@
     <declare-styleable name="ChangeOutlineRadius">
         <attr name="startRadius" format="dimension" />
         <attr name="endRadius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="ThemeImageView">
+        <attr name="themeImageColor" format="string" />
+    </declare-styleable>
+    <declare-styleable name="ThemeLinearLayout">
+        <attr name="themeBackgroundColor" format="string" />
     </declare-styleable>
 </resources>

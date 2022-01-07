@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 
 public class LocalizableEditText extends AppCompatEditText {
@@ -37,7 +38,7 @@ public class LocalizableEditText extends AppCompatEditText {
         CharSequence locId = typedArray.getText(localizableKey);
         localId = locId;
         try {
-            setHint(StringsRepository.getValue(String.valueOf(locId)));
+            setHint(CustomLanguage.getStringsRepository().getValue(String.valueOf(locId)));
         } catch (NoSuchValueException ignored) {
         }
         typedArray.recycle();

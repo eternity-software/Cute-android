@@ -17,6 +17,17 @@ public class CachedValues {
         cacheUtils.setString(CacheKeys.SESSION_KEY, sessionKey, context);
     }
 
+    public static void saveTheme(Context context, String themeString) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.setString(CacheKeys.THEME, themeString, context);
+    }
+
+    public static String getTheme(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.THEME, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.THEME, context);
+    }
+
     public static String getEmail(Context context) throws NotCachedException {
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (!cacheUtils.hasKey(CacheKeys.EMAIL, context)) throw new NotCachedException();
@@ -118,6 +129,7 @@ public class CachedValues {
     }
 
     public class CacheKeys {
+        public final static String THEME = "theme";
         public final static String SESSION_KEY = "session";
         public final static String EMAIL = "email";
         public final static String ID = "id";

@@ -9,12 +9,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <ru.etysoft.cute.components.ThemeLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:background="@drawable/text_panel"
             android:gravity="center"
+            app:themeBackgroundColor="colorTextPanel"
+
             android:orientation="horizontal">
 
             <ImageView
@@ -30,7 +32,7 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/error_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -39,9 +41,10 @@
                     android:fontFamily="@font/montserratmedium"
                     android:text="Test title"
                     android:textColor="@color/colorTextDark"
+                    app:themeColor="colorTextDark"
                     android:textSize="16sp" />
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/error_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -49,14 +52,15 @@
                     android:fontFamily="@font/montserrat"
                     android:text="test error"
                     android:textColor="@color/colorTextDark"
+                    app:themeColor="colorTextDark"
                     android:textSize="12sp" />
 
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ru.etysoft.cute.components.ThemeLinearLayout>
 
-        <ImageView
+        <ru.etysoft.cute.components.ThemeImageView
             android:id="@+id/reload"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -65,6 +69,7 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/button_circle_gray"
             android:paddingHorizontal="8dp"
+            app:themeImageColor="colorIconTint"
             app:srcCompat="@drawable/icon_reload" />
 
     </LinearLayout>

@@ -87,6 +87,7 @@
                         android:gravity="center"
                         android:onClick="updateCover"
                         android:text="@string/change_cover"
+                        app:themeColor="colorTextAccent"
                         android:textSize="18sp" />
                 </androidx.cardview.widget.CardView>
 
@@ -111,12 +112,13 @@
                     android:layout_marginBottom="@dimen/indent_8"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:id="@+id/imageView12"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/indent_4"
                         android:tint="@color/colorIconTint"
+                        app:themeImageColor="colorIconTint"
                         app:srcCompat="@drawable/icon_person_blue" />
 
                     <ru.etysoft.cute.lang.components.LocalizableTextView
@@ -128,6 +130,7 @@
                         android:text="@string/sign_up_display_name_hint"
                         android:textColor="@color/colorTextAccent"
                         android:textSize="18dp"
+                        app:themeColor="colorTextAccent"
                         app:localizableKey="sign_up_display_name_hint" />
                 </LinearLayout>
 
@@ -171,11 +174,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <androidx.appcompat.widget.AppCompatImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/indent_4"
-                        android:tint="@color/colorIconTint"
+                        app:themeImageColor="colorIconTint"
                         app:srcCompat="@drawable/icon_microscope" />
 
                     <ru.etysoft.cute.lang.components.LocalizableTextView
@@ -185,6 +188,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/bio"
                         android:textColor="@color/colorTextAccent"
+                        app:themeColor="colorTextAccent"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -219,7 +223,7 @@
     </ScrollView>
 
 
-    <Button
+    <ru.etysoft.cute.lang.components.LocalizableButton
         android:id="@+id/button2"
         android:layout_width="0dp"
         android:layout_height="60dp"

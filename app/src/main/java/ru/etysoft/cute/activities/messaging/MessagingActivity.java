@@ -3,16 +3,21 @@ package ru.etysoft.cute.activities.messaging;
 import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Transition;
+import android.transition.TransitionListenerAdapter;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +27,6 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,21 +48,29 @@ import java.util.List;
 import java.util.Map;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.activities.ImageSend.ImageSendActivity;
+import ru.etysoft.cute.activities.messaging.messages.BeginningView;
+import ru.etysoft.cute.activities.messaging.messages.MessageObject;
+import ru.etysoft.cute.activities.messaging.messages.RecyclerObject;
 import ru.etysoft.cute.activities.messaging.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ErrorPanel;
+import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.components.InfoPanel;
-import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.components.FileParingImageView;
 import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.exceptions.MessageNotFoundException;
 import ru.etysoft.cute.exceptions.NotCachedException;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
@@ -80,7 +92,6 @@ import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener, MessagingContract.View {
 
-    private final List<Message> messageList = new ArrayList<>();
     public final Map<String, Message> loadedMessagesIds = new HashMap<String, Message>();
     private MessagesAdapter adapter;
 
@@ -140,7 +151,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             }
         }, new Runnable() {
             @Override
-            public void run() { }});
+            public void run() {
+            }
+        });
 
         networkStateReceiver.register(this);
 
@@ -202,6 +215,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         errorContainer.setVisibility(View.INVISIBLE);
         titleView = findViewById(R.id.title);
         statusView = findViewById(R.id.subtitle);
+        Theme.applyBackground(rootView);
         setupRecyclerView();
     }
 
@@ -227,13 +241,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     @Override
     public String getStringsRepositoryResult(int resId) {
-        return StringsRepository.getOrDefault(R.string.offline, MessagingActivity.this);
+        return CustomLanguage.getStringsRepository().getOrDefault(R.string.offline, MessagingActivity.this);
     }
 
     @Override
     public void setupRecyclerView() {
         messageRecyclerView = findViewById(R.id.messages);
-        adapter = new MessagesAdapter(this, messageList, presenter.isDialog(), messageRecyclerView,
+        adapter = new MessagesAdapter(this, new ArrayList<RecyclerObject>(), presenter.isDialog(), messageRecyclerView,
                 (LinearLayout) MessagingActivity.this.findViewById(R.id.bottom_scroll_button),
                 (TextView) MessagingActivity.this.findViewById(R.id.timeView));
         messageRecyclerView.setAdapter(adapter);
@@ -262,8 +276,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                Message message = messageList.get(viewHolder.getAdapterPosition());
-                if (message != null) {
+                RecyclerObject recyclerObject = adapter.getMessagesList().get(viewHolder.getAdapterPosition());
+                if (recyclerObject instanceof MessageObject) {
+                    Message message = ((MessageObject) recyclerObject).getMessage();
                     if (message.getType() != null && message.getType().equals(Message.Type.USER) && dX > -(recyclerView.getWidth() / 4)) {
                         super.onChildDraw(c, recyclerView, viewHolder, dX / 2, dY, actionState, isCurrentlyActive);
                     }
@@ -273,13 +288,17 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-                Message message = messageList.get(viewHolder.getAdapterPosition());
-                if (message != null && message.getType().equals(Message.Type.USER)) {
-                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                    forwardedMessageId = String.valueOf(message.getId());
-                    forwardedMessageContainer.setVisibility(View.VISIBLE);
-                    forwardedMessagePreview.setContent(message, MessagingActivity.this);
-                    SendorsControl.vibrate(MessagingActivity.this, 50);
+                RecyclerObject recyclerObject = adapter.getMessagesList().get(viewHolder.getAdapterPosition());
+                if (recyclerObject instanceof MessageObject) {
+                    Message message = ((MessageObject) recyclerObject).getMessage();
+                    if (message.getType().equals(Message.Type.USER)) {
+                        adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                        forwardedMessageId = String.valueOf(message.getId());
+                        forwardedMessageContainer.setVisibility(View.VISIBLE);
+                        forwardedMessagePreview.setContent(message, MessagingActivity.this);
+                        SendorsControl.vibrate(MessagingActivity.this, 50);
+                    }
+
                 }
             }
         };
@@ -376,7 +395,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     @Override
     public void addMessage(Message message) {
-        adapter.addItem(message, true);
+        adapter.addItem(new MessageObject(messageRecyclerView, message), true);
     }
 
     @Override
@@ -432,11 +451,12 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
-        filePickerBottomSheet.setRunnable(new AdapterView.OnItemClickListener() {
+        filePickerBottomSheet.setRunnable(new FilePickerBottomSheet.ItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getImages().get(position), messageView.getText().toString(),
-                        (SmartImageView) view);
+            public void onItemClick(int pos, final View view) {
+                ImageSendActivity.open(MessagingActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), messageView.getText().toString(),
+                        (FilePreview) view);
+
 
             }
         });
@@ -531,6 +551,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                 adapter.setFirstMessageId(getMessageListResponse.getFirstMessageId());
                             }
                         });
+                        boolean addClouds = false;
                         for (final Message message : messages) {
 
 
@@ -541,17 +562,33 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
                                         loadedMessagesIds.put(String.valueOf(message.getId()), message);
 
-                                        adapter.addItem(message, true);
+                                        adapter.addItem(new MessageObject(messageRecyclerView, message), true);
 
                                     } else {
                                         // Если сообщение уже есть проверяем не изменился ли статус прочитанности
                                     }
-                                    LinearLayout loadingLayot = findViewById(R.id.loadingLayout);
-                                    loadingLayot.setVisibility(View.INVISIBLE);
+                                    LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+                                    loadingLayout.setVisibility(View.INVISIBLE);
                                 }
                             });
                             // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
+                            if(message.getId() == getMessageListResponse.getFirstMessageId())
+                            {
+                                addClouds = true;
+                            }
+                        }
 
+                        if(addClouds)
+                        {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                        adapter.addItem(new BeginningView(messageRecyclerView));
+
+
+                                }
+                            });
                         }
                     } else {
                         runOnUiThread(new Runnable() {
@@ -616,9 +653,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 final int duration = 150;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (recordWaiter != null) {
-                            recordWaiter.interrupt();
-                        }
+
                         recordWaiter = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -669,6 +704,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                 final LinearLayout recordPanel = findViewById(R.id.recordPanel);
                                 recordPanel.setVisibility(View.VISIBLE);
                                 final Animation fadeIn = new AlphaAnimation(0, 1);
+                                fadeIn.setFillAfter(true);
 
                                 fadeIn.setAnimationListener(new Animation.AnimationListener() {
                                     @Override
@@ -717,6 +753,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
                                                         }
                                                     });
+                                                    fadeOut.setFillAfter(true);
 
                                                     if (recordPanel.getAnimation() != null) {
                                                         if (recordPanel.getAnimation().hasEnded()) {
@@ -763,8 +800,15 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter.list.get(adapter.getPositionById(messageId)).setRead(true);
-                adapter.notifyItemChanged(adapter.getPositionById(messageId));
+
+                try {
+                    adapter.getMessage(adapter.getPositionById(messageId)).setRead(true);
+                    adapter.notifyItemChanged(adapter.getPositionById(messageId));
+                } catch (MessageNotFoundException ignored) {
+
+                }
+
+
             }
         });
 
@@ -970,8 +1014,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             }
             messagePreview = new Message((int) localId, 1, false, placegolderText, null, null, null, null, null, null, null,
                     new User(null, null, null, null, CachedValues.getId(this), null, null, null, false));
-            adapter.addItem(messagePreview, true);
-            adapter.getRecyclerView().scrollToPosition(messageList.indexOf(messagePreview));
+            MessageObject messageObject = new MessageObject(messageRecyclerView, messagePreview);
+            adapter.addItem(messageObject, true);
+            adapter.getRecyclerView().scrollToPosition(adapter.getMessagesList().indexOf(messageObject));
 
             Thread sendThread = new Thread(new Runnable() {
                 @Override
@@ -980,7 +1025,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     try {
                         SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
 
                     try {

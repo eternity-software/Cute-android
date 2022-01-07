@@ -5,12 +5,13 @@
     android:padding="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <ru.etysoft.cute.components.ThemeLinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/square_element_background"
 
+        app:themeBackgroundColor="colorBackgroundElement"
         android:orientation="horizontal"
         android:padding="8dp">
 
@@ -28,33 +29,34 @@
             android:paddingVertical="4dp"
             android:paddingLeft="8dp">
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/displayNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratalternates_medium"
                 android:text="Username"
-                android:textColor="@color/colorTextDark" />
+                app:themeColor="colorTextDark"
+                />
 
-            <TextView
+            <ru.etysoft.cute.lang.components.LocalizableTextView
                 android:id="@+id/onlineView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratalternates_medium"
                 android:paddingTop="4dp"
                 android:text="online"
-                android:textColor="@color/state_green"
+                app:themeColor="state_green"
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <ImageView
+        <ru.etysoft.cute.components.ThemeImageView
             android:layout_width="24dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:padding="8dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/icon_expand_right"
-            app:tint="@color/colorIconSupportTint" />
-    </LinearLayout>
+            app:themeImageColor="colorIconSupportTint" />
+    </ru.etysoft.cute.components.ThemeLinearLayout>
 
 </RelativeLayout>

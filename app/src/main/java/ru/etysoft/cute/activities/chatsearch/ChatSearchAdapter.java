@@ -52,31 +52,31 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
             @Override
             public void onClick(View v) {
 
-                Runnable toRun = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (info.isHas()) {
-                            Intent intent = new Intent(getContext(), MessagingActivity.class);
-                            intent.putExtra("cid", String.valueOf(info.getCid()));
-                            intent.putExtra("isd", false);
-                            intent.putExtra("name", info.getName());
-                            intent.putExtra("cover", "null");
-                            MessagingActivity.openActivityForChat(getContext(), info.getCid(), info.getName(), null);
-                        } else {
 
+                AlertDialog cdd = new AlertDialog(context, getContext().getResources().getString(R.string.chat_join_title).replace("%s%", info.getName()), getContext().getResources().getString(R.string.chat_join_text),
+                        new AlertDialog.DialogHandler() {
+                            @Override
+                            public void onPositiveClicked(String input) {
 
-                        }
-                    }
-                };
+                            }
 
-                Runnable cancel = new Runnable() {
-                    @Override
-                    public void run() {
+                            @Override
+                            public void onNegativeClicked(String input) {
 
-                    }
-                };
+                            }
 
-                AlertDialog cdd = new AlertDialog(context, getContext().getResources().getString(R.string.chat_join_title).replace("%s%", info.getName()), getContext().getResources().getString(R.string.chat_join_text), toRun, cancel);
+                            @Override
+                            public void onClosed(String input) {
+                                if (info.isHas()) {
+                                    Intent intent = new Intent(getContext(), MessagingActivity.class);
+                                    intent.putExtra("cid", String.valueOf(info.getCid()));
+                                    intent.putExtra("isd", false);
+                                    intent.putExtra("name", info.getName());
+                                    intent.putExtra("cover", "null");
+                                    MessagingActivity.openActivityForChat(getContext(), info.getCid(), info.getName(), null);
+                                }
+                            }
+                        });
                 cdd.show();
             }
         });

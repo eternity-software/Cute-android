@@ -3,8 +3,12 @@ package ru.etysoft.cute.images;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,16 +16,19 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
-import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.main.MainActivity;
+import ru.etysoft.cute.bottomsheets.filepicker.FileInfo;
 import ru.etysoft.cute.components.CuteToast;
-import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.components.FileParingImageView;
+import ru.etysoft.cute.components.FilePreview;
 
 public class WaterfallImageLoader {
 
-    private List<SmartImageView> imagesQueue = new ArrayList<>();
+    private List<FilePreview> imagesQueue = new ArrayList<>();
     private boolean isRunning;
     private boolean isDataUpdated;
     private Activity activity;
+    private WaterfallCallback waterfallCallback;
 
     public WaterfallImageLoader(Activity activity) {
         this.activity = activity;
@@ -29,9 +36,14 @@ public class WaterfallImageLoader {
         isDataUpdated = false;
     }
 
+    public void setWaterfallCallback(WaterfallCallback waterfallCallback) {
+        this.waterfallCallback = waterfallCallback;
+    }
+
     public void start() {
         if (!isRunning) {
             isRunning = true;
+            waterfallCallback.onStarted();
             Thread worker = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -39,47 +51,126 @@ public class WaterfallImageLoader {
                         try {
 
                             WaterfallLogger.log("Starting worker...");
-                            List<SmartImageView> localList = (new ArrayList<>());
+                            List<FilePreview> localList = (new ArrayList<>());
                             localList.addAll(imagesQueue);
-                            for (final SmartImageView imageView : localList) {
-                                if (imageView.isShown()) {
-                                    WaterfallLogger.log("Loading " + imageView.getImagePath());
-                                    try {
-                                        final Bitmap bitmap = decodeFile(new File(imageView.getImagePath()));
-                                        if (bitmap != null) {
-                                            final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmap(activity, Uri.fromFile(new File(imageView.getImagePath())));
+                            for (final FilePreview imageView : localList) {
+                                final boolean[] isCancelled = {false};
+                                    WaterfallLogger.log("Loading " + imageView.getFileInfo());
+
+                                        try {
+                                            final Bitmap bitmap;
+                                            if(imageView.getFileInfo().isImage())
+                                            {
+                                               bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
+                                            }
+                                            else
+                                            {
+                                                bitmap = imageView.getFileInfo().getVideoThumbnail();
+                                            }
+
+
+                                            if (bitmap != null) {
+                                                final Bitmap fixedBitmap;
+                                                final String oldUri = imageView.getFileInfo().getFilePath();
+                                                if(imageView.getFileInfo().isImage()) {
+                                                    fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmap(activity, Uri.fromFile(new File(imageView.getFileInfo().getFilePath())));
+                                                }
+                                                else
+                                                {
+                                                    fixedBitmap = bitmap;
+                                                }
+                                                final String subtitle;
+                                                if(imageView.getFileInfo().isVideo()) {
+                                                   subtitle = FileInfo.getFormattedVideoDuration(activity, imageView.getFileInfo().getFilePath());
+                                                }
+                                                else
+                                                {
+                                                    subtitle = "";
+                                                }
+                                                activity.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+
+
+                                                        //  Glide.with(activity).load(imageView.getImagePath()).into(imageView);
+                                                        // Old trivial way
+
+                                                        try {
+
+
+                                                            if (imageView.getFileInfo().getFilePath().equals(oldUri)) {
+                                                                imageView.getFileParingImageView().setImageBitmap(fixedBitmap);
+                                                                imageView.setSubtitle(subtitle);
+
+                                                                if (waterfallCallback != null) {
+                                                                    waterfallCallback.onImageProcessedSuccess(imageView);
+                                                                }
+                                                                Animation fadeIn = new AlphaAnimation(0, 1);
+                                                                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+                                                                fadeIn.setDuration(400);
+
+                                                                imageView.getFileParingImageView().startAnimation(fadeIn);
+                                                            } else {
+
+
+                                                                if (MainActivity.isDev) {
+                                                                    imageView.setBackgroundColor(Color.MAGENTA);
+                                                                  //  imageView.getFileParingImageView().setImageBitmap(null);
+                                                                }
+                                                                waterfallCallback.onImageReplaced(imageView);
+                                                            }
+                                                        } catch (Exception e)
+                                                        {
+                                                            if (waterfallCallback != null) {
+                                                                waterfallCallback.onImageProcessedError(imageView);
+                                                            }
+                                                            e.printStackTrace();
+                                                        }
+
+
+
+
+
+
+
+
+                                                    }
+                                                });
+                                            }
+                                            else
+                                            {
+                                                if (waterfallCallback != null) {
+                                                    waterfallCallback.onImageProcessedError(imageView);
+                                                }
+                                            }
+                                        } catch (final Exception e) {
                                             activity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    if (imageView != null) {
-                                                        imageView.setImageBitmap(fixedBitmap);
+                                                    if (waterfallCallback != null) {
+                                                        waterfallCallback.onImageProcessedError(imageView);
                                                     }
+                                                    CuteToast.showError(e.getMessage(), activity);
+                                                    if (MainActivity.isDev) {
+                                                        imageView.setBackgroundColor(Color.RED);
+
+                                                    }
+
                                                 }
                                             });
-                                        }
-                                    } catch (final Exception e) {
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                CuteToast.showError(e.getMessage(), activity);
-                                            }
-                                        });
-                                        e.printStackTrace();
+                                            e.printStackTrace();
+
                                     }
-                                } else {
-                                    activity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            imageView.setImageDrawable(activity.getResources().getDrawable(R.drawable.icon_error));
-                                        }
-                                    });
-                                }
-                                imagesQueue.remove(imageView);
+
+                                        imagesQueue.remove(imageView);
+
+
                             }
 
                             if (!isDataUpdated) {
                                 WaterfallLogger.log("Data update isn't detected");
                                 isRunning = false;
+                                waterfallCallback.onFinishedAllTasks();
                             } else {
                                 isDataUpdated = false;
                                 WaterfallLogger.log("Updated data detected!");
@@ -96,7 +187,7 @@ public class WaterfallImageLoader {
         }
     }
 
-    public void add(SmartImageView imageView) {
+    public void add(FilePreview imageView) {
         imagesQueue.add(imageView);
         if (isRunning) {
             isDataUpdated = true;
@@ -134,6 +225,16 @@ public class WaterfallImageLoader {
         fis.close();
 
         return b;
+    }
+
+    public interface WaterfallCallback
+    {
+        void onImageProcessedSuccess(FilePreview filePreview);
+        void onImageProcessedError(FilePreview filePreview);
+        void onImageReplaced(FilePreview filePreview);
+        void onFinishedAllTasks();
+        void onStarted();
+
     }
 
     private boolean isVisible(final View view) {

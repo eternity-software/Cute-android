@@ -28,7 +28,7 @@
                 android:layout_marginRight="15dp"
                 android:orientation="vertical">
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/title_dialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -36,10 +36,11 @@
                     android:fontFamily="@font/montserratalternates_medium"
                     android:gravity="left"
                     android:text="Title"
-                    android:textColor="@color/colorTextAccent"
+
+                    app:themeColor="colorTextAccent"
                     android:textSize="18sp" />
 
-                <TextView
+                <ru.etysoft.cute.lang.components.LocalizableTextView
                     android:id="@+id/dialog_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,8 +48,14 @@
                     android:gravity="start"
                     android:paddingTop="12dp"
                     android:text="Text. I like cute and hope you like it)"
-                    android:textColor="@color/colorText"
+                    app:themeColor="colorText"
                     android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/alertInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="someText"/>
 
                 <LinearLayout
                     android:id="@+id/motherButtons"

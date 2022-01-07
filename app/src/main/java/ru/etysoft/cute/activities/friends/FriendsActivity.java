@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.LightToolbar;
 import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
@@ -86,7 +87,7 @@ public class FriendsActivity extends AppCompatActivity {
                         public void run() {
                             try {
                               TextView incomingRequestsView = findViewById(R.id.requestCountView);
-                              incomingRequestsView.setText(StringsRepository.getOrDefault(R.string.friends_requests, FriendsActivity.this) + " (" + friendRequestsResponse.getRequests().size() + ")");
+                              incomingRequestsView.setText(CustomLanguage.getStringsRepository().getOrDefault(R.string.friends_requests, FriendsActivity.this) + " (" + friendRequestsResponse.getRequests().size() + ")");
                             } catch (ResponseException e) {
                                 e.printStackTrace();
                             }

@@ -7,14 +7,14 @@
     android:background="@color/colorBackground"
     tools:context=".activities.Account">
 
-    <LinearLayout
+    <ru.etysoft.cute.components.ThemeLinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/square_rounded_top_gray"
         android:orientation="horizontal"
         android:padding="20dp"
-        android:backgroundTint="@color/colorAccountTop"
+        app:themeBackgroundColor="colorAccountTop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
 
                     android:layout_weight="1">
 
-                    <TextView
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:id="@+id/login"
                         android:layout_width="wrap_content"
                         android:layout_height="28dp"
@@ -57,6 +57,7 @@
                         android:singleLine="true"
                         android:text="karlov"
                         android:textColor="@color/colorTextAccent"
+                        app:themeColor="colorTextAccent"
                         android:textSize="20sp" />
 
                 </LinearLayout>
@@ -68,33 +69,35 @@
                     android:gravity="right"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:id="@+id/editProfile"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
                         android:background="?actionBarItemBackground"
                         android:padding="4dp"
                         app:srcCompat="@drawable/icon_edit"
-                        app:tint="@color/colorSupportButton" />
+                        app:themeImageColor="colorSupportButton"/>
 
 
-                    <ImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:id="@+id/imageView20"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
                         android:background="?actionBarItemBackground"
                         android:padding="4dp"
+                        app:themeImageColor="colorSupportButton"
                         app:srcCompat="@drawable/icon_qr_code"
-                        app:tint="@color/colorSupportButton" />
+                       />
 
-                    <ImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:id="@+id/setting"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
                         android:background="?actionBarItemBackground"
                         android:padding="4dp"
+                        app:themeImageColor="colorSupportButton"
                         app:srcCompat="@drawable/icon_settings"
-                        app:tint="@color/colorSupportButton" />
+                        />
                 </LinearLayout>
             </LinearLayout>
 
@@ -111,7 +114,7 @@
         </LinearLayout>
 
 
-    </LinearLayout>
+    </ru.etysoft.cute.components.ThemeLinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -145,20 +148,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal" >
-                    <ImageView
+                    <ru.etysoft.cute.components.ThemeImageView
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
                         android:padding="5dp"
+                        app:themeImageColor="colorIconTint"
                         app:srcCompat="@drawable/icon_people"
-                        app:tint="@color/colorIconTint" />
-                    <TextView
+                        />
+                    <ru.etysoft.cute.lang.components.LocalizableTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserratalternates_medium"
                         android:singleLine="true"
                         android:text="@string/friends"
                         android:textColor="@color/colorTextAccent"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        app:localizableKey="friends"
+                        app:themeColor="colorTextAccent"/>
                     <TextView
                         android:id="@+id/friendsCountView"
                         android:layout_width="match_parent"

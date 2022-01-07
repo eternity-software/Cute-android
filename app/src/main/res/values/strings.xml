@@ -18,6 +18,7 @@
     <string name="message">Message</string>
     <string name="incoming">Incoming</string>
     <string name="outgoing">Outgoing</string>
+    <string name="err_theme_url">Can\'t setup theme!</string>
     <string name="friends_requests">Requests</string>
     <string name="sign_up_subpassword">Think for hard password</string>
     <string name="password_confirm">Password confirm</string>
@@ -149,7 +150,7 @@
     <string name="add_member">%s joined chat</string>
     <string name="about">About</string>
     <string name="unknown_service_message">Unknown service message</string>
-    <string name="chat_beginning_title">The Begining.</string>
+    <string name="chat_beginning_title">The Beginning.</string>
     <string name="chat_beginning_text">Let there be light</string>
     <string name="you">You</string>
     <string name="change_cover">Change cover</string>

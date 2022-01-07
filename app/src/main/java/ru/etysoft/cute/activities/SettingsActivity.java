@@ -15,6 +15,7 @@ import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.data.CacheUtils;
+import ru.etysoft.cute.themes.Theme;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -31,6 +32,25 @@ public class SettingsActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.settings, new SettingsFragment())
                 .commit();
+
+        AlertDialog alertDialog = new AlertDialog(this, "Кастомная тема", "Вы можете применить кастомную тему", new AlertDialog.DialogHandler() {
+            @Override
+            public void onPositiveClicked(String input) {
+                Theme.loadFromUrl(input, SettingsActivity.this, false);
+            }
+
+            @Override
+            public void onNegativeClicked(String input) {
+
+            }
+
+            @Override
+            public void onClosed(String input) {
+
+            }
+        });
+        alertDialog.show();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -80,22 +100,26 @@ public class SettingsActivity extends AppCompatActivity {
             logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    final Runnable toRun = new Runnable() {
-                        @Override
-                        public void run() {
-                            cacheUtils.clean(getContext());
-                            Intent meet = new Intent(getActivity(), MeetActivity.class);
-                            getActivity().startActivity(meet);
-                        }
-                    };
 
-                    Runnable cancel = new Runnable() {
-                        @Override
-                        public void run() {
+                    AlertDialog alertDialog = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.logout_text),
+                            new AlertDialog.DialogHandler() {
+                                @Override
+                                public void onPositiveClicked(String input) {
+                                    cacheUtils.clean(getContext());
+                                    Intent meet = new Intent(getActivity(), MeetActivity.class);
+                                    getActivity().startActivity(meet);
+                                }
 
-                        }
-                    };
-                    AlertDialog alertDialog = new AlertDialog(getActivity(), getResources().getString(R.string.logout_title), getString(R.string.logout_text), toRun, cancel);
+                                @Override
+                                public void onNegativeClicked(String input) {
+
+                                }
+
+                                @Override
+                                public void onClosed(String input) {
+
+                                }
+                            });
                     alertDialog.show();
                     return false;
                 }

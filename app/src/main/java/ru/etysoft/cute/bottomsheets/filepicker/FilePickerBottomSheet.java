@@ -1,58 +1,91 @@
 package ru.etysoft.cute.bottomsheets.filepicker;
 
 import android.annotation.SuppressLint;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.SharedElementCallback;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.ImageEdit.ImageEdit;
-import ru.etysoft.cute.components.SmartImageView;
+import ru.etysoft.cute.activities.camera.CameraActivity;
+import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.images.WaterfallBalancer;
+import ru.etysoft.cute.utils.Logger;
+import ru.etysoft.cute.utils.Numbers;
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private View view;
     private ArrayList<String> images;
+    private boolean isShown = false;
 
-    public ArrayList<String> getImages() {
-        return images;
+    private FilePickerAdapter filePickerAdapter;
+
+    public ArrayList<FileInfo> getMedia() {
+        return filePickerAdapter.getImages();
     }
 
-    private android.widget.AdapterView.OnItemClickListener onItemClickListener;
+    private FilePickerBottomSheet.ItemClickListener onItemClickListener;
+
+    public static interface ItemClickListener
+    {
+        void onItemClick(int pos, View view);
+    }
+
+
+    @Override
+    public void show(@NonNull FragmentManager manager, @Nullable String tag) {
+        super.show(manager, tag);
+        Logger.logActivity("Showed bs");
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.bottom_sheet_filespicker, container, true);
         view = v;
+
+        v.findViewById(R.id.openCamera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CameraActivity.class);
+
+                getActivity().startActivity(intent);
+
+            }
+        });
 
         return v;
     }
 
-    public void setRunnable(AdapterView.OnItemClickListener onItemClickListener) {
+
+
+    public void setRunnable(FilePickerBottomSheet.ItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,170 +101,71 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
 
-        getDialog().getWindow()
-                .getAttributes().windowAnimations = R.style.DialogAnimation;
+
+
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
 
         final FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
+
+
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                final CardView cardView = view.findViewById(R.id.appBar);
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
-
-                    if (cardView.getRadius() != 0) {
-                        Thread animation = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (int radius = 20; radius >= 0; radius = radius - 1) {
-                                    System.out.print(radius);
-                                    final int finalRadius = radius;
-                                    try {
-                                        Thread.sleep(10);
-
-
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                            }
-                        });
-                        animation.start();
-                    }
-                } else {
-
-                    // cardView.setRadius(Numbers.dpToPx(20, getContext()));
-                }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                final CardView cardView = view.findViewById(R.id.appBar);
+
+
+                float pix = Numbers.dpToPx(20, getContext()) * (1 - slideOffset);
+                float maxPix = Numbers.dpToPx(20, getContext());
+
+                if(pix < maxPix)
+                {
+                    cardView.setRadius(pix);
+                }
+                else
+                {
+                    cardView.setRadius(maxPix);
+                }
+
+
 
             }
         });
+        setAllowReturnTransitionOverlap(false);
+        setAllowEnterTransitionOverlap(false);
+        RecyclerView gallery = bottomSheet.findViewById(R.id.gridView);
+        gallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
-        GridView gallery = bottomSheet.findViewById(R.id.gridView);
 
-        gallery.setAdapter(new ImageAdapter(bottomSheet));
-
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        final TextView debugText = view.findViewById(R.id.debugText);
+        filePickerAdapter = new FilePickerAdapter(getActivity(), onItemClickListener, gallery);
+        filePickerAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-                onItemClickListener.onItemClick(arg0, arg1, position, arg3);
+            public void onActiveWaterfallsCountChange(final int count) {
+              getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        debugText.setText("Active waterfalls: " + count);
+                    }
+                });
             }
         });
+
+        gallery.setAdapter(filePickerAdapter);
+
+
     }
 
-    private class ImageAdapter extends BaseAdapter {
-
-        /**
-         * The context.
-         */
-        private final FrameLayout context;
-        private final int threadCount = 0;
-        private WaterfallBalancer waterfallBalancer;
-
-
-        /**
-         * Instantiates a new image adapter.
-         *
-         * @param localContext the local context
-         */
-        public ImageAdapter(FrameLayout localContext) {
-            context = localContext;
-            images = getAllShownImagesPath(context);
-            Collections.reverse(images);
-            waterfallBalancer = new WaterfallBalancer(getActivity(), 10);
-        }
-
-
-        public int getCount() {
-            return images.size();
-        }
-
-        public Object getItem(int position) {
-            return position;
-        }
-
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            final SmartImageView picturesView;
-
-            final LayoutInflater layoutInflater = getLayoutInflater();
-            picturesView = (SmartImageView) layoutInflater.inflate(R.layout.file_picker_image, null);
-
-            picturesView
-                    .setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
-
-
-            picturesView.setImagePath(images.get(position));
-
-            try {
-                picturesView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.icon_image));
-
-                waterfallBalancer.add(picturesView);
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            return picturesView;
-        }
-
-
-        /**
-         * Getting All Images Path.
-         *
-         * @param activity the activity
-         * @return ArrayList with images Path
-         */
-        private ArrayList<String> getAllShownImagesPath(FrameLayout activity) {
-//            Uri uri;
-//            Cursor cursor;
-//            int column_index_data, column_index_folder_name;
-//
-//            String absolutePathOfImage = null;
-//            uri = MediaStore.Images.Media.E;
-//
-//
-//
-//            cursor = activity.getContext().getContentResolver().query(uri, projection, null,
-//                    null, null);
-//
-//            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-//            column_index_folder_name = cursor
-//                    .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-//            while (cursor.moveToNext()) {
-//                absolutePathOfImage = cursor.getString(column_index_data);
-//
-//                listOfAllImages.add(absolutePathOfImage);
-//            }
-//
-            ArrayList<String> listOfAllImages = new ArrayList<String>();
-            String[] projection = {MediaStore.MediaColumns.DATA};
-            Cursor cursor = activity.getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,null, null);
-            while (cursor.moveToNext()) {
-                String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-
-                listOfAllImages.add(absolutePathOfImage);
-            }
-            cursor.close();
-            return listOfAllImages;
-        }
-    }
 
 }

@@ -55,7 +55,7 @@
                 android:background="@drawable/text_outline_shape"
                 android:fontFamily="@font/montserratalternates_medium"
                 app:localizableKey="friends_requests"
-
+                app:themeColor="colorButtonText"
                 android:onClick="openRequests"
                 android:text="@string/friends_requests"
                 android:paddingHorizontal="8dp"

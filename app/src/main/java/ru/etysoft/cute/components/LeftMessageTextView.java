@@ -6,7 +6,9 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-public class LeftMessageTextView extends AppCompatTextView {
+import ru.etysoft.cute.lang.components.LocalizableTextView;
+
+public class LeftMessageTextView extends LocalizableTextView {
 
     public LeftMessageTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

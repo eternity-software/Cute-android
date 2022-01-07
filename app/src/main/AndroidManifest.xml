@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.intent.action.MEDIA_MOUNTED" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
 
@@ -29,11 +31,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.camera.CameraActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ImageSend.ImageSendActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
-            android:windowSoftInputMode="stateHidden"
+            android:exported="true"
             android:theme="@style/AppSlideTheme"
-            android:exported="true" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.ImageEdit.ImageEdit"
             android:exported="true" />
@@ -75,9 +80,8 @@
         <activity
             android:name=".activities.messaging.MessagingActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
-            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppSlideTheme"
-          />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CreateChatActivity"
             android:theme="@style/AppSlideTheme"

@@ -4,29 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/AppSlideTheme"
+
     android:background="@color/colorBackgroundElements"
+
     tools:context=".activities.ImageSend.ImageSendActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/imageContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ru.etysoft.cute.components.PreviewImageView
-            android:id="@+id/photoView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:transitionName="@string/transition_image_send"
 
-            android:layout_marginBottom="20dp"
+        <ru.etysoft.cute.components.PreviewImageView
+            android:id="@+id/fileImageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+
+
             android:scaleType="fitCenter"
             android:src="@drawable/houses"
+            android:transitionName="@string/transition_image_send"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ru.etysoft.cute.components.VideoPlayer
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -2,6 +2,8 @@ package ru.etysoft.cute.tooltip;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -16,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.themes.Theme;
 
 public class Tooltip extends PopupWindow {
 
@@ -45,7 +48,7 @@ public class Tooltip extends PopupWindow {
     public void showAsDropDown(View anchor, int xoff, int yoff) {
         oldDrawable = anchor.getBackground();
         this.anchor = anchor;
-        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.accent_blue));
+        anchor.setBackgroundColor(Theme.getColor(anchor.getContext(), R.color.accent_blue));
         super.showAsDropDown(anchor, xoff, yoff);
     }
 
@@ -53,7 +56,7 @@ public class Tooltip extends PopupWindow {
     public void showAsDropDown(View anchor) {
         oldDrawable = anchor.getBackground();
         this.anchor = anchor;
-        anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.accent_blue));
+        anchor.setBackgroundColor(Theme.getColor(anchor.getContext(), R.color.accent_blue));
         super.showAsDropDown(anchor);
     }
 
@@ -107,7 +110,7 @@ public class Tooltip extends PopupWindow {
                 public void onAnimationStart(Animation animation) {
                     canAnimate = false;
                     anchor.setBackground(oldDrawable);
-                    anchor.setBackgroundColor(anchor.getContext().getResources().getColor(R.color.colorTransparent));
+                    anchor.setBackgroundColor(Theme.getColor(anchor.getContext(), R.color.colorTransparent));
                 }
 
                 @Override

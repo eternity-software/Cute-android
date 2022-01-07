@@ -17,18 +17,15 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.Account;
-import ru.etysoft.cute.activities.fragments.account.AccountContact;
 import ru.etysoft.cute.activities.fragments.account.AccountFragment;
-import ru.etysoft.cute.activities.fragments.account.AccountPresenter;
 import ru.etysoft.cute.activities.fragments.chatslist.ChatsListFragment;
 import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
-import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.services.NotificationService;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Permissions;
 import ru.etysoft.cute.utils.SocketHolder;
 import ru.etysoft.cute.utils.ViewPagerAdapter;
@@ -36,7 +33,7 @@ import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
 
 public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener, MainContract.View, LifecycleObserver {
 
-    public static final boolean isDev = true;
+    public static final boolean isDev = false;
 
     private MainPresenter mainPresenter;
 
@@ -96,7 +93,9 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
         startService(new Intent(this, NotificationService.class));
 
-        devOptions();
+        //devOptions();
+
+
 
         setupNavigation();
         Permissions.requestAll(this);

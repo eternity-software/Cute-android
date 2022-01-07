@@ -6,7 +6,9 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-public class MessageTextView extends AppCompatTextView {
+import ru.etysoft.cute.lang.components.LocalizableTextView;
+
+public class MessageTextView extends LocalizableTextView {
 
 
     public MessageTextView(Context context, AttributeSet attrs) {

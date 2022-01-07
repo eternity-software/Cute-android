@@ -35,6 +35,7 @@
                 android:paddingBottom="3dp"
                 android:textColor="@color/colorTitle"
                 android:textSize="22sp"
+                app:themeColor="colorTitle"
                 />
 
         </LinearLayout>

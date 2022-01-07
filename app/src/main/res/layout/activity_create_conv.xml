@@ -102,7 +102,7 @@
         app:layout_constraintStart_toEndOf="@+id/menuButton"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ru.etysoft.cute.lang.components.LocalizableButton
         android:id="@+id/button8"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"

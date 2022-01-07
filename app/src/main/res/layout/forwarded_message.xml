@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="4dp"
 
     android:layout_height="wrap_content">
 
-    <ImageView
+    <ru.etysoft.cute.components.ThemeImageView
         android:id="@+id/forwardedMessageDivider"
         android:layout_width="2dp"
         android:layout_height="40dp"
         android:layout_marginEnd="6dp"
+        app:themeImageColor="accent_support"
+        app:srcCompat="@drawable/forwarded_message_divider" />
 
-        android:background="@drawable/forwarded_message_divider" />
-
-    <TextView
+    <ru.etysoft.cute.lang.components.LocalizableTextView
         android:id="@+id/senderDisplayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,10 +28,11 @@
         android:fontFamily="@font/montserratalternates_medium"
         android:maxLines="1"
         android:text="Вы"
-        android:textColor="@color/colorTextAccent"
+
+        app:themeColor="colorTextAccent"
         android:textSize="12sp" />
 
-    <TextView
+    <ru.etysoft.cute.lang.components.LocalizableTextView
         android:id="@+id/forwardedMessageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +45,9 @@
         android:maxLines="1"
 
         android:text="Блин пипец какой-то. Почините уже"
-        android:textColor="@color/colorTextDark"
+        app:themeColor="colorTextDark"
+        app:themeColorLink="colorTextDark"
+
         android:textSize="12sp" />
 
 </RelativeLayout>

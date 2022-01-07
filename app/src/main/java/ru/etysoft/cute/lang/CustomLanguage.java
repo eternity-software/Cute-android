@@ -14,13 +14,16 @@ import ru.etysoft.cuteframework.requests.GET;
 
 public class CustomLanguage {
 
+    private static StringsRepository stringsRepository = new StringsRepository();
+
     public static void loadFromUrl(final String urlToXml, final Activity context, final boolean silentMode) {
         Thread loading = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     String xmlString = GET.execute(urlToXml);
-                    StringsRepository.applyXml(xmlString);
+
+                    CustomLanguage.getStringsRepository().applyXml(xmlString);
                     CachedUrls.setLangUrl(context, urlToXml);
                     CachedValues.setCustomLanguage(context, xmlString);
                 } catch (ResponseException | LanguageParsingException e) {
@@ -40,8 +43,13 @@ public class CustomLanguage {
         loading.start();
     }
 
+    public static StringsRepository getStringsRepository() {
+        return stringsRepository;
+    }
+
     public static void loadExisting(Activity context) throws NotCachedException, LanguageParsingException {
-        StringsRepository.applyXml(CachedValues.getCustomLanguage(context));
+
+        CustomLanguage.getStringsRepository().applyXml(CachedValues.getCustomLanguage(context));
         loadFromUrl(CachedUrls.getLangUrl(context), context, true);
     }
 
