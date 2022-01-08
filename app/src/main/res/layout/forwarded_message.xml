@@ -12,8 +12,8 @@
         android:layout_width="2dp"
         android:layout_height="40dp"
         android:layout_marginEnd="6dp"
-        app:themeImageColor="accent_support"
-        app:srcCompat="@drawable/forwarded_message_divider" />
+        app:srcCompat="@drawable/forwarded_message_divider"
+        app:themeImageColor="accent_support" />
 
     <ru.etysoft.cute.lang.components.LocalizableTextView
         android:id="@+id/senderDisplayName"

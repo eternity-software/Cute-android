@@ -82,7 +82,7 @@
                         android:textColor="@color/colorText"
                         android:textSize="14sp" />
 
-                    <Button
+                    <ru.etysoft.cute.lang.components.LocalizableButton
                         android:id="@+id/dialog_active"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="wrap_content"

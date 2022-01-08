@@ -3,6 +3,7 @@ package ru.etysoft.cute.components;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -15,7 +16,7 @@ import ru.etysoft.cute.themes.Theme;
 public class ThemeLinearLayout extends LinearLayout {
     @StyleableRes
     int themeColor = 0;
-    private CharSequence localId;
+    private String backgroundTint;
 
     public ThemeLinearLayout(Context context) {
         super(context);
@@ -31,19 +32,36 @@ public class ThemeLinearLayout extends LinearLayout {
         initialize(context, attrs);
     }
 
+    @Override
+    public void setBackground(Drawable background) {
+
+        super.setBackground(background);
+        updateTint();
+    }
+
+    private void updateTint() {
+        if (getBackground() != null) {
+
+            try {
+                getBackground().setColorFilter(Theme.getColor(String.valueOf(backgroundTint)), PorterDuff.Mode.SRC_ATOP);
+                // getBackground().setT(Theme.getColor(String.valueOf(color)));
+            } catch (NoSuchValueException e) {
+                e.printStackTrace();
+                getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(backgroundTint), R.color.class)), PorterDuff.Mode.SRC_ATOP);
+            }
+            requestLayout();
+        }
+    }
+
     private void initialize(Context context, AttributeSet attrs) {
-        int[] sets = { R.attr.themeBackgroundColor};
+        int[] sets = {R.attr.themeBackgroundColor};
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
 
 
-        String color = typedArray.getString(0);
-        try {
-            getBackground().setColorFilter(Theme.getColor(String.valueOf(color)), PorterDuff.Mode.SRC);
-        } catch (NoSuchValueException e) {
-            e.printStackTrace();
-            getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(color), R.color.class)), PorterDuff.Mode.SRC);
-        }
+        backgroundTint = typedArray.getString(0);
 
+
+        updateTint();
         typedArray.recycle();
     }
 }

@@ -15,11 +15,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <ru.etysoft.cute.components.ThemeLinearLayout
             android:id="@+id/messageContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="50"
+            app:themeBackgroundColor="colorMessage"
             android:background="@drawable/dialog_message"
             android:orientation="vertical">
 
@@ -52,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text="🐈"
                 android:textColor="@color/colorText"
-                android:textSize="60sp"/>
+                android:textSize="60sp" />
 
             <ru.etysoft.cute.components.Attachments
                 android:id="@+id/attachments"
@@ -60,9 +61,8 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:padding="4dp"
-                android:layout_marginTop="-8dp"
-                />
-        </LinearLayout>
+                android:layout_marginTop="-8dp" />
+        </ru.etysoft.cute.components.ThemeLinearLayout>
 
 
 

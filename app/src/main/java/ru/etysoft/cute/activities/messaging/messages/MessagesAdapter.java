@@ -1,7 +1,5 @@
 package ru.etysoft.cute.activities.messaging.messages;
 
-import static java.security.AccessController.getContext;
-
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,16 +32,14 @@ import java.util.Set;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.ImagePreview;
-import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.activities.Profile;
+import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.components.Attachments;
 import ru.etysoft.cute.components.Avatar;
-import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.MessageNotFoundException;
 import ru.etysoft.cute.lang.CustomLanguage;
-import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
