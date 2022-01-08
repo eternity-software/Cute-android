@@ -141,7 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageButton
+                <ru.etysoft.cute.components.dynamic.ThemeImageView
                     android:id="@+id/friendButton"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
@@ -150,11 +150,13 @@
                     android:textSize="18sp"
                     android:paddingHorizontal="30dp"
                     android:layout_marginRight="12dp"
+                    app:themeImageColor="colorIconTintAccent"
+                    app:themeBackgroundTint="colorMessage"
                     android:onClick="addFriend"
                     android:fontFamily="@font/montserratalternates_medium"
                     android:textAllCaps="false"
                     app:srcCompat="@drawable/icon_add" />
-                <ru.etysoft.cute.lang.components.LocalizableButton
+                <ru.etysoft.cute.components.dynamic.DynamicButton
                     android:id="@+id/button4"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
@@ -163,12 +165,13 @@
                     android:textSize="18sp"
                     android:onClick="openPrivateChat"
                     android:fontFamily="@font/montserratalternates_medium"
+                    app:themeButtonBackground="colorButton"
                     android:textAllCaps="false"
                     android:text="@string/message" />
             </LinearLayout>
 
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -183,7 +186,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="86dp">
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/bioView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

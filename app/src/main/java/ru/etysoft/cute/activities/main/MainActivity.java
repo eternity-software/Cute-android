@@ -2,6 +2,12 @@ package ru.etysoft.cute.activities.main;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -201,8 +207,26 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
         setupViewPager(viewPager);
 
+        Theme.applyThemeToActivity(this);
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setSelectedItemId(R.id.dialogs);
+
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked}, // unchecked
+                new int[] { android.R.attr.state_checked}  // pressed
+        };
+        int[] colors = new int[] {
+                Theme.getColor(this, R.color.colorNavigationUnfocused),
+                Theme.getColor(this, R.color.colorNavigationFocused),
+        };
+
+        navView.setItemIconTintList(new ColorStateList(states, colors));
+
+        navView.setBackgroundColor(Theme.getColor(this, R.color.colorBackground));
+        //   navView.setBackground(new ColorDrawable(Theme.getColor(this, R.color.colorBackground)));
+//        RippleDrawable rippleDrawable = new RippleDrawable(ColorStateList.valueOf(Color.GRAY), navView.getBackground(), null);
+//        navView.setBackground(rippleDrawable);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // Выбрать раздел сообщений

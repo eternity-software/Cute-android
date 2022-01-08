@@ -28,7 +28,7 @@
                 android:layout_marginRight="15dp"
                 android:orientation="vertical">
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/title_dialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                     app:themeColor="colorTextAccent"
                     android:textSize="18sp" />
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/dialog_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                         android:textColor="@color/colorText"
                         android:textSize="14sp" />
 
-                    <ru.etysoft.cute.lang.components.LocalizableButton
+                    <ru.etysoft.cute.components.dynamic.DynamicButton
                         android:id="@+id/dialog_active"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="wrap_content"

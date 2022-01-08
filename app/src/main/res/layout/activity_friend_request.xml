@@ -31,14 +31,14 @@
         app:layout_constraintStart_toEndOf="@+id/lightToolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.tabs.TabLayout
+    <ru.etysoft.cute.components.CuteTabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lightToolbar"
-        app:tabSelectedTextColor="@color/colorTextAccent">
+     >
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:text="@string/outgoing" />
 
-    </com.google.android.material.tabs.TabLayout>
+    </ru.etysoft.cute.components.CuteTabLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

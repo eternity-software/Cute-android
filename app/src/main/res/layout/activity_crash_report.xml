@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.CrashReportActivity">
 
-    <ru.etysoft.cute.lang.components.LocalizableTextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

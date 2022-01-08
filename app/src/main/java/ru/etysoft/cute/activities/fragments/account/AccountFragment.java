@@ -23,6 +23,7 @@ import ru.etysoft.cute.activities.SettingsActivity;
 import ru.etysoft.cute.activities.EditProfile.EditProfileActivity;
 import ru.etysoft.cute.activities.friends.FriendsActivity;
 import ru.etysoft.cute.components.Avatar;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cuteframework.methods.user.User;
 
@@ -48,6 +49,7 @@ public class AccountFragment extends Fragment implements AccountContact.View {
 
         final View root = inflater.inflate(R.layout.activity_account, container, false);
         view = root;
+        Theme.applyBackground(view);
         friends = new ArrayList<User>();
         presenter = new AccountPresenter(getActivity(), this);
         initializeViews();

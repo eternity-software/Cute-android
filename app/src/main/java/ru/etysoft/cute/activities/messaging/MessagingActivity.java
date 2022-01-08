@@ -132,6 +132,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         String type = getIntent().getStringExtra(APIKeys.TYPE);
         String avatar = getIntent().getStringExtra(APIKeys.AVATAR);
 
+        Theme.applyBackground(findViewById(R.id.rootView));
+
         try {
             presenter = new MessagingPresenter(this, type, avatar, CachedValues.getSessionKey(this), String.valueOf(chatId));
         } catch (NotCachedException e) {
@@ -216,6 +218,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         titleView = findViewById(R.id.title);
         statusView = findViewById(R.id.subtitle);
         Theme.applyBackground(rootView);
+        Theme.applyThemeToActivity(this);
         setupRecyclerView();
     }
 

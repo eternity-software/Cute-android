@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
@@ -21,7 +22,6 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -268,13 +268,13 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
     public void loadData() {
         final TextView chatNameView = view.findViewById(R.id.conv_name);
         final TextView chatDescriptionView = view.findViewById(R.id.conv_desc);
-        final ImageButton addMemberButton = view.findViewById(R.id.buttonAdd);
-        addMemberButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addMember();
-            }
-        });
+        //final ImageView addMemberButton = view.findViewById(R.id.buttonAdd);
+//        addMemberButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addMember();
+//            }
+//        });
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -488,21 +488,29 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         View v = inflater.inflate(R.layout.bottom_sheet_conversation, container, true);
         view = v;
         loadData();
-        ImageButton leave = v.findViewById(R.id.conv_exit);
-        leave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                leaveChat();
-            }
-        });
-        final ImageButton delete = v.findViewById(R.id.conv_delete);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteChat();
-            }
-        });
-        setContent();
+        try {
+
+
+            ImageView leave = v.findViewById(R.id.conv_exit);
+            leave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    leaveChat();
+                }
+            });
+            final ImageView delete = v.findViewById(R.id.conv_delete);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteChat();
+                }
+            });
+            setContent();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
 
         return v;

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rootView"
 
     android:background="@color/colorBackgroundElements"
 
@@ -48,7 +49,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="0dp"
         android:elevation="10dp"
@@ -56,31 +57,34 @@
         android:animateLayoutChanges="true"
         android:orientation="horizontal"
 
+        app:themeBackgroundColor="colorBackground"
+
         android:background="@drawable/square_rounded_top"
         android:backgroundTint="@color/colorBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
+        <ru.etysoft.cute.components.dynamic.DynamicEditText
             android:id="@+id/message_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="8dp"
             android:layout_weight="1"
-            android:background="@color/colorBackground"
+            android:background="@color/colorTransparent"
             android:fontFamily="@font/montserratmedium"
             android:hint="@string/your_message"
             android:textColor="@color/colorMessageText"
             android:inputType="textMultiLine|textCapSentences"
             android:layout_marginLeft="14dp"
             android:maxHeight="150dp"
+
             android:backgroundTint="@color/colorBackground"
             android:textColorHint="@color/colorSupportText"
             android:textSize="16sp" />
 
-        <ImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:id="@+id/editButton"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -91,10 +95,12 @@
             android:background="@drawable/button_circle_gray"
             android:onClick="editImageButtonClick"
             android:padding="8dp"
+            app:themeImageColor="colorAccentIcon"
+            app:themeBackgroundTint="colorButtonCircle"
             android:tint="@color/colorAccentIcon"
             app:srcCompat="@drawable/icon_brush" />
 
-        <ImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:id="@+id/sendButton"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -104,8 +110,10 @@
             android:layout_marginRight="7dp"
             android:background="@drawable/circle_button_accent"
             android:onClick="sendButtonClick"
+            app:themeBackgroundTint="colorButton"
+            app:themeImageColor="colorIconTintAccent"
             android:padding="8dp"
             app:srcCompat="@drawable/icon_send" />
 
-    </LinearLayout>
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,11 +4,9 @@ import android.content.Context;
 import android.text.Layout;
 import android.util.AttributeSet;
 
-import androidx.appcompat.widget.AppCompatTextView;
+import ru.etysoft.cute.components.dynamic.DynamicTextView;
 
-import ru.etysoft.cute.lang.components.LocalizableTextView;
-
-public class LeftMessageTextView extends LocalizableTextView {
+public class LeftMessageTextView extends DynamicTextView {
 
     public LeftMessageTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

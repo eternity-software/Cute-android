@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ru.etysoft.cute.components.ThemeLinearLayout
+        <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -30,7 +30,7 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/error_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                     app:themeColor="colorTextDark"
                     android:textSize="16sp" />
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/error_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
 
             </LinearLayout>
 
-        </ru.etysoft.cute.components.ThemeLinearLayout>
+        </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

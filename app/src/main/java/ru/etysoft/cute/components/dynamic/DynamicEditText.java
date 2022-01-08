@@ -1,19 +1,13 @@
-package ru.etysoft.cute.lang.components;
-
+package ru.etysoft.cute.components.dynamic;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleableRes;
-import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,36 +15,30 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
 import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
-import ru.etysoft.cute.themes.Theme;
 
-public class LocalizableButton extends AppCompatButton {
+public class DynamicEditText extends AppCompatEditText {
+
     @StyleableRes
     int localizableKey = 0;
     private CharSequence localId;
 
-    public LocalizableButton(Context context) {
-        super(context);
-    }
-
-    public LocalizableButton(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
+    public DynamicEditText(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
         super(context, attrs);
         initialize(context, attrs);
     }
 
-    public LocalizableButton(Context context, AttributeSet attrs, int defStyle) {
+    public DynamicEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initialize(context, attrs);
     }
 
     private void initialize(Context context, AttributeSet attrs) {
-        int[] sets = {R.attr.localizableButtonKey};
+        int[] sets = {R.attr.localizableHint};
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
         CharSequence locId = typedArray.getText(localizableKey);
         localId = locId;
-        Drawable backgroundShape = getBackground();
-        backgroundShape.setColorFilter(Theme.getColor(getContext(), R.color.colorButton), PorterDuff.Mode.SRC);
         try {
-            setText(CustomLanguage.getStringsRepository().getValue(String.valueOf(locId)));
+            setHint(CustomLanguage.getStringsRepository().getValue(String.valueOf(locId)));
         } catch (NoSuchValueException ignored) {
         }
         typedArray.recycle();

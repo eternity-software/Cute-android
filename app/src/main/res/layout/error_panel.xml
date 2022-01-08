@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ru.etysoft.cute.components.ThemeLinearLayout
+        <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -32,7 +32,7 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/error_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                     app:themeColor="colorTextDark"
                     android:textSize="16sp" />
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/error_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,9 +58,9 @@
 
             </LinearLayout>
 
-        </ru.etysoft.cute.components.ThemeLinearLayout>
+        </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
-        <ru.etysoft.cute.components.ThemeImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:id="@+id/reload"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -69,6 +69,7 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/button_circle_gray"
             android:paddingHorizontal="8dp"
+            app:themeBackgroundTint="colorButtonCircle"
             app:themeImageColor="colorIconTint"
             app:srcCompat="@drawable/icon_reload" />
 

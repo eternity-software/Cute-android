@@ -39,6 +39,7 @@ import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.components.PreviewImageView;
 import ru.etysoft.cute.components.VideoPlayer;
 import ru.etysoft.cute.images.ImageRotationFix;
+import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.transition.Transitions;
 
 public class ImageSendActivity extends AppCompatActivity {
@@ -63,6 +64,9 @@ public class ImageSendActivity extends AppCompatActivity {
         final String type = getIntent().getExtras().getString("type");
         EditText editText = findViewById(R.id.message_box);
         ImageView editButton = findViewById(R.id.editButton);
+
+
+        Theme.applyBackground(findViewById(R.id.rootView));
 
         videoPlayer = findViewById(R.id.videoView);
         editText.setText(getIntent().getExtras().getString("text"));

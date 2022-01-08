@@ -31,17 +31,18 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
+                <ru.etysoft.cute.components.dynamic.ThemeImageView
                     android:id="@+id/imageView2"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:layout_weight="0"
                     android:foregroundGravity="center_horizontal"
+                    app:themeImageColor="colorAccentIcon"
                     android:tint="@color/colorAccentIcon"
                     app:srcCompat="@drawable/icon_signin" />
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,10 +54,11 @@
                     android:text="@string/sign_in"
                     android:textColor="@color/colorTitle"
                     android:textSize="40sp"
+                    app:themeColor="colorTitle"
                     app:localizableKey="sign_in" />
             </LinearLayout>
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,6 +70,7 @@
                 android:gravity="center"
                 android:text="@string/sub_passwords"
                 android:textSize="16sp"
+                app:themeColor="colorSupportText"
                 app:localizableKey="sub_passwords" />
 
             <LinearLayout
@@ -79,7 +82,7 @@
                 android:background="@drawable/edit_text_passive_double"
                 android:orientation="vertical">
 
-                <ru.etysoft.cute.lang.components.LocalizableEditText
+                <ru.etysoft.cute.components.dynamic.DynamicEditText
                     android:id="@+id/edittext_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,7 +104,7 @@
                     app:localizableHint="login" />
 
 
-                <ru.etysoft.cute.lang.components.LocalizableEditText
+                <ru.etysoft.cute.components.dynamic.DynamicEditText
                     android:id="@+id/edittext_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -152,13 +155,14 @@
 
     </ScrollView>
 
-    <LinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/square_rounded_top"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:themeBackgroundColor="accent_support"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -194,7 +198,7 @@
 
             </LinearLayout>
 
-            <ru.etysoft.cute.lang.components.LocalizableButton
+            <ru.etysoft.cute.components.dynamic.DynamicButton
                 android:id="@+id/button_next"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
@@ -206,10 +210,11 @@
                 android:textAllCaps="false"
                 android:textColor="@color/colorPassiveButtonText"
                 android:textSize="18sp"
+                app:themeButtonBackground="colorIconTintAccent"
                 app:localizableButtonKey="next" />
         </LinearLayout>
 
-        <ru.etysoft.cute.lang.components.LocalizableTextView
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -218,9 +223,10 @@
             android:text="@string/next_button_privacy_policy"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
+            app:themeColor="colorWhite"
             app:localizableKey="next_button_privacy_policy" />
 
-        <ru.etysoft.cute.lang.components.LocalizableTextView
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -230,11 +236,12 @@
             android:fontFamily="@font/montserratmedium"
             android:gravity="center"
             android:text="@string/privacy_policy"
+            app:themeColor="colorWhite"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
             app:localizableKey="privacy_policy" />
 
 
-    </LinearLayout>
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -108,7 +108,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             if (info.getMessage().isRead()) {
                 TypedValue selectableBackground = new TypedValue();
                 getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBackground, true);
-                holder.container.setBackgroundResource(selectableBackground.resourceId);
+             //   holder.container.setBackground(context.getResources().getDrawable(selectableBackground.resourceId));
                 holder.readstatus.setVisibility(View.INVISIBLE);
             } else {
                 holder.readstatus.setVisibility(View.VISIBLE);

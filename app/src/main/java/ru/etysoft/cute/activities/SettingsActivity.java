@@ -2,6 +2,7 @@ package ru.etysoft.cute.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
+import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.themes.Theme;
 
@@ -62,6 +64,11 @@ public class SettingsActivity extends AppCompatActivity {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
+    }
+
+    public void openSessionManagement(View v)
+    {
+        CuteToast.showSuccess("aaa", this);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

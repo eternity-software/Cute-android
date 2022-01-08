@@ -64,7 +64,7 @@
             app:srcCompat="@drawable/logo_text_white" />
 
 
-        <ru.etysoft.cute.lang.components.LocalizableTextView
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
             android:id="@+id/subTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,6 +74,7 @@
             android:text="@string/app_subtext"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
+            app:themeColor="colorWhite"
             app:localizableKey="app_subtext" />
     </LinearLayout>
 
@@ -105,7 +106,7 @@
                 app:tint="@color/gray" />
 
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -114,6 +115,7 @@
                 android:paddingLeft="20dp"
                 android:text="@string/sign_in"
                 android:textColor="@color/gray"
+                app:themeColor="gray"
                 android:textSize="18sp"
                 app:localizableKey="sign_in" />
 
@@ -136,7 +138,7 @@
                 app:tint="@color/colorWhite" />
 
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -144,6 +146,7 @@
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:text="@string/sign_up"
+                app:themeColor="colorWhite"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 app:localizableKey="sign_up" />

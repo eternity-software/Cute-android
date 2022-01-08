@@ -79,7 +79,7 @@
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"/>
-                    <ru.etysoft.cute.lang.components.LocalizableTextView
+                    <ru.etysoft.cute.components.dynamic.DynamicTextView
                         android:id="@+id/changeCover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -112,7 +112,7 @@
                     android:layout_marginBottom="@dimen/indent_8"
                     android:orientation="horizontal">
 
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:id="@+id/imageView12"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                         app:themeImageColor="colorIconTint"
                         app:srcCompat="@drawable/icon_person_blue" />
 
-                    <ru.etysoft.cute.lang.components.LocalizableTextView
+                    <ru.etysoft.cute.components.dynamic.DynamicTextView
                         android:id="@+id/textView15"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -134,7 +134,7 @@
                         app:localizableKey="sign_up_display_name_hint" />
                 </LinearLayout>
 
-                <ru.etysoft.cute.lang.components.LocalizableEditText
+                <ru.etysoft.cute.components.dynamic.DynamicEditText
                     android:id="@+id/editTextAccountLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
                     android:paddingVertical="@dimen/indent_4"
                     android:textSize="18sp" />
 
-                <ru.etysoft.cute.lang.components.LocalizableEditText
+                <ru.etysoft.cute.components.dynamic.DynamicEditText
                     android:id="@+id/editTextAccountName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -174,14 +174,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/indent_4"
                         app:themeImageColor="colorIconTint"
                         app:srcCompat="@drawable/icon_microscope" />
 
-                    <ru.etysoft.cute.lang.components.LocalizableTextView
+                    <ru.etysoft.cute.components.dynamic.DynamicTextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/montserratalternates_medium"
@@ -192,7 +192,7 @@
                         android:textSize="18sp" />
                 </LinearLayout>
 
-                <ru.etysoft.cute.lang.components.LocalizableEditText
+                <ru.etysoft.cute.components.dynamic.DynamicEditText
                     android:id="@+id/bioView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -205,7 +205,7 @@
                     android:paddingVertical="@dimen/indent_4"
                     android:textSize="18sp" />
 
-                <ru.etysoft.cute.lang.components.LocalizableEditText
+                <ru.etysoft.cute.components.dynamic.DynamicEditText
                     android:id="@+id/statusView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
     </ScrollView>
 
 
-    <ru.etysoft.cute.lang.components.LocalizableButton
+    <ru.etysoft.cute.components.dynamic.DynamicButton
         android:id="@+id/button2"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -232,6 +232,7 @@
         android:onClick="applyChanges"
         android:text="@string/save_profile"
         android:textAllCaps="false"
+        app:themeButtonBackground="colorButton"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

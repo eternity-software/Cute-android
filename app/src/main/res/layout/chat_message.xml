@@ -28,7 +28,7 @@
 
             android:orientation="vertical">
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/displayNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content">
 
 
-                <ru.etysoft.cute.components.ThemeLinearLayout
+                <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
                     android:id="@+id/messageContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -97,10 +97,10 @@
                         android:padding="4dp"
                         />
 
-                </ru.etysoft.cute.components.ThemeLinearLayout>
+                </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/timeview"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

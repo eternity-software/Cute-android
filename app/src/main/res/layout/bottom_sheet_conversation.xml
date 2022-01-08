@@ -9,25 +9,25 @@
     android:background="@android:color/transparent">
 
 
-    <androidx.cardview.widget.CardView
+    <ru.etysoft.cute.components.dynamic.DynamicCardView
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="-20dp"
         android:paddingBottom="20dp"
         app:behavior_skipCollapsed="true"
-        app:cardBackgroundColor="@color/colorBackground"
         app:cardCornerRadius="20dp"
         app:cardElevation="3dp"
-        app:cardPreventCornerOverlap="true">
+        app:cardPreventCornerOverlap="true"
+        app:themeBackgroundCardTint="colorBackground">
 
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="12dp"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="20dp"
             android:orientation="vertical"
             android:visibility="visible">
@@ -48,33 +48,31 @@
                     app:srcCompat="@drawable/circle_gray" />
 
 
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:gravity="center_vertical"
-                    android:paddingVertical="8dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
 
-                    <ru.etysoft.cute.lang.components.LocalizableTextView
+                    <ru.etysoft.cute.components.dynamic.DynamicTextView
                         android:id="@+id/conv_name"
+                        style="@style/autoscroll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserratalternates_medium"
 
-                        style="@style/autoscroll"
                         android:ellipsize="marquee"
                         android:focusable="true"
-                        android:text="Сute Cummunity"
-                        android:textColor="@color/colorTextAccent"
+                        android:fontFamily="@font/montserratalternates_medium"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
-                        app:themeColor="colorTextAccent"
-                        android:textSize="20sp" />
+                        android:text="Сute Cummunity"
+                        android:textColor="@color/colorTextAccent"
+                        android:textSize="20sp"
+                        app:themeColor="colorTextAccent" />
 
-                    <TextView
+                    <ru.etysoft.cute.components.dynamic.DynamicTextView
                         android:id="@+id/conv_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -83,7 +81,8 @@
                         android:paddingVertical="10dp"
                         android:text="Описание этой беседы. Не пиду в армию ооууоо не пиду в армиюю Что? Бебра. Бебросня. Занюхнул беброчки конкретно)))"
                         android:textColor="@color/colorSupportText"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        app:themeColor="colorSupportText" />
 
 
                 </LinearLayout>
@@ -99,7 +98,7 @@
                 android:orientation="horizontal">
 
 
-                <ImageButton
+                <ru.etysoft.cute.components.dynamic.ThemeImageView
                     android:id="@+id/notification_button"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
@@ -114,9 +113,11 @@
                     android:scaleType="centerInside"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"
-                    app:srcCompat="@drawable/icon_notifications" />
+                    app:srcCompat="@drawable/icon_notifications"
+                    app:themeBackgroundTint="colorButton"
+                    app:themeImageColor="colorIconTintAccent" />
 
-                <ImageButton
+                <ru.etysoft.cute.components.dynamic.ThemeImageView
                     android:id="@+id/buttonAdd"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
@@ -131,47 +132,52 @@
                     android:scaleType="centerInside"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"
-                    app:srcCompat="@drawable/icon_add" />
+                    app:srcCompat="@drawable/icon_add"
+                    app:themeBackgroundTint="colorButton"
+                    app:themeImageColor="colorIconTintAccent" />
 
 
-                <ImageButton
+                <ru.etysoft.cute.components.dynamic.ThemeImageView
                     android:id="@+id/conv_delete"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="7dp"
+                    android:layout_weight="1"
                     android:background="@drawable/button_passive_mini"
+                    android:backgroundTint="@color/colorBackgroundElements"
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
-                    android:layout_weight="1"
                     android:maxLines="1"
                     android:scaleType="centerInside"
                     android:textColor="@color/colorWhite"
-                    android:textSize="14sp"
-                    android:tint="@color/colorFrontElements"
-                    android:backgroundTint="@color/colorBackgroundElements"
-                    android:transitionName="delbtn"
-                    app:srcCompat="@drawable/icon_delete" />
 
-                <ImageButton
+                    android:textSize="14sp"
+                    android:transitionName="delbtn"
+                    app:srcCompat="@drawable/icon_delete"
+                    app:themeBackgroundTint="colorBackgroundElements"
+                    app:themeImageColor="colorIconSupportTint" />
+
+                <ru.etysoft.cute.components.dynamic.ThemeImageView
                     android:id="@+id/conv_exit"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
+                    android:layout_weight="1"
                     android:background="@drawable/button_passive_mini"
+                    android:backgroundTint="@color/colorBackgroundElements"
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
                     android:maxLines="1"
                     android:scaleType="centerInside"
-                    android:layout_weight="1"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"
-                    android:tint="@color/colorFrontElements"
-                    android:backgroundTint="@color/colorBackgroundElements"
                     android:transitionName="exitbtn"
-                    app:srcCompat="@drawable/icon_exit" />
+                    app:srcCompat="@drawable/icon_exit"
+                    app:themeBackgroundTint="colorBackgroundElements"
+                    app:themeImageColor="colorIconSupportTint" />
             </LinearLayout>
 
             <TextView
@@ -208,17 +214,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/colorBackground"
-                android:scrollbars="none"
-                android:nestedScrollingEnabled="true"
                 android:dividerHeight="8dp"
-               >
+                android:nestedScrollingEnabled="true"
+                android:scrollbars="none">
 
             </ListView>
 
         </LinearLayout>
 
 
-
-    </androidx.cardview.widget.CardView>
+    </ru.etysoft.cute.components.dynamic.DynamicCardView>
 
 </RelativeLayout>

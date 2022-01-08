@@ -6,7 +6,7 @@
 
     android:layout_height="100dp">
 
-    <ru.etysoft.cute.components.ThemeImageView
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/imageView7"
         android:layout_width="70dp"
         android:layout_height="70dp"
@@ -16,7 +16,7 @@
         app:themeImageColor="colorCloud"
         />
 
-    <ru.etysoft.cute.components.ThemeImageView
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/imageView8"
         android:layout_width="70dp"
         android:layout_height="70dp"
@@ -27,7 +27,7 @@
         app:themeImageColor="colorCloud"
         />
 
-    <ru.etysoft.cute.lang.components.LocalizableTextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ru.etysoft.cute.lang.components.LocalizableTextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

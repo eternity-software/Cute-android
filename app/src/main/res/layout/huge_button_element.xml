@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.etysoft.cute.components.dynamic.ThemeLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/hugeButtonContainer"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+
+
+    android:background="@drawable/square_element_background"
+
+
+    app:themeBackgroundColor="colorBackgroundElement"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
+        android:id="@+id/hugeButtonIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="4dp"
+        android:layout_gravity="center"
+        app:themeImageColor="colorIconTintLight"
+        app:srcCompat="@drawable/icon_crop"/>
+
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
+        android:id="@+id/hugeButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:layout_marginLeft="8dp"
+        android:fontFamily="@font/montserratmedium"
+        android:text="lol!"
+        app:themeColor="colorGrayText"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:gravity="right"
+        android:layout_height="match_parent">
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:padding="8dp"
+
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/icon_expand_right"
+            app:themeImageColor="colorIconSupportTint" />
+    </LinearLayout>
+
+
+</ru.etysoft.cute.components.dynamic.ThemeLinearLayout>

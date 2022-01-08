@@ -62,7 +62,8 @@
     <color name="colorEditText">@color/colorBackgroundElements</color>
     <color name="colorEditTextOutline">@color/colorBackground</color>
     <color name="colorEditTextIcon">#FFF</color>
-
+    <color name="colorIconTintLight">@color/white</color>
+    <color name="colorGrayText">@color/white</color>
 
     <color name="colorBackButton">#FFFFFF</color>
     <color name="colorButtonText">#FFFFFF</color>
@@ -70,6 +71,7 @@
     <color name="colorPassiveButtonText">#CACACA</color>
 
     <color name="colorIconTint">#FFFFFF</color>
+    <color name="colorIconTintAccent">#FFFFFF</color>
     <color name="colorIconSupportTint">@color/colorPrimaryGray</color>
     <color name="colorPanelGray">@color/colorBackground</color>
     <color name="splashLogo">#FFFFFF</color>

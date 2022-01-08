@@ -10,21 +10,22 @@
     style="@style/AppSlideTheme"
     tools:context=".activities.messaging.MessagingActivity">
 
-    <View
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/divider4"
         android:layout_width="0dp"
         android:layout_height="1dp"
 
+        app:themeBackgroundTint="colorDivider"
         android:background="@color/colorDivider"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <View
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/divider3"
         android:layout_width="0dp"
         android:layout_height="1dp"
-
+        app:themeBackgroundTint="colorDivider"
         android:layout_marginTop="50dp"
         android:background="@color/colorDivider"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +43,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <ru.etysoft.cute.components.ThemeImageView
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/menuButton2"
         android:layout_width="30dp"
         android:paddingHorizontal="6dp"
@@ -56,7 +57,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_back_arrow" />
 
-    <ru.etysoft.cute.lang.components.LocalizableTextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -74,7 +75,7 @@
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ru.etysoft.cute.lang.components.LocalizableTextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -91,7 +92,7 @@
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <TextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/timeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,15 +102,17 @@
         android:textColor="@color/colorTextDark"
         android:paddingHorizontal="8dp"
         android:textSize="12sp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:text="2 апреля, 2022"
         android:fontFamily="@font/montserratalternates_medium"
         android:background="@drawable/square_text_background"
+        app:themeColor="colorTextDark"
+        app:themeColorBackground="colorTextBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundImage" />
 
-    <LinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/bottom_scroll_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -117,19 +120,21 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/circle_bottom_scroll"
         android:elevation="2dp"
-
-        android:visibility="gone"
+        app:themeBackgroundColor="colorBackground"
+        android:visibility="visible"
         android:onClick="scrollToBottom"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent" >
-        <ImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:layout_width="match_parent"
             android:padding="8dp"
             android:layout_height="match_parent"
             android:background="?actionBarItemBackground"
+            app:themeBackgroundTint="colorBackground"
+            app:themeImageColor="colorAccentIcon"
             app:srcCompat="@drawable/icon_popup_arrow"
-            app:tint="@color/colorAccentIcon" />
-    </LinearLayout>
+            />
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -159,13 +164,14 @@
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-            <ImageView
+            <ru.etysoft.cute.components.dynamic.ThemeImageView
                 android:layout_width="20dp"
                 android:layout_gravity="center_vertical"
                 app:srcCompat="@drawable/icon_close"
                 android:layout_height="30dp"
                 android:onClick="clearFwd"
-                app:tint="@color/colorIconTint" />
+                app:themeBackgroundTint="colorIconTint"
+                />
         </LinearLayout>
 
 
@@ -175,7 +181,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <ImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:id="@+id/imageView5"
             android:layout_width="37dp"
             android:layout_height="37dp"
@@ -186,28 +192,29 @@
             android:background="@drawable/circle_gray"
             android:padding="5dp"
             android:onClick="pickFiles"
+            app:themeImageColor="colorIconSupportTint"
+            app:themeBackgroundTint="colorBackgroundElements"
             app:srcCompat="@drawable/icon_image"
             app:tint="@color/colorSupportText" />
 
-        <EditText
+        <ru.etysoft.cute.components.dynamic.DynamicEditText
             android:id="@+id/message_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="8dp"
             android:layout_weight="1"
-            android:background="@color/colorBackground"
+            android:background="@color/colorTransparent"
             android:fontFamily="@font/montserratmedium"
             android:hint="@string/your_message"
             android:textColor="@color/colorMessageText"
             android:inputType="textMultiLine|textCapSentences"
             android:maxHeight="150dp"
-            android:backgroundTint="@color/colorBackground"
             android:textColorHint="@color/colorSupportText"
             app:themeColor="colorMessageText"
             android:textSize="16sp" />
 
-        <ru.etysoft.cute.components.ThemeImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:id="@+id/sendButton"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -218,6 +225,9 @@
             android:background="@drawable/circle_button_accent"
             android:onClick="onSendMessageButtonClick"
             android:padding="8dp"
+
+            app:themeImageColor="colorIconTintAccent"
+            app:themeBackgroundTint="colorButton"
             app:srcCompat="@drawable/icon_send"
 
              />
@@ -227,15 +237,19 @@
 
 
 
-    <ImageView
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/sendVoice"
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_marginVertical="7dp"
         android:layout_marginEnd="7dp"
         android:background="@drawable/circle_button_accent"
+
         android:padding="8dp"
         android:elevation="1dp"
+        app:themeImageColor="colorIconTintAccent"
+        app:themeBackgroundTint="colorButton"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
         app:srcCompat="@drawable/icon_microphone" />
@@ -275,13 +289,14 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <LinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/loadingLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
+        app:themeBackgroundColor="colorBackground"
         app:layout_constraintBottom_toBottomOf="@+id/messages"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -293,7 +308,7 @@
             android:layout_height="33dp"
             android:theme="@style/progressBarBlue" />
 
-    </LinearLayout>
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
 
 
@@ -362,12 +377,14 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/recordPanel"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorBackground"
         android:gravity="center"
+
+        app:themeBackgroundColor="colorBackground"
         android:orientation="vertical"
         android:visibility="invisible"
         android:elevation="5dp"
@@ -376,13 +393,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout3">
 
-        <TextView
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
+            app:themeColor="colorSupportText"
             android:gravity="center"
             android:text="@string/wait_for_record" />
-    </LinearLayout>
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

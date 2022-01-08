@@ -9,17 +9,17 @@
     android:theme="@style/AppTheme">
 
 
-
-    <androidx.cardview.widget.CardView
+    <ru.etysoft.cute.components.dynamic.DynamicCardView
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="-20dp"
         android:paddingBottom="20dp"
         app:behavior_skipCollapsed="true"
-        app:cardBackgroundColor="@color/colorBackground"
+
         app:cardCornerRadius="20dp"
         app:cardElevation="3dp"
+        app:themeBackgroundCardTint="colorBackground"
         app:cardPreventCornerOverlap="true">
 
         <LinearLayout
@@ -45,7 +45,7 @@
                     android:orientation="horizontal"
                     android:paddingBottom="10dp">
 
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:id="@+id/openCamera"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -53,29 +53,30 @@
                         android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_camera"
-                        app:themeImageColor="colorIconTint"
-                       />
+                        app:themeBackgroundTint="colorButtonCircle"
+                        app:themeImageColor="colorIconTint" />
 
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:id="@+id/convCreateButton"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_marginLeft="16dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
                         android:background="@drawable/button_circle_gray"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/icon_image"
-                        app:themeImageColor="colorIconTint"
-                        />
+                        app:themeBackgroundTint="colorButtonCircle"
+                        app:themeImageColor="colorIconTint" />
                 </LinearLayout>
 
 
             </HorizontalScrollView>
 
-            <androidx.cardview.widget.CardView
+            <ru.etysoft.cute.components.dynamic.DynamicCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
+                app:themeBackgroundCardTint="colorBackground"
                 app:cardBackgroundColor="@color/colorBackground"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="0dp">
@@ -92,7 +93,7 @@
 
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="3" />
-            </androidx.cardview.widget.CardView>
+            </ru.etysoft.cute.components.dynamic.DynamicCardView>
 
         </LinearLayout>
 
@@ -101,11 +102,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="false"
-            android:layout_marginEnd="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
             android:text="debug_info"
             android:textColor="#292929" />
 
-    </androidx.cardview.widget.CardView>
+    </ru.etysoft.cute.components.dynamic.DynamicCardView>
 
 </RelativeLayout>

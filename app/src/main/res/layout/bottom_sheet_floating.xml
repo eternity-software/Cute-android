@@ -40,7 +40,7 @@
                 android:padding="20dp"
                 app:srcCompat="@drawable/logo_outlined" />
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/BottomTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 app:themeColor="colorText"
                 android:textSize="24sp" />
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/BottomText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                     android:textColor="@color/colorText"
                     android:textSize="14sp" />
 
-                <ru.etysoft.cute.lang.components.LocalizableButton
+                <ru.etysoft.cute.components.dynamic.DynamicButton
                     android:id="@+id/ButtonActive"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"

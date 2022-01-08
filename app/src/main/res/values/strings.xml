@@ -154,4 +154,8 @@
     <string name="chat_beginning_text">Let there be light</string>
     <string name="you">You</string>
     <string name="change_cover">Change cover</string>
+    <string name="login_and_auth">Login and authentication</string>
+    <string name="app">App</string>
+    <string name="session_management">Session management</string>
+    <string name="appearance">Appearance</string>
 </resources>

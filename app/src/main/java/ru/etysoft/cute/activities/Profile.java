@@ -87,7 +87,7 @@ public class Profile extends AppCompatActivity {
                                 TextView statusView = findViewById(R.id.statusView);
                                 TextView bioView = findViewById(R.id.bioView);
 
-                                final ImageButton friendButton = findViewById(R.id.friendButton);
+                                final ImageView friendButton = findViewById(R.id.friendButton);
 
                                 if(getUserResponse.getUser().isFriend())
                                 {

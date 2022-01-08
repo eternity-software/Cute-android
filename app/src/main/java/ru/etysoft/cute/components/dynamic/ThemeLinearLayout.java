@@ -1,4 +1,4 @@
-package ru.etysoft.cute.components;
+package ru.etysoft.cute.components.dynamic;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -34,8 +34,13 @@ public class ThemeLinearLayout extends LinearLayout {
 
     @Override
     public void setBackground(Drawable background) {
-
         super.setBackground(background);
+        updateTint();
+    }
+
+    @Override
+    public void setBackgroundResource(int resid) {
+        super.setBackgroundResource(resid);
         updateTint();
     }
 
@@ -46,7 +51,6 @@ public class ThemeLinearLayout extends LinearLayout {
                 getBackground().setColorFilter(Theme.getColor(String.valueOf(backgroundTint)), PorterDuff.Mode.SRC_ATOP);
                 // getBackground().setT(Theme.getColor(String.valueOf(color)));
             } catch (NoSuchValueException e) {
-                e.printStackTrace();
                 getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(backgroundTint), R.color.class)), PorterDuff.Mode.SRC_ATOP);
             }
             requestLayout();

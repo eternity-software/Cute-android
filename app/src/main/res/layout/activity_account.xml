@@ -7,7 +7,7 @@
     android:background="@color/colorBackground"
     tools:context=".activities.Account">
 
-    <ru.etysoft.cute.components.ThemeLinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
 
                     android:layout_weight="1">
 
-                    <ru.etysoft.cute.lang.components.LocalizableTextView
+                    <ru.etysoft.cute.components.dynamic.DynamicTextView
                         android:id="@+id/login"
                         android:layout_width="wrap_content"
                         android:layout_height="28dp"
@@ -69,7 +69,7 @@
                     android:gravity="right"
                     android:orientation="horizontal">
 
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:id="@+id/editProfile"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                         app:themeImageColor="colorSupportButton"/>
 
 
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:id="@+id/imageView20"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                         app:srcCompat="@drawable/icon_qr_code"
                        />
 
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:id="@+id/setting"
                         android:layout_width="28dp"
                         android:layout_height="wrap_content"
@@ -101,12 +101,14 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/statusView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
                 android:textSize="12sp"
+                app:themeColor="colorSupportText"
+                app:themeColorLink="colorTextLink"
                 android:fontFamily="@font/montserrat"
                 android:text="@string/no_status" />
 
@@ -114,7 +116,7 @@
         </LinearLayout>
 
 
-    </ru.etysoft.cute.components.ThemeLinearLayout>
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -148,14 +150,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal" >
-                    <ru.etysoft.cute.components.ThemeImageView
+                    <ru.etysoft.cute.components.dynamic.ThemeImageView
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
                         android:padding="5dp"
                         app:themeImageColor="colorIconTint"
                         app:srcCompat="@drawable/icon_people"
                         />
-                    <ru.etysoft.cute.lang.components.LocalizableTextView
+                    <ru.etysoft.cute.components.dynamic.DynamicTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserratalternates_medium"

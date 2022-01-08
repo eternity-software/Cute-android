@@ -46,8 +46,6 @@
 
     <color name="colorPrimaryDark">#4E4E4E</color>
 
-
-
     <color name="colorLightGray">#D9D9D9</color>
     <color name="colorUnderWhite">#F9F9F9</color>
     <color name="colorMainLight">#7D93FF</color>
@@ -63,17 +61,9 @@
     <color name="colorSupportButton">@color/colorPrimaryDark</color>
 
 
-
-    <color name="colorTitle">@color/accent_blue</color>
-    <color name="colorButton">@color/accent_blue</color>
     <color name="colorTextBackground">#D7FFFFFF</color>
-    <color name="colorMessageState">@color/accent_blue</color>
+
     <color name="colorBackgroundElement">@color/colorLightLGray</color>
-
-
-
-
-    <color name="colorUnreadBackground">#A1F3F3F3</color>
 
 
     <color name="colorNavigationUnfocused">@color/achromatic_75</color>
@@ -84,28 +74,48 @@
     <color name="colorEditTextIcon">#ACACAC</color>
 
 
-    <color name="colorBackButton">#D8D8D8</color>
-    <color name="colorButtonText">#FFFFFF</color>
-    <color name="colorHint">#757575</color>
-    <color name="colorPassiveButtonText">#505050</color>
 
+
+    <!-- Snap buttons -->
     <color name="colorIconTint">@color/accent_support</color>
-    <color name="colorIconSupportTint">@color/colorPrimaryGray</color>
+    <color name="colorIconTintAccent">#FFFFFF</color>
+    <color name="colorIconSupportTint">#878787</color>
+    <color name="colorButton">@color/accent_blue</color>
+    <color name="colorButtonCircle">@color/colorLightLGray</color>
+
+    <!-- Buttons -->
+    <color name="colorPassiveMini">#ECECEC</color>
+    <color name="colorPassiveMiniOutline">#ECECEC</color>
+    <color name="colorButtonTrans">@color/text_soft_gray</color>
+    <color name="colorBackButton">#D8D8D8</color>
+    <color name="colorButtonPassive">@color/colorLightLGray</color>
+    <color name="colorIconTintLight">@color/colorMainLight</color>
+
     <color name="colorCloud">@color/colorMainLight</color>
     <color name="colorPanelGray">@color/colorLightLGray</color>
     <color name="splashLogo">@color/accent_blue</color>
 
-
-    <color name="colorPassiveMini">#ECECEC</color>
-    <color name="colorPassiveMiniOutline">#ECECEC</color>
-
     <color name="colorBackground">#FFFFFF</color>
-    <color name="colorDarkBackground">#EFEFEF</color>
     <color name="colorBackgroundElements">#D6D6D6</color>
-    <color name="colorFrontElements">#A2A2A2</color>
-    <color name="colorPassiveImage">#FFFFFF</color>
+
+
+    <!-- Text -->
     <color name="colorText">#252525</color>
     <color name="colorTextAccent">@color/accent_blue</color>
+    <color name="colorSupportText">@color/text_soft_gray</color>
+    <color name="colorGrayText">@color/colorPrimaryDark</color>
+    <color name="colorChatMessageText">#FFFFFF</color>
+    <color name="colorChatMessageLink">#FFFFFF</color>
+    <color name="colorMyMessageText">#171717</color>
+    <color name="colorMyMessageLink">@color/accent_blue</color>
+    <color name="colorTextLink">#BABABA</color>
+    <color name="colorTextPanel">@color/colorLightLGray</color>
+    <color name="colorButtonText">#FFFFFF</color>
+    <color name="colorHint">#757575</color>
+    <color name="colorPassiveButtonText">#505050</color>
+    <color name="colorTitle">@color/accent_blue</color>
+
+
     <color name="colorError">@color/colorOrange</color>
     <color name="colorErrorIcon">@color/colorOrange</color>
     <color name="colorSuccess">@color/state_green</color>
@@ -120,31 +130,24 @@
     <color name="colorOnline">@color/state_green</color>
     <color name="colorOnlineOutLine">@color/white</color>
 
-    <color name="colorSupportText">@color/text_soft_gray</color>
-    <color name="colorButtonTrans">@color/text_soft_gray</color>
-    <color name="colorButtonPassive">@color/colorLightLGray</color>
-
-    <color name="colorButtonCircle">@color/colorLightLGray</color>
 
     <color name="colorAccountTop">@color/colorLightLGray</color>
 
     <color name="colorProgressBar">@color/accent_blue</color>
 
     <color name="colorAltSupport">@color/accent_blue</color>
+
+
     <color name="colorNotReaded">#F4F4F4</color>
     <color name="colorNoMessagesPlanet">@color/accent_blue</color>
     <color name="colorMyMessage">#E6E6E6</color>
     <color name="colorMessage">@color/accent_blue</color>
-    <color name="colorChatMessageText">#FFFFFF</color>
-    <color name="colorChatMessageLink">#FFFFFF</color>
-    <color name="colorMyMessageText">#171717</color>
-    <color name="colorMyMessageLink">@color/accent_blue</color>
-    <color name="colorTextLink">#BABABA</color>
+    <color name="colorUnreadBackground">#EDEDED</color>
+    <color name="colorMessageState">@color/accent_blue</color>
 
-    <color name="colorTextPanel">@color/colorLightLGray</color>
 
     <color name="colorOffline">#707070</color>
-    <color name="colorOfflineOutLine">#FFFF</color>
+    <color name="colorOfflineOutLine">@color/colorBackground</color>
 
     <color name="colorTransparent">#00C1C1C1</color>
     <color name="colorTooltip">#B0000000</color>

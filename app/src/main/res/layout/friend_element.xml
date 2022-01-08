@@ -5,7 +5,7 @@
     android:padding="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ru.etysoft.cute.components.ThemeLinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:paddingVertical="4dp"
             android:paddingLeft="8dp">
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/displayNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                 app:themeColor="colorTextDark"
                 />
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/onlineView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <ru.etysoft.cute.components.ThemeImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:layout_width="24dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
@@ -57,6 +57,6 @@
             android:scaleType="centerInside"
             app:srcCompat="@drawable/icon_expand_right"
             app:themeImageColor="colorIconSupportTint" />
-    </ru.etysoft.cute.components.ThemeLinearLayout>
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
 </RelativeLayout>

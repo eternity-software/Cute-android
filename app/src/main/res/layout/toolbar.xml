@@ -26,7 +26,7 @@
                 app:srcCompat="@drawable/icon_back_arrow"
                 app:tint="@color/colorBackButton" />
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

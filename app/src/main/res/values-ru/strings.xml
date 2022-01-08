@@ -130,4 +130,8 @@
     <string name="fwd_message">Пересланное сообщение</string>
     <string name="empty_message">Пустое сообщение</string>
     <string name="loading_history">Загружаем историю...</string>
+    <string name="login_and_auth">Вход и регистрация</string>
+    <string name="app">Приложение</string>
+    <string name="session_management">Управление сессиями</string>
+    <string name="appearance">Внешний вид</string>
 </resources>

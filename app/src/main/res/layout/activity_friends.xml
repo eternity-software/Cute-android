@@ -44,7 +44,7 @@
             android:gravity="right"
             android:layout_marginRight="10dp"
             android:orientation="horizontal">
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/requestCountView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,6 +56,7 @@
                 android:fontFamily="@font/montserratalternates_medium"
                 app:localizableKey="friends_requests"
                 app:themeColor="colorButtonText"
+                app:themeColorBackground="accent_support"
                 android:onClick="openRequests"
                 android:text="@string/friends_requests"
                 android:paddingHorizontal="8dp"

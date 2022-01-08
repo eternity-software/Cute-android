@@ -39,7 +39,7 @@
 
             </LinearLayout>
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/loginView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
                 android:textSize="36sp"
                 app:localizableKey="confirmation" />
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ru.etysoft.cute.lang.components.LocalizableTextView
+                <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratmedium"
@@ -96,7 +96,7 @@
             </LinearLayout>
 
 
-            <ru.etysoft.cute.lang.components.LocalizableEditText
+            <ru.etysoft.cute.components.dynamic.DynamicEditText
                 android:id="@+id/edittext_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
                 android:textColor="@color/colorText"
                 app:localizableHint="confirmation_edit" />
 
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/cant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
 
         </LinearLayout>
 
-        <ru.etysoft.cute.lang.components.LocalizableButton
+        <ru.etysoft.cute.components.dynamic.DynamicButton
             android:id="@+id/button_next"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"

@@ -20,7 +20,7 @@
             android:layout_height="300dp"
             app:srcCompat="@drawable/icon_uber" />
 
-        <ru.etysoft.cute.lang.components.LocalizableTextView
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
             android:id="@+id/textView10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

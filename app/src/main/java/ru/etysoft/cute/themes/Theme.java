@@ -3,9 +3,13 @@ package ru.etysoft.cute.themes;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -77,7 +81,6 @@ public class Theme {
             Field idField = c.getDeclaredField(resName);
             return idField.getInt(idField);
         } catch (Exception e) {
-            e.printStackTrace();
             return -1;
         }
     }
@@ -86,12 +89,12 @@ public class Theme {
         try {
             return getColor(context.getResources().getResourceName(resId).split(":")[1].split("/")[1]);
         } catch (Exception e) {
-            e.printStackTrace();
             try {
                 return context.getResources().getColor(resId);
             }
             catch (Exception exception)
             {
+
                 return Color.RED;
             }
         }
@@ -99,7 +102,8 @@ public class Theme {
 
     public static int getColor(String name) throws NoSuchValueException {
 
-        if(name == null) return Color.RED;
+        if(name.startsWith("@")) name = name.split("/")[1];
+        if(name == null) return Color.MAGENTA;
         String colorHex = stringsRepository.getValue(name);
 
 
@@ -120,6 +124,26 @@ public class Theme {
         }
 
 
+    }
+
+
+
+    public static void applyThemeToActivity(Activity activity)
+    {
+        Window window = activity.getWindow();
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.clearFlags(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+// finally change the color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            window.setStatusBarColor(getColor(activity, R.color.colorBackground));
+        }
     }
 
     public static void loadFromUrl(final String urlToXml, final Activity context, final boolean silentMode) {

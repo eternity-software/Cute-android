@@ -27,6 +27,7 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.FileParingImageView;
 import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.images.WaterfallBalancer;
+import ru.etysoft.cute.themes.Theme;
 
 public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.ViewHolder> {
 
@@ -58,7 +59,7 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.file_picker_image, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.fileParingImageView.getFileParingImageView().setImageDrawable(context.getResources().getDrawable(R.drawable.icon_image));
+       viewHolder.fileParingImageView.getFileParingImageView().setImageDrawable(null);
         return viewHolder;
     }
 
@@ -69,7 +70,9 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         System.out.println(images.get(position).getMimeType());
 
         try {
-            picturesView.getFileParingImageView().setImageDrawable(context.getResources().getDrawable(R.drawable.icon_image));
+
+            picturesView.getFileParingImageView().setBackgroundColor(Theme.getColor(context, R.color.colorBackgroundElements));
+            picturesView.getFileParingImageView().setImageDrawable(null);
 
             waterfallBalancer.add(picturesView);
 

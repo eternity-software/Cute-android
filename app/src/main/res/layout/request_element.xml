@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ru.etysoft.cute.components.ThemeLinearLayout
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:paddingLeft="8dp"
             android:layout_weight="1"
             android:orientation="vertical">
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/displayNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 app:themeColor="colorTextDark"
                 android:fontFamily="@font/montserratalternates_medium"
                 />
-            <ru.etysoft.cute.lang.components.LocalizableTextView
+            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/onlineView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 android:fontFamily="@font/montserratalternates_medium"
                 />
         </LinearLayout>
-        <ru.etysoft.cute.components.ThemeImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:id="@+id/declineButton"
             android:layout_width="32dp"
             android:layout_height="match_parent"
@@ -55,7 +55,7 @@
             android:padding="8dp"
             app:srcCompat="@drawable/icon_deny"
             app:themeImageColor="colorAccentIcon"  />
-        <ru.etysoft.cute.components.ThemeImageView
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
             android:id="@+id/acceptButton"
             android:layout_width="32dp"
             android:layout_height="match_parent"
@@ -64,6 +64,6 @@
             android:padding="6dp"
             app:srcCompat="@drawable/icon_add"
             app:themeImageColor="colorAccentIcon" />
-    </ru.etysoft.cute.components.ThemeLinearLayout>
+    </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
 </RelativeLayout>

@@ -7,7 +7,7 @@
 
     android:layout_height="wrap_content">
 
-    <ru.etysoft.cute.components.ThemeImageView
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/forwardedMessageDivider"
         android:layout_width="2dp"
         android:layout_height="40dp"
@@ -15,7 +15,7 @@
         app:srcCompat="@drawable/forwarded_message_divider"
         app:themeImageColor="accent_support" />
 
-    <ru.etysoft.cute.lang.components.LocalizableTextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/senderDisplayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         app:themeColor="colorTextAccent"
         android:textSize="12sp" />
 
-    <ru.etysoft.cute.lang.components.LocalizableTextView
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
         android:id="@+id/forwardedMessageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
