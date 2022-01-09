@@ -18,6 +18,11 @@ public class CachedUrls {
         cacheUtils.setString(CacheKeys.CUSTOM_THEME, email, context);
     }
 
+    public static void removeThemeUrl(Context context) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.removeString(CacheKeys.CUSTOM_THEME, context);
+    }
+
     public static String getLangUrl(Context context) throws NotCachedException {
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (!cacheUtils.hasKey(CacheKeys.CUSTOM_LANG, context)) throw new NotCachedException();

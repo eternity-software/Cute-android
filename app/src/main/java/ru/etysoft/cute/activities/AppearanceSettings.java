@@ -12,6 +12,7 @@ import com.r0adkll.slidr.Slidr;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.data.CacheUtils;
+import ru.etysoft.cute.data.CachedUrls;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.themes.Theme;
@@ -202,6 +203,7 @@ public class AppearanceSettings extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_appearance_settings);
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (cacheUtils.hasKey(ISDARK_THEME, this)) {
@@ -211,6 +213,7 @@ public class AppearanceSettings extends AppCompatActivity {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         Slidr.attach(this);
     }
 
@@ -227,11 +230,7 @@ public class AppearanceSettings extends AppCompatActivity {
         }
 
 
-        // Пересоздание активности для красивой смены темы
-        Intent intent = new Intent(AppearanceSettings.this, AppearanceSettings.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
+
 
     }
 
@@ -240,16 +239,23 @@ public class AppearanceSettings extends AppCompatActivity {
     }
 
     public void resetTheme(View v) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        CachedUrls.removeThemeUrl(this);
         CachedValues.removeCustomTheme(this);
         Theme.clear();
         recreateTheme();
+        applyChanges();
     }
 
     public void oldSchoolTheme(View v) {
         try {
             if (Theme.isDayTheme(this)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                CachedUrls.removeThemeUrl(this);
                 Theme.applyXml(oldSchoolLight, this);
-                recreateTheme();
+                applyChanges();
             }
 
         } catch (LanguageParsingException e) {
@@ -258,11 +264,21 @@ public class AppearanceSettings extends AppCompatActivity {
 
     }
 
+    public void applyChanges() {
+        Intent intent = new Intent(AppearanceSettings.this, AppearanceSettings.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
+    }
+
     public void onLightThemeClick(View v) {
+
         changeTheme(true);
+        applyChanges();
     }
 
     public void onDarkThemeClick(View v) {
         changeTheme(false);
+        applyChanges();
     }
 }
