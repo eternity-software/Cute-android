@@ -128,6 +128,11 @@ public class CachedValues {
         cacheUtils.removeString(CacheKeys.CUSTOM_LANG, context);
     }
 
+    public static void removeCustomTheme(Context context) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.removeString(CacheKeys.THEME, context);
+    }
+
     public class CacheKeys {
         public final static String THEME = "theme";
         public final static String SESSION_KEY = "session";

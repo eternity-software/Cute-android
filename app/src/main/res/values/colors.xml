@@ -91,6 +91,7 @@
     <color name="colorButtonPassive">@color/colorLightLGray</color>
     <color name="colorIconTintLight">@color/colorMainLight</color>
 
+
     <color name="colorCloud">@color/colorMainLight</color>
     <color name="colorPanelGray">@color/colorLightLGray</color>
     <color name="splashLogo">@color/accent_blue</color>
@@ -177,4 +178,8 @@
     <color name="avatar19">#373737</color>
     <color name="avatar20">#DC8BFF</color>
 
+    <!-- Theme preview colors -->
+    <color name="colorMessageOldschool">#C043FB</color>
+    <color name="colorMyMessageOldschool">#C6C6C6</color>
+    <color name="colorBackgroundOldschool">@color/colorBackground</color>
 </resources>

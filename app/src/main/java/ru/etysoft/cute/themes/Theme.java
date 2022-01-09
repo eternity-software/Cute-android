@@ -9,7 +9,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -171,6 +170,15 @@ public class Theme {
             }
         });
         loading.start();
+    }
+
+    public static void clear() {
+        stringsRepository.clear();
+    }
+
+    public static void applyXml(String xmlString, Context context) throws LanguageParsingException {
+        stringsRepository.applyXml(xmlString);
+        CachedValues.saveTheme(context, xmlString);
     }
 
     public static void loadExisting(Activity context) throws NotCachedException, LanguageParsingException {

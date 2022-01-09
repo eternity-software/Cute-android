@@ -44,4 +44,10 @@
         <attr name="hugeButtonText" format="string" />
         <attr name="hugeButtonIcon" format="integer" />
     </declare-styleable>
+    <declare-styleable name="ThemePreview">
+        <attr name="themePreviewBackground" format="integer" />
+        <attr name="themePreviewMyMessageColor" format="integer" />
+        <attr name="themePreviewChatMessageColor" format="integer" />
+        <attr name="themePreviewName" format="string" />
+    </declare-styleable>
 </resources>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.etysoft.cute.components.dynamic.ThemeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    app:themeBackgroundColor="colorBackground"
+    tools:context=".activities.AppearanceSettings">
+
+    <ru.etysoft.cute.components.LightToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:caption="@string/appearance"
+        app:captionLocId="appearance" />
+
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:background="?attr/selectableItemBackground"
+        android:fontFamily="@font/montserratalternates_medium"
+        android:gravity="bottom"
+        android:paddingLeft="20dp"
+        android:singleLine="true"
+        android:text="@string/theme"
+        android:textColor="@color/colorTextAccent"
+        android:textSize="14sp"
+        app:localizableKey="theme"
+        app:themeColor="colorSupportText" />
+
+    <ru.etysoft.cute.components.HugeButton
+        style="?selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:onClick="onLightThemeClick"
+        app:hugeButtonIcon="@drawable/icon_appearance"
+        app:hugeButtonText="day_theme" />
+
+    <ru.etysoft.cute.components.HugeButton
+        style="?selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:onClick="onDarkThemeClick"
+        app:hugeButtonIcon="@drawable/icon_appearance"
+        app:hugeButtonText="night_theme"
+
+        />
+
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:background="?attr/selectableItemBackground"
+        android:fontFamily="@font/montserratalternates_medium"
+        android:gravity="bottom"
+        android:paddingLeft="20dp"
+        android:singleLine="true"
+        android:text="@string/color_scheme"
+        android:textColor="@color/colorTextAccent"
+        android:textSize="14sp"
+        app:localizableKey="color_scheme"
+        app:themeColor="colorSupportText" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:scrollbarThumbHorizontal="@color/colorTransparent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ru.etysoft.cute.components.ThemePreview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="resetTheme"
+                app:themePreviewBackground="@color/colorBackground"
+                app:themePreviewChatMessageColor="@color/colorMessage"
+                app:themePreviewMyMessageColor="@color/colorMyMessage"
+                app:themePreviewName="@string/theme_default" />
+
+            <ru.etysoft.cute.components.ThemePreview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:onClick="oldSchoolTheme"
+                app:themePreviewBackground="@color/colorBackgroundOldschool"
+                app:themePreviewChatMessageColor="@color/colorMessageOldschool"
+                app:themePreviewMyMessageColor="@color/colorMyMessageOldschool"
+                app:themePreviewName="@string/theme_oldschool" />
+
+            <ru.etysoft.cute.components.ThemePreview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp" />
+
+            <ru.etysoft.cute.components.ThemePreview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp" />
+
+            <ru.etysoft.cute.components.ThemePreview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp" />
+
+            <ru.etysoft.cute.components.ThemePreview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp" />
+
+            <ru.etysoft.cute.components.ThemePreview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</ru.etysoft.cute.components.dynamic.ThemeLinearLayout>

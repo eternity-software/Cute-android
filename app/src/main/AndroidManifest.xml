@@ -15,7 +15,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.intent.action.MEDIA_MOUNTED" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -30,6 +32,9 @@
         android:roundIcon="@mipmap/launcher_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.AppearanceSettings"
+            android:exported="false" />
         <activity
             android:name=".activities.camera.CameraActivity"
             android:exported="true" />

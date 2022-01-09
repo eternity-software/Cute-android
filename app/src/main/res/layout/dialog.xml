@@ -96,6 +96,7 @@
                         android:paddingRight="10dp"
                         android:text="@string/adialog_yes"
                         android:textColor="@color/colorWhite"
+                        app:themeButtonBackground="colorButton"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>

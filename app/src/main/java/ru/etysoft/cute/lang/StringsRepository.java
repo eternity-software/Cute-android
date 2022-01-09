@@ -1,6 +1,5 @@
 package ru.etysoft.cute.lang;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,17 +9,16 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.StringReader;
 import java.util.HashMap;
 
-import ru.etysoft.cute.R;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
 
 public class StringsRepository {
 
-    private final HashMap<String, String> values = new HashMap<>();
+    private HashMap<String, String> values = new HashMap<>();
 
     public void applyXml(String xmlString) throws LanguageParsingException {
         try {
-
+            values.clear();
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xmlPullParser = factory.newPullParser();
@@ -30,7 +28,7 @@ public class StringsRepository {
             String key = null;
             String value = null;
             boolean lastStartTag = false;
-            values.clear();
+
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
@@ -56,6 +54,10 @@ public class StringsRepository {
             e.printStackTrace();
             throw new LanguageParsingException();
         }
+    }
+
+    public void clear() {
+        values.clear();
     }
 
     public String getOrDefault(int resId, Context context) {

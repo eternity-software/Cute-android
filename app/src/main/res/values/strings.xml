@@ -158,4 +158,10 @@
     <string name="app">App</string>
     <string name="session_management">Session management</string>
     <string name="appearance">Appearance</string>
+    <string name="theme">Theme</string>
+    <string name="day_theme">Light mode</string>
+    <string name="night_theme">Dark mode</string>
+    <string name="color_scheme">Color scheme</string>
+    <string name="theme_default">Default</string>
+    <string name="theme_oldschool">Oldschool</string>
 </resources>

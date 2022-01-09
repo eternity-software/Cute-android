@@ -153,4 +153,8 @@
     <color name="avatar19">#373737</color>
     <color name="avatar20">#DC8BFF</color>
 
+    <!-- Theme preview colors -->
+    <color name="colorMessageOldschool">#C043FB</color>
+    <color name="colorMyMessageOldschool">#505050</color>
+    <color name="colorBackgroundOldschool">#3C3C3C</color>
 </resources>

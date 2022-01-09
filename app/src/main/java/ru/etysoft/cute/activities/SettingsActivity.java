@@ -15,8 +15,8 @@ import ru.etysoft.cute.AlertDialog;
 import ru.etysoft.cute.BuildConfig;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.meet.MeetActivity;
-import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CacheUtils;
+import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.themes.Theme;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -30,14 +30,15 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         cacheUtils = CacheUtils.getInstance();
-        getSupportFragmentManager()
+        /*getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.settings, new SettingsFragment())
-                .commit();
+                .commit();*/
 
         AlertDialog alertDialog = new AlertDialog(this, "Кастомная тема", "Вы можете применить кастомную тему", new AlertDialog.DialogHandler() {
             @Override
             public void onPositiveClicked(String input) {
+                CachedValues.removeCustomTheme(getApplicationContext());
                 Theme.loadFromUrl(input, SettingsActivity.this, false);
             }
 
@@ -57,18 +58,12 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        if (cacheUtils.hasKey(ISDARK_THEME, this)) {
-            if (cacheUtils.getBoolean(ISDARK_THEME, this)) {
-                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            } else {
-                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
-        }
+
     }
 
-    public void openSessionManagement(View v)
-    {
-        CuteToast.showSuccess("aaa", this);
+    public void openSessionManagement(View v) {
+        Intent appearanceIntent = new Intent(SettingsActivity.this, AppearanceSettings.class);
+        startActivity(appearanceIntent);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

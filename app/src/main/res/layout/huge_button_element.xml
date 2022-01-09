@@ -7,7 +7,7 @@
     android:layout_height="50dp"
 
 
-    android:background="@drawable/square_element_background"
+    android:background="@drawable/huge_button"
 
 
     app:themeBackgroundColor="colorBackgroundElement"

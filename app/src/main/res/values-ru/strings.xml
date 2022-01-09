@@ -134,4 +134,10 @@
     <string name="app">Приложение</string>
     <string name="session_management">Управление сессиями</string>
     <string name="appearance">Внешний вид</string>
+    <string name="theme">Тема</string>
+    <string name="day_theme">Светлая тема</string>
+    <string name="night_theme">Тёмная тема</string>
+    <string name="color_scheme">Цветовая схема</string>
+    <string name="theme_default">Стандарт</string>
+    <string name="theme_oldschool">Дедовский</string>
 </resources>
