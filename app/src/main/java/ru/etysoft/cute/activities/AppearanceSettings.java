@@ -1,18 +1,12 @@
 
 package ru.etysoft.cute.activities;
 
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.PorterDuff;
-import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -22,6 +16,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.r0adkll.slidr.Slidr;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.SelectFrame;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedUrls;
 import ru.etysoft.cute.data.CachedValues;
@@ -176,21 +171,35 @@ public class AppearanceSettings extends AppCompatActivity {
         GradientDrawable  gradientBackground = new GradientDrawable(  GradientDrawable.Orientation.LEFT_RIGHT,
                 new int[] { manipulateColor(0xFF000000, factor),manipulateColor(0xFF0000FF, factor),
                         manipulateColor(0xFF00FF00, factor), manipulateColor(0xFF00FFFF, factor),
-                                manipulateColor( 0xFFFF0000, factor), manipulateColor(0xFFFF00FF, factor),
-                                        manipulateColor(0xFFFFFF00, factor), manipulateColor(0xFFFFFFFF, factor)});
-
+                        manipulateColor(0xFFFF0000, factor), manipulateColor(0xFFFF00FF, factor),
+                        manipulateColor(0xFFFFFF00, factor), manipulateColor(0xFFFFFFFF, factor)});
 
 
         gradientBackground.setCornerRadius(Numbers.dpToPx(10f, this));
 
 
+        findViewById(R.id.colorBox).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectFrame selectFrame = findViewById(R.id.selectFrame);
+                selectFrame.select(v);
+            }
+        });
+
+        findViewById(R.id.colorBox2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectFrame selectFrame = findViewById(R.id.selectFrame);
+                selectFrame.select(v);
+            }
+        });
 
 
         seekBar.setProgressDrawable(gradientBackground);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-               seekBar.getThumb().setColorFilter(getColorFromProgress(progress), PorterDuff.Mode.SRC_ATOP);
+                seekBar.getThumb().setColorFilter(getColorFromProgress(progress), PorterDuff.Mode.SRC_ATOP);
             }
 
             @Override
@@ -286,19 +295,32 @@ public class AppearanceSettings extends AppCompatActivity {
         applyChanges();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        SelectFrame selectFrame = findViewById(R.id.selectFrame);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int topOffset = dm.heightPixels - findViewById(R.id.rootView).getMeasuredHeight();
+
+        selectFrame.select(findViewById(R.id.defaultPreview));
+    }
+
     public void oldSchoolTheme(View v) {
-//        try {
-//            if (Theme.isDayTheme(this)) {
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//                CachedUrls.removeThemeUrl(this);
-//                Theme.applyXml(oldSchoolLight, this);
-//                applyChanges();
-//            }
-//
-//        } catch (LanguageParsingException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            if (Theme.isDayTheme(this)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                CachedUrls.removeThemeUrl(this);
+                Theme.applyXml(oldSchoolLight, this);
+                applyChanges();
+            }
+
+        } catch (LanguageParsingException e) {
+            e.printStackTrace();
+        }
         applyChanges();
     }
 

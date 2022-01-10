@@ -140,4 +140,5 @@
     <string name="color_scheme">Цветовая схема</string>
     <string name="theme_default">Стандарт</string>
     <string name="theme_oldschool">Дедовский</string>
+    <string name="info">О приложении</string>
 </resources>

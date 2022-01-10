@@ -7,6 +7,7 @@
     android:background="@color/colorBackground"
     android:orientation="vertical"
     app:themeBackgroundColor="colorBackground"
+    android:id="@+id/rootView"
     tools:context=".activities.AppearanceSettings">
 
     <ru.etysoft.cute.components.LightToolbar
@@ -78,6 +79,7 @@
             android:orientation="horizontal">
 
             <ru.etysoft.cute.components.ThemePreview
+                android:id="@+id/defaultPreview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="resetTheme"
@@ -134,8 +136,23 @@
     <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/colorBox"
         android:layout_width="100dp"
-        android:background="@drawable/square_rounded_corners"
-        app:themeBackgroundColor="themeAccent"
-        android:layout_height="100dp"/>
+        android:background="@drawable/square_element_background"
+        app:themeBackgroundColor="themeAccentLight"
+
+        android:layout_height="100dp" />
+
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
+        android:id="@+id/colorBox2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/square_element_background"
+
+        app:themeBackgroundColor="themeAccentLight" />
+
+    <ru.etysoft.cute.components.SelectFrame
+        android:id="@+id/selectFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/select_frame" />
 
 </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>

@@ -138,5 +138,15 @@
         app:hugeButtonIcon="@drawable/icon_appearance"
         android:onClick="openSessionManagement" />
 
+    <ru.etysoft.cute.components.HugeButton
+        style="?selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:onClick="openSessionManagement"
+        app:hugeButtonIcon="@drawable/icon_info"
+        app:hugeButtonText="info" />
+
 
 </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>

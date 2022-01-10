@@ -52,7 +52,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-        alertDialog.show();
+        //  alertDialog.show();
+
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
