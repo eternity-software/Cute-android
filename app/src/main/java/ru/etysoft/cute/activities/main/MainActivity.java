@@ -110,12 +110,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                    SocketHolder.initialize(CachedValues.getSessionKey(MainActivity.this));
                     ProcessLifecycleOwner.get().getLifecycle().addObserver(MainActivity.this);
-                    } catch (NotCachedException e) {
-                        e.printStackTrace();
-                    }
                 }
             });
             thread.start();

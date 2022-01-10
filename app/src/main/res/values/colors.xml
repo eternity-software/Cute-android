@@ -92,12 +92,14 @@
 
 
 
+
     <!-- Snap buttons -->
     <color name="colorIconTint">@color/themeAccent</color>
     <color name="colorIconTintAccent">#FFFFFF</color>
     <color name="colorIconSupportTint">#878787</color>
     <color name="colorButton">@color/themeButton</color>
     <color name="colorButtonCircle">@color/colorLightLGray</color>
+
 
     <!-- Buttons -->
     <color name="colorPassiveMini">#ECECEC</color>

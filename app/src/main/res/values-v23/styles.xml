@@ -10,7 +10,7 @@
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:statusBarColor">#00000000</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/test_transition</item>
+
     </style>
 
     <style name="autoscroll">

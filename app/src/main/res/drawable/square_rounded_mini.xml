@@ -5,8 +5,8 @@
 
             <solid android:color="@color/accent_support" />
             <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
-            <corners android:radius="@dimen/corners" />
-
+            <corners android:radius="4dp" />
+            <stroke android:color="@color/colorTransBlack" android:width="4dp"/>
         </shape>
     </item>
 

@@ -1,9 +1,20 @@
 
 package ru.etysoft.cute.activities;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.PorterDuff;
+import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -16,6 +27,7 @@ import ru.etysoft.cute.data.CachedUrls;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.themes.Theme;
+import ru.etysoft.cute.utils.Numbers;
 
 public class AppearanceSettings extends AppCompatActivity {
 
@@ -156,8 +168,89 @@ public class AppearanceSettings extends AppCompatActivity {
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+        SeekBar seekBar = findViewById(R.id.seekBar);
+        seekBar.setMax(256*7-1);
+        seekBar.setProgress(128*7-1);
+        float factor = 0.9f;
+        GradientDrawable  gradientBackground = new GradientDrawable(  GradientDrawable.Orientation.LEFT_RIGHT,
+                new int[] { manipulateColor(0xFF000000, factor),manipulateColor(0xFF0000FF, factor),
+                        manipulateColor(0xFF00FF00, factor), manipulateColor(0xFF00FFFF, factor),
+                                manipulateColor( 0xFFFF0000, factor), manipulateColor(0xFFFF00FF, factor),
+                                        manipulateColor(0xFFFFFF00, factor), manipulateColor(0xFFFFFFFF, factor)});
+
+
+
+        gradientBackground.setCornerRadius(Numbers.dpToPx(10f, this));
+
+
+
+
+        seekBar.setProgressDrawable(gradientBackground);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+               seekBar.getThumb().setColorFilter(getColorFromProgress(progress), PorterDuff.Mode.SRC_ATOP);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         Slidr.attach(this);
+    }
+
+
+    public static int manipulateColor(int color, float factor) {
+        int a = Color.alpha(color);
+        int r = Math.round(Color.red(color) * factor);
+        int g = Math.round(Color.green(color) * factor);
+        int b = Math.round(Color.blue(color) * factor);
+        return Color.argb(a,
+                Math.min(r,255),
+                Math.min(g,255),
+                Math.min(b,255));
+    }
+
+    public int getColorFromProgress(int progress)
+    {
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        if(progress < 256){
+            b = progress;
+        } else if(progress < 256*2) {
+            g = progress%256;
+            b = 256 - progress%256;
+        } else if(progress < 256*3) {
+            g = 255;
+            b = progress%256;
+        } else if(progress < 256*4) {
+            r = progress%256;
+            g = 256 - progress%256;
+            b = 256 - progress%256;
+        } else if(progress < 256*5) {
+            r = 255;
+            g = 0;
+            b = progress%256;
+        } else if(progress < 256*6) {
+            r = 255;
+            g = progress%256;
+            b = 256 - progress%256;
+        } else if(progress < 256*7) {
+            r = 255;
+            g = 255;
+            b = progress%256;
+        }
+
+        return Color.argb(255, r, g, b);
     }
 
     public void changeTheme(boolean isLight) {
@@ -194,26 +287,28 @@ public class AppearanceSettings extends AppCompatActivity {
     }
 
     public void oldSchoolTheme(View v) {
-        try {
-            if (Theme.isDayTheme(this)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                CachedUrls.removeThemeUrl(this);
-                Theme.applyXml(oldSchoolLight, this);
-                applyChanges();
-            }
-
-        } catch (LanguageParsingException e) {
-            e.printStackTrace();
-        }
-
+//        try {
+//            if (Theme.isDayTheme(this)) {
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//                CachedUrls.removeThemeUrl(this);
+//                Theme.applyXml(oldSchoolLight, this);
+//                applyChanges();
+//            }
+//
+//        } catch (LanguageParsingException e) {
+//            e.printStackTrace();
+//        }
+        applyChanges();
     }
 
     public void applyChanges() {
-        Intent intent = new Intent(AppearanceSettings.this, AppearanceSettings.class);
+        Intent intent = new Intent(this, AppearanceSettings.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+
         finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     public void onLightThemeClick(View v) {

@@ -123,4 +123,19 @@
         </LinearLayout>
     </HorizontalScrollView>
 
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:thumb="@drawable/thumb"
+        android:progress="50" />
+
+
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
+        android:id="@+id/colorBox"
+        android:layout_width="100dp"
+        android:background="@drawable/square_rounded_corners"
+        app:themeBackgroundColor="themeAccent"
+        android:layout_height="100dp"/>
+
 </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>

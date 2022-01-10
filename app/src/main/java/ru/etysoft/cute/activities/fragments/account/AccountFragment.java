@@ -125,7 +125,14 @@ public class AccountFragment extends Fragment implements AccountContact.View {
         userimage.generateIdPicture(id);
         userimage.setAcronym(login, Avatar.Size.LARGE);
         if (photo != null) {
-            Picasso.get().load(photo).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(userimage.getPictureView());
+            try {
+
+                Picasso.get().load(photo).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(userimage.getPictureView());
+            }
+            catch (Exception ignored)
+            {
+                // Not attached to context
+            }
         }
     }
 
