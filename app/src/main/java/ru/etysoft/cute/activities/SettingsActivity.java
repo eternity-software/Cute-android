@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         AlertDialog alertDialog = new AlertDialog(this, "Кастомная тема", "Вы можете применить кастомную тему", new AlertDialog.DialogHandler() {
             @Override
             public void onPositiveClicked(String input) {
-                CachedValues.removeCustomTheme(getApplicationContext());
+                CachedValues.removeCustomThemeNight(getApplicationContext());
                 Theme.loadFromUrl(input, SettingsActivity.this, false);
             }
 

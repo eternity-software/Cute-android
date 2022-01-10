@@ -86,9 +86,9 @@
     <color name="colorAccentIcon">#FFF</color>
 
     <color name="colorBackground">#232D40</color>
-    <color name="colorDarkBackground">#EFEFEF</color>
     <color name="colorBackgroundElements">#2E3B53</color>
-    <color name="colorFrontElements">#FFFFFF</color>
+    <color name="colorMyMessageText">#FFFFFF</color>
+    <color name="colorMyMessageLink">#FFFFFF</color>
     <color name="colorText">#FFFFFF</color>
     <color name="colorTextAccent">#FFFFFF</color>
     <color name="colorError">@color/colorOrange</color>

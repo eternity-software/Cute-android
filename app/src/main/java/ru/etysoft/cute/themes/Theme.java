@@ -154,7 +154,11 @@ public class Theme {
 
                     stringsRepository.applyXml(xmlString);
                     CachedUrls.setThemeUrl(context, urlToXml);
-                    CachedValues.saveTheme(context, xmlString);
+                    if (isDayTheme(context)) {
+                        CachedValues.saveDayTheme(context, xmlString);
+                    } else {
+                        CachedValues.saveNightTheme(context, xmlString);
+                    }
                 } catch (ResponseException | LanguageParsingException e) {
                     if (!silentMode) {
                         context.runOnUiThread(new Runnable() {
@@ -178,11 +182,19 @@ public class Theme {
 
     public static void applyXml(String xmlString, Context context) throws LanguageParsingException {
         stringsRepository.applyXml(xmlString);
-        CachedValues.saveTheme(context, xmlString);
+        if (isDayTheme(context)) {
+            CachedValues.saveDayTheme(context, xmlString);
+        } else {
+            CachedValues.saveNightTheme(context, xmlString);
+        }
     }
 
     public static void loadExisting(Activity context) throws NotCachedException, LanguageParsingException {
-        stringsRepository.applyXml(CachedValues.getTheme(context));
+        if (isDayTheme(context)) {
+            stringsRepository.applyXml(CachedValues.getThemeDay(context));
+        } else {
+            stringsRepository.applyXml(CachedValues.getThemeNight(context));
+        }
         loadFromUrl(CachedUrls.getThemeUrl(context), context, true);
     }
 

@@ -91,7 +91,7 @@
                     android:scaleType="centerInside"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"
-                    android:tint="@color/colorFrontElements"
+                    android:tint="@color/themeGrayIcon"
                     android:transitionName="delbtn"
                     app:srcCompat="@drawable/icon_delete" />
 
@@ -109,7 +109,7 @@
                     android:scaleType="centerInside"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"
-                    android:tint="@color/colorFrontElements"
+                    android:tint="@color/themeGrayIcon"
                     android:transitionName="exitbtn"
                     app:srcCompat="@drawable/icon_exit" />
             </LinearLayout>

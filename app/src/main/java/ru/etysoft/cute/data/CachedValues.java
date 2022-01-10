@@ -17,15 +17,27 @@ public class CachedValues {
         cacheUtils.setString(CacheKeys.SESSION_KEY, sessionKey, context);
     }
 
-    public static void saveTheme(Context context, String themeString) {
+    public static void saveNightTheme(Context context, String themeString) {
         CacheUtils cacheUtils = CacheUtils.getInstance();
-        cacheUtils.setString(CacheKeys.THEME, themeString, context);
+        cacheUtils.setString(CacheKeys.THEME_NIGHT, themeString, context);
     }
 
-    public static String getTheme(Context context) throws NotCachedException {
+    public static void saveDayTheme(Context context, String themeString) {
         CacheUtils cacheUtils = CacheUtils.getInstance();
-        if (!cacheUtils.hasKey(CacheKeys.THEME, context)) throw new NotCachedException();
-        return cacheUtils.getString(CacheKeys.THEME, context);
+        cacheUtils.setString(CacheKeys.THEME_DAY, themeString, context);
+    }
+
+    public static String getThemeNight(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.THEME_NIGHT, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.THEME_NIGHT, context);
+    }
+
+
+    public static String getThemeDay(Context context) throws NotCachedException {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        if (!cacheUtils.hasKey(CacheKeys.THEME_DAY, context)) throw new NotCachedException();
+        return cacheUtils.getString(CacheKeys.THEME_DAY, context);
     }
 
     public static String getEmail(Context context) throws NotCachedException {
@@ -128,13 +140,19 @@ public class CachedValues {
         cacheUtils.removeString(CacheKeys.CUSTOM_LANG, context);
     }
 
-    public static void removeCustomTheme(Context context) {
+    public static void removeCustomThemeNight(Context context) {
         CacheUtils cacheUtils = CacheUtils.getInstance();
-        cacheUtils.removeString(CacheKeys.THEME, context);
+        cacheUtils.removeString(CacheKeys.THEME_NIGHT, context);
+    }
+
+    public static void removeCustomThemeDay(Context context) {
+        CacheUtils cacheUtils = CacheUtils.getInstance();
+        cacheUtils.removeString(CacheKeys.THEME_DAY, context);
     }
 
     public class CacheKeys {
-        public final static String THEME = "theme";
+        public final static String THEME_NIGHT = "theme_night";
+        public final static String THEME_DAY = "theme_day";
         public final static String SESSION_KEY = "session";
         public final static String EMAIL = "email";
         public final static String ID = "id";
