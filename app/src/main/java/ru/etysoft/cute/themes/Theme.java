@@ -190,6 +190,7 @@ public class Theme {
     }
 
     public static void loadExisting(Activity context) throws NotCachedException, LanguageParsingException {
+        clear();
         if (isDayTheme(context)) {
             stringsRepository.applyXml(CachedValues.getThemeDay(context));
         } else {

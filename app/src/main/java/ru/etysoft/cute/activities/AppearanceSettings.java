@@ -21,6 +21,7 @@ import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedUrls;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.LanguageParsingException;
+import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Numbers;
 
@@ -267,11 +268,19 @@ public class AppearanceSettings extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         CacheUtils cacheUtils = CacheUtils.getInstance();
         if (!isLight) {
+
             cacheUtils.setBoolean(ISDARK_THEME, true, this);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             cacheUtils.setBoolean(ISDARK_THEME, false, this);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        try {
+            Theme.loadExisting(this);
+        } catch (NotCachedException e) {
+            e.printStackTrace();
+        } catch (LanguageParsingException e) {
+            e.printStackTrace();
         }
 
 
