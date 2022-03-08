@@ -47,7 +47,6 @@ public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView
             try {
                 setColorFilter(Theme.getColor(String.valueOf(color)));
             } catch (NoSuchValueException e) {
-                e.printStackTrace();
                 setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(color), R.color.class)));
             }
 

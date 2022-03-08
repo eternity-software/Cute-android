@@ -37,7 +37,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
 
         initializeViews();
 
-        signUpPresenter = new SignUpPresenter(this, this);
+        signUpPresenter = new SignUpPresenter(this, SignUpActivity.this);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,7 +9,6 @@ import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.CuteFramework;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.GetAccount.GetAccountResponse;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListRequest;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListResponse;
 
@@ -39,26 +38,22 @@ public class AccountPresenter implements AccountContact.Presenter {
             @Override
             public void run() {
                 try {
-                    final GetAccountResponse getAccountResponse = CuteFramework.getInfo(CachedValues.getSessionKey(context));
-                    context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (getAccountResponse.isSuccess()) {
-                                CachedValues.setCover(context, getAccountResponse.getCover());
-                                CachedValues.setStatus(context, getAccountResponse.getStatus());
-                                CachedValues.setBio(context, getAccountResponse.getBio());
-                                CachedValues.setAvatar(context, getAccountResponse.getAvatar());
-                                view.setAccountInfo(getAccountResponse.getLogin(), getAccountResponse.getStatus(), getAccountResponse.getAvatar(),
-                                        Integer.parseInt(getAccountResponse.getId()));
-
-                            }
-                        }
-                    });
-
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
+//                    final GetAccountResponse getAccountResponse = CuteFramework.getInfo(CachedValues.getSessionKey(context));
+//                    context.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (getAccountResponse.isSuccess()) {
+//                                CachedValues.setCover(context, getAccountResponse.getCover());
+//                                CachedValues.setStatus(context, getAccountResponse.getStatus());
+//                                CachedValues.setBio(context, getAccountResponse.getBio());
+//                                CachedValues.setAvatar(context, getAccountResponse.getAvatar());
+//                                view.setAccountInfo(getAccountResponse.getLogin(), getAccountResponse.getStatus(), getAccountResponse.getAvatar(),
+//                                        Integer.parseInt(getAccountResponse.getId()));
+//
+//                            }
+//                        }
+//                    });
+                    
                 } catch (final Exception e) {
                     if(context != null)
                     {

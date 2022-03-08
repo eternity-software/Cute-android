@@ -6,12 +6,16 @@ import android.content.IntentFilter;
 
 import org.json.JSONException;
 
+import java.sql.SQLException;
+
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.utils.Device;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
+import ru.etysoft.cuteframework.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.Login.LoginResponse;
+import ru.etysoft.cuteframework.methods.account.LoginRequest;
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class SignInPresenter implements SignInContract.Presenter {
@@ -35,11 +39,10 @@ public class SignInPresenter implements SignInContract.Presenter {
             @Override
             public void run() {
                 try {
-                    LoginResponse loginResponse = signInModel.signIn(login, password);
+                    LoginRequest.LoginResponse loginResponse = signInModel.signIn(login, password);
 
                     if (loginResponse.isSuccess()) {
                         CachedValues.setLogin(context, login);
-                        CachedValues.setSessionKey(context, loginResponse.getSessionKey());
                         Intent intent = new Intent(context, MainActivity.class);
                         context.startActivity(intent);
                     } else {
@@ -68,6 +71,8 @@ public class SignInPresenter implements SignInContract.Presenter {
                         }
                     });
 
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 context.runOnUiThread(new Runnable() {
                     @Override
@@ -77,7 +82,29 @@ public class SignInPresenter implements SignInContract.Presenter {
                 });
             }
         });
-        requestThread.start();
+        if(Device.isDeviceRegistered())
+        {
+            requestThread.start();
+        }
+        else
+        {
+            Device.registerDevice(new Device.DeviceCallback() {
+                @Override
+                public void onRegistered() {
+                    requestThread.start();
+                }
+
+                @Override
+                public void onError() {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            signInView.showError(context.getResources().getString(R.string.err_unknown));
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override

@@ -1,7 +1,10 @@
 package ru.etysoft.cute.activities.signup;
 
+import java.sql.SQLException;
+
+import ru.etysoft.cuteframework.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.Registration.RegistrationResponse;
+import ru.etysoft.cuteframework.methods.account.LoginRequest;
 
 
 public interface SignUpContract {
@@ -29,6 +32,6 @@ public interface SignUpContract {
     }
 
     interface Model {
-        RegistrationResponse signUp(String login, String displayName, String email, String password) throws ResponseException;
+        LoginRequest.LoginResponse signUp(String login, String email, String password) throws ResponseException, NotCachedException, SQLException;
     }
 }

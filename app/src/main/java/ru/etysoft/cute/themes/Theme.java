@@ -62,7 +62,6 @@ public class Theme {
         try {
             loadExisting(activity);
         } catch (NotCachedException e) {
-            e.printStackTrace();
         } catch (LanguageParsingException e) {
             e.printStackTrace();
         }

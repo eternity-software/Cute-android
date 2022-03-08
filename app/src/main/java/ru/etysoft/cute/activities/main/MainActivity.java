@@ -3,11 +3,6 @@ package ru.etysoft.cute.activities.main;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,19 +18,19 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.confirmation.ConfirmationActivity;
 import ru.etysoft.cute.activities.fragments.account.AccountFragment;
 import ru.etysoft.cute.activities.fragments.chatslist.ChatsListFragment;
 import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
+import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
-import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Permissions;
-import ru.etysoft.cute.utils.SocketHolder;
+
 import ru.etysoft.cute.utils.ViewPagerAdapter;
-import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
+
 
 public class MainActivity extends AppCompatActivity implements FloatingBottomSheet.BottomSheetListener, MainContract.View, LifecycleObserver {
 
@@ -49,9 +44,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     private ChatsListFragment fragmentDialogs;
     private AccountFragment fragmentAccount;
     private ExploreFragment fragmentExplore;
-    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -67,28 +61,6 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             return false;
         }
     };
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    public void onAppBackgrounded() {
-        try {
-            SocketHolder.getChatSocket().sendRequest(0, MemberStateChangedEvent.States.OFFLINE);
-        }
-        catch (Exception e)
-        {
-
-        }
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    public void onAppForegrounded() {
-        try {
-            SocketHolder.getChatSocket().sendRequest(0, MemberStateChangedEvent.States.ONLINE);
-        }
-        catch (Exception e)
-        {
-
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,16 +79,35 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         Permissions.requestAll(this);
 
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ProcessLifecycleOwner.get().getLifecycle().addObserver(MainActivity.this);
-                }
-            });
-            thread.start();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ProcessLifecycleOwner.get().getLifecycle().addObserver(MainActivity.this);
+            }
+        });
+        thread.start();
 
 
     }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    public void onAppBackgrounded() {
+        try {
+            //SocketHolder.getChatSocket().sendRequest(0, MemberStateChangedEvent.States.OFFLINE);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    public void onAppForegrounded() {
+        try {
+            //  SocketHolder.getChatSocket().sendRequest(0, MemberStateChangedEvent.States.ONLINE);
+        } catch (Exception e) {
+
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -130,15 +121,13 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        SocketHolder.clear();
+        //SocketHolder.clear();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    SocketHolder.initialize(CachedValues.getSessionKey(MainActivity.this));
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
-                }
+
+                // SocketHolder.initialize(CachedValues.getSessionKey(MainActivity.this));
+
             }
         });
         thread.start();
@@ -207,11 +196,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setSelectedItemId(R.id.dialogs);
 
-        int[][] states = new int[][] {
-                new int[] {-android.R.attr.state_checked}, // unchecked
-                new int[] { android.R.attr.state_checked}  // pressed
+        int[][] states = new int[][]{
+                new int[]{-android.R.attr.state_checked}, // unchecked
+                new int[]{android.R.attr.state_checked}  // pressed
         };
-        int[] colors = new int[] {
+        int[] colors = new int[]{
                 Theme.getColor(this, R.color.colorNavigationUnfocused),
                 Theme.getColor(this, R.color.colorNavigationFocused),
         };
@@ -222,10 +211,41 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         //   navView.setBackground(new ColorDrawable(Theme.getColor(this, R.color.colorBackground)));
 //        RippleDrawable rippleDrawable = new RippleDrawable(ColorStateList.valueOf(Color.GRAY), navView.getBackground(), null);
 //        navView.setBackground(rippleDrawable);
-        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
         // Выбрать раздел сообщений
         viewPager.setCurrentItem(1);
+    }
+
+    @Override
+    public void startMeetActivity() {
+        Intent intent = new Intent(this, MeetActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void startConfirmationActivity() {
+        Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void showBannedBottomSheet() {
+        final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMeetActivity();
+            }
+        };
+        floatingBottomSheet.setContent(getResources().getDrawable(R.drawable.icon_uber),
+                getString(R.string.banned_title),
+               getString(R.string.banned_text));
+        floatingBottomSheet.setCancelable(false);
+        floatingBottomSheet.show((this).getSupportFragmentManager(), "blocked");
     }
 
     @Override

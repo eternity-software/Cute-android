@@ -5,9 +5,10 @@ import android.content.IntentFilter;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.data.CachedValues;
+import ru.etysoft.cute.utils.Device;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.Registration.RegistrationResponse;
+import ru.etysoft.cuteframework.methods.account.LoginRequest;
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class SignUpPresenter implements SignUpContract.Presenter {
@@ -38,18 +39,14 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
         signUpView.setEnabledActionButton(false);
 
+
         Thread requestThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    RegistrationResponse registrationResponse = signUpModel.signUp(login, displayName, email, password);
+                    LoginRequest.LoginResponse registrationResponse = signUpModel.signUp(login, email, password);
 
                     if (registrationResponse.isSuccess()) {
-                        String sessionKey = registrationResponse.getToken();
-                        CachedValues.setLogin(context, login);
-                        CachedValues.setDisplayName(context, displayName);
-                        CachedValues.setEmail(context, email);
-                        CachedValues.setSessionKey(context, sessionKey);
                         signUpView.showConfirmationActivity();
                     } else {
                         ErrorHandler errorHandler = registrationResponse.getErrorHandler();
@@ -80,7 +77,30 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                 });
             }
         });
-        requestThread.start();
+        if(Device.isDeviceRegistered())
+        {
+            requestThread.start();
+        }
+        else
+        {
+            Device.registerDevice(new Device.DeviceCallback() {
+                @Override
+                public void onRegistered() {
+                    requestThread.start();
+                }
+
+                @Override
+                public void onError() {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            signUpView.showError(context.getResources().getString(R.string.err_unknown));
+                        }
+                    });
+                }
+            });
+        }
+
     }
 
     @Override

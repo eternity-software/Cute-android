@@ -76,8 +76,8 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
-import ru.etysoft.cute.utils.SocketHolder;
-import ru.etysoft.cuteframework.data.APIKeys;
+
+
 import ru.etysoft.cuteframework.methods.chat.Chat;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
@@ -88,7 +88,6 @@ import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.methods.messages.Message;
 import ru.etysoft.cuteframework.methods.user.User;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
-import ru.etysoft.cuteframework.sockets.events.MemberStateChangedEvent;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener, MessagingContract.View {
 
@@ -127,19 +126,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
-        chatId = getIntent().getLongExtra(APIKeys.CHAT_ID, 0);
-        name = getIntent().getStringExtra(APIKeys.NAME);
-        String type = getIntent().getStringExtra(APIKeys.TYPE);
-        String avatar = getIntent().getStringExtra(APIKeys.AVATAR);
+//        chatId = getIntent().getLongExtra(APIKeys.CHAT_ID, 0);
+//        name = getIntent().getStringExtra(APIKeys.NAME);
+//        String type = getIntent().getStringExtra(APIKeys.TYPE);
+//        String avatar = getIntent().getStringExtra(APIKeys.AVATAR);
 
         Theme.applyBackground(findViewById(R.id.rootView));
 
-        try {
-            presenter = new MessagingPresenter(this, type, avatar, CachedValues.getSessionKey(this), String.valueOf(chatId));
-        } catch (NotCachedException e) {
-            e.printStackTrace();
-            finish();
-        }
+
+            //presenter = new MessagingPresenter(this, type, avatar, CachedValues.getSessionKey(this), String.valueOf(chatId));
+
 
         presenter.registerChatSocket();
 
@@ -159,14 +155,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         networkStateReceiver.register(this);
 
-        setAvatarImage(avatar);
+        //setAvatarImage(avatar);
         avatarView.setAcronym((name), Avatar.Size.SMALL);
 
         if (!presenter.isDialog()) {
             presenter.loadChatInfo();
             avatarView.generateIdPicture(chatId);
         } else {
-            accountId = getIntent().getLongExtra(APIKeys.ACCOUNT_ID, -1L);
+            //accountId = getIntent().getLongExtra(APIKeys.ACCOUNT_ID, -1L);
             avatarView.generateIdPicture(accountId);
 
         }
@@ -423,21 +419,21 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public static void openActivityForChat(Context context, long chatId, String name,
                                            String avatarPath) {
         Intent intent = new Intent(context, MessagingActivity.class);
-        intent.putExtra(APIKeys.CHAT_ID, chatId);
-        intent.putExtra(APIKeys.TYPE, Chat.Types.CONVERSATION);
-        intent.putExtra(APIKeys.NAME, name);
-        intent.putExtra(APIKeys.AVATAR, avatarPath);
+//        intent.putExtra(APIKeys.CHAT_ID, chatId);
+//        intent.putExtra(APIKeys.TYPE, Chat.Types.CONVERSATION);
+//        intent.putExtra(APIKeys.NAME, name);
+//        intent.putExtra(APIKeys.AVATAR, avatarPath);
         context.startActivity(intent);
     }
 
     public static void openActivityForDialog(Context context, long chatId, long accountId, String name,
                                              String avatarPath) {
         Intent intent = new Intent(context, MessagingActivity.class);
-        intent.putExtra(APIKeys.CHAT_ID, chatId);
-        intent.putExtra(APIKeys.TYPE, Chat.Types.PRIVATE);
-        intent.putExtra(APIKeys.NAME, name);
-        intent.putExtra(APIKeys.ACCOUNT_ID, accountId);
-        intent.putExtra(APIKeys.AVATAR, avatarPath);
+//        intent.putExtra(APIKeys.CHAT_ID, chatId);
+//        intent.putExtra(APIKeys.TYPE, Chat.Types.PRIVATE);
+//        intent.putExtra(APIKeys.NAME, name);
+//        intent.putExtra(APIKeys.ACCOUNT_ID, accountId);
+//        intent.putExtra(APIKeys.AVATAR, avatarPath);
         context.startActivity(intent);
     }
 
@@ -834,7 +830,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         Thread.sleep(1000);
                         if (System.currentTimeMillis() > lastTypingTime + 1000 && isTyping) {
                             isTyping = false;
-                            SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
+                            //SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
                         }
 
                     } catch (Exception e) {
@@ -867,12 +863,12 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         public void run() {
                             try {
 
-                                SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.TYPING);
+                               // SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.TYPING);
 
 
                             } catch (Exception e) {
                                 try {
-                                    SocketHolder.initialize(CachedValues.getSessionKey(MessagingActivity.this));
+                                  //  SocketHolder.initialize(CachedValues.getSessionKey(MessagingActivity.this));
                                 } catch (Exception ignored) {
 
                                 }
@@ -1026,7 +1022,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 public void run() {
                     isTyping = false;
                     try {
-                        SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
+                       // SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

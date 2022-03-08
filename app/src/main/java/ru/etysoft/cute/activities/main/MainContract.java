@@ -1,13 +1,19 @@
 package ru.etysoft.cute.activities.main;
 
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.GetAccount.GetAccountResponse;
+
 
 
 public interface MainContract {
 
     interface View {
         void setupNavigation();
+
+        void startMeetActivity();
+
+        void startConfirmationActivity();
+
+        void showBannedBottomSheet();
     }
 
     interface Presenter {
@@ -20,7 +26,7 @@ public interface MainContract {
     }
 
     interface Model {
-        GetAccountResponse getAccountInfo(String token) throws ResponseException;
+        //GetAccountResponse getAccountInfo(String token) throws ResponseException;
     }
 
 }

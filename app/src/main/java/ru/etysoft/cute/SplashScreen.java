@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import java.sql.SQLException;
+
 import ru.etysoft.cute.activities.main.MainActivity;
+import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedValues;
@@ -15,15 +18,17 @@ import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.themes.Theme;
-import ru.etysoft.cute.utils.SocketHolder;
+import ru.etysoft.cuteframework.CuteFramework;
+import ru.etysoft.cuteframework.storage.Cache;
+
 
 public class SplashScreen extends AppCompatActivity {
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         try {
@@ -35,12 +40,10 @@ public class SplashScreen extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    SocketHolder.initialize(CachedValues.getSessionKey(SplashScreen.this));
 
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
-                }
+                // SocketHolder.initialize(CachedValues.getSessionKey(SplashScreen.this));
+
+
             }
         });
         thread.start();
@@ -52,13 +55,31 @@ public class SplashScreen extends AppCompatActivity {
             CuteToast.show(getResources().getString(R.string.err_lang), R.drawable.icon_error, this);
         }
 
+
         Theme.initTheme(this);
         // Запуск активности
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+        Intent intent;
+
+        setupCuteFramework();
+
+
+        if (Cache.getUserAccount().hasToken()) {
+            intent = new Intent(this, MainActivity.class);
+        } else {
+
+            intent = new Intent(this, MeetActivity.class);
+        }
+        startActivity(intent);
+
+
         finish();
 
-        // Инициализация текущей темы и её применение
+    }
 
+    private void setupCuteFramework() {
+        CuteFramework.setCacheDir(getFilesDir().getPath() + "/");
+        CuteFramework.setSqlClassName("org.sqldroid.SQLDroidDriver");
+        CuteFramework.setJdbcUrl("jdbc:sqldroid:");
+        CuteFramework.initialize();
     }
 }

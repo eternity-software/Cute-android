@@ -1,7 +1,7 @@
 package ru.etysoft.cute.activities.confirmation;
 
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.Confirmation.ConfirmationResponse;
+
 
 
 public interface ConfirmationContract {
@@ -33,6 +33,6 @@ public interface ConfirmationContract {
     }
 
     interface Model {
-        ConfirmationResponse confirm(int code, String token) throws ResponseException;
+
     }
 }

@@ -99,6 +99,7 @@
     <string name="to_mail">на</string>
     <string name="err_email">Электронная почта не найдена</string>
     <string name="err_confirm_code_length">Длина кода неверна!</string>
+    <string name="err_confirm_code_incorrect">Код неверен!</string>
     <string name="err_lang">Невозможно установить язык!</string>
     <string name="sign_up_display_name">Придумайте отображаемое имя</string>
     <string name="sign_up_display_name_hint">Имя</string>

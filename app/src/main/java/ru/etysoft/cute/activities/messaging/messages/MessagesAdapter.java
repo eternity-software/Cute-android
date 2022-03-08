@@ -43,7 +43,6 @@ import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
-import ru.etysoft.cute.utils.SocketHolder;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
 import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
@@ -332,7 +331,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void sendRead(int messageId) {
         try {
-            SocketHolder.getChatSocket().readMessage(context.chatId, messageId);
+           // SocketHolder.getChatSocket().readMessage(context.chatId, messageId);
         } catch (Exception ignored) {
             /*
             Socket not initialized

@@ -1,13 +1,17 @@
 package ru.etysoft.cute.activities.signup;
 
+import java.sql.SQLException;
+
 import ru.etysoft.cuteframework.CuteFramework;
+import ru.etysoft.cuteframework.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.Registration.RegistrationResponse;
+import ru.etysoft.cuteframework.methods.account.LoginRequest;
+import ru.etysoft.cuteframework.methods.account.RegisterRequest;
 
 
 public class SignUpModel implements SignUpContract.Model {
     @Override
-    public RegistrationResponse signUp(String login, String displayName, String email, String password) throws ResponseException {
-        return CuteFramework.register(login, email, password, displayName);
+    public LoginRequest.LoginResponse signUp(String login, String email, String password) throws ResponseException, NotCachedException, SQLException {
+        return new RegisterRequest(login, email, password).execute();
     }
 }

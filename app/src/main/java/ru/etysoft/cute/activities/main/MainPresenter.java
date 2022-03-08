@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
+import java.sql.SQLException;
+
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.confirmation.ConfirmationActivity;
 import ru.etysoft.cute.activities.meet.MeetActivity;
@@ -11,9 +13,12 @@ import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.data.CacheUtils;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.CrashExceptionHandler;
-import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
-import ru.etysoft.cuteframework.methods.account.GetAccount.GetAccountResponse;
+import ru.etysoft.cuteframework.exceptions.NotCachedException;
+import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.account.GetAccount;
+import ru.etysoft.cuteframework.storage.Cache;
+
 
 public class MainPresenter implements MainContract.Presenter {
 
@@ -39,86 +44,50 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void updateAccountData() {
-        try {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            final String token = CachedValues.getSessionKey(context);
+                GetAccount getAccount = new GetAccount();
+                try {
+                    GetAccount.GetAccountResponse getAccountResponse = getAccount.execute();
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final GetAccountResponse getAccountResponse = mainModel.getAccountInfo(token);
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            try {
+                                if (getAccountResponse.isSuccess()) {
+                                    boolean isConfirm = getAccountResponse.getAccount().isConfirmed();
+                                    boolean isBlocked = getAccountResponse.getAccount().isBlocked();
 
-                                try {
-                                    if (getAccountResponse.isSuccess()) {
-                                        String confirmStatus = getAccountResponse.getConfirm();
-
-                                        if (confirmStatus.equals("Y")) {
-                                            String displayName = getAccountResponse.getDisplayName();
-                                            String login = getAccountResponse.getLogin();
-
-                                            CachedValues.setId(context, getAccountResponse.getId());
-                                            CachedValues.setDisplayName(context, displayName);
-                                            CachedValues.setLogin(context, login);
-                                        } else if (confirmStatus.equals("B")) {
-                                            final FloatingBottomSheet floatingBottomSheet = new FloatingBottomSheet();
-
-                                            View.OnClickListener onClickListener = new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-
-                                                    Intent intent = new Intent(context, MeetActivity.class);
-                                                    context.startActivity(intent);
-                                                    floatingBottomSheet.dismiss();
-
-                                                }
-                                            };
-
-                                            floatingBottomSheet.setContent(context.getResources().getDrawable(R.drawable.icon_uber),
-                                                    context.getString(R.string.banned_title),
-                                                    context.getString(R.string.banned_text));
-                                            floatingBottomSheet.setCancelable(false);
-                                            floatingBottomSheet.show(((MainActivity) context).getSupportFragmentManager(), "blocked");
-                                        } else if (confirmStatus.equals("N")) {
-                                            Intent intent = new Intent(context, ConfirmationActivity.class);
-                                            context.startActivity(intent);
-                                            context.finish();
-                                        } else {
-                                            Intent intent = new Intent(context, MeetActivity.class);
-                                            context.startActivity(intent);
-                                            context.finish();
-                                        }
+                                    if (!isConfirm && !isBlocked) {
+                                        mainView.startConfirmationActivity();
+                                    } else if (isBlocked) {
+                                        mainView.showBannedBottomSheet();
                                     } else {
-                                        Intent intent = new Intent(context, MeetActivity.class);
-                                        context.startActivity(intent);
-                                        context.finish();
+                                        mainView.startMeetActivity();
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                } else {
+
+                                    Cache.clean();
+                                    mainView.startMeetActivity();
                                 }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                        }
+                    });
 
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-            thread.start();
 
 
-        } catch (NotCachedException e) {
-            Intent intent = new Intent(context, MeetActivity.class);
-            CacheUtils cacheUtils = CacheUtils.getInstance();
-            cacheUtils.clean(context);
-            context.startActivity(intent);
-            context.finish();
-            e.printStackTrace();
-        }
+            }
+        });
+        thread.start();
     }
 
     @Override

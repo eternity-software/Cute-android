@@ -6,13 +6,17 @@ import android.content.IntentFilter;
 
 import org.json.JSONException;
 
+import java.sql.SQLException;
+
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.main.MainActivity;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.Confirmation.ConfirmationResponse;
+
+import ru.etysoft.cuteframework.methods.BlankResponse;
+import ru.etysoft.cuteframework.methods.account.ConfirmRequest;
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class ConfirmationPresenter implements ConfirmationContract.Presenter {
@@ -46,47 +50,35 @@ public class ConfirmationPresenter implements ConfirmationContract.Presenter {
         Thread requestThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    ConfirmationResponse registrationResponse = confirmationModel.confirm(Integer.parseInt(code), CachedValues.getSessionKey(context));
 
-                    if (registrationResponse.isSuccess()) {
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
-                    } else {
-                        ErrorHandler errorHandler = registrationResponse.getErrorHandler();
-                        confirmationView.showError(context.getResources().getString(R.string.err_unknown));
+                ConfirmRequest confirmRequest = new ConfirmRequest(code);
+
+                try {
+                    if(confirmRequest.execute().isSuccess())
+                    {
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                confirmationView.showMainActivity();
+                            }
+                        });
                     }
-                } catch (ResponseException e) {
-                    context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            confirmationView.showError(context.getResources().getString(R.string.err_unknown));
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            confirmationView.showError(context.getResources().getString(R.string.err_json));
-                        }
-                    });
+                    else
+                    {
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                confirmationView.setEnabledActionButton(true);
+                                confirmationView.showError(context.getResources().getString(R.string.err_confirm_code_incorrect));
+                            }
+                        });
+                    }
 
                 } catch (Exception e) {
+
                     e.printStackTrace();
-                    context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            confirmationView.showError(context.getResources().getString(R.string.err_unknown));
-                        }
-                    });
                 }
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        confirmationView.setEnabledActionButton(true);
-                    }
-                });
+
             }
         });
         requestThread.start();

@@ -1,7 +1,10 @@
 package ru.etysoft.cute.activities.signin;
 
+import java.sql.SQLException;
+
+import ru.etysoft.cuteframework.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.Login.LoginResponse;
+import ru.etysoft.cuteframework.methods.account.LoginRequest;
 
 
 public interface SignInContract {
@@ -27,7 +30,7 @@ public interface SignInContract {
     }
 
     interface Model {
-        LoginResponse signIn(String login, String password) throws ResponseException;
+        LoginRequest.LoginResponse signIn(String login, String password) throws ResponseException, NotCachedException, SQLException;
     }
 
 
