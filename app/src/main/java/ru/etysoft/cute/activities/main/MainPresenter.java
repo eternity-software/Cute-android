@@ -16,7 +16,7 @@ import ru.etysoft.cute.exceptions.CrashExceptionHandler;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cuteframework.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.account.GetAccount;
+import ru.etysoft.cuteframework.methods.account.GetAccountRequest;
 import ru.etysoft.cuteframework.storage.Cache;
 
 
@@ -48,9 +48,9 @@ public class MainPresenter implements MainContract.Presenter {
             @Override
             public void run() {
 
-                GetAccount getAccount = new GetAccount();
+                GetAccountRequest getAccount = new GetAccountRequest();
                 try {
-                    GetAccount.GetAccountResponse getAccountResponse = getAccount.execute();
+                    GetAccountRequest.GetAccountResponse getAccountResponse = getAccount.execute();
 
                     context.runOnUiThread(new Runnable() {
                         @Override

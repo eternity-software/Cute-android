@@ -28,7 +28,7 @@ public class Device {
                     {
                         deviceCallback.onError();
                     }
-                } catch (ResponseException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     deviceCallback.onError();
                 }
