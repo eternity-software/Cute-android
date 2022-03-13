@@ -188,8 +188,7 @@ public class Profile extends AppCompatActivity {
                                 if(name != null)
                                 {
                                     try {
-                                        MessagingActivity.openActivityForDialog(Profile.this, Integer.parseInt(chatCreateResponse.getChatId()),
-                                                id, name, avatar);
+                                        MessagingActivity.openActivityForDialog(Profile.this, chatCreateResponse.getChatId());
                                     } catch (ResponseException e) {
                                         e.printStackTrace();
                                     }

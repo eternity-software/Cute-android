@@ -17,17 +17,17 @@ import ru.etysoft.cuteframework.exceptions.ResponseException;
 
 import ru.etysoft.cuteframework.methods.BlankResponse;
 import ru.etysoft.cuteframework.methods.account.ConfirmRequest;
+import ru.etysoft.cuteframework.methods.account.ResendCodeRequest;
 import ru.etysoft.cuteframework.responses.errors.ErrorHandler;
 
 public class ConfirmationPresenter implements ConfirmationContract.Presenter {
 
     private final ConfirmationContract.View confirmationView;
-    private final ConfirmationContract.Model confirmationModel;
     private final Activity context;
     private NetworkStateReceiver networkStateReceiver;
 
     public ConfirmationPresenter(ConfirmationContract.View confirmationView, Activity context) {
-        confirmationModel = new ConfirmationModel();
+
         this.confirmationView = confirmationView;
         this.context = context;
 
@@ -91,7 +91,44 @@ public class ConfirmationPresenter implements ConfirmationContract.Presenter {
 
     @Override
     public void onCantReceiveButtonClick() {
+        Thread request = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    BlankResponse blankResponse = new ResendCodeRequest().execute();
+                    if(!blankResponse.isSuccess())
+                    {
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                confirmationView.setEnabledActionButton(true);
+                                confirmationView.showError(context.getResources().getString(R.string.err_confirm_code_incorrect));
+                            }
+                        });
+                    }
+                    else
+                    {
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
 
+                                confirmationView.hideError();
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            confirmationView.showError(context.getResources().getString(R.string.err_unknown));
+                        }
+                    });
+                }
+            }
+        });
+        request.start();
     }
 
     @Override

@@ -30,10 +30,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         cacheUtils = CacheUtils.getInstance();
-        /*getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment())
-                .commit();*/
 
         AlertDialog alertDialog = new AlertDialog(this, "Кастомная тема", "Вы можете применить кастомную тему", new AlertDialog.DialogHandler() {
             @Override
@@ -64,6 +60,11 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void openSessionManagement(View v) {
         Intent appearanceIntent = new Intent(SettingsActivity.this, AppearanceSettings.class);
+        startActivity(appearanceIntent);
+    }
+
+    public void openStorageManagement(View v) {
+        Intent appearanceIntent = new Intent(SettingsActivity.this, StorageManagementActivity.class);
         startActivity(appearanceIntent);
     }
 

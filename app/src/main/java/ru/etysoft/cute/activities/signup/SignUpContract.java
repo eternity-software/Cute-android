@@ -24,7 +24,7 @@ public interface SignUpContract {
     }
 
     interface Presenter {
-        void onSignUpButtonClick(final String login, final String displayName, final String email, final String password);
+        void onSignUpButtonClick(final String login, final String email, final String password);
 
         void initializeNetworkStateHolder();
 

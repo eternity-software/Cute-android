@@ -13,6 +13,8 @@ public interface ConfirmationContract {
 
         void showMainActivity();
 
+        void resendCodeClick();
+
         void setEmail(String email);
 
         void initializeViews();
@@ -30,9 +32,5 @@ public interface ConfirmationContract {
         void initializeNetworkStateHolder();
 
         void onDestroy();
-    }
-
-    interface Model {
-
     }
 }

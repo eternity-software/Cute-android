@@ -142,4 +142,5 @@
     <string name="theme_default">Стандарт</string>
     <string name="theme_oldschool">Дедовский</string>
     <string name="info">О приложении</string>
+    <string name="storage_settings">Управление памятью</string>
 </resources>

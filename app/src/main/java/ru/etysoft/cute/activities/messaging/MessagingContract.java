@@ -3,15 +3,17 @@ package ru.etysoft.cute.activities.messaging;
 import android.content.res.Resources;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ru.etysoft.cute.activities.main.MainContract;
-import ru.etysoft.cuteframework.methods.messages.Message;
+
+import ru.etysoft.cuteframework.models.messages.Message;
+
 
 public interface MessagingContract {
 
-    interface View
-    {
+    interface View {
         void initViews();
 
         String getStatusText();
@@ -19,6 +21,8 @@ public interface MessagingContract {
         String getChatName();
 
         Resources getResources();
+
+        void addMessages(List<MessageComponent> messageComponents);
 
         String getAccountId();
 
@@ -32,7 +36,13 @@ public interface MessagingContract {
 
         void showErrorToast(String message);
 
-        void addMessage(Message message);
+        void showErrorPanel();
+
+        void showInfoPanel();
+
+        void hideInfoPanel();
+
+        void hideErrorPanel();
 
         Map<String, Message> getMessagesIds();
 
@@ -41,7 +51,7 @@ public interface MessagingContract {
          */
         void runOnUiThread(Runnable runnable);
 
-        void showEmptyChatPanel(android.view.View view);
+        void showChatInfo(android.view.View view);
 
         void setHeaderInfo(String avatarUrl, String title, String status);
 
@@ -51,17 +61,21 @@ public interface MessagingContract {
 
         void setAvatarImage(String avatarUrl);
 
+        void showLoading();
+
+        void hideLoading();
+
     }
 
     interface Presenter {
-
-        void registerChatSocket();
 
         String getChatType();
 
         String getAvatarUrl();
 
         void loadChatInfo();
+
+        void loadLatestMessages();
 
         boolean isDialog();
 

@@ -33,6 +33,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.StorageManagementActivity"
+            android:theme="@style/AppSlideTheme"
+            android:exported="false" />
+        <activity
             android:name=".activities.AppearanceSettings"
             android:exported="false" />
         <activity

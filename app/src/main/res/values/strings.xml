@@ -46,6 +46,7 @@
     <string name="adialog_yes">OK</string>
     <string name="adialog_no">Cancel</string>
     <string name="developer">Developer</string>
+    <string name="storage_settings">Storage managing</string>
     <string name="debug_menu">Debug</string>
     <string name="no_conv_title">Quite and empty...</string>
     <string name="no_conv_text">Oops! Looks like you haven\'t any conversations...</string>

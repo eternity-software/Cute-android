@@ -127,13 +127,11 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
         builder.setTitle("Invite member by id");
 
-// Set up the input
         final EditText input = new EditText(getContext());
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         builder.setView(input);
 
-// Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -287,24 +285,26 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                             try {
                                 Avatar avatar = view.findViewById(R.id.icon);
 
-                                if (chatInfoResponse.getChat().getAvatar() != null) {
-                                    Picasso.get().load(chatInfoResponse.getChat().getAvatar()).transform(new CircleTransform()).into(avatar.getPictureView());
+
+                                // TODO: add avatar check
+
+                                boolean hasAvatar = false;
+                                if (hasAvatar) {
+                                    //Picasso.get().load(chatInfoResponse.getChat().getAvatar()).transform(new CircleTransform()).into(avatar.getPictureView());
                                     avatar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            try {
+
                                                 Intent intent = new Intent(getActivity(), ImagePreview.class);
-                                                intent.putExtra("url", chatInfoResponse.getChat().getAvatar());
+                                               // intent.putExtra("url", chatInfoResponse.getChat().getAvatar());
                                                 startActivity(intent);
-                                            } catch (ResponseException e) {
-                                                e.printStackTrace();
-                                            }
+
 
                                         }
                                     });
                                 }
                                 avatar.setAcronym(chatInfoResponse.getChat().getName(), Avatar.Size.MEDIUM);
-                                avatar.generateIdPicture(chatInfoResponse.getChat().getId());
+                                avatar.generateIdPicture(1);
                                 chatNameView.setText(chatInfoResponse.getChat().getName());
                                 chatDescriptionView.setText(chatInfoResponse.getChat().getDescription());
                                 for (ChatMember chatMember : chatInfoResponse.getMembers()) {

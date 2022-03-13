@@ -61,12 +61,12 @@ public class MainPresenter implements MainContract.Presenter {
                                     boolean isConfirm = getAccountResponse.getAccount().isConfirmed();
                                     boolean isBlocked = getAccountResponse.getAccount().isBlocked();
 
+
+
                                     if (!isConfirm && !isBlocked) {
                                         mainView.startConfirmationActivity();
                                     } else if (isBlocked) {
                                         mainView.showBannedBottomSheet();
-                                    } else {
-                                        mainView.startMeetActivity();
                                     }
                                 } else {
 

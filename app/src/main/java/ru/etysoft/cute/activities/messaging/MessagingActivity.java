@@ -42,6 +42,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.math.MathUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,10 +54,6 @@ import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
 import ru.etysoft.cute.activities.ImageSend.ImageSendActivity;
-import ru.etysoft.cute.activities.messaging.messages.BeginningView;
-import ru.etysoft.cute.activities.messaging.messages.MessageObject;
-import ru.etysoft.cute.activities.messaging.messages.RecyclerObject;
-import ru.etysoft.cute.activities.messaging.messages.MessagesAdapter;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
@@ -76,28 +74,21 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
-
-
-import ru.etysoft.cuteframework.methods.chat.Chat;
-import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListRequest;
-import ru.etysoft.cuteframework.methods.chat.GetHistory.GetMessageListResponse;
-import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageRequest;
-import ru.etysoft.cuteframework.methods.chat.SendMessage.SendMessageResponse;
+import ru.etysoft.cuteframework.consts.APIKeys;
+import ru.etysoft.cuteframework.methods.chat.ChatSendMessageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
-import ru.etysoft.cuteframework.methods.messages.Message;
-import ru.etysoft.cuteframework.methods.user.User;
+import ru.etysoft.cuteframework.models.Chat;
+import ru.etysoft.cuteframework.models.messages.Message;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener, MessagingContract.View {
 
     public final Map<String, Message> loadedMessagesIds = new HashMap<String, Message>();
-    private MessagesAdapter adapter;
 
-    public long chatId = 1;
+    public String chatId = "";
     private long accountId = -1;
     private String name = "42";
-    private String mediaIdToSend;
     public String forwardedMessageId = null;
 
     public boolean isVoiceButtonShowed = true;
@@ -108,6 +99,10 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private ErrorPanel errorPanel;
     private InfoPanel infoPanel;
     private TextView statusView;
+    private long lastTypingTime = 0;
+    private boolean isTyping = false;
+    private MessagesAdapter adapter;
+
     private TextView titleView;
     private Avatar avatarView;
     private NetworkStateReceiver networkStateReceiver;
@@ -126,28 +121,30 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
-//        chatId = getIntent().getLongExtra(APIKeys.CHAT_ID, 0);
-//        name = getIntent().getStringExtra(APIKeys.NAME);
-//        String type = getIntent().getStringExtra(APIKeys.TYPE);
+        chatId = getIntent().getStringExtra(APIKeys.Chat.CHAT_ID);
+        name = getIntent().getStringExtra(APIKeys.Chat.NAME);
+        String type = getIntent().getStringExtra(APIKeys.Chat.TYPE);
 //        String avatar = getIntent().getStringExtra(APIKeys.AVATAR);
 
         Theme.applyBackground(findViewById(R.id.rootView));
 
 
-            //presenter = new MessagingPresenter(this, type, avatar, CachedValues.getSessionKey(this), String.valueOf(chatId));
 
+        presenter = new MessagingPresenter(this, type, null, chatId);
 
-        presenter.registerChatSocket();
+        // TODO: socket support
+        // presenter.registerChatSocket();
 
         initViews();
+
 
 
         networkStateReceiver = new NetworkStateReceiver(new Runnable() {
             @Override
             public void run() {
-                presenter.registerChatSocket();
-            }
-        }, new Runnable() {
+
+
+            }}, new Runnable() {
             @Override
             public void run() {
             }
@@ -160,9 +157,9 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         if (!presenter.isDialog()) {
             presenter.loadChatInfo();
-            avatarView.generateIdPicture(chatId);
+            avatarView.generateIdPicture(5);
         } else {
-            //accountId = getIntent().getLongExtra(APIKeys.ACCOUNT_ID, -1L);
+
             avatarView.generateIdPicture(accountId);
 
         }
@@ -173,8 +170,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 errorPanel.hide(new Runnable() {
                     @Override
                     public void run() {
-                        processListUpdate();
                         errorContainer.setVisibility(View.INVISIBLE);
+                        presenter.loadLatestMessages();
 
                     }
                 });
@@ -186,13 +183,12 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         setupVoiceButton();
         setupMessageInputHandler();
 
-        processListUpdate();
-
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
 
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+        presenter.loadLatestMessages();
 
     }
 
@@ -229,6 +225,18 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
     @Override
+    public void addMessages(List<MessageComponent> messageComponents) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.getItemList().addAll(messageComponents);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
+    @Override
     public String getAccountId() {
         try {
             return CachedValues.getId(this);
@@ -238,18 +246,23 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
+
     @Override
     public String getStringsRepositoryResult(int resId) {
         return CustomLanguage.getStringsRepository().getOrDefault(R.string.offline, MessagingActivity.this);
     }
 
     @Override
+    public void setMessageRead(long messageId) {
+
+    }
+
+    @Override
     public void setupRecyclerView() {
         messageRecyclerView = findViewById(R.id.messages);
-        adapter = new MessagesAdapter(this, new ArrayList<RecyclerObject>(), presenter.isDialog(), messageRecyclerView,
-                (LinearLayout) MessagingActivity.this.findViewById(R.id.bottom_scroll_button),
-                (TextView) MessagingActivity.this.findViewById(R.id.timeView));
+        adapter = new MessagesAdapter(this);
         messageRecyclerView.setAdapter(adapter);
+
 
         ItemTouchHelper.SimpleCallback swipeForForwardMessageCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -275,116 +288,35 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                RecyclerObject recyclerObject = adapter.getMessagesList().get(viewHolder.getAdapterPosition());
-                if (recyclerObject instanceof MessageObject) {
-                    Message message = ((MessageObject) recyclerObject).getMessage();
-                    if (message.getType() != null && message.getType().equals(Message.Type.USER) && dX > -(recyclerView.getWidth() / 4)) {
-                        super.onChildDraw(c, recyclerView, viewHolder, dX / 2, dY, actionState, isCurrentlyActive);
-                    }
-                }
+//                RecyclerObject recyclerObject = adapter.getMessagesList().get(viewHolder.getAdapterPosition());
+//                if (recyclerObject instanceof MessageObject) {
+//                    Message message = ((MessageObject) recyclerObject).getMessage();
+//                    if (message.getType() != null && message.getType().equals(Message.Type.USER) && dX > -(recyclerView.getWidth() / 4)) {
+//                        super.onChildDraw(c, recyclerView, viewHolder, dX / 2, dY, actionState, isCurrentlyActive);
+//                    }
+//                }
             }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-                RecyclerObject recyclerObject = adapter.getMessagesList().get(viewHolder.getAdapterPosition());
-                if (recyclerObject instanceof MessageObject) {
-                    Message message = ((MessageObject) recyclerObject).getMessage();
-                    if (message.getType().equals(Message.Type.USER)) {
-                        adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                        forwardedMessageId = String.valueOf(message.getId());
-                        forwardedMessageContainer.setVisibility(View.VISIBLE);
-                        forwardedMessagePreview.setContent(message, MessagingActivity.this);
-                        SendorsControl.vibrate(MessagingActivity.this, 50);
-                    }
-
-                }
+//                RecyclerObject recyclerObject = adapter.getMessagesList().get(viewHolder.getAdapterPosition());
+//                if (recyclerObject instanceof MessageObject) {
+//                    Message message = ((MessageObject) recyclerObject).getMessage();
+//                    if (message.getType().equals(Message.Type.USER)) {
+//                        adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+//                        forwardedMessageId = String.valueOf(message.getId());
+//                        forwardedMessageContainer.setVisibility(View.VISIBLE);
+//                        forwardedMessagePreview.setContent(message, MessagingActivity.this);
+//                        SendorsControl.vibrate(MessagingActivity.this, 50);
+//                    }
+//
+//                }
             }
         };
 
         new ItemTouchHelper(swipeForForwardMessageCallback).attachToRecyclerView(messageRecyclerView);
 
-        /*
-          Keyboard appear animation
-
-          In Android API >= 30 we can animate layout resize in realtime
-          At API < 30 we emulate layout resizing after keyboard appearing
-         */
-        if (Build.VERSION.SDK_INT >= 30) {
-            rootView.setWindowInsetsAnimationCallback(new WindowInsetsAnimation.Callback(WindowInsetsAnimation.Callback.DISPATCH_MODE_STOP) {
-                float startBottom = 0;
-                float endBottom = 0;
-
-                @NonNull
-                @Override
-                public WindowInsetsAnimation.Bounds onStart(@NonNull WindowInsetsAnimation animation, @NonNull WindowInsetsAnimation.Bounds bounds) {
-                    startBottom = rootView.getBottom();
-                    return super.onStart(animation, bounds);
-                }
-
-                @Override
-                public void onPrepare(@NonNull WindowInsetsAnimation animation) {
-                    super.onPrepare(animation);
-                    endBottom = rootView.getBottom();
-                    rootView.setTranslationY(startBottom - endBottom);
-                }
-
-                @NonNull
-                @Override
-                public WindowInsets onProgress(@NonNull WindowInsets insets, @NonNull List<WindowInsetsAnimation> runningAnimations) {
-                    float offset = MathUtils.lerp(startBottom - endBottom,
-                            0,
-                            android.R.anim.decelerate_interpolator);
-
-                    rootView.setTranslationY(offset);
-
-                    return insets;
-                }
-            });
-
-            rootView.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-                @Override
-                public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
-
-                    return null;
-                }
-            });
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-
-            final ValueAnimator anim = ValueAnimator.ofInt(messageRecyclerView.getMeasuredHeight(), -100);
-            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    int val = (Integer) valueAnimator.getAnimatedValue();
-                    ViewGroup.LayoutParams layoutParams = messageRecyclerView.getLayoutParams();
-                    layoutParams.height = val;
-                    messageRecyclerView.setLayoutParams(layoutParams);
-                }
-            });
-            anim.setDuration(500);
-
-            LayoutTransition layoutTransition = rootView.getLayoutTransition();
-            layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
-            layoutTransition.setStartDelay(LayoutTransition.CHANGING, 0);
-            layoutTransition.setDuration(500);
-            layoutTransition.addTransitionListener(new LayoutTransition.TransitionListener() {
-                @Override
-                public void startTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
-                    //  anim.start();
-                }
-
-                @Override
-                public void endTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
-                    EditText messageView = findViewById(R.id.message_box);
-                    messageView.setCursorVisible(true);
-                    messageView.requestFocus();
-                }
-            });
-
-
-            layoutTransition.setInterpolator(LayoutTransition.CHANGING, new DecelerateInterpolator(6.5f));
-
-        }
     }
 
     @Override
@@ -393,9 +325,62 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
     @Override
-    public void addMessage(Message message) {
-        adapter.addItem(new MessageObject(messageRecyclerView, message), true);
+    public void showErrorPanel() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                errorContainer.setVisibility(View.VISIBLE);
+                errorPanel.setVisibility(View.VISIBLE);
+                errorPanel.show();
+            }
+        });
+
     }
+
+    @Override
+    public void showInfoPanel() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final LinearLayout info = findViewById(R.id.info);
+                info.setVisibility(View.VISIBLE);
+                infoPanel.setVisibility(View.VISIBLE);
+                infoPanel.show();
+            }
+        });
+
+    }
+
+    @Override
+    public void hideInfoPanel() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final LinearLayout info = findViewById(R.id.info);
+                info.setVisibility(View.INVISIBLE);
+                infoPanel.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+
+    @Override
+    public void hideErrorPanel() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                errorPanel.hide(new Runnable() {
+                    @Override
+                    public void run() {
+                        errorContainer.setVisibility(View.GONE);
+                        errorPanel.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }});
+    }
+
 
     @Override
     public Map<String, Message> getMessagesIds() {
@@ -416,18 +401,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
-    public static void openActivityForChat(Context context, long chatId, String name,
-                                           String avatarPath) {
+    public static void openActivityForChat(Context context, String chatId, String name) {
         Intent intent = new Intent(context, MessagingActivity.class);
-//        intent.putExtra(APIKeys.CHAT_ID, chatId);
-//        intent.putExtra(APIKeys.TYPE, Chat.Types.CONVERSATION);
-//        intent.putExtra(APIKeys.NAME, name);
-//        intent.putExtra(APIKeys.AVATAR, avatarPath);
+        intent.putExtra(APIKeys.Chat.CHAT_ID, chatId);
+        intent.putExtra(APIKeys.Chat.NAME, name);
+        intent.putExtra(APIKeys.Chat.TYPE, Chat.TYPE_CONVERSATION);
+
         context.startActivity(intent);
     }
 
-    public static void openActivityForDialog(Context context, long chatId, long accountId, String name,
-                                             String avatarPath) {
+    public static void openActivityForDialog(Context context, String chatId) {
         Intent intent = new Intent(context, MessagingActivity.class);
 //        intent.putExtra(APIKeys.CHAT_ID, chatId);
 //        intent.putExtra(APIKeys.TYPE, Chat.Types.PRIVATE);
@@ -463,7 +446,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
     @Override
-    public void showEmptyChatPanel(View v) {
+    public void showChatInfo(View v) {
         if (presenter.isDialog()) {
             Intent intent = new Intent(MessagingActivity.this, Profile.class);
             intent.putExtra("id", accountId);
@@ -510,11 +493,29 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
+    @Override
+    public void showLoading() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+                loadingLayout.setVisibility(View.VISIBLE);
+            }
+        });
 
-    public void setOnResume(Runnable runnable) {
-        onResume = runnable;
     }
 
+    @Override
+    public void hideLoading() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+                loadingLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
 
     @Override
     protected void onStop() {
@@ -531,113 +532,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     public boolean isRecordPanelShown = false;
     private Thread recordWaiter;
-
-
-    private void processListUpdate() {
-
-        // Обработка ответа JSON
-        Thread loadThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    final GetMessageListResponse getMessageListResponse = (new GetMessageListRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId))).execute();
-                    if (getMessageListResponse.isSuccess()) {
-                        List<Message> messages = getMessageListResponse.getMessages();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.setFirstMessageId(getMessageListResponse.getFirstMessageId());
-                            }
-                        });
-                        boolean addClouds = false;
-                        for (final Message message : messages) {
-
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!loadedMessagesIds.containsKey(String.valueOf(message.getId()))) {
-
-                                        loadedMessagesIds.put(String.valueOf(message.getId()), message);
-
-                                        adapter.addItem(new MessageObject(messageRecyclerView, message), true);
-
-                                    } else {
-                                        // Если сообщение уже есть проверяем не изменился ли статус прочитанности
-                                    }
-                                    LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
-                                    loadingLayout.setVisibility(View.INVISIBLE);
-                                }
-                            });
-                            // Если это id уже есть, то проверяем прочитанность, а если нет, то добавляем
-                            if(message.getId() == getMessageListResponse.getFirstMessageId())
-                            {
-                                addClouds = true;
-                            }
-                        }
-
-                        if(addClouds)
-                        {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                        adapter.addItem(new BeginningView(messageRecyclerView));
-
-
-                                }
-                            });
-                        }
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                final LinearLayout error = findViewById(R.id.error);
-                                error.setVisibility(View.VISIBLE);
-                                errorPanel.show();
-                            }
-                        });
-                    }
-
-
-                } catch (Exception e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            final LinearLayout error = findViewById(R.id.error);
-                            error.setVisibility(View.VISIBLE);
-                            errorPanel.show();
-                        }
-                    });
-                    e.printStackTrace();
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if (loadedMessagesIds.size() == 0) {
-                            final LinearLayout info = findViewById(R.id.info);
-                            info.setVisibility(View.VISIBLE);
-                            infoPanel.setVisibility(View.VISIBLE);
-                            infoPanel.show();
-                        } else {
-                            final LinearLayout info = findViewById(R.id.info);
-                            info.setVisibility(View.INVISIBLE);
-                            infoPanel.setVisibility(View.INVISIBLE);
-                        }
-                        adapter.notifyDataSetChanged();
-                        findViewById(R.id.loadingLayout).setVisibility(View.INVISIBLE);
-                    }
-                });
-
-            }
-        });
-        loadThread.start();
-
-
-    }
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -737,19 +631,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                                     fadeOut.setAnimationListener(new Animation.AnimationListener() {
                                                         @Override
                                                         public void onAnimationStart(Animation animation) {
-
                                                         }
 
                                                         @Override
                                                         public void onAnimationEnd(Animation animation) {
                                                             recordPanel.setVisibility(View.INVISIBLE);
                                                             isRecordPanelShown = false;
-
                                                         }
 
                                                         @Override
                                                         public void onAnimationRepeat(Animation animation) {
-
                                                         }
                                                     });
                                                     fadeOut.setFillAfter(true);
@@ -763,7 +654,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                                     } else {
                                                         if (recordPanel.getVisibility() != View.INVISIBLE) {
                                                             recordPanel.startAnimation(fadeOut);
-
                                                         }
                                                     }
 
@@ -795,26 +685,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
     }
 
-    public void setMessageRead(final long messageId) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    adapter.getMessage(adapter.getPositionById(messageId)).setRead(true);
-                    adapter.notifyItemChanged(adapter.getPositionById(messageId));
-                } catch (MessageNotFoundException ignored) {
-
-                }
 
 
-            }
-        });
-
-    }
-
-    private long lastTypingTime = 0;
-    private boolean isTyping = false;
 
 
     public void setupMessageInputHandler() {
@@ -863,12 +735,12 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         public void run() {
                             try {
 
-                               // SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.TYPING);
+                                // SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.TYPING);
 
 
                             } catch (Exception e) {
                                 try {
-                                  //  SocketHolder.initialize(CachedValues.getSessionKey(MessagingActivity.this));
+                                    //  SocketHolder.initialize(CachedValues.getSessionKey(MessagingActivity.this));
                                 } catch (Exception ignored) {
 
                                 }
@@ -922,9 +794,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         }
     }
 
-    public void scrollToBottom(View v) {
-        adapter.getRecyclerView().smoothScrollToPosition(0);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -956,146 +826,28 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
             final ImageFile finalImageFile = imageFile;
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final UploadImageResponse uploadImageResponse = (new UploadImageRequest(finalImageFile, CachedValues.getSessionKey(getApplicationContext()))).execute();
-                        if (!uploadImageResponse.isSuccess()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CuteToast.showError("Failed upload image!", MessagingActivity.this);
-                                }
-
-                            });
-                        } else {
-
-                            mediaIdToSend = uploadImageResponse.getMediaId();
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    sendMessageWithPreview(message);
-                                }
-                            });
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
+            // TODO: Upload image to server
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void clearFwd(View v) {
+    public void clearForwardButtonClick(View v) {
         clearForwardMessage();
     }
 
-    private long imaginaryMessageId = -2;
 
     public void sendMessageWithPreview(final String message) {
-
-        final LinearLayout info = findViewById(R.id.info);
-        info.setVisibility(View.INVISIBLE);
-        infoPanel.setVisibility(View.INVISIBLE);
-        final Message messagePreview;
-        try {
-            final long localId = imaginaryMessageId - 1;
-            EditText messageView = findViewById(R.id.message_box);
-            messageView.setText("");
-            String placegolderText = message;
-            if (mediaIdToSend != null) {
-                placegolderText += "(Изображение)";
-            }
-            messagePreview = new Message((int) localId, 1, false, placegolderText, null, null, null, null, null, null, null,
-                    new User(null, null, null, null, CachedValues.getId(this), null, null, null, false));
-            MessageObject messageObject = new MessageObject(messageRecyclerView, messagePreview);
-            adapter.addItem(messageObject, true);
-            adapter.getRecyclerView().scrollToPosition(adapter.getMessagesList().indexOf(messageObject));
-
-            Thread sendThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    isTyping = false;
-                    try {
-                       // SocketHolder.getChatSocket().sendRequest(chatId, MemberStateChangedEvent.States.ONLINE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-
-                        final SendMessageResponse sendMessageResponse;
-                        if (mediaIdToSend == null) {
-                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, forwardedMessageId)).execute();
-                        } else {
-                            sendMessageResponse = (new SendMessageRequest(CachedValues.getSessionKey(getApplicationContext()), String.valueOf(chatId), message, mediaIdToSend, forwardedMessageId)).execute();
-                        }
-
-                        mediaIdToSend = null;
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                clearForwardMessage();
-                                try {
-
-
-                                    Message newMessage = sendMessageResponse.getMessage();
-                                    messagePreview.setId(newMessage.getId());
-                                    messagePreview.setTime(newMessage.getTime());
-                                    messagePreview.setText(newMessage.getText());
-                                    messagePreview.setType(newMessage.getType());
-                                    messagePreview.setSender(newMessage.getSender());
-                                    messagePreview.setAttachmentData(newMessage.getAttachmentData());
-                                    messagePreview.setAttachmentPath(newMessage.getCleanAttachmentPath());
-                                    messagePreview.setAttachmentType(newMessage.getAttachmentType());
-                                    messagePreview.setForwardedMessage(newMessage.getForwardedMessage());
-                                    try {
-                                        int position = adapter.getPositionList().get(localId);
-                                        adapter.getPositionList().remove(localId);
-                                        adapter.getPositionList().put((long) newMessage.getId(), position);
-                                        messagePreview.notifyDataChanged();
-                                    } catch (Exception ignored) {
-                                    }
-
-                                    if (!loadedMessagesIds.containsKey(String.valueOf(sendMessageResponse.getMessage().getId()))) {
-                                        loadedMessagesIds.put(String.valueOf((sendMessageResponse.getMessage().getId())), messagePreview);
-                                    }
-
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-
-                                    messagePreview.setId(-2);
-                                    messagePreview.notifyDataChanged();
-
-                                }
-
-                            }
-                        });
-                    } catch (Exception e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                messagePreview.setId(-2);
-                                messagePreview.notifyDataChanged();
-                            }
-                        });
-                        e.printStackTrace();
-                    }
-
+        Thread sendThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ChatSendMessageRequest.ChatSendMessageResponse chatSendMessageResponse = new ChatSendMessageRequest(chatId, message).execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-            sendThread.start();
-        } catch (NotCachedException e) {
-
-            e.printStackTrace();
-        }
+            }
+        });
+        sendThread.start();
     }
 
     @Override

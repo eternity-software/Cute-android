@@ -14,27 +14,24 @@ import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.chat.Chat;
-import ru.etysoft.cuteframework.methods.chat.Creation.ChatCreateRequest;
-import ru.etysoft.cuteframework.methods.chat.Creation.ChatCreateResponse;
+
+import ru.etysoft.cuteframework.methods.chat.ChatCreateRequest;
+import ru.etysoft.cuteframework.models.Chat;
+import ru.etysoft.cuteframework.storage.Cache;
 
 public class CreateChatActivity extends AppCompatActivity {
-
-
-    private SlidrInterface slidr;
-    boolean hasChangedToTrans = true;
-    private float mPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_conv);
-        // Анимация
 
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
+        System.out.println("cache usage " + Cache.getSizeMb());
+
     }
 
 
@@ -46,9 +43,10 @@ public class CreateChatActivity extends AppCompatActivity {
                 try {
                     EditText nameView = findViewById(R.id.name);
                     EditText descriptionView = findViewById(R.id.description);
-                    ChatCreateResponse chatCreateResponse = (new ChatCreateRequest(CachedValues.getSessionKey(CreateChatActivity.this), String.valueOf(nameView.getText()),
-                            String.valueOf(descriptionView.getText()),
-                            Chat.Types.CONVERSATION)).execute();
+                    ChatCreateRequest.ChatCreateResponse chatCreateResponse = new ChatCreateRequest(
+                            Chat.TYPE_CONVERSATION,
+                            nameView.getText().toString(),
+                            descriptionView.getText().toString()).execute();
                     if (chatCreateResponse.isSuccess()) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -67,10 +65,6 @@ public class CreateChatActivity extends AppCompatActivity {
                         });
 
                     }
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

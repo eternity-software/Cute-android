@@ -23,13 +23,18 @@ import ru.etysoft.cute.components.Avatar;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.CustomLanguage;
-import ru.etysoft.cute.lang.StringsRepository;
-import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
-import ru.etysoft.cuteframework.methods.chat.ServiceData;
-import ru.etysoft.cuteframework.methods.messages.Message;
+
+import ru.etysoft.cuteframework.models.Chat;
+
+import ru.etysoft.cuteframework.models.ChatSnippet;
+import ru.etysoft.cuteframework.models.messages.ChatCreatedData;
+import ru.etysoft.cuteframework.models.messages.Message;
+import ru.etysoft.cuteframework.models.messages.ServiceData;
+import ru.etysoft.cuteframework.models.messages.ServiceMessage;
+import ru.etysoft.cuteframework.models.messages.SuperMessage;
+import ru.etysoft.cuteframework.storage.Cache;
 
 public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
     private final Activity context;
@@ -74,15 +79,10 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                 public void onClick(View v) {
                     if (isMessagingActivityOpened) {
                         isMessagingActivityOpened = false;
-                        if (info.isDialog()) {
-                            MessagingActivity.openActivityForDialog(getContext(), info.getId(),
-                                    info.getAccountId(),
-                                    info.getName(),
-                                    info.getAvatarPath());
+                        if (info.getType().equals(Chat.TYPE_PRIVATE)) {
+                            MessagingActivity.openActivityForDialog(getContext(), info.getId());
                         } else {
-                            MessagingActivity.openActivityForChat(getContext(), info.getId(),
-                                    info.getName(),
-                                    info.getAvatarPath());
+                            MessagingActivity.openActivityForChat(getContext(), info.getId(), info.getName());
                         }
 
                     }
@@ -93,7 +93,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
 
             ViewHolder holder = (ViewHolder) view.getTag();
 
-            boolean isDialog = (info.getType().equals(ChatSnippet.Types.PRIVATE));
+            boolean isDialog = (info.getType().equals(Chat.TYPE_PRIVATE));
 
             if (isDialog) {
 
@@ -105,10 +105,12 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
 
             }
 
-            if (info.getMessage().isRead()) {
+            //TODO: Update read state
+            boolean isLastMessageRead = false;
+            if (isLastMessageRead) {
                 TypedValue selectableBackground = new TypedValue();
                 getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBackground, true);
-             //   holder.container.setBackground(context.getResources().getDrawable(selectableBackground.resourceId));
+                //   holder.container.setBackground(context.getResources().getDrawable(selectableBackground.resourceId));
                 holder.readstatus.setVisibility(View.INVISIBLE);
             } else {
                 holder.readstatus.setVisibility(View.VISIBLE);
@@ -117,85 +119,84 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
 
             if (holder.avatar != null) {
                 holder.avatar.showAnimate();
-                if (info.isDialog()) {
+                if (info.getType().equals(Chat.TYPE_PRIVATE)) {
 
-                    holder.avatar.generateIdPicture(info.getAccountId());
+                    holder.avatar.generateIdPicture(1);
                 } else {
-                    holder.avatar.generateIdPicture(info.getId());
+                    holder.avatar.generateIdPicture(2);
                 }
 
                 holder.avatar.setAcronym(info.getName(), Avatar.Size.MEDIUM);
 
-                if (info.getAvatarPath() != null) {
-                    Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
+                // TODO: set avatar
+                if (false) {
+                    // Picasso.get().load(info.getAvatarPath()).transform(new CircleTransform()).into(holder.avatar.getPictureView());
                 }
             }
 
 
             holder.name.setText(info.getName());
 
-            if (!info.getMessage().getType().equals(Message.Type.SERVICE)) {
-                try {
-                    if (info.getMessage().getSender().getId() != Integer.parseInt(CachedValues.getId(context))) {
+
+            Message lastMessage = info.getLastMessage();
+
+
+            if (!(lastMessage instanceof ServiceMessage)) {
+
+                if (lastMessage instanceof SuperMessage) {
+
+                    SuperMessage superMessage = (SuperMessage) lastMessage;
+
+                    if (!superMessage.getSender().getId().equals(Cache.getUserAccount().getId())){
                         if (!isDialog) {
-                            holder.accentView.setText(info.getMessage().getSender().getDisplayName() + ": ");
+                            holder.accentView.setText(superMessage.getSender().getName() + ": ");
                         } else {
                             holder.accentView.setText("");
                         }
 
-                    } else {
+                    } else{
                         holder.accentView.setText(CustomLanguage.getStringsRepository().getOrDefault(R.string.you, context) + ": ");
                     }
-                } catch (NotCachedException e) {
-                    holder.accentView.setText(info.getMessage().getSender().getDisplayName() + ": ");
-                    e.printStackTrace();
+
+                    holder.messageView.setText(superMessage.getText());
                 }
-                holder.messageView.setText(info.getMessage().getText());
+
             } else {
-                ServiceData serviceData = info.getMessage().getServiceData();
-                if (serviceData.getType().equals(ServiceData.Types.CHAT_CREATED)) {
-                    try {
-                        String messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.chat_created, getContext())
-                                .replace("%s", serviceData.getChatName());
-                        holder.accentView.setText(messageText);
-                        holder.messageView.setText("");
-                    } catch (ResponseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (serviceData.getType().equals(ServiceData.Types.ADD_MEMBER)) {
-                    try {
-                        String messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.add_member, getContext())
-                                .replace("%s", serviceData.getDisplayName());
-                        holder.accentView.setText(messageText);
-                        holder.messageView.setText("");
-                    } catch (ResponseException e) {
-                        e.printStackTrace();
-                    }
+
+
+                ServiceData serviceData = ((ServiceMessage) lastMessage).getServiceData();
+                String messageText;
+                if (serviceData instanceof ChatCreatedData) {
+
+                    messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.chat_created, getContext())
+                            .replace("%s", ((ChatCreatedData) serviceData).getChatName());
                 } else {
 
-                    String messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.unknown_service_message, getContext());
-                    holder.accentView.setText(messageText);
-                    holder.messageView.setText("");
+                    messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.unknown_service_message, getContext());
 
                 }
+                holder.accentView.setText(messageText);
+                holder.messageView.setText("");
 
             }
-            holder.time.setText(Numbers.getTimeFromTimestamp(info.getMessage().getTime() + "000", context));
+
+            // TODO: add time handler
+            holder.time.setText(Numbers.getTimeFromTimestamp("000", context));
 
             Animation fadeIn = new AlphaAnimation(0, 1);
             fadeIn.setFillAfter(false);
             fadeIn.setInterpolator(new DecelerateInterpolator());
             fadeIn.setDuration(800);
-            if(info.getMessage().getAttachmentData() != null)
-            {
-                holder.messageView.setText("");
-                holder.accentView.setText(holder.accentView.getText() + CustomLanguage.getStringsRepository().getOrDefault(R.string.image, getContext()));
-            }
+
+            // TODO: add attachments check
+//            if(info.getMessage().getAttachmentData() != null)
+//            {
+//                holder.messageView.setText("");
+//                holder.accentView.setText(holder.accentView.getText() + CustomLanguage.getStringsRepository().getOrDefault(R.string.image, getContext()));
+//            }
 
             holder.container.startAnimation(fadeIn);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return view;

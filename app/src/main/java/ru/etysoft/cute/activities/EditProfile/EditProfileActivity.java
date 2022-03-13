@@ -20,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,9 +35,12 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.BlankResponse;
+import ru.etysoft.cuteframework.methods.account.EditAccountRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
+import ru.etysoft.cuteframework.storage.Cache;
 
 public class EditProfileActivity extends AppCompatActivity implements EditProfileContract.View{
 
@@ -83,11 +88,10 @@ public class EditProfileActivity extends AppCompatActivity implements EditProfil
     @Override
     public void setAccountInfo() {
         try {
-            urlPhoto = CachedValues.getAvatar(this);
-            loginView.setText(CachedValues.getLogin(this));
-            nameView.setText(CachedValues.getDisplayName(this));
-            bioView.setText(CachedValues.getBio(this));
-            statusView.setText(CachedValues.getStatus(this));
+
+            loginView.setText(Cache.getUserAccount().getLogin());
+            bioView.setText(Cache.getUserAccount().getBio());
+            statusView.setText(Cache.getUserAccount().getStatus());
             urlcover = CachedValues.getCover(this);
             if (urlPhoto != null){
                 Picasso.get().load(urlPhoto).placeholder(getResources().getDrawable(R.drawable.circle_gray)).transform(new CircleTransform()).into(avatar.getPictureView());
@@ -98,7 +102,7 @@ public class EditProfileActivity extends AppCompatActivity implements EditProfil
             if (urlcover == null){
                 changeCover.setBackground(getResources().getDrawable(R.drawable.square_rounded_corners_gray));
             }
-        }catch (NotCachedException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -113,12 +117,28 @@ public class EditProfileActivity extends AppCompatActivity implements EditProfil
             @Override
             public void run() {
 
+                EditAccountRequest editAccountRequest = new EditAccountRequest();
+                try {
+                    editAccountRequest.addBio(bioView.getText().toString());
+                    editAccountRequest.addName(nameView.getText().toString());
+                    editAccountRequest.addStatus(statusView.getText().toString());
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if(!editAccountRequest.execute().isSuccess())
+                    {
+                        // TODO: error handler
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         thread.start();
     }
 
-    //TODO: переместить методы
+    //TODO: переместить методы MVP
 
     public static void copyStream(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024];

@@ -71,9 +71,8 @@ public class ChatSearchAdapter extends ArrayAdapter<ChatSearchInfo> {
                                     Intent intent = new Intent(getContext(), MessagingActivity.class);
                                     intent.putExtra("cid", String.valueOf(info.getCid()));
                                     intent.putExtra("isd", false);
-                                    intent.putExtra("name", info.getName());
                                     intent.putExtra("cover", "null");
-                                    MessagingActivity.openActivityForChat(getContext(), info.getCid(), info.getName(), null);
+                                    MessagingActivity.openActivityForChat(getContext(), "suka", info.getName());
                                 }
                             }
                         });

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.etysoft.cute.components.dynamic.ThemeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    app:themeBackgroundColor="colorBackground"
+    tools:context=".activities.StorageManagementActivity">
+    <ru.etysoft.cute.components.LightToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:caption="@string/storage_settings"
+        app:captionLocId="storage_settings" />
+
+    <ru.etysoft.cute.components.dynamic.DynamicTextView
+        android:id="@+id/storageUsageSummaryView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="29 gb"
+        android:layout_marginLeft="20dp"
+        android:layout_marginVertical="40dp"
+        android:textSize="36sp"
+        android:fontFamily="@font/montserratalternates_medium"
+        app:themeColor="colorTextAccent"
+        />
+
+    <ru.etysoft.cute.components.HugeButton
+        style="?selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:onClick="cleanCache"
+        app:hugeButtonIcon="@drawable/icon_appearance"
+        app:hugeButtonText="night_theme"
+
+        />
+
+
+</ru.etysoft.cute.components.dynamic.ThemeLinearLayout>

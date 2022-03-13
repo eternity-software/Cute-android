@@ -3,14 +3,18 @@ package ru.etysoft.cute.activities.fragments.account;
 import android.app.Activity;
 import android.content.Intent;
 
+
 import ru.etysoft.cute.activities.ImagePreview;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cute.data.CachedValues;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cuteframework.CuteFramework;
+import ru.etysoft.cuteframework.exceptions.NoSuchValueException;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.account.GetAccountRequest;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListRequest;
 import ru.etysoft.cuteframework.methods.friend.GetFriends.FriendListResponse;
+import ru.etysoft.cuteframework.models.Account;
 
 public class AccountPresenter implements AccountContact.Presenter {
     private final Activity context;
@@ -38,21 +42,32 @@ public class AccountPresenter implements AccountContact.Presenter {
             @Override
             public void run() {
                 try {
-//                    final GetAccountResponse getAccountResponse = CuteFramework.getInfo(CachedValues.getSessionKey(context));
-//                    context.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (getAccountResponse.isSuccess()) {
-//                                CachedValues.setCover(context, getAccountResponse.getCover());
-//                                CachedValues.setStatus(context, getAccountResponse.getStatus());
-//                                CachedValues.setBio(context, getAccountResponse.getBio());
-//                                CachedValues.setAvatar(context, getAccountResponse.getAvatar());
-//                                view.setAccountInfo(getAccountResponse.getLogin(), getAccountResponse.getStatus(), getAccountResponse.getAvatar(),
-//                                        Integer.parseInt(getAccountResponse.getId()));
-//
-//                            }
-//                        }
-//                    });
+                    final GetAccountRequest.GetAccountResponse getAccountResponse = new GetAccountRequest().execute();
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (getAccountResponse.isSuccess()) {
+                                Account account = null;
+                                try {
+                                    account = getAccountResponse.getAccount();
+                                    String status = "Set your status";
+                                    try {
+
+                                        status = account.getStatus();
+                                    } catch (NoSuchValueException ignored) {
+
+                                    }
+                                    view.setAccountInfo(account.getName(), status, null,
+                                            account.getId());
+                                } catch (NoSuchValueException e) {
+                                    e.printStackTrace();
+                                }
+
+
+
+                            }
+                        }
+                    });
                     
                 } catch (final Exception e) {
                     if(context != null)

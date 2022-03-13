@@ -13,7 +13,7 @@ public interface AccountContact {
     interface View{
         void initializeViews();
 
-        void setAccountInfo(String login, String status, String photo, int id);
+        void setAccountInfo(String login, String status, String photo, String id);
 
         List<User> getFriends();
 

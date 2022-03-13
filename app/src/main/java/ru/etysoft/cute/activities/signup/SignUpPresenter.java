@@ -25,7 +25,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     @Override
-    public void onSignUpButtonClick(final String login, final String displayName, final String email, final String password) {
+    public void onSignUpButtonClick(final String login,  final String email, final String password) {
         if (!signUpView.isPasswordsCorrect()) {
             signUpView.showError(context.getResources().getString(R.string.password_incorrect));
             return;

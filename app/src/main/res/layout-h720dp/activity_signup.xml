@@ -90,40 +90,6 @@
                 app:localizableHint="nickname" />
 
             <ru.etysoft.cute.components.dynamic.DynamicTextView
-                android:id="@+id/description_display_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"
-                android:fontFamily="@font/montserratmedium"
-                android:gravity="center"
-                android:text="@string/sign_up_display_name"
-                app:themeColor="colorSupportText"
-                app:localizableKey="sign_up_displayname" />
-
-            <ru.etysoft.cute.components.dynamic.DynamicEditText
-                android:id="@+id/edittext_displayname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edit_text_passive"
-                android:drawableLeft="@drawable/icon_person"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:fontFamily="@font/montserrat"
-                android:foregroundGravity="left|clip_horizontal"
-                android:hint="@string/sign_up_display_name_hint"
-                android:inputType="textPersonName"
-                android:maxLength="255"
-                android:paddingLeft="10dp"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:textColor="@color/colorText"
-                app:localizableHint="sign_up_displayname_hint" />
-
-            <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

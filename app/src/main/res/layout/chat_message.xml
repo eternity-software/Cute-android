@@ -66,7 +66,7 @@
                         android:layout_marginBottom="-5dp"
                         android:layout_height="40dp" />
                     <ru.etysoft.cute.components.LeftMessageTextView
-                        android:id="@+id/message_body"
+                        android:id="@+id/messageBody"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"

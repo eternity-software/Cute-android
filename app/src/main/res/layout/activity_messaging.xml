@@ -37,7 +37,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:onClick="showEmptyChatPanel"
+        android:onClick="showChatInfo"
         app:layout_constraintBottom_toTopOf="@+id/divider3"
         app:layout_constraintStart_toEndOf="@+id/menuButton2"
         app:layout_constraintTop_toTopOf="parent" />
@@ -65,7 +65,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/montserratalternates_medium"
         android:maxLines="1"
-        android:onClick="showEmptyChatPanel"
+        android:onClick="showChatInfo"
         android:paddingTop="4dp"
         android:text=".."
 
@@ -83,7 +83,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/montserrat"
         android:maxLines="1"
-        android:onClick="showEmptyChatPanel"
+        android:onClick="showChatInfo"
         android:text=".."
         android:textColor="@color/colorSupportText"
         android:textSize="12sp"
@@ -169,7 +169,7 @@
                 android:layout_gravity="center_vertical"
                 app:srcCompat="@drawable/icon_close"
                 android:layout_height="30dp"
-                android:onClick="clearFwd"
+                android:onClick="clearForwardButtonClick"
                 app:themeBackgroundTint="colorIconTint"
                 />
         </LinearLayout>
@@ -296,11 +296,12 @@
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
-        app:themeBackgroundColor="colorBackground"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/messages"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/messages">
+        app:layout_constraintTop_toTopOf="@+id/messages"
+        app:themeBackgroundColor="colorBackground">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -311,16 +312,15 @@
     </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
 
-
     <LinearLayout
         android:id="@+id/error"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingHorizontal="40dp"
         android:layout_weight="1"
         android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical"
+        android:paddingHorizontal="40dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"

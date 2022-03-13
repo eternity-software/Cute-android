@@ -52,6 +52,7 @@
                 android:text="@string/confirmation"
                 android:textColor="@color/colorTitle"
                 android:textSize="36sp"
+                app:themeColor="colorTitle"
                 app:localizableKey="confirmation" />
 
             <ru.etysoft.cute.components.dynamic.DynamicTextView
@@ -64,6 +65,7 @@
                 android:gravity="center"
                 android:text="@string/confirmation_sub"
                 android:textSize="20sp"
+                app:themeColor="colorSupportText"
                 app:localizableKey="confirmation_sub" />
 
             <LinearLayout
@@ -80,6 +82,7 @@
                     android:fontFamily="@font/montserratmedium"
                     android:gravity="center"
                     android:text="@string/to_mail"
+                    app:themeColor="colorSupportText"
                     android:textSize="20sp"
                     app:localizableKey="@string/to_mail" />
 
@@ -87,6 +90,7 @@
                     android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:themeColor="colorSupportText"
                     android:layout_marginLeft="8dp"
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
@@ -115,7 +119,7 @@
                 app:localizableHint="confirmation_edit" />
 
             <ru.etysoft.cute.components.dynamic.DynamicTextView
-                android:id="@+id/cant"
+                android:id="@+id/resendCodeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -126,6 +130,7 @@
                 android:text="@string/confirmation_bottom"
                 android:textColor="@color/colorTextAccent"
                 android:textSize="14sp"
+                app:themeColor="colorSupportText"
                 app:localizableKey="confirmation_bottom" />
 
             <LinearLayout
@@ -201,6 +206,7 @@
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
             android:textSize="18sp"
+            app:themeButtonBackground="colorButton"
             app:localizableButtonKey="next" />
 
     </LinearLayout>

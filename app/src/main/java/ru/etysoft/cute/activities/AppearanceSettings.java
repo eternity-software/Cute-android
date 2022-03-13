@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.r0adkll.slidr.Slidr;
 
+import java.sql.SQLException;
+
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.SelectFrame;
 import ru.etysoft.cute.data.CacheUtils;
@@ -24,6 +26,7 @@ import ru.etysoft.cute.exceptions.LanguageParsingException;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Numbers;
+import ru.etysoft.cuteframework.storage.Cache;
 
 public class AppearanceSettings extends AppCompatActivity {
 
@@ -154,6 +157,8 @@ public class AppearanceSettings extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         setContentView(R.layout.activity_appearance_settings);
         CacheUtils cacheUtils = CacheUtils.getInstance();

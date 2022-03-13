@@ -28,7 +28,8 @@ import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.themes.Theme;
-import ru.etysoft.cuteframework.methods.chat.ChatSnippet;
+
+import ru.etysoft.cuteframework.models.ChatSnippet;
 
 
 public class ChatsListFragment extends Fragment implements ChatsListContact.View {

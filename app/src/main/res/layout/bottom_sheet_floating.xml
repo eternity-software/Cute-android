@@ -71,7 +71,7 @@
                 android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
-                <Button
+                <ru.etysoft.cute.components.dynamic.DynamicButton
                     android:id="@+id/ButtonPassive"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
@@ -84,6 +84,8 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="PASSIVE MINI"
+                    app:themeButtonBackground="colorButtonPassive"
+                    app:themeButtonText="colorText"
                     android:textColor="@color/colorText"
                     android:textSize="14sp" />
 
@@ -99,7 +101,9 @@
                     android:fontFamily="@font/montserrat"
                     android:paddingHorizontal="14dp"
                     android:text="ACTIVE MINI"
+                    app:themeButtonBackground="colorButton"
                     android:textColor="@color/colorWhite"
+                    app:themeButtonText="colorWhite"
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>

@@ -119,10 +119,10 @@ public class AccountFragment extends Fragment implements AccountContact.View {
 
 
     @Override
-    public void setAccountInfo(String login, String status, String photo, int id) {
+    public void setAccountInfo(String login, String status, String photo, String id) {
         this.status.setText(status);
         this.login.setText(login);
-        userimage.generateIdPicture(id);
+        userimage.generateIdPicture(3);
         userimage.setAcronym(login, Avatar.Size.LARGE);
         if (photo != null) {
             try {

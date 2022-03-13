@@ -19,6 +19,7 @@ public class ConfirmationActivity extends AppCompatActivity implements Confirmat
     private LinearLayout errorView;
     private TextView errorText;
     private TextView emailText;
+    private TextView resendCodeTextView;
     private Button nextButton;
     private LinearLayout backButton;
     private EditText confirmationCodeInput;
@@ -47,6 +48,13 @@ public class ConfirmationActivity extends AppCompatActivity implements Confirmat
                 onBackPressed();
             }
         });
+
+        resendCodeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resendCodeClick();
+            }
+        });
     }
 
 
@@ -56,6 +64,7 @@ public class ConfirmationActivity extends AppCompatActivity implements Confirmat
         errorText = findViewById(R.id.error_text);
         backButton = findViewById(R.id.button_back);
         nextButton = findViewById(R.id.button_next);
+        resendCodeTextView = findViewById(R.id.resendCodeTextView);
         emailText = findViewById(R.id.email);
         confirmationCodeInput = findViewById(R.id.edittext_code);
     }
@@ -81,6 +90,11 @@ public class ConfirmationActivity extends AppCompatActivity implements Confirmat
     public void showMainActivity() {
         Intent intent = new Intent(ConfirmationActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void resendCodeClick() {
+        confirmationPresenter.onCantReceiveButtonClick();
     }
 
     @Override
