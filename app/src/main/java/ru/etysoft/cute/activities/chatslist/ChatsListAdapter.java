@@ -5,6 +5,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -80,9 +81,11 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                     if (isMessagingActivityOpened) {
                         isMessagingActivityOpened = false;
                         if (info.getType().equals(Chat.TYPE_PRIVATE)) {
+
                             MessagingActivity.openActivityForDialog(getContext(), info.getId());
                         } else {
                             MessagingActivity.openActivityForChat(getContext(), info.getId(), info.getName());
+
                         }
 
                     }
@@ -94,6 +97,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             ViewHolder holder = (ViewHolder) view.getTag();
 
             boolean isDialog = (info.getType().equals(Chat.TYPE_PRIVATE));
+
 
             if (isDialog) {
 
@@ -181,7 +185,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             }
 
             // TODO: add time handler
-            holder.time.setText(Numbers.getTimeFromTimestamp("000", context));
+            holder.time.setText(Numbers.getTimeFromTimestamp(0, context));
 
             Animation fadeIn = new AlphaAnimation(0, 1);
             fadeIn.setFillAfter(false);

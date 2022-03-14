@@ -90,7 +90,7 @@
             android:name=".activities.messaging.MessagingActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
             android:theme="@style/AppSlideTheme"
-            android:windowSoftInputMode="stateHidden" />
+             />
         <activity
             android:name=".activities.CreateChatActivity"
             android:theme="@style/AppSlideTheme"
@@ -136,6 +136,7 @@
         <activity
             android:name=".activities.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SplashScreen"

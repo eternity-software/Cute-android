@@ -61,11 +61,14 @@ import ru.etysoft.cute.utils.CircleTransform;
 import ru.etysoft.cute.images.ImagesWorker;
 import ru.etysoft.cute.utils.Numbers;
 import ru.etysoft.cute.utils.SliderActivity;
+import ru.etysoft.cuteframework.exceptions.NoSuchValueException;
 import ru.etysoft.cuteframework.exceptions.ResponseException;
-import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberRequest;
+import ru.etysoft.cuteframework.methods.BlankResponse;
 import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberResponse;
+import ru.etysoft.cuteframework.methods.chat.AddMemberRequest;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarRequest;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarResponse;
+import ru.etysoft.cuteframework.methods.chat.ChatGetInfoRequest;
 import ru.etysoft.cuteframework.methods.chat.ChatMember;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryRequest;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryResponse;
@@ -139,7 +142,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                     @Override
                     public void run() {
                         try {
-                            AddMemberResponse addMemberResponse = (new AddMemberRequest(CachedValues.getSessionKey(getActivity()), cid, input.getText().toString())).execute();
+                            BlankResponse addMemberResponse = (new AddMemberRequest(input.getText().toString(), cid)).execute();
                             if (addMemberResponse.isSuccess()) {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
@@ -277,7 +280,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void run() {
                 try {
-                    final ChatInfoResponse chatInfoResponse = (new ChatInfoRequest(CachedValues.getSessionKey(getContext()), cid)).execute();
+                    final ChatGetInfoRequest.ChatGetInfoResponse chatInfoResponse = (new ChatGetInfoRequest(cid)).execute();
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -303,24 +306,27 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                                         }
                                     });
                                 }
+
                                 avatar.setAcronym(chatInfoResponse.getChat().getName(), Avatar.Size.MEDIUM);
                                 avatar.generateIdPicture(1);
                                 chatNameView.setText(chatInfoResponse.getChat().getName());
                                 chatDescriptionView.setText(chatInfoResponse.getChat().getDescription());
-                                for (ChatMember chatMember : chatInfoResponse.getMembers()) {
-                                    MemberInfo memberInfo = new MemberInfo(chatMember.getId(),
-                                            chatMember.getDisplayName(),
-                                            chatMember.getType(), chatMember.getAvatar());
 
-                                    if (memberInfo.getRole().equals(ChatMember.Types.CREATOR)) {
-                                        memberInfos.add(0, memberInfo);
-                                    } else if (memberInfo.getRole().equals(ChatMember.Types.ADMIN)) {
-                                        memberInfos.add(1, memberInfo);
-                                    } else {
-                                        memberInfos.add(memberInfo);
-                                    }
-                                    membersCount++;
-                                }
+//                                for (ChatMember chatMember : chatInfoResponse.get()) {
+//                                    MemberInfo memberInfo = new MemberInfo(chatMember.getId(),
+//                                            chatMember.getDisplayName(),
+//                                            chatMember.getType(), chatMember.getAvatar());
+//
+//                                    if (memberInfo.getRole().equals(ChatMember.Types.CREATOR)) {
+//                                        memberInfos.add(0, memberInfo);
+//                                    } else if (memberInfo.getRole().equals(ChatMember.Types.ADMIN)) {
+//                                        memberInfos.add(1, memberInfo);
+//                                    } else {
+//                                        memberInfos.add(memberInfo);
+//                                    }
+//                                    membersCount++;
+//                                }
+
                                 ((LinearLayout) view.findViewById(R.id.loading)).removeAllViews();
 
                                 TextView membersCountTextView = view.findViewById(R.id.membersCount);
@@ -328,17 +334,12 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                                 MembersAdapter membersAdapter = new MembersAdapter(getActivity(), memberInfos);
                                 ((ListView) view.findViewById(R.id.members)).setAdapter(membersAdapter);
 
-                            } catch (ResponseException e) {
+                            } catch ( NoSuchValueException e) {
                                 e.printStackTrace();
                             }
                         }
                     });
 
-
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                } catch (NotCachedException e) {
-                    e.printStackTrace();
                 } catch (final Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
@@ -503,6 +504,14 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                 @Override
                 public void onClick(View v) {
                     deleteChat();
+                }
+            });
+
+            final ImageView addMember = v.findViewById(R.id.buttonAdd);
+            addMember.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addMember();
                 }
             });
             setContent();

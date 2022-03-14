@@ -21,7 +21,9 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -68,6 +70,7 @@ import ru.etysoft.cute.exceptions.MessageNotFoundException;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.lang.StringsRepository;
+import ru.etysoft.cute.resizer.FluidContentResizer;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.transition.Transitions;
 import ru.etysoft.cute.utils.CircleTransform;
@@ -79,7 +82,9 @@ import ru.etysoft.cuteframework.methods.chat.ChatSendMessageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
 import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.models.Chat;
+import ru.etysoft.cuteframework.models.messages.ChatCreatedData;
 import ru.etysoft.cuteframework.models.messages.Message;
+import ru.etysoft.cuteframework.models.messages.ServiceMessage;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class MessagingActivity extends AppCompatActivity implements ConversationBottomSheet.BottomSheetListener, MessagingContract.View {
@@ -129,7 +134,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         Theme.applyBackground(findViewById(R.id.rootView));
 
 
-
         presenter = new MessagingPresenter(this, type, null, chatId);
 
         // TODO: socket support
@@ -138,13 +142,13 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         initViews();
 
 
-
         networkStateReceiver = new NetworkStateReceiver(new Runnable() {
             @Override
             public void run() {
 
 
-            }}, new Runnable() {
+            }
+        }, new Runnable() {
             @Override
             public void run() {
             }
@@ -180,9 +184,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
         titleView.setText(name);
 
+
         setupVoiceButton();
         setupMessageInputHandler();
 
+        FluidContentResizer.INSTANCE.listen(this);
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
@@ -224,16 +230,17 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         return String.valueOf(titleView.getText());
     }
 
+
+
     @Override
-    public void addMessages(List<MessageComponent> messageComponents) {
+    public void insertMessages(List<MessageComponent> messageComponents, int index) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter.getItemList().addAll(messageComponents);
+                adapter.getItemList().addAll(index, messageComponents);
                 adapter.notifyDataSetChanged();
             }
         });
-
     }
 
     @Override
@@ -244,6 +251,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             e.printStackTrace();
             return "-1";
         }
+    }
+
+    @Override
+    public MessagesAdapter getMessagesAdapter() {
+        return adapter;
     }
 
 
@@ -260,8 +272,37 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     @Override
     public void setupRecyclerView() {
         messageRecyclerView = findViewById(R.id.messages);
-        adapter = new MessagesAdapter(this);
+        adapter = new MessagesAdapter(this, presenter.getChatType());
         messageRecyclerView.setAdapter(adapter);
+
+        messageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                final int offset = recyclerView.computeVerticalScrollOffset();
+
+                if (offset < recyclerView.getHeight()) {
+                    if (adapter.getItemList().get(0).getMessage() instanceof ServiceMessage) {
+                        if (((ServiceMessage) adapter.getItemList().get(0).getMessage()).getServiceData() instanceof ChatCreatedData) {
+                        } else {
+                            presenter.loadUpperMessages();
+                        }
+
+                    }
+                    else
+                    {
+                        presenter.loadUpperMessages();
+                    }
+
+                }
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
 
 
         ItemTouchHelper.SimpleCallback swipeForForwardMessageCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -378,7 +419,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                         errorPanel.setVisibility(View.INVISIBLE);
                     }
                 });
-            }});
+            }
+        });
     }
 
 
@@ -397,7 +439,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         super.onResume();
 
         if (onResume != null) {
-            onResume.run();
+            //  onResume.run();
         }
     }
 
@@ -686,9 +728,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
 
-
-
-
     public void setupMessageInputHandler() {
         final ImageView sendBtn = findViewById(R.id.sendButton);
         final ImageView voiceBtn = findViewById(R.id.sendVoice);
@@ -793,7 +832,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             }
         }
     }
-
 
 
     @Override

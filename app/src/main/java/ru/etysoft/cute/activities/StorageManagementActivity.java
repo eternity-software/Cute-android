@@ -18,6 +18,7 @@ import ru.etysoft.cuteframework.storage.Cache;
 public class StorageManagementActivity extends AppCompatActivity {
 
     private TextView summaryStorageUsageView;
+    private TextView chatsCountView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +27,17 @@ public class StorageManagementActivity extends AppCompatActivity {
         initializeViews();
         Slidr.attach(this);
         summaryStorageUsageView.setText(Cache.getSizeMb() + " MB");
+        try {
+            chatsCountView.setText(Cache.getChatSnippetsTable().getRowsCount() + " chats");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void initializeViews()
     {
         summaryStorageUsageView = findViewById(R.id.storageUsageSummaryView);
+        chatsCountView = findViewById(R.id.cachedChatsCount);
     }
 
     public void cleanCache(View view)

@@ -1,12 +1,17 @@
 package ru.etysoft.cute;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import org.sqlite.SQLiteConfig;
+
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import ru.etysoft.cute.activities.main.MainActivity;
@@ -72,13 +77,16 @@ public class SplashScreen extends AppCompatActivity {
         startActivity(intent);
 
 
-        finish();
+        //finish();
 
     }
 
     private void setupCuteFramework() {
         CuteFramework.setCacheDir(getFilesDir().getPath() + "/");
+
+        // TODO use custom JDBC Driver
         CuteFramework.setSqlClassName("org.sqldroid.SQLDroidDriver");
+
         CuteFramework.setJdbcUrl("jdbc:sqldroid:");
         CuteFramework.initialize();
     }

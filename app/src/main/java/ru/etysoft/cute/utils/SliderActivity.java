@@ -1,7 +1,9 @@
 package ru.etysoft.cute.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
@@ -33,6 +35,13 @@ public class SliderActivity {
             return;
         }
 
+        if(state == ViewDragHelper.STATE_DRAGGING)
+        {
+            if(activity.getWindow().getCurrentFocus() != null) {
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(activity.getWindow().getCurrentFocus().getWindowToken(), 0);
+            }
+        }
         final @ColorRes int color = getWindowColor(state);
         ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(activity, color));
       //  activity.getWindow().setBackgroundDrawable(colorDrawable);

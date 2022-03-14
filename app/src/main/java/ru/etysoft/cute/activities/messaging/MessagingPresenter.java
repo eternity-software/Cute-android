@@ -13,6 +13,7 @@ import ru.etysoft.cuteframework.methods.chat.ChatGetInfoRequest;
 import ru.etysoft.cuteframework.methods.chat.GetChatHistoryRequest;
 import ru.etysoft.cuteframework.models.Chat;
 import ru.etysoft.cuteframework.models.messages.Message;
+import ru.etysoft.cuteframework.models.messages.ServiceMessage;
 import ru.etysoft.cuteframework.models.messages.SuperMessage;
 import ru.etysoft.cuteframework.storage.Cache;
 
@@ -22,6 +23,7 @@ public class MessagingPresenter implements MessagingContract.Presenter {
     private MessagingContract.View view;
     private String chatType, avatarPath, chatId;
     private long membersCount;
+    private boolean isLoadingMessages = false;
 
 
     public MessagingPresenter(MessagingContract.View view,
@@ -46,7 +48,6 @@ public class MessagingPresenter implements MessagingContract.Presenter {
                             try {
                                 membersCount = chatInfoResponse.getChat().getMembersCount();
                                 view.setStatus(chatInfoResponse.getChat().getMembersCount() + " " + view.getResources().getString(R.string.members));
-                                view.showLoading();
                             } catch (NoSuchValueException e) {
                                 e.printStackTrace();
                             }
@@ -71,6 +72,8 @@ public class MessagingPresenter implements MessagingContract.Presenter {
     @Override
     public void loadLatestMessages() {
 
+        if(isLoadingMessages) return;
+        isLoadingMessages = true;
         view.showLoading();
         view.hideErrorPanel();
         Thread loadingThread = new Thread(new Runnable() {
@@ -78,35 +81,73 @@ public class MessagingPresenter implements MessagingContract.Presenter {
             public void run() {
                 try {
                     GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse = new GetChatHistoryRequest(chatId).execute();
-                    List<MessageComponent> messageComponentList = new ArrayList<>();
-                    for(Message message : getChatHistoryResponse.getMessages())
-                    {
-                        if(message instanceof SuperMessage)
-                        {
+                    List<MessageComponent> messageComponentList = handleResponse(getChatHistoryResponse);
 
-                            if(((SuperMessage) message).getSender().getId().equals(Cache.getUserAccount().getId()))
-                            {
-                                MessageComponent messageComponent = new MessageComponent(MessageComponent.TYPE_MY_MESSAGE);
-                                messageComponent.setMessage(message);
-                                messageComponentList.add(messageComponent);
-
-                            }
-                        }
-
-                    }
-
-                    view.addMessages(messageComponentList);
+                    view.insertMessages(messageComponentList, view.getMessagesAdapter().getItemCount());
                     view.hideLoading();
+
 
                 } catch (Exception e) {
                     view.hideLoading();
                     view.showErrorPanel();
                     e.printStackTrace();
                 }
+                isLoadingMessages = false;
             }
         });
         loadingThread.start();
     }
+
+
+    private  List<MessageComponent> handleResponse(GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse ) throws NoSuchValueException {
+        List<MessageComponent> messageComponentList = new ArrayList<>();
+        for(Message message : getChatHistoryResponse.getMessages())
+        {
+            if(message instanceof SuperMessage)
+            {
+
+
+                MessageComponent messageComponent = new MessageComponent(MessageComponent.TYPE_MY_MESSAGE);
+                messageComponent.setMessage(message);
+                messageComponentList.add(messageComponent);
+
+
+            }
+            else if(message instanceof ServiceMessage)
+            {
+                MessageComponent messageComponent = new MessageComponent(MessageComponent.TYPE_SERVICE_MESSAGE);
+                messageComponent.setMessage(message);
+                messageComponentList.add(messageComponent);
+            }
+
+        }
+        return messageComponentList;
+    }
+
+    @Override
+    public void loadUpperMessages() {
+        if(isLoadingMessages) return;
+        isLoadingMessages = true;
+        Thread loadingThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse = new GetChatHistoryRequest(chatId, view.getMessagesAdapter().getItemList().get(0).getMessage().getId()).execute();
+                    List<MessageComponent> messageComponentList = handleResponse(getChatHistoryResponse);
+
+
+                    view.insertMessages(messageComponentList, 0);
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+                isLoadingMessages = false;
+            }
+        });
+        loadingThread.start();
+    }
+
 
     @Override
     public String getChatType() {

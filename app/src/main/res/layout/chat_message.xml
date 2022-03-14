@@ -80,14 +80,6 @@
                         android:textColorLink="@color/colorTextLink"
                         android:textSize="@dimen/messageText" />
 
-                    <TextView
-                        android:id="@+id/emojiView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🐈"
-                        android:textColor="@color/colorText"
-                        android:textSize="60sp"/>
-
                     <ru.etysoft.cute.components.Attachments
                         android:id="@+id/attachments"
                         android:layout_width="wrap_content"
@@ -99,6 +91,14 @@
 
                 </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
+
+                <TextView
+                    android:id="@+id/emojiView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐈"
+                    android:textColor="@color/colorText"
+                    android:textSize="60sp" />
 
                 <ru.etysoft.cute.components.dynamic.DynamicTextView
                     android:id="@+id/timeview"

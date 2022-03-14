@@ -22,9 +22,11 @@ public interface MessagingContract {
 
         Resources getResources();
 
-        void addMessages(List<MessageComponent> messageComponents);
+        void insertMessages(List<MessageComponent> messageComponents, int index);
 
         String getAccountId();
+
+        MessagesAdapter getMessagesAdapter();
 
         String getStringsRepositoryResult(int resId);
 
@@ -76,6 +78,8 @@ public interface MessagingContract {
         void loadChatInfo();
 
         void loadLatestMessages();
+
+        void loadUpperMessages();
 
         boolean isDialog();
 

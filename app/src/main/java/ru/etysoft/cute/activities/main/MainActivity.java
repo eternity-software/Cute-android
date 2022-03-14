@@ -25,6 +25,7 @@ import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.resizer.FluidContentResizer;
 import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Permissions;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         startService(new Intent(this, NotificationService.class));
 
         //devOptions();
+
+
 
 
 
@@ -262,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         viewPagerAdapter.addFragment(fragmentDialogs);
         viewPagerAdapter.addFragment(fragmentAccount);
         viewPager.setSaveEnabled(true);
+
         viewPager.setSaveFromParentEnabled(true);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(viewPagerAdapter);
