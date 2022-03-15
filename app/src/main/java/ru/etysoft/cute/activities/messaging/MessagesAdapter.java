@@ -29,6 +29,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
 
     private List<MessageComponent> itemList = new ArrayList<>();
+    private List<String> ids = new ArrayList<>();
     private LayoutInflater layoutInflater;
     private String chatType;
 
@@ -91,8 +92,30 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         return itemList.get(position).getType();
     }
 
-    public List<MessageComponent> getItemList() {
-        return itemList;
+    public void insertRange(int index, List<MessageComponent> messageComponentList) {
+        List<MessageComponent> finalMessages = new ArrayList<>();
+
+        for(MessageComponent messageComponent : messageComponentList)
+        {
+            if(messageComponent.getMessage() != null)
+            {
+                if(ids.contains(messageComponent.getMessage().getId()))
+                {
+
+                }
+                else
+                {
+                    finalMessages.add(messageComponent);
+              //      ids.add(messageComponent.getMessage().getId());
+                }
+            }
+        }
+        itemList.addAll(index, finalMessages);
+    }
+
+    public MessageComponent getMessageComponent(int index) {
+
+        return itemList.get(index);
     }
 
     @NonNull

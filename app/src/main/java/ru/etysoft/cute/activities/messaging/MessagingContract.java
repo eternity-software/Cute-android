@@ -67,6 +67,8 @@ public interface MessagingContract {
 
         void hideLoading();
 
+        void notifyDataSetChanged();
+
     }
 
     interface Presenter {
@@ -79,7 +81,7 @@ public interface MessagingContract {
 
         void loadLatestMessages();
 
-        void loadUpperMessages();
+        void loadUpperMessages(Runnable onSuccess);
 
         boolean isDialog();
 

@@ -39,6 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.math.MathUtils;
@@ -237,8 +238,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter.getItemList().addAll(index, messageComponents);
-                adapter.notifyDataSetChanged();
+                adapter.insertRange(index, messageComponents);
+
             }
         });
     }
@@ -275,6 +276,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         adapter = new MessagesAdapter(this, presenter.getChatType());
         messageRecyclerView.setAdapter(adapter);
 
+
         messageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -284,22 +286,47 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 final int offset = recyclerView.computeVerticalScrollOffset();
+                final int extent = recyclerView.computeVerticalScrollExtent();
+                final int bottomRange = recyclerView.computeVerticalScrollRange() -extent - offset;
+                super.onScrolled(recyclerView, dx, dy);
 
+
+                System.out.println("offset " + offset);
+                System.out.println("extent " + extent);
+                System.out.println("range " +  recyclerView.computeVerticalScrollRange());
+                System.out.println("============== ");
+
+                Runnable runnable =  new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int positionIndex= ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                                View startView = recyclerView.getChildAt(0);
+                                int topView = (startView == null) ? 0 : (startView.getTop() - recyclerView.getPaddingTop());
+                                if (positionIndex!= -1) {
+                                    ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(positionIndex, topView);
+                                }
+                            }
+                        });
+                    }
+                };
                 if (offset < recyclerView.getHeight()) {
-                    if (adapter.getItemList().get(0).getMessage() instanceof ServiceMessage) {
-                        if (((ServiceMessage) adapter.getItemList().get(0).getMessage()).getServiceData() instanceof ChatCreatedData) {
+                    if (adapter.getMessageComponent(0).getMessage() instanceof ServiceMessage) {
+                        if (((ServiceMessage) adapter.getMessageComponent(0).getMessage()).getServiceData() instanceof ChatCreatedData) {
                         } else {
-                            presenter.loadUpperMessages();
+                            presenter.loadUpperMessages(runnable);
                         }
 
                     }
                     else
                     {
-                        presenter.loadUpperMessages();
+                        presenter.loadUpperMessages(runnable);
                     }
 
                 }
-                super.onScrolled(recyclerView, dx, dy);
+
 
             }
         });
@@ -557,6 +584,16 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
             }
         });
 
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override

@@ -85,6 +85,7 @@ public class MessagingPresenter implements MessagingContract.Presenter {
 
                     view.insertMessages(messageComponentList, view.getMessagesAdapter().getItemCount());
                     view.hideLoading();
+                    view.notifyDataSetChanged();
 
 
                 } catch (Exception e) {
@@ -125,18 +126,21 @@ public class MessagingPresenter implements MessagingContract.Presenter {
     }
 
     @Override
-    public void loadUpperMessages() {
+    public void loadUpperMessages(Runnable onSuccess) {
         if(isLoadingMessages) return;
         isLoadingMessages = true;
         Thread loadingThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse = new GetChatHistoryRequest(chatId, view.getMessagesAdapter().getItemList().get(0).getMessage().getId()).execute();
+                    GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse = new GetChatHistoryRequest(chatId, view.getMessagesAdapter().getMessageComponent(0).getMessage().getId()).execute();
                     List<MessageComponent> messageComponentList = handleResponse(getChatHistoryResponse);
 
 
                     view.insertMessages(messageComponentList, 0);
+                    view.notifyDataSetChanged();
+                    onSuccess.run();
+
 
                 } catch (Exception e) {
 
