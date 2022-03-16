@@ -280,8 +280,10 @@
 
         android:clipToPadding="false"
 
+        android:animateLayoutChanges="false"
         android:background="@color/colorTransparent"
         app:stackFromEnd="true"
+        app:reverseLayout="true"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/divider4"
         app:layout_constraintEnd_toEndOf="parent"

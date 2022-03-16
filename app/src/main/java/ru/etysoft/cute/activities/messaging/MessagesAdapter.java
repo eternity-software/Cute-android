@@ -92,25 +92,30 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         return itemList.get(position).getType();
     }
 
-    public void insertRange(int index, List<MessageComponent> messageComponentList) {
+    public void addAll(List<MessageComponent> messageComponentList) {
         List<MessageComponent> finalMessages = new ArrayList<>();
 
-        for(MessageComponent messageComponent : messageComponentList)
-        {
-            if(messageComponent.getMessage() != null)
-            {
-                if(ids.contains(messageComponent.getMessage().getId()))
-                {
+        for (MessageComponent messageComponent : messageComponentList) {
+            if (messageComponent.getMessage() != null) {
+                if (ids.contains(messageComponent.getMessage().getId())) {
 
-                }
-                else
-                {
+                } else {
                     finalMessages.add(messageComponent);
-              //      ids.add(messageComponent.getMessage().getId());
+                    ids.add(messageComponent.getMessage().getId());
+                    itemList.add(messageComponent);
+                    notifyItemInserted(itemList.size() - 1);
                 }
             }
         }
-        itemList.addAll(index, finalMessages);
+
+
+    }
+
+    public void sendMessagePending(MessageComponent messageComponent) {
+
+        itemList.add(0, messageComponent);
+        notifyItemInserted(0);
+
     }
 
     public MessageComponent getMessageComponent(int index) {
@@ -135,21 +140,30 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         return viewHolder;
     }
 
+
+    public int getMessageComponentId(MessageComponent messageComponent)
+    {
+        return itemList.indexOf(messageComponent);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         MessageComponent messageComponent = itemList.get(position);
 
+        View view = holder.getMessageView();
+
+        TextView messageBody = view.findViewById(R.id.messageBody);
+        TextView emojiView = view.findViewById(R.id.emojiView);
+        TextView timeView = view.findViewById(R.id.timeview);
+        ImageView state = view.findViewById(R.id.state);
+        LinearLayout messageContainer = view.findViewById(R.id.messageContainer);
+        ForwardedMessage forwardedMessage = view.findViewById(R.id.forwardedMessage);
+
         if (messageComponent.getMessage() instanceof SuperMessage) {
 
             SuperMessage superMessage = (SuperMessage) messageComponent.getMessage();
-            View view = holder.getMessageView();
 
-            TextView messageBody = view.findViewById(R.id.messageBody);
-            TextView emojiView = view.findViewById(R.id.emojiView);
-            TextView timeView = view.findViewById(R.id.timeview);
-            ImageView state = view.findViewById(R.id.state);
-            LinearLayout messageContainer = view.findViewById(R.id.messageContainer);
-            ForwardedMessage forwardedMessage = view.findViewById(R.id.forwardedMessage);
+
 
             String messageText = superMessage.getText();
 
@@ -167,8 +181,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
             String senderId = superMessage.getSender().getId();
 
-            if(messageComponent.getType() == MessageComponent.TYPE_CHAT_ANNOTATION_MESSAGE)
-            {
+            if (messageComponent.getType() == MessageComponent.TYPE_CHAT_ANNOTATION_MESSAGE) {
                 TextView displayNameView = view.findViewById(R.id.displayNameView);
                 displayNameView.setText(superMessage.getSender().getName());
                 Avatar avatar = view.findViewById(R.id.avatarView);
@@ -184,12 +197,28 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
             if (messageComponent.getState() == MessageComponent.STATE_SENT) {
                 String time = Numbers.getTimeFromTimestamp(Long.parseLong(superMessage.getCreatedTime() + "000"), layoutInflater.getContext());
                 timeView.setText(time);
+                timeView.setVisibility(View.VISIBLE);
                 if (messageComponent.getType() == MessageComponent.TYPE_MY_MESSAGE) {
                     state.setVisibility(View.GONE);
                 }
             }
 
 
+        }
+        else if(messageComponent.getState() == MessageComponent.STATE_PENDING)
+        {
+            state.setVisibility(View.VISIBLE);
+            timeView.setVisibility(View.GONE);
+            String messageText = messageComponent.getPlaceholderText();
+            if (StringFormatter.isEmoji(messageText) && messageText.length() < 10) {
+                messageContainer.setVisibility(View.GONE);
+                emojiView.setVisibility(View.VISIBLE);
+                emojiView.setText(messageText);
+            } else {
+                emojiView.setVisibility(View.GONE);
+                messageContainer.setVisibility(View.VISIBLE);
+                messageBody.setText(messageText);
+            }
         }
 
 

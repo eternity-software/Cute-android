@@ -22,7 +22,8 @@ public interface MessagingContract {
 
         Resources getResources();
 
-        void insertMessages(List<MessageComponent> messageComponents, int index);
+        void loadMessages(List<MessageComponent> messageComponents);
+        void loadPreviousMessages(List<MessageComponent> messageComponents);
 
         String getAccountId();
 

@@ -231,18 +231,29 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         return String.valueOf(titleView.getText());
     }
 
-
-
     @Override
-    public void insertMessages(List<MessageComponent> messageComponents, int index) {
+    public void loadMessages(List<MessageComponent> messageComponents) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter.insertRange(index, messageComponents);
+                adapter.addAll( messageComponents);
+                messageRecyclerView.scrollToPosition(0);
 
             }
         });
     }
+
+    @Override
+    public void loadPreviousMessages(List<MessageComponent> messageComponents) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.addAll( messageComponents);
+
+            }
+        });
+    }
+
 
     @Override
     public String getAccountId() {
@@ -291,9 +302,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 super.onScrolled(recyclerView, dx, dy);
 
 
-                System.out.println("offset " + offset);
-                System.out.println("extent " + extent);
-                System.out.println("range " +  recyclerView.computeVerticalScrollRange());
+
                 System.out.println("============== ");
 
                 Runnable runnable =  new Runnable() {
@@ -306,7 +315,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                                 View startView = recyclerView.getChildAt(0);
                                 int topView = (startView == null) ? 0 : (startView.getTop() - recyclerView.getPaddingTop());
                                 if (positionIndex!= -1) {
-                                    ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(positionIndex, topView);
+                                 //   ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(positionIndex, topView);
                                 }
                             }
                         });
@@ -316,12 +325,14 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     if (adapter.getMessageComponent(0).getMessage() instanceof ServiceMessage) {
                         if (((ServiceMessage) adapter.getMessageComponent(0).getMessage()).getServiceData() instanceof ChatCreatedData) {
                         } else {
+                            System.out.println("============== ");
                             presenter.loadUpperMessages(runnable);
                         }
 
                     }
                     else
                     {
+                        System.out.println("============== ");
                         presenter.loadUpperMessages(runnable);
                     }
 
@@ -911,12 +922,32 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
 
-    public void sendMessageWithPreview(final String message) {
+    public void sendMessageWithPreview(final String messageText) {
+
+        MessageComponent messageComponent = new MessageComponent(MessageComponent.TYPE_MY_MESSAGE);
+
+        messageComponent.setState(MessageComponent.STATE_PENDING);
+        messageComponent.setPlaceholderText(messageText);
+        adapter.sendMessagePending(messageComponent);
+
+
         Thread sendThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ChatSendMessageRequest.ChatSendMessageResponse chatSendMessageResponse = new ChatSendMessageRequest(chatId, message).execute();
+                    ChatSendMessageRequest.ChatSendMessageResponse chatSendMessageResponse = new ChatSendMessageRequest(chatId, messageText).execute();
+                    if(chatSendMessageResponse.isSuccess())
+                    {
+                      //  messageComponent.setState(MessageComponent.STATE_SENT);
+                       // messageComponent.setPlaceholderText("ger");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                             //   adapter.notifyItemChanged(adapter.getMessageComponentId(messageComponent));
+                            }
+                        });
+
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

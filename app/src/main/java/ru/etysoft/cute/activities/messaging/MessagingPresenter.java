@@ -3,6 +3,7 @@ package ru.etysoft.cute.activities.messaging;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ru.etysoft.cute.R;
@@ -83,7 +84,9 @@ public class MessagingPresenter implements MessagingContract.Presenter {
                     GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse = new GetChatHistoryRequest(chatId).execute();
                     List<MessageComponent> messageComponentList = handleResponse(getChatHistoryResponse);
 
-                    view.insertMessages(messageComponentList, view.getMessagesAdapter().getItemCount());
+                    Collections.reverse(messageComponentList);
+
+                    view.loadMessages(messageComponentList);
                     view.hideLoading();
                     view.notifyDataSetChanged();
 
@@ -133,12 +136,12 @@ public class MessagingPresenter implements MessagingContract.Presenter {
             @Override
             public void run() {
                 try {
-                    GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse = new GetChatHistoryRequest(chatId, view.getMessagesAdapter().getMessageComponent(0).getMessage().getId()).execute();
+                    GetChatHistoryRequest.GetChatHistoryResponse getChatHistoryResponse = new GetChatHistoryRequest(chatId, view.getMessagesAdapter().getMessageComponent(view.getMessagesAdapter().getItemCount() - 1).getMessage().getId()).execute();
                     List<MessageComponent> messageComponentList = handleResponse(getChatHistoryResponse);
 
-
-                    view.insertMessages(messageComponentList, 0);
-                    view.notifyDataSetChanged();
+                    Collections.reverse(messageComponentList);
+                    view.loadPreviousMessages(messageComponentList);
+                  //  view.notifyDataSetChanged();
                     onSuccess.run();
 
 

@@ -16,6 +16,7 @@ public class MessageComponent {
     public static final int STATE_ERROR = 2;
 
     private Message message;
+    private String placeholderText;
     private int type;
     private int state = STATE_SENT;
 
@@ -25,6 +26,18 @@ public class MessageComponent {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public String getPlaceholderText() {
+        return placeholderText;
+    }
+
+    public void setPlaceholderText(String placeholderText) {
+        this.placeholderText = placeholderText;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     public Message getMessage() {
