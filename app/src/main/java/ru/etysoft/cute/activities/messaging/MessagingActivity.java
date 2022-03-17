@@ -1,39 +1,26 @@
 package ru.etysoft.cute.activities.messaging;
 
-import android.animation.LayoutTransition;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.Transition;
-import android.transition.TransitionListenerAdapter;
-import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowInsets;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.view.WindowInsetsAnimation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,21 +29,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.math.MathUtils;
 import com.squareup.picasso.Picasso;
 
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ru.etysoft.cute.R;
-import ru.etysoft.cute.activities.ImagePreview;
+import ru.etysoft.cute.activities.ImageSend.ImageSendActivity;
 import ru.etysoft.cute.activities.Profile;
 import ru.etysoft.cute.activities.chatslist.ChatsListAdapter;
-import ru.etysoft.cute.activities.ImageSend.ImageSendActivity;
 import ru.etysoft.cute.bottomsheets.conversation.ConversationBottomSheet;
 import ru.etysoft.cute.bottomsheets.filepicker.FilePickerBottomSheet;
 import ru.etysoft.cute.components.Avatar;
@@ -65,12 +47,9 @@ import ru.etysoft.cute.components.ErrorPanel;
 import ru.etysoft.cute.components.FilePreview;
 import ru.etysoft.cute.components.ForwardedMessage;
 import ru.etysoft.cute.components.InfoPanel;
-import ru.etysoft.cute.components.FileParingImageView;
 import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.MessageNotFoundException;
 import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.CustomLanguage;
-import ru.etysoft.cute.lang.StringsRepository;
 import ru.etysoft.cute.resizer.FluidContentResizer;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.transition.Transitions;
@@ -80,8 +59,6 @@ import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.consts.APIKeys;
 import ru.etysoft.cuteframework.methods.chat.ChatSendMessageRequest;
-import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
-import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
 import ru.etysoft.cuteframework.models.Chat;
 import ru.etysoft.cuteframework.models.messages.ChatCreatedData;
 import ru.etysoft.cuteframework.models.messages.Message;
@@ -98,6 +75,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     public String forwardedMessageId = null;
 
     public boolean isVoiceButtonShowed = true;
+
     private boolean isRecordingVoiceMessage = false;
 
     private LinearLayout infoContainer;
@@ -116,11 +94,8 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     private LinearLayout forwardedMessageContainer;
     private RecyclerView messageRecyclerView;
     private ViewGroup rootView;
-    private List<Long> readIds;
 
     private MessagingContract.Presenter presenter;
-
-    private Runnable onResume;
 
 
     @Override
@@ -471,15 +446,7 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         forwardedMessageId = "";
         forwardedMessageContainer.setVisibility(View.GONE);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (onResume != null) {
-            //  onResume.run();
-        }
-    }
+    
 
     public static void openActivityForChat(Context context, String chatId, String name) {
         Intent intent = new Intent(context, MessagingActivity.class);
@@ -930,16 +897,22 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
         messageComponent.setPlaceholderText(messageText);
         adapter.sendMessagePending(messageComponent);
 
+        final int offset = messageRecyclerView.computeVerticalScrollOffset();
+        final int extent = messageRecyclerView.computeVerticalScrollExtent();
+        final int bottomRange = messageRecyclerView.computeVerticalScrollRange() - extent - offset;
+
+        if (bottomRange < messageRecyclerView.getHeight()) {
+            messageRecyclerView.scrollToPosition(0);
+        }
 
         Thread sendThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     ChatSendMessageRequest.ChatSendMessageResponse chatSendMessageResponse = new ChatSendMessageRequest(chatId, messageText).execute();
-                    if(chatSendMessageResponse.isSuccess())
-                    {
-                      //  messageComponent.setState(MessageComponent.STATE_SENT);
-                       // messageComponent.setPlaceholderText("ger");
+                    if (chatSendMessageResponse.isSuccess()) {
+                        //  messageComponent.setState(MessageComponent.STATE_SENT);
+                        // messageComponent.setPlaceholderText("ger");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
