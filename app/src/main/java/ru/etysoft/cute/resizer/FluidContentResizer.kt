@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 
@@ -35,7 +36,7 @@ object FluidContentResizer {
         // under 16ms in your app. Using Transitions API would be more efficient, but
         // for some reason it skips the first animation and I cannot figure out why.
         heightAnimator = ObjectAnimator.ofInt(startHeight, event.contentHeight).apply {
-            interpolator = FastOutSlowInInterpolator()
+            interpolator = DecelerateInterpolator(2f)
             duration = 300
         }
         heightAnimator.addUpdateListener { contentView.setHeight(it.animatedValue as Int) }

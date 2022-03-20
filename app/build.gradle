@@ -46,7 +46,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'org.sqldroid:sqldroid:1.0.3'
+    implementation 'org.sqldroid:sqldroid:1.1.0-rc1'
     implementation 'com.google.mlkit:face-detection:16.1.2'
     api 'com.otaliastudios:cameraview:2.7.2'
     implementation 'com.uncopt:android.justified:1.0'
@@ -68,6 +68,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation files('libs\\CuteFramework.jar')
+
 
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
     testImplementation 'junit:junit:4.12'

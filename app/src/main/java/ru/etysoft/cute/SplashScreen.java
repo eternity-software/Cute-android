@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
-import org.sqlite.SQLiteConfig;
-
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -77,7 +75,7 @@ public class SplashScreen extends AppCompatActivity {
         startActivity(intent);
 
 
-        //finish();
+        finish();
 
     }
 

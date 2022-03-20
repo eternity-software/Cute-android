@@ -79,7 +79,7 @@ public class MembersAdapter extends ArrayAdapter<MemberInfo> {
         }
         holder.picture.showAnimate();
         holder.picture.setAcronym(info.getName(), Avatar.Size.SMALL);
-        holder.picture.generateIdPicture(info.getId());
+        holder.picture.generateIdPicture(2);
         holder.name.setText(info.getName());
         if (!info.getPhoto().equals("null")) {
             Picasso.get().load(info.getPhoto()).transform(new CircleTransform()).into(

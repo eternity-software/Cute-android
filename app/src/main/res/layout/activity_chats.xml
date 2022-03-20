@@ -12,15 +12,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <ListView
-            android:id="@+id/listView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/colorBackground"
             android:divider="@color/colorBackground"
             android:dividerHeight="0dp"
             android:footerDividersEnabled="false"
-            android:nestedScrollingEnabled="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
             android:visibility="visible" />
 
 

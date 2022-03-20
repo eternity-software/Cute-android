@@ -44,6 +44,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,16 +69,13 @@ import ru.etysoft.cuteframework.methods.chat.AddMember.AddMemberResponse;
 import ru.etysoft.cuteframework.methods.chat.AddMemberRequest;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarRequest;
 import ru.etysoft.cuteframework.methods.chat.ChangeAvatar.ChangeAvatarResponse;
+import ru.etysoft.cuteframework.methods.chat.ChatClearHistory;
 import ru.etysoft.cuteframework.methods.chat.ChatGetInfoRequest;
-import ru.etysoft.cuteframework.methods.chat.ChatMember;
+import ru.etysoft.cuteframework.methods.chat.ChatGetMembersRequest;
+import ru.etysoft.cuteframework.methods.chat.ChatLeaveRequest;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryRequest;
 import ru.etysoft.cuteframework.methods.chat.ClearHistory.ClearHistoryResponse;
-import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoRequest;
-import ru.etysoft.cuteframework.methods.chat.GetInfo.ChatInfoResponse;
-import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveRequest;
-import ru.etysoft.cuteframework.methods.chat.Leave.ChatLeaveResponse;
-import ru.etysoft.cuteframework.methods.media.UploadImageRequest;
-import ru.etysoft.cuteframework.methods.media.UploadImageResponse;
+import ru.etysoft.cuteframework.models.ChatMember;
 import ru.etysoft.cuteframework.requests.attachements.ImageFile;
 
 public class ConversationBottomSheet extends BottomSheetDialogFragment {
@@ -340,6 +338,30 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         }
                     });
 
+                    final ChatGetMembersRequest.ChatGetMembersResponse chatGetMembersResponse = (new ChatGetMembersRequest(cid)).execute();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                for (ChatMember chatMember : chatGetMembersResponse.getChatMembers()) {
+                                        MemberInfo memberInfo = new MemberInfo(chatMember.getAccountId(),
+                                                chatMember.getName(),
+                                                chatMember.getPermissionsGroup(), null);
+
+                                        if (memberInfo.getRole().equals(ChatMember.TYPE_OWNER)) {
+                                            memberInfos.add(0, memberInfo);
+                                        } else if (memberInfo.getRole().equals(ChatMember.TYPE_ADMIN)) {
+                                            memberInfos.add(1, memberInfo);
+                                        } else {
+                                            memberInfos.add(memberInfo);
+                                        }
+                                        membersCount++;
+                                    }
+                            } catch (NoSuchValueException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 } catch (final Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
@@ -347,7 +369,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                             @Override
                             public void run() {
                                 CuteToast.showError(e.getMessage(), getActivity());
-                                dismiss();
+                              //  dismiss();
                             }
                         });
                     }
@@ -362,9 +384,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
 
 
     public void leaveChat() {
-        final String token;
-        try {
-            token = CachedValues.getSessionKey(getActivity());
+
 
 
             AlertDialog leaveDialog = new AlertDialog(getActivity(), getResources().getString(R.string.leave_title), getString(R.string.leave_text), new AlertDialog.DialogHandler() {
@@ -375,7 +395,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                             @Override
                             public void run() {
                                 try {
-                                    ChatLeaveResponse chatLeaveResponse = (new ChatLeaveRequest(token, cid)).execute();
+                                    BlankResponse chatLeaveResponse = (new ChatLeaveRequest(cid)).execute();
                                     if (chatLeaveResponse.isSuccess()) {
                                         activity.runOnUiThread(new Runnable() {
                                             @Override
@@ -389,6 +409,10 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                                     }
                                 } catch (ResponseException e) {
                                     e.printStackTrace();
+                                } catch (ru.etysoft.cuteframework.exceptions.NotCachedException e) {
+                                    e.printStackTrace();
+                                } catch (SQLException throwables) {
+                                    throwables.printStackTrace();
                                 }
 
                             }
@@ -413,37 +437,41 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
             });
             leaveDialog.show();
             dismiss();
-        } catch (NotCachedException e) {
-            e.printStackTrace();
-        }
 
     }
 
     public void deleteChat() {
-
-        final String token;
-        try {
-            token = CachedValues.getSessionKey(getActivity());
 
             dismiss();
             AlertDialog deleteDialog = new AlertDialog(getActivity(), getResources().getString(R.string.clear_title), getString(R.string.clear_text),
                     new AlertDialog.DialogHandler() {
                         @Override
                         public void onPositiveClicked(String input) {
-                            try {
-                                ClearHistoryResponse clearHistoryResponse = (new ClearHistoryRequest(token, cid)).execute();
-                                if (clearHistoryResponse.isSuccess()) {
-                                    activity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            activity.finish();
-                                        }
-                                    });
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        BlankResponse clearHistoryResponse = (new ChatClearHistory(cid)).execute();
+                                        if (clearHistoryResponse.isSuccess()) {
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    activity.finish();
+                                                }
+                                            });
 
+                                        }
+                                    } catch (ResponseException e) {
+                                        e.printStackTrace();
+                                    } catch (ru.etysoft.cuteframework.exceptions.NotCachedException e) {
+                                        e.printStackTrace();
+                                    } catch (SQLException throwables) {
+                                        throwables.printStackTrace();
+                                    }
                                 }
-                            } catch (ResponseException e) {
-                                e.printStackTrace();
-                            }
+                            });
+                            thread.start();
+
                         }
 
                         @Override
@@ -457,9 +485,7 @@ public class ConversationBottomSheet extends BottomSheetDialogFragment {
                         }
                     });
             deleteDialog.show();
-        } catch (NotCachedException e) {
-            e.printStackTrace();
-        }
+
 
     }
 

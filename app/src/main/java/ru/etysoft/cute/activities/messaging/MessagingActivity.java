@@ -278,7 +278,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
 
 
 
-                System.out.println("============== ");
 
                 Runnable runnable =  new Runnable() {
                     @Override
@@ -300,7 +299,6 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                     if (adapter.getMessageComponent(0).getMessage() instanceof ServiceMessage) {
                         if (((ServiceMessage) adapter.getMessageComponent(0).getMessage()).getServiceData() instanceof ChatCreatedData) {
                         } else {
-                            System.out.println("============== ");
                             presenter.loadUpperMessages(runnable);
                         }
 
@@ -889,6 +887,11 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
     }
 
 
+    public void scrollToBottom(View v)
+    {
+        messageRecyclerView.scrollToPosition(0);
+    }
+
     public void sendMessageWithPreview(final String messageText) {
 
         MessageComponent messageComponent = new MessageComponent(MessageComponent.TYPE_MY_MESSAGE);
@@ -911,12 +914,12 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 try {
                     ChatSendMessageRequest.ChatSendMessageResponse chatSendMessageResponse = new ChatSendMessageRequest(chatId, messageText).execute();
                     if (chatSendMessageResponse.isSuccess()) {
-                        //  messageComponent.setState(MessageComponent.STATE_SENT);
-                        // messageComponent.setPlaceholderText("ger");
+                         messageComponent.setState(MessageComponent.STATE_SENT);
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                             //   adapter.notifyItemChanged(adapter.getMessageComponentId(messageComponent));
+                                adapter.notifyItemChanged(adapter.getMessageComponentId(messageComponent));
                             }
                         });
 

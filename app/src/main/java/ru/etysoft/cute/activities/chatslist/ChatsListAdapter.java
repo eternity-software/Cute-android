@@ -5,27 +5,23 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.messaging.MessagingActivity;
 import ru.etysoft.cute.components.Avatar;
-import ru.etysoft.cute.data.CachedValues;
-import ru.etysoft.cute.exceptions.NotCachedException;
 import ru.etysoft.cute.lang.CustomLanguage;
 import ru.etysoft.cute.utils.Numbers;
-import ru.etysoft.cuteframework.exceptions.ResponseException;
 
 import ru.etysoft.cuteframework.models.Chat;
 
@@ -37,41 +33,44 @@ import ru.etysoft.cuteframework.models.messages.ServiceMessage;
 import ru.etysoft.cuteframework.models.messages.SuperMessage;
 import ru.etysoft.cuteframework.storage.Cache;
 
-public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
+public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.ChatsViewHolder> {
     private final Activity context;
     private final List<ChatSnippet> list;
     public static boolean isMessagingActivityOpened = true;
+    private LayoutInflater layoutInflater;
 
     public ChatsListAdapter(Activity context, List<ChatSnippet> values) {
-        super(context, R.layout.dialog_element, values);
         this.context = context;
         this.list = values;
+        layoutInflater = LayoutInflater.from(context);
+    }
+
+
+
+
+
+    @NonNull
+    @Override
+    public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        return new ChatsViewHolder((layoutInflater.inflate(R.layout.dialog_element, parent, false)));
     }
 
     @Override
-    public View getView(final int position, final View convertView, ViewGroup parent) {
-        View view = null;
+    public void onBindViewHolder(@NonNull ChatsViewHolder holder, int position) {
+        View view = holder.mainView;
 
         try {
             // Инициализируем информацию о беседе или диалоге
             final ChatSnippet info = list.get(position);
 
-            final LayoutInflater inflator = context.getLayoutInflater();
-
-            view = inflator.inflate(R.layout.dialog_element, null);
 
 
-            final ViewHolder viewHolder = new ViewHolder();
+
+
 
             // Инициализируем подэлементы
-            viewHolder.name = view.findViewById(R.id.label);
-            viewHolder.messageView = view.findViewById(R.id.message);
-            viewHolder.time = view.findViewById(R.id.time);
-            viewHolder.accentView = view.findViewById(R.id.message_accent);
-            viewHolder.readstatus = view.findViewById(R.id.readed);
 
-            viewHolder.avatar = view.findViewById(R.id.avatar_component);
-            viewHolder.container = view.findViewById(R.id.container);
 
 
             // Задаём обработчик нажатия
@@ -82,9 +81,9 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                         isMessagingActivityOpened = false;
                         if (info.getType().equals(Chat.TYPE_PRIVATE)) {
 
-                            MessagingActivity.openActivityForDialog(getContext(), info.getId());
+                            MessagingActivity.openActivityForDialog(context, info.getId());
                         } else {
-                            MessagingActivity.openActivityForChat(getContext(), info.getId(), info.getName());
+                            MessagingActivity.openActivityForChat(context, info.getId(), info.getName());
 
                         }
 
@@ -92,9 +91,8 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                 }
             });
 
-            view.setTag(viewHolder);
 
-            ViewHolder holder = (ViewHolder) view.getTag();
+
 
             boolean isDialog = (info.getType().equals(Chat.TYPE_PRIVATE));
 
@@ -102,9 +100,9 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             if (isDialog) {
 
                 if (true) {
-                    holder.avatar.setOnline(true);
+                    holder.avatarView.setOnline(true);
                 } else {
-                    holder.avatar.setOnline(false);
+                    holder.avatarView.setOnline(false);
                 }
 
             }
@@ -113,24 +111,24 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             boolean isLastMessageRead = false;
             if (isLastMessageRead) {
                 TypedValue selectableBackground = new TypedValue();
-                getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBackground, true);
+                context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableBackground, true);
                 //   holder.container.setBackground(context.getResources().getDrawable(selectableBackground.resourceId));
-                holder.readstatus.setVisibility(View.INVISIBLE);
+                holder.readstatusView.setVisibility(View.INVISIBLE);
             } else {
-                holder.readstatus.setVisibility(View.VISIBLE);
+                holder.readstatusView.setVisibility(View.VISIBLE);
             }
 
 
-            if (holder.avatar != null) {
-                holder.avatar.showAnimate();
+            if (holder.avatarView != null) {
+                // holder.avatar.showAnimate();
                 if (info.getType().equals(Chat.TYPE_PRIVATE)) {
 
-                    holder.avatar.generateIdPicture(1);
+                    holder.avatarView.generateIdPicture(1);
                 } else {
-                    holder.avatar.generateIdPicture(2);
+                    holder.avatarView.generateIdPicture(2);
                 }
 
-                holder.avatar.setAcronym(info.getName(), Avatar.Size.MEDIUM);
+                holder.avatarView.setAcronym(info.getName(), Avatar.Size.MEDIUM);
 
                 // TODO: set avatar
                 if (false) {
@@ -139,7 +137,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             }
 
 
-            holder.name.setText(info.getName());
+            holder.nameView.setText(info.getName());
 
 
             Message lastMessage = info.getLastMessage();
@@ -172,11 +170,11 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
                 String messageText;
                 if (serviceData instanceof ChatCreatedData) {
 
-                    messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.chat_created, getContext())
+                    messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.chat_created, context)
                             .replace("%s", ((ChatCreatedData) serviceData).getChatName());
                 } else {
 
-                    messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.unknown_service_message, getContext());
+                    messageText = CustomLanguage.getStringsRepository().getOrDefault(R.string.unknown_service_message, context);
 
                 }
                 holder.accentView.setText(messageText);
@@ -185,7 +183,7 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
             }
 
             // TODO: add time handler
-            holder.time.setText(Numbers.getTimeFromTimestamp(0, context));
+            holder.timeView.setText(Numbers.getTimeFromTimestamp(0, context));
 
             Animation fadeIn = new AlphaAnimation(0, 1);
             fadeIn.setFillAfter(false);
@@ -199,23 +197,78 @@ public class ChatsListAdapter extends ArrayAdapter<ChatSnippet> {
 //                holder.accentView.setText(holder.accentView.getText() + CustomLanguage.getStringsRepository().getOrDefault(R.string.image, getContext()));
 //            }
 
-            holder.container.startAnimation(fadeIn);
+            //holder.container.startAnimation(fadeIn);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return view;
+
     }
 
 
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public List<ChatSnippet> getList() {
+        return list;
+    }
+
     // Держим данные
-    static class ViewHolder {
-        protected TextView name;
-        protected TextView accentView;
-        protected TextView messageView;
-        protected Avatar avatar;
-        protected TextView time;
-        protected TextView readstatus;
-        protected LinearLayout container;
-        protected ImageView online;
+    public static class ChatsViewHolder extends RecyclerView.ViewHolder {
+         TextView nameView;
+         TextView accentView;
+         TextView messageView;
+         Avatar avatarView;
+         TextView timeView;
+         TextView readstatusView;
+         LinearLayout container;
+         ImageView onlineView;
+         View mainView;
+
+        public ChatsViewHolder(@NonNull View view) {
+            super(view);
+            mainView = view;
+            nameView = view.findViewById(R.id.label);
+            messageView = view.findViewById(R.id.message);
+            timeView = view.findViewById(R.id.time);
+            accentView = view.findViewById(R.id.message_accent);
+            readstatusView = view.findViewById(R.id.readed);
+            avatarView = view.findViewById(R.id.avatar_component);
+            container = view.findViewById(R.id.container);
+        }
+
+        public TextView getNameView() {
+            return nameView;
+        }
+
+        public TextView getAccentView() {
+            return accentView;
+        }
+
+        public TextView getMessageView() {
+            return messageView;
+        }
+
+        public Avatar getAvatarView() {
+            return avatarView;
+        }
+
+        public TextView getTimeView() {
+            return timeView;
+        }
+
+        public TextView getReadstatusView() {
+            return readstatusView;
+        }
+
+        public LinearLayout getContainer() {
+            return container;
+        }
+
+        public ImageView getOnlineView() {
+            return onlineView;
+        }
     }
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -69,10 +70,10 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
 
     @Override
     public void initViews() {
-        ListView listView = view.findViewById(R.id.listView);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         toolbar = view.findViewById(R.id.toolbar);
         adapter = new ChatsListAdapter(getActivity(), new ArrayList<ChatSnippet>());
-        listView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
         errorContainer = view.findViewById(R.id.error);
 
         progressBar = view.findViewById(R.id.loading);
@@ -82,7 +83,7 @@ public class ChatsListFragment extends Fragment implements ChatsListContact.View
 
         Theme.applyBackground(toolbar);
         Theme.applyBackground(noChats);
-        Theme.applyBackground(listView);
+        Theme.applyBackground(recyclerView);
 
         final LinearLayout error = view.findViewById(R.id.error);
         error.setVisibility(View.INVISIBLE);

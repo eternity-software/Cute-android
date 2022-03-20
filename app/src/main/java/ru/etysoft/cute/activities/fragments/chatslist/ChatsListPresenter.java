@@ -41,7 +41,14 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
     public void updateChatsList(final ChatsListAdapter chatsListAdapter) {
         if (!updateListLock) {
             updateListLock = true;
-            chatsListAdapter.clear();
+
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    chatsListAdapter.getList().clear();
+                    chatsListAdapter.notifyDataSetChanged();
+                }
+            });
             view.showUpdateViews();
             // Задаём обработчик запроса к API
             Thread thread = new Thread(new Runnable() {
@@ -51,21 +58,12 @@ public class ChatsListPresenter implements ChatsListContact.Presenter {
                         ChatGetListRequest.ChatGetListResponse chatListResponse = new ChatGetListRequest().execute();
                         final List<ChatSnippet> chats = chatListResponse.getChatSnippets();
 
-                        for (int i = 0; i < chats.size(); i++) {
-                            final ChatSnippet chat = chats.get(i);
-                            context.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    chatsListAdapter.add(chat);
-                                }
-                            });
-
-                        }
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                chatsListAdapter.getList().addAll(chats);
                                 chatsListAdapter.notifyDataSetChanged();
-                                if (chatsListAdapter.getCount() > 10) {
+                                if (chatsListAdapter.getItemCount() > 10) {
                                     view.hideToolbar();
                                 } else {
                                     view.showToolbar();
