@@ -73,6 +73,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
                             }
                         }
                     } else {
+
                         if (!superMessage.getSender().getId().equals(Cache.getUserAccount().getId())) {
                             itemList.get(position).setType(MessageComponent.TYPE_CHAT_ANNOTATION_MESSAGE);
                         }
@@ -179,7 +180,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
                 messageBody.setText(superMessage.getText());
             }
 
-            String senderId = superMessage.getSender().getId();
+           // String senderId = superMessage.getSender().getId();
 
             if (messageComponent.getType() == MessageComponent.TYPE_CHAT_ANNOTATION_MESSAGE) {
                 TextView displayNameView = view.findViewById(R.id.displayNameView);
@@ -205,9 +206,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
 
         }
-        else if(messageComponent.getState() == MessageComponent.STATE_PENDING)
+        else if(messageComponent.getState() == MessageComponent.STATE_PENDING || messageComponent.getState() == MessageComponent.STATE_ERROR)
         {
             state.setVisibility(View.VISIBLE);
+            if(messageComponent.getState() == MessageComponent.STATE_ERROR)
+            {
+                state.setImageDrawable(layoutInflater.getContext().getResources().getDrawable(R.drawable.icon_error));
+            }
+            else
+            {
+                state.setImageDrawable(layoutInflater.getContext().getResources().getDrawable(R.drawable.icon_clock));
+
+            }
             timeView.setVisibility(View.GONE);
             String messageText = messageComponent.getPlaceholderText();
             if (StringFormatter.isEmoji(messageText) && messageText.length() < 10) {

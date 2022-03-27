@@ -257,18 +257,39 @@
         app:srcCompat="@drawable/icon_microphone" />
 
 
+    <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
+        android:id="@+id/backgroundLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerCrop"
+        android:alpha="1"
 
-    <ImageView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/messages"
+        app:themeBackgroundColor="messagesBackground"
+        android:background="@color/messagesBackground"
+
+
+        />
+
+
+    <ru.etysoft.cute.components.dynamic.ThemeImageView
         android:id="@+id/backgroundImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         android:scaleType="centerCrop"
-        android:alpha="0"
-        android:src="@drawable/houses"
+        android:alpha="1"
+        app:srcCompat="@drawable/pattern_study"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/messages"
+        app:themeImageColor="messagesBackgroundTint"
+
+
+
        />
 
 

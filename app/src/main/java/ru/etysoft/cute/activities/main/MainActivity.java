@@ -3,12 +3,14 @@ package ru.etysoft.cute.activities.main;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -16,6 +18,8 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.IOException;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.confirmation.ConfirmationActivity;
@@ -25,6 +29,7 @@ import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.media.MediaService;
 import ru.etysoft.cute.resizer.FluidContentResizer;
 import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.themes.Theme;
@@ -73,6 +78,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         startService(new Intent(this, NotificationService.class));
 
         //devOptions();
+        String url = "https://etysoft.ru/egg.mp3";
+
+        ContextCompat.startForegroundService(
+                MainActivity.this.getApplicationContext(),
+                new Intent(MainActivity.this.getApplicationContext(), MediaService.class));
 
 
 

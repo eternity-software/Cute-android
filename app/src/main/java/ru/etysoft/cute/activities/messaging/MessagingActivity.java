@@ -58,6 +58,7 @@ import ru.etysoft.cute.utils.NetworkStateReceiver;
 import ru.etysoft.cute.utils.SendorsControl;
 import ru.etysoft.cute.utils.SliderActivity;
 import ru.etysoft.cuteframework.consts.APIKeys;
+import ru.etysoft.cuteframework.exceptions.NoSuchValueException;
 import ru.etysoft.cuteframework.methods.chat.ChatSendMessageRequest;
 import ru.etysoft.cuteframework.models.Chat;
 import ru.etysoft.cuteframework.models.messages.ChatCreatedData;
@@ -914,11 +915,24 @@ public class MessagingActivity extends AppCompatActivity implements Conversation
                 try {
                     ChatSendMessageRequest.ChatSendMessageResponse chatSendMessageResponse = new ChatSendMessageRequest(chatId, messageText).execute();
                     if (chatSendMessageResponse.isSuccess()) {
-                         messageComponent.setState(MessageComponent.STATE_SENT);
+
+
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
+                                messageComponent.setState(MessageComponent.STATE_SENT);
+                                try {
+                                    messageComponent.setMessage(chatSendMessageResponse.getMessage());
+                                } catch (NoSuchValueException e) {
+                                    e.printStackTrace();
+                                }
+//                                try {
+//                                  //  messageComponent.setMessage(chatSendMessageResponse.getMessage());
+//                                } catch (NoSuchValueException e) {
+//                                    e.printStackTrace();
+//                                }
                                 adapter.notifyItemChanged(adapter.getMessageComponentId(messageComponent));
                             }
                         });

@@ -3,7 +3,7 @@
 
     <!-- Theme colored -->
 
-    <color name="themeMyMessage">#E6E6E6</color>
+    <color name="themeMyMessage">#FFFFFF</color>
     <color name="themeMyMessageText">#171717</color>
     <color name="themeMyMessageTextLink">#526FFF</color>
     <color name="themeMessage">@color/accent_blue</color>
@@ -20,6 +20,8 @@
     <!-- Static values -->
 
     <color name="black">#1B1B1B</color>
+    <color name="messagesBackground">#F1F9FF</color>
+    <color name="messagesBackgroundTint">#C0E5FF</color>
     <color name="white">#FFFFFF</color>
     <color name="achromatic_20">#232D40</color>
     <color name="achromatic_30">#4D4D4D</color>

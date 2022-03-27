@@ -120,7 +120,7 @@ public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.Chat
 
 
             if (holder.avatarView != null) {
-                // holder.avatar.showAnimate();
+                 holder.avatarView.showAnimate();
                 if (info.getType().equals(Chat.TYPE_PRIVATE)) {
 
                     holder.avatarView.generateIdPicture(1);
@@ -197,7 +197,7 @@ public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.Chat
 //                holder.accentView.setText(holder.accentView.getText() + CustomLanguage.getStringsRepository().getOrDefault(R.string.image, getContext()));
 //            }
 
-            //holder.container.startAnimation(fadeIn);
+            holder.container.startAnimation(fadeIn);
         } catch (Exception e) {
             e.printStackTrace();
         }

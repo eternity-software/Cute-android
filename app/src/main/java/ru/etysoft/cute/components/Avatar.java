@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -92,6 +93,8 @@ public class Avatar extends RelativeLayout implements Parcelable {
     {
         Animation bottomDown = AnimationUtils.loadAnimation(getContext(),
                 R.anim.zoom_in);
+
+        bottomDown.setInterpolator(new DecelerateInterpolator(1f));
 
         rootView.startAnimation(bottomDown);
     }
