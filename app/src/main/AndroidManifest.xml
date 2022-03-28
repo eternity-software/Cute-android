@@ -34,9 +34,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.StorageManagementActivity"
-            android:theme="@style/AppSlideTheme"
+            android:name=".activities.MusicPlayerActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.StorageManagementActivity"
+            android:exported="false"
+            android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".activities.AppearanceSettings"
             android:exported="false" />
@@ -90,8 +93,7 @@
         <activity
             android:name=".activities.messaging.MessagingActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
-            android:theme="@style/AppSlideTheme"
-             />
+            android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".activities.CreateChatActivity"
             android:theme="@style/AppSlideTheme"
@@ -105,19 +107,22 @@
                     tools:ignore="BatteryLife" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".media.MediaService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </service>
+
         <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".activities.confirmation.ConfirmationActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -149,8 +154,8 @@
         <activity
             android:name=".activities.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="adjustNothing"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".SplashScreen"
             android:theme="@style/SplashTheme">
@@ -175,17 +180,15 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <receiver android:name=".media.MediaActionsReceiver">
 
-        </receiver>
-
-        <receiver android:name=".media.AudioOutputHandler"
+        <receiver android:name=".media.MediaActionsReceiver"></receiver>
+        <receiver
+            android:name=".media.AudioOutputHandler"
             tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

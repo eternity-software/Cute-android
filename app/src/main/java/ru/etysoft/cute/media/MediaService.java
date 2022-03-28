@@ -1,12 +1,9 @@
 package ru.etysoft.cute.media;
 
-import static android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY;
 import static android.media.AudioManager.AUDIOFOCUS_GAIN;
 
 import android.app.Notification;
 import android.app.Service;
-import android.bluetooth.BluetoothHeadset;
-import android.content.AsyncQueryHandler;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,21 +11,13 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.media.AudioRouting;
 import android.media.MediaPlayer;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.KeyEvent;
 
 import androidx.annotation.Nullable;
-
-import java.io.IOException;
 
 import ru.etysoft.cute.R;
 
@@ -48,7 +37,17 @@ public class MediaService extends Service {
     public static boolean isStopped = true;
 
 
+    public static MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
 
+    public static String getArtistName() {
+        return artistName;
+    }
+
+    public static String getTrackName() {
+        return trackName;
+    }
 
     @Override
     public void onCreate() {
@@ -76,8 +75,6 @@ public class MediaService extends Service {
                 play();
             }
         });
-
-
 
 
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
