@@ -1,8 +1,13 @@
 package ru.etysoft.cute.activities.main;
 
+import static android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -29,6 +34,8 @@ import ru.etysoft.cute.activities.fragments.explore.ExploreFragment;
 import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
+import ru.etysoft.cute.media.AudioOutputHandler;
+import ru.etysoft.cute.media.MediaActionsReceiver;
 import ru.etysoft.cute.media.MediaService;
 import ru.etysoft.cute.resizer.FluidContentResizer;
 import ru.etysoft.cute.services.NotificationService;
@@ -80,16 +87,47 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         //devOptions();
         String url = "https://etysoft.ru/egg.mp3";
 
+
+
         ContextCompat.startForegroundService(
                 MainActivity.this.getApplicationContext(),
                 new Intent(MainActivity.this.getApplicationContext(), MediaService.class));
 
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int action = intent.getExtras().getInt("action", 1);
+                MediaActionsReceiver.processAction(action);
+                if(MediaService.isStopped)
+                {
+                    ContextCompat.startForegroundService(
+                            MainActivity.this.getApplicationContext(),
+                            new Intent(MainActivity.this.getApplicationContext(), MediaService.class));
+                }
+            }
+        };
 
 
+        final BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
 
+                if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+
+                    MediaService.pause();
+                }
+            }
+        };
+        registerReceiver(
+                becomingNoisyReceiver,
+                new IntentFilter(AudioManager.ACTION_HEADSET_PLUG));
+        registerReceiver(broadcastReceiver, new IntentFilter(MediaActionsReceiver.BROADCAST_INTENT));
 
         setupNavigation();
         Permissions.requestAll(this);
+
+        MediaService.play("КОСМОНАВТОВ НЕТ", "моя зима","https://ru.muzikavsem.org/dl/571284051/KOSMONAVTOV_NET_-_moya_zima_(ru.muzikavsem.org).mp3"
+                , null);
 
 
         Thread thread = new Thread(new Runnable() {
@@ -145,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         });
         thread.start();
 
+        AudioOutputHandler audioOutputHandler = new AudioOutputHandler();
+        registerReceiver(audioOutputHandler, new IntentFilter(ACTION_AUDIO_BECOMING_NOISY));
     }
 
     @Override
@@ -170,6 +210,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         floatingBottomSheet.setCancelable(true);
 
     }
+
+
 
     @Override
     public void setupNavigation() {

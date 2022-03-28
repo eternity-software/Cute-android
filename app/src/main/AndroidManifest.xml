@@ -175,6 +175,17 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <receiver android:name=".media.MediaActionsReceiver">
+
+        </receiver>
+
+        <receiver android:name=".media.AudioOutputHandler"
+            tools:ignore="Instantiatable">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -33,38 +33,29 @@ public class MediaNotificationManager {
     public static final int NOTIFICATION_ID = 412;
 
     private static final String TAG = MediaNotificationManager.class.getSimpleName();
-    private static final String CHANNEL_ID = "com.example.android.musicplayer.channel";
+    private static final String CHANNEL_ID = "cute_channel";
     private static final int REQUEST_CODE = 501;
 
-    private final MediaService mService;
+    private final MediaService mediaService;
 
-    private final NotificationCompat.Action mPlayAction;
-    private final NotificationCompat.Action mPauseAction;
-    private final NotificationManager mNotificationManager;
+    private final PendingIntent toggleAction;
+
+    private final NotificationManager notificationManager;
 
     public MediaNotificationManager(MediaService musicContext) {
-        mService = musicContext;
+        mediaService = musicContext;
 
-        mNotificationManager =
-                (NotificationManager) mService.getSystemService(Service.NOTIFICATION_SERVICE);
+        notificationManager =
+                (NotificationManager) mediaService.getSystemService(Service.NOTIFICATION_SERVICE);
 
-        mPlayAction =
-                new NotificationCompat.Action(
-                        R.drawable.icon_add,
-                        "play",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(
-                                mService,
-                                PlaybackStateCompat.ACTION_PLAY));
-        mPauseAction =
-                new NotificationCompat.Action(
-                        R.drawable.icon_delete,
-                        "pause",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(
-                                mService,
-                                PlaybackStateCompat.ACTION_PAUSE));
+
+
+       toggleAction = PendingIntent.getBroadcast(musicContext,1,
+               MediaActionsReceiver.createToggleAction(musicContext)
+               ,PendingIntent.FLAG_UPDATE_CURRENT);
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.
-        mNotificationManager.cancelAll();
+        notificationManager.cancelAll();
     }
 
     public void onDestroy() {
@@ -72,7 +63,7 @@ public class MediaNotificationManager {
     }
 
     public NotificationManager getNotificationManager() {
-        return mNotificationManager;
+        return notificationManager;
     }
 
     public Notification getNotification(MediaMetadataCompat metadata,
@@ -80,45 +71,54 @@ public class MediaNotificationManager {
                                         MediaSessionCompat.Token token) {
         boolean isPlaying = state.getState() == PlaybackStateCompat.STATE_PLAYING;
         MediaDescriptionCompat description = metadata.getDescription();
-        NotificationCompat.Builder builder =
-                buildNotification(state, token, isPlaying, description);
+
+        NotificationCompat.Builder builder = buildNotification(state, token, isPlaying, description);
+
         return builder.build();
     }
 
     private NotificationCompat.Builder buildNotification(@NonNull PlaybackStateCompat state,
                                                          MediaSessionCompat.Token token,
                                                          boolean isPlaying,
-                                                         MediaDescriptionCompat description) {
+                                                         MediaDescriptionCompat mediaDescriptionCompat) {
 
         // Create the (mandatory) notification channel when running on Android Oreo.
         if (isAndroidOOrHigher()) {
             createChannel();
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mService, CHANNEL_ID);
-        builder.setStyle(
-                new MediaStyle()
-                        .setMediaSession(token)
-                        .setShowActionsInCompactView(0)
-                        // For backwards compatibility with Android L and earlier.
-                        .setShowCancelButton(true)
-                        .setCancelButtonIntent(
-                                MediaButtonReceiver.buildMediaButtonPendingIntent(
-                                        mService,
-                                        PlaybackStateCompat.ACTION_STOP)))
-                .setColor(ContextCompat.getColor(mService, R.color.white))
-                .setSmallIcon(R.drawable.icon_add)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mediaService, CHANNEL_ID);
+        builder
+                .setColor(ContextCompat.getColor(mediaService, R.color.white))
+                .setSmallIcon(R.drawable.icon_music)
                 // Pending intent that is fired when user clicks on notification.
                 .setContentIntent(createContentIntent())
                 // Title - Usually Song name.
-                .setContentTitle(description.getTitle())
+                .setContentTitle(mediaDescriptionCompat.getTitle())
+                .setContentText(mediaDescriptionCompat.getSubtitle())
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2)
+                        .setMediaSession(mediaService.getMediaSession().getSessionToken()))
+                .setLargeIcon(mediaDescriptionCompat.getIconBitmap())
+
                 // When notification is deleted (when playback is paused and notification can be
                 // deleted) fire MediaButtonPendingIntent with ACTION_PAUSE.
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
-                        mService, PlaybackStateCompat.ACTION_PAUSE));
+                        mediaService, PlaybackStateCompat.ACTION_PAUSE));
 
 
-        builder.addAction(isPlaying ? mPauseAction : mPlayAction);
+        builder.addAction(R.drawable.icon_skip_previous, "Skip previous", toggleAction);
+
+        if (MediaService.isPaused())
+        {
+            builder.addAction(R.drawable.icon_play, "Play button", toggleAction);
+
+        }
+        else
+        {
+            builder.addAction(R.drawable.icon_pause, "Pause button", toggleAction);
+        }
+        builder.addAction(R.drawable.icon_skip_next, "Skip next", toggleAction);
 
         return builder;
     }
@@ -126,7 +126,7 @@ public class MediaNotificationManager {
     // Does nothing on versions of Android earlier than O.
     @RequiresApi(Build.VERSION_CODES.O)
     private void createChannel() {
-        if (mNotificationManager.getNotificationChannel(CHANNEL_ID) == null) {
+        if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
             // The user-visible name of the channel.
             CharSequence name = "MediaSession";
             // The user-visible description of the channel.
@@ -140,11 +140,13 @@ public class MediaNotificationManager {
             // channel, if the device supports this feature.
             mChannel.setLightColor(Color.RED);
             mChannel.enableVibration(true);
+
             mChannel.setVibrationPattern(
                     new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            mNotificationManager.createNotificationChannel(mChannel);
+            notificationManager.createNotificationChannel(mChannel);
             Log.d(TAG, "createChannel: New channel created");
         } else {
+
             Log.d(TAG, "createChannel: Existing channel reused");
         }
     }
@@ -154,10 +156,10 @@ public class MediaNotificationManager {
     }
 
     private PendingIntent createContentIntent() {
-        Intent openUI = new Intent(mService, MainActivity.class);
+        Intent openUI = new Intent(mediaService, MainActivity.class);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(
-                mService, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);
+                mediaService, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
 }

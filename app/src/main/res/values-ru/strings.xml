@@ -143,4 +143,5 @@
     <string name="theme_oldschool">Дедовский</string>
     <string name="info">О приложении</string>
     <string name="storage_settings">Управление памятью</string>
+    <string name="media_buffering">Загрузка...</string>
 </resources>
