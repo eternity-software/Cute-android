@@ -8,6 +8,8 @@ public class MediaActions extends BroadcastReceiver {
 
     public final static int ACTION_PLAY = 0;
     public final static int ACTION_PAUSE = 1;
+    public final static int ACTION_NEXT = 2;
+    public final static int ACTION_PREV = 3;
     public final static String BROADCAST_INTENT = "media_action_broadcast";
 
     @Override
@@ -34,11 +36,21 @@ public class MediaActions extends BroadcastReceiver {
             MediaService.play();
         } else if (action == ACTION_PAUSE) {
             MediaService.pause();
+        } else if (action == ACTION_NEXT) {
+            MediaService.next();
+        } else if (action == ACTION_PREV) {
+            MediaService.previous();
         }
+
+
     }
 
 
-
+    public static Intent createActionIntent(Context context, int action) {
+        Intent intentAction = new Intent(context, MediaActions.class);
+        intentAction.putExtra("action", action);
+        return intentAction;
+    }
     public static Intent createPauseAction(Context context) {
         Intent intentAction = new Intent(context, MediaActions.class);
         intentAction.putExtra("action", ACTION_PAUSE);

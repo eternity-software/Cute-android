@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
     private ChatsListFragment fragmentDialogs;
     private AccountFragment fragmentAccount;
     private ExploreFragment fragmentExplore;
+    private BroadcastReceiver broadcastReceiver;
     private final BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -81,15 +82,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         startService(new Intent(this, NotificationService.class));
 
         //devOptions();
-        String url = "https://etysoft.ru/egg.mp3";
 
 
 
-        ContextCompat.startForegroundService(
-                MainActivity.this.getApplicationContext(),
-                new Intent(MainActivity.this.getApplicationContext(), MediaService.class));
 
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int action = intent.getExtras().getInt("action", 1);
@@ -110,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         setupNavigation();
         Permissions.requestAll(this);
 
-        MediaService.play("8(913)", "Прыгай, за руки держась","https://ru.muzikavsem.org/dl/276846446/8913_-_Prygajj_za_ruki_derzhas_(ru.muzikavsem.org).mp3"
-                , null);
+//        MediaService.play("8(913)", "Прыгай, за руки держась","https://ru.muzikavsem.org/dl/276846446/8913_-_Prygajj_za_ruki_derzhas_(ru.muzikavsem.org).mp3"
+//                , null);
 
 
         Thread thread = new Thread(new Runnable() {
@@ -195,7 +192,11 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+    }
 
     @Override
     public void setupNavigation() {

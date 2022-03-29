@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.music.Track;
 
 public class MediaService extends Service {
     private static MediaPlayer mediaPlayer = new MediaPlayer();
@@ -35,12 +37,19 @@ public class MediaService extends Service {
 
     private static String artistName = "..";
     private static String trackName = ".";
+    private static Bitmap bitmap;
+    private static List<Track> trackList = new ArrayList<>();
     private BroadcastReceiver broadcastReceiver;
     private static boolean isBuffering;
     private static MediaService mediaService;
+    private static Track track;
 
     private static List<MediaServiceCallback> mediaServiceCallbackList = new ArrayList<>();
     public static boolean isStopped = true;
+    public static boolean isPreparing = false;
+    public static boolean isBackgrounded = false;
+
+    private static boolean requestedPrepared = true;
 
 
     public static int getDuration() {
@@ -73,9 +82,13 @@ public class MediaService extends Service {
     }
 
     public interface MediaServiceCallback {
-        void onTrackChanged(String name, String artist);
+        void onTrackChanged(String name, String artist, Bitmap bitmap);
 
         void onServiceStopped();
+    }
+
+    public static Bitmap getBitmap() {
+        return bitmap;
     }
 
     public static String getArtistName() {
@@ -107,7 +120,7 @@ public class MediaService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 MediaService.pause();
-                updateNotification();
+                updateNotification("noisy receiver");
             }
         };
         registerReceiver(
@@ -134,7 +147,7 @@ public class MediaService extends Service {
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
             public void onSeekComplete(MediaPlayer mp) {
-                updateNotification();
+                updateNotification("OnSeek complete");
                 isBuffering = false;
             }
         });
@@ -142,15 +155,34 @@ public class MediaService extends Service {
         mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                updateNotification();
+             //   updateNotification();
             }
         });
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                isPaused = true;
-                updateNotification();
+
+
+                if (mediaPlayer.getDuration() <= mediaPlayer.getCurrentPosition()) {
+                    if (trackList.contains(track)) {
+                        int pos = trackList.indexOf(track);
+                        if (pos != trackList.size() - 1) {
+                            pos++;
+                            play(trackList.get(pos), null);
+                        } else {
+                            isPaused = true;
+                        }
+                    } else {
+                        isPaused = true;
+                    }
+                }
+
+                if (!isPreparing)
+                {updateNotification("onCompletion");
+
+                }
+
             }
         });
 
@@ -158,33 +190,52 @@ public class MediaService extends Service {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                updateNotification();
+
                 isBuffering = false;
+                mediaPlayer.start();
+                requestedPrepared = true;
+                isPreparing = false;
+                isPaused = false;
+                updateNotification("OnPrepared");
                 AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
 
                 audioManager.requestAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
                                                    @Override
                                                    public void onAudioFocusChange(int focusChange) {
-                                                       switch (focusChange) {
-                                                           case AudioManager.AUDIOFOCUS_LOSS:
-                                                           case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                                                               mediaPlayer.pause();
-                                                               isPaused = true;
-                                                               break;
-                                                           case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                                                       if (!requestedPrepared) {
 
-                                                               mediaPlayer.setVolume(0.5f, 0.5f);
-                                                               break;
-                                                           case AUDIOFOCUS_GAIN:
-                                                               isPaused = false;
-                                                               if (!mediaPlayer.isPlaying())
+                                                           switch (focusChange) {
+                                                               case AudioManager.AUDIOFOCUS_LOSS:
+                                                               case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                                                                   mediaPlayer.pause();
+                                                                   isPaused = true;
+                                                                   isBackgrounded = true;
+                                                                   updateNotification("OnAudioFocusChange");
+                                                                   break;
+                                                               case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+
+                                                                   mediaPlayer.setVolume(0.5f, 0.5f);
+                                                                   updateNotification("OnAudioFocusChange");
+                                                                   break;
+                                                               case AUDIOFOCUS_GAIN:
                                                                    isPaused = false;
-                                                               mediaPlayer.start();
-                                                               mediaPlayer.setVolume(1.0f, 1.0f);
-                                                               break;
+                                                                   if (!mediaPlayer.isPlaying())
+                                                                       isPaused = false;
+                                                                   isBackgrounded = false;
+                                                                   mediaPlayer.start();
+                                                                   updateNotification("OnAudioFocusChange");
+                                                                   mediaPlayer.setVolume(1.0f, 1.0f);
+                                                                   break;
+                                                           }
                                                        }
-                                                       updateNotification();
+                                                       else
+                                                       {
+                                                           requestedPrepared = false;
+                                                       }
+
+
+
 
                                                    }
                                                },
@@ -209,12 +260,24 @@ public class MediaService extends Service {
 
 
             @Override
+            public void onSkipToPrevious() {
+                super.onSkipToPrevious();
+                previous();
+            }
+
+            @Override
+            public void onSkipToNext() {
+                super.onSkipToNext();
+                next();
+            }
+
+            @Override
             public void onPlay() {
 
                 mediaPlayer.start();
                 isPaused = false;
                 if (!isBuffering) {
-                    updateNotification();
+                    updateNotification("OnPlay session");
                 }
 
             }
@@ -225,15 +288,15 @@ public class MediaService extends Service {
                 mediaPlayer.pause();
                 isPaused = true;
                 if (!isBuffering) {
-                    updateNotification();
+                    updateNotification("OnPause session");
                 }
             }
         });
-        updateNotification();
+
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                updateNotification();
+                updateNotification("broadcastReceiver");
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter(MediaActions.BROADCAST_INTENT));
@@ -242,7 +305,8 @@ public class MediaService extends Service {
         mediaSession.setPlaybackState(getState());
     }
 
-    public void updateNotification() {
+    public void updateNotification(String request) {
+        Log.d("MEDIA SER", "Notification updated by" + request );
         registerReceiver(broadcastReceiver, new IntentFilter(MediaActions.BROADCAST_INTENT));
         Notification notification =
                 mediaNotificationManager.getNotification(
@@ -250,7 +314,7 @@ public class MediaService extends Service {
         mediaSession.setPlaybackState(getState());
         mediaSession.setMetadata(getMetadata());
         startForeground(NOTIFICATION_ID, notification);
-        if (isPaused) {
+        if (isPaused && !isBackgrounded) {
             isStopped = true;
             try {
                 unregisterReceiver(broadcastReceiver);
@@ -271,10 +335,11 @@ public class MediaService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(becomingNoisyReceiver);
+        updateNotification("OnDestroy");
     }
 
     public void stopNotification() {
-
+        Log.d("MEDIA SER", "Stop Notification updated");
         Notification notification =
                 mediaNotificationManager.getNotification(
                         getMetadata(), getState(), mediaSession.getSessionToken());
@@ -283,14 +348,21 @@ public class MediaService extends Service {
         startForeground(NOTIFICATION_ID, notification);
     }
 
+    public static void setTrackList(List<Track> trackList) {
+        MediaService.trackList = trackList;
+    }
+
     public MediaMetadataCompat getMetadata() {
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
 
         builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artistName);
         builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, trackName);
 
+
+
+
         builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART,
-                BitmapFactory.decodeResource(getResources(), R.drawable.test_cover));
+               bitmap);
 
         builder.putLong(
                 MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration()
@@ -299,24 +371,47 @@ public class MediaService extends Service {
     }
 
 
-    public static void play(String artistName, String trackName, String url, Bitmap cover) {
-        try {
-            MediaService.artistName = artistName;
-            MediaService.trackName = trackName;
-            if (url != null) {
-                mediaPlayer.setDataSource(url);
-            }
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            isPaused = false;
+    public static void play(Track track, Bitmap cover) {
 
-            for (MediaServiceCallback mediaServiceCallback : mediaServiceCallbackList) {
-                mediaServiceCallback.onTrackChanged(trackName, artistName);
-            }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if(mediaService != null) {
+                        try {
+                            mediaPlayer.reset();
+                            MediaService.artistName = track.getArtist();
+                            MediaService.trackName = track.getName();
+                            if (cover == null) {
+                                bitmap = BitmapFactory.decodeResource(getMediaServiceInstance().getResources(), R.drawable.empty_cover);
+                            } else {
+                                bitmap = cover;
+                            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                            if (track.getUrl() != null) {
+                                mediaPlayer.setDataSource(track.getUrl());
+                            }
+                            isPreparing = true;
+                            mediaPlayer.prepare();
+
+                            MediaService.track = track;
+
+
+                            for (MediaServiceCallback mediaServiceCallback : mediaServiceCallbackList) {
+                                mediaServiceCallback.onTrackChanged(trackName, artistName, bitmap);
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+        thread.start();
+
     }
 
     public MediaSessionCompat getMediaSession() {
@@ -330,21 +425,64 @@ public class MediaService extends Service {
 
     public static void play() {
 
+        if(mediaService == null) return;
         if (isPaused) {
             isPaused = false;
         }
         mediaPlayer.start();
         mediaPlayer.setVolume(100, 100);
-        getMediaServiceInstance().updateNotification();
+        getMediaServiceInstance().updateNotification("OnPlay");
 
 
     }
 
+    public static void next() {
+        if(mediaService == null) return;
+        if(trackList.contains(track)) {
+            int pos = trackList.indexOf(track);
+            if (pos != trackList.size() - 1)
+            {
+                pos++;
+                play(trackList.get(pos), null);
+                if (isPaused) {
+                    isPaused = false;
+                }
+                mediaPlayer.start();
+                mediaPlayer.setVolume(100, 100);
+                getMediaServiceInstance().updateNotification("OnNext");
+            }
+        }
+
+
+    }
+    public static void previous() {
+        if(mediaService == null) return;
+        if(trackList.contains(track)) {
+            int pos = trackList.indexOf(track);
+            if (pos > 0)
+            {
+                pos -= 1;
+                play(trackList.get(pos), null);
+                if (isPaused) {
+                    isPaused = false;
+                }
+                mediaPlayer.start();
+                mediaPlayer.setVolume(100, 100);
+                getMediaServiceInstance().updateNotification("OnPrevious");
+            }
+        }
+
+
+    }
+
+
     public static void pause() {
+
+        if(mediaService == null) return;
         if (mediaPlayer != null) {
             isPaused = true;
             mediaPlayer.pause();
-            getMediaServiceInstance().updateNotification();
+            getMediaServiceInstance().updateNotification("OnPause");
         }
     }
 

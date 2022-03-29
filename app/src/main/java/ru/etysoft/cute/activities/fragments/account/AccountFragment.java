@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.music.Music;
 import ru.etysoft.cute.activities.SettingsActivity;
 import ru.etysoft.cute.activities.EditProfile.EditProfileActivity;
 import ru.etysoft.cute.activities.friends.FriendsActivity;
@@ -36,6 +37,7 @@ public class AccountFragment extends Fragment implements AccountContact.View {
     private TextView status;
     private TextView login;
     private LinearLayout friendsView;
+    private LinearLayout musicView;
     private RecyclerView friendsRecyclerView;
     private TextView friendsCountView;
     private FriendsSnippetAdapter friendsSnippetAdapter;
@@ -64,6 +66,7 @@ public class AccountFragment extends Fragment implements AccountContact.View {
         login = view.findViewById(R.id.login);
         settingImageView = view.findViewById(R.id.setting);
         friendsView = view.findViewById(R.id.friendsView);
+        musicView = view.findViewById(R.id.musicView);
         friendsCountView = view.findViewById(R.id.friendsCountView);
         friendsRecyclerView = view.findViewById(R.id.friendSnippets);
         // создаем адаптер
@@ -102,6 +105,14 @@ public class AccountFragment extends Fragment implements AccountContact.View {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendsActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+
+        musicView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Music.class);
                 getActivity().startActivity(intent);
             }
         });

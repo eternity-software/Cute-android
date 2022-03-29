@@ -144,4 +144,6 @@
     <string name="info">О приложении</string>
     <string name="storage_settings">Управление памятью</string>
     <string name="media_buffering">Загрузка...</string>
+    <string name="music">Музыка</string>
+    <string name="music_search">Поиск по трекам</string>
 </resources>

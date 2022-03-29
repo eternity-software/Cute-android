@@ -150,45 +150,111 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal" >
-                    <ru.etysoft.cute.components.dynamic.ThemeImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:padding="5dp"
-                        app:themeImageColor="colorIconTint"
-                        app:srcCompat="@drawable/icon_people"
-                        />
-                    <ru.etysoft.cute.components.dynamic.DynamicTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserratalternates_medium"
-                        android:singleLine="true"
-                        android:text="@string/friends"
-                        android:textColor="@color/colorTextAccent"
-                        android:textSize="20sp"
-                        app:localizableKey="friends"
-                        app:themeColor="colorTextAccent"/>
-                    <TextView
-                        android:id="@+id/friendsCountView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        <ru.etysoft.cute.components.dynamic.ThemeImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:padding="5dp"
+                            app:themeImageColor="colorIconTint"
+                            app:srcCompat="@drawable/icon_people"
+                            />
+                        <ru.etysoft.cute.components.dynamic.DynamicTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserratalternates_medium"
+                            android:singleLine="true"
+                            android:text="@string/friends"
+                            android:textColor="@color/colorTextAccent"
+                            android:textSize="20sp"
+                            app:localizableKey="friends"
+                            app:themeColor="colorTextAccent"/>
+                        <TextView
+                            android:id="@+id/friendsCountView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
 
-                        android:fontFamily="@font/montserratalternates_medium"
-                        android:singleLine="true"
-                        android:text=""
-                        android:layout_weight="1"
-                        android:paddingLeft="8dp"
-                        android:textColor="@color/colorSupportText"
-                        android:textSize="14sp" />
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:layout_gravity="right"
-                        android:padding="10dp"
-                        app:srcCompat="@drawable/icon_expand_right"
-                        app:tint="@color/colorIconSupportTint" />
+                            android:fontFamily="@font/montserratalternates_medium"
+                            android:singleLine="true"
+                            android:text=""
+                            android:layout_weight="1"
+                            android:paddingLeft="8dp"
+                            android:textColor="@color/colorSupportText"
+                            android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_gravity="right"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/icon_expand_right"
+                            app:tint="@color/colorIconSupportTint" />
                     </LinearLayout>
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/friendSnippets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="6dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/musicView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:background="?attr/selectableItemBackground"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+                        <ru.etysoft.cute.components.dynamic.ThemeImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:padding="5dp"
+                            app:themeImageColor="colorIconTint"
+                            app:srcCompat="@drawable/icon_music"
+                            />
+                        <ru.etysoft.cute.components.dynamic.DynamicTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserratalternates_medium"
+                            android:singleLine="true"
+                            android:text="@string/music"
+                            android:textColor="@color/colorTextAccent"
+                            android:textSize="20sp"
+                            app:localizableKey="music"
+                            app:themeColor="colorTextAccent"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:fontFamily="@font/montserratalternates_medium"
+                            android:singleLine="true"
+                            android:text=""
+                            android:layout_weight="1"
+                            android:paddingLeft="8dp"
+                            android:textColor="@color/colorSupportText"
+                            android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_gravity="right"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/icon_expand_right"
+                            app:tint="@color/colorIconSupportTint" />
+                    </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/musicSnippets"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="6dp"

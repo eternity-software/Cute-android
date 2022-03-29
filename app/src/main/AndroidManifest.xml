@@ -26,6 +26,7 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -34,9 +35,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MusicPlayerActivity"
+            android:name=".activities.music.Music"
             android:theme="@style/AppSlideTheme"
             android:exported="false" />
+        <activity
+            android:name=".activities.MusicPlayerActivity"
+            android:exported="false"
+            android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".activities.StorageManagementActivity"
             android:exported="false"
@@ -182,7 +187,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".media.MediaActions"></receiver>
+        <receiver android:name=".media.MediaActions" />
         <receiver
             android:name=".media.AudioOutputHandler"
             tools:ignore="Instantiatable">

@@ -1,5 +1,6 @@
 package ru.etysoft.cute.activities;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
     private boolean isSeeking = false;
     private SeekBar seekBar;
     private ImageView playButton;
+    private ImageView coverView;
     private TextView artistTextView;
     private TextView trackNameTextView;
     private TextView timeCurrent;
@@ -38,6 +40,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
 
         seekBar = findViewById(R.id.progressSeekBar);
         artistTextView = findViewById(R.id.artistView);
+        coverView = findViewById(R.id.coverView);
         trackNameTextView = findViewById(R.id.trackNameView);
         playButton = findViewById(R.id.playButton);
         timeCurrent = findViewById(R.id.timeCurrent);
@@ -47,7 +50,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
 
         Theme.applyBackground(findViewById(R.id.rootView));
 
-        onTrackChanged(MediaService.getTrackName(), MediaService.getArtistName());
+        onTrackChanged(MediaService.getTrackName(), MediaService.getArtistName(), MediaService.getBitmap());
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -117,15 +120,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
 
             playButton.setImageResource(R.drawable.icon_pause_mini);
             MediaService.play();
-            MediaService.getMediaServiceInstance().updateNotification();
+
         }
         else
         {
             playButton.setImageResource(R.drawable.icon_play);
             MediaService.pause();
 
-            MediaService.getMediaServiceInstance().updateNotification();
+
         }
+        MediaService.getMediaServiceInstance().updateNotification("onPlayButtonClick");
     }
 
     @Override
@@ -135,9 +139,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
     }
 
     @Override
-    public void onTrackChanged(String name, String artist) {
+    public void onTrackChanged(String name, String artist, Bitmap bitmap) {
         trackNameTextView.setText(name);
         artistTextView.setText(artist);
+        coverView.setImageBitmap(bitmap);
     }
 
     @Override

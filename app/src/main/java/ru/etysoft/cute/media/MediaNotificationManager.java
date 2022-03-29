@@ -41,6 +41,10 @@ public class MediaNotificationManager {
     private final PendingIntent playAction;
     private final PendingIntent pauseAction;
 
+    private final PendingIntent nextAction;
+    private final PendingIntent prevAction;
+
+
     private final NotificationManager notificationManager;
 
     public MediaNotificationManager(MediaService musicContext) {
@@ -57,6 +61,14 @@ public class MediaNotificationManager {
 
         pauseAction = PendingIntent.getBroadcast(musicContext,2,
                 MediaActions.createPauseAction(musicContext)
+                ,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        prevAction = PendingIntent.getBroadcast(musicContext,3,
+                MediaActions.createActionIntent(musicContext, MediaActions.ACTION_PREV)
+                ,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        nextAction = PendingIntent.getBroadcast(musicContext,4,
+                MediaActions.createActionIntent(musicContext, MediaActions.ACTION_NEXT)
                 ,PendingIntent.FLAG_UPDATE_CURRENT);
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.
@@ -116,7 +128,7 @@ public class MediaNotificationManager {
                         mediaService, PlaybackStateCompat.ACTION_PAUSE));
 
 
-        builder.addAction(R.drawable.icon_skip_previous, "Skip previous", pauseAction);
+        builder.addAction(R.drawable.icon_skip_previous, "Skip previous", prevAction);
 
         if (MediaService.isPaused())
         {
@@ -127,7 +139,7 @@ public class MediaNotificationManager {
         {
             builder.addAction(R.drawable.icon_pause, "Pause button", pauseAction);
         }
-        builder.addAction(R.drawable.icon_skip_next, "Skip next", pauseAction);
+        builder.addAction(R.drawable.icon_skip_next, "Skip next", nextAction);
 
         return builder;
     }
