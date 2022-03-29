@@ -17,10 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.media.app.NotificationCompat.MediaStyle;
 import androidx.media.session.MediaButtonReceiver;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.MusicPlayerActivity;
 import ru.etysoft.cute.activities.main.MainActivity;
 
 
@@ -38,7 +38,8 @@ public class MediaNotificationManager {
 
     private final MediaService mediaService;
 
-    private final PendingIntent toggleAction;
+    private final PendingIntent playAction;
+    private final PendingIntent pauseAction;
 
     private final NotificationManager notificationManager;
 
@@ -50,9 +51,13 @@ public class MediaNotificationManager {
 
 
 
-       toggleAction = PendingIntent.getBroadcast(musicContext,1,
-               MediaActionsReceiver.createToggleAction(musicContext)
+        playAction = PendingIntent.getBroadcast(musicContext,1,
+               MediaActions.createPlayAction(musicContext)
                ,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        pauseAction = PendingIntent.getBroadcast(musicContext,2,
+                MediaActions.createPauseAction(musicContext)
+                ,PendingIntent.FLAG_UPDATE_CURRENT);
         // Cancel all notifications to handle the case where the Service was killed and
         // restarted by the system.
         notificationManager.cancelAll();
@@ -87,6 +92,10 @@ public class MediaNotificationManager {
             createChannel();
         }
 
+        Intent intent = new Intent(mediaService, MusicPlayerActivity.class);
+        intent.putExtra("NotiClick",true);
+        PendingIntent pIntent = PendingIntent.getActivity(mediaService, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mediaService, CHANNEL_ID);
         builder
                 .setColor(ContextCompat.getColor(mediaService, R.color.white))
@@ -100,25 +109,25 @@ public class MediaNotificationManager {
                         .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(mediaService.getMediaSession().getSessionToken()))
                 .setLargeIcon(mediaDescriptionCompat.getIconBitmap())
-
+                .setContentIntent(pIntent)
                 // When notification is deleted (when playback is paused and notification can be
                 // deleted) fire MediaButtonPendingIntent with ACTION_PAUSE.
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         mediaService, PlaybackStateCompat.ACTION_PAUSE));
 
 
-        builder.addAction(R.drawable.icon_skip_previous, "Skip previous", toggleAction);
+        builder.addAction(R.drawable.icon_skip_previous, "Skip previous", pauseAction);
 
         if (MediaService.isPaused())
         {
-            builder.addAction(R.drawable.icon_play, "Play button", toggleAction);
+            builder.addAction(R.drawable.icon_play, "Play button", playAction);
 
         }
         else
         {
-            builder.addAction(R.drawable.icon_pause, "Pause button", toggleAction);
+            builder.addAction(R.drawable.icon_pause, "Pause button", pauseAction);
         }
-        builder.addAction(R.drawable.icon_skip_next, "Skip next", toggleAction);
+        builder.addAction(R.drawable.icon_skip_next, "Skip next", pauseAction);
 
         return builder;
     }
@@ -128,10 +137,10 @@ public class MediaNotificationManager {
     private void createChannel() {
         if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
             // The user-visible name of the channel.
-            CharSequence name = "MediaSession";
+            CharSequence name = "Music";
             // The user-visible description of the channel.
-            String description = "MediaSession and MediaPlayer";
-            int importance = NotificationManager.IMPORTANCE_LOW;
+            String description = "Cute music";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             // Configure the notification channel.
             mChannel.setDescription(description);

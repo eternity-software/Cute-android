@@ -3,78 +3,193 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/rootView"
     android:layout_height="match_parent"
     tools:context=".activities.MusicPlayerActivity">
 
-    <ImageView
-        android:id="@+id/imageView11"
-        android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="50dp"
-        android:scaleType="centerInside"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/empty_cover" />
-
-    <ru.etysoft.cute.components.dynamic.DynamicTextView
-        android:id="@+id/trackNameView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/montserratalternates_medium"
-        android:text="Track name"
-        android:textColor="@color/colorText"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView11"
-
-        app:localizableKey="friends"
-        app:themeColor="colorText" />
-
-    <ru.etysoft.cute.components.dynamic.DynamicTextView
-        android:id="@+id/artistView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/montserratalternates_medium"
-        android:text="Artist"
-        android:textColor="@color/colorTextAccent"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trackNameView"
-        app:localizableKey="friends"
-        app:themeColor="colorTextAccent" />
-
-    <SeekBar
-        android:id="@+id/seekBar2"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
+        android:scaleType="centerInside"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artistView" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.81"
+        app:srcCompat="@drawable/empty_cover">
+
+        <ImageView
+            android:id="@+id/coverView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/test_cover" />
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout13"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/progressSeekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
+            android:id="@+id/trackNameView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:text="Track name"
+            android:textColor="@color/colorText"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout"
+
+            app:localizableKey="friends"
+            app:themeColor="colorText" />
+
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
+            android:id="@+id/artistView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/montserratalternates_medium"
+            android:text="Artist"
+            android:textColor="@color/colorTextAccent"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trackNameView"
+            app:localizableKey="friends"
+            app:themeColor="colorTextAccent" />
+    </LinearLayout>
+
+
+    <SeekBar
+        android:id="@+id/progressSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar2">
+        app:layout_constraintTop_toBottomOf="@+id/progressSeekBar">
 
-        <ImageView
-            android:id="@+id/imageView14"
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
+            android:id="@+id/timeCurrent"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/icon_play" />
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/montserratmedium"
+            android:text="0:00"
+            android:textColor="@color/colorText"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout"
+
+            app:localizableKey="friends"
+            app:themeColor="colorSupportText" />
+
+        <ru.etysoft.cute.components.dynamic.DynamicTextView
+            android:id="@+id/timeDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/montserratmedium"
+            android:gravity="right"
+            android:text="0:00"
+            android:textColor="@color/colorText"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout"
+
+            app:localizableKey="friends"
+            app:themeColor="colorSupportText" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout12"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
+            android:id="@+id/previousButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="?actionBarItemBackground"
+            android:padding="10dp"
+            app:srcCompat="@drawable/icon_skip_previous"
+            app:themeImageColor="colorMainLight" />
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="?actionBarItemBackground"
+            android:gravity="center"
+
+            android:onClick="onPlayButtonClick">
+
+            <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
+
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+
+
+                android:background="@drawable/circle_gray"
+                app:themeBackgroundColor="colorMainLight">
+
+                <ru.etysoft.cute.components.dynamic.ThemeImageView
+                    android:id="@+id/playButton"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:padding="10dp"
+
+                    app:srcCompat="@drawable/icon_pause_mini"
+                    app:themeImageColor="colorWhite" />
+            </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
+
+        </LinearLayout>
+
+        <ru.etysoft.cute.components.dynamic.ThemeImageView
+            android:id="@+id/nextButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="?actionBarItemBackground"
+            android:padding="10dp"
+            app:srcCompat="@drawable/icon_skip_next"
+            app:themeImageColor="colorMainLight" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

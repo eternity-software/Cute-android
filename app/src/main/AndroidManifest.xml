@@ -35,6 +35,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MusicPlayerActivity"
+            android:theme="@style/AppSlideTheme"
             android:exported="false" />
         <activity
             android:name=".activities.StorageManagementActivity"
@@ -181,7 +182,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".media.MediaActionsReceiver"></receiver>
+        <receiver android:name=".media.MediaActions"></receiver>
         <receiver
             android:name=".media.AudioOutputHandler"
             tools:ignore="Instantiatable">

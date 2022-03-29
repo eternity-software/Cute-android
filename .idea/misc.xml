@@ -3,16 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/drawable/error_big_icon.xml" value="0.37864583333333335" />
+        <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/drawable/icon_pause.xml" value="0.37864583333333335" />
+        <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/drawable/icon_pause_mini.xml" value="0.37864583333333335" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout-h650dp/activity_signin.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout-h700dp/activity_confirmation.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout-h720dp/activity_signup.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_account.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_appearance_settings.xml" value="0.3484375" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_chats.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_chats_search.xml" value="0.18072916666666666" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_confirmation.xml" value="0.3484375" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_edit_chat.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_edit_profile.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_messaging.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_music_player.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_passwordchaange.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_profile.xml" value="0.3625" />
         <entry key="..\:/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_settings.xml" value="0.3625" />
@@ -100,7 +105,6 @@
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_main.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_meet.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_messaging.xml" value="0.5" />
-        <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_music_player.xml" value="0.29981884057971014" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_passwordchaange.xml" value="0.3625" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_profile.xml" value="0.33" />
         <entry key="..\:/Users/etyso/AndroidStudioProjects/Cute/app/src/main/res/layout/activity_settings.xml" value="0.20260416666666667" />

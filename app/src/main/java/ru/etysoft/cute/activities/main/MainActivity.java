@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +23,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.IOException;
-
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.confirmation.ConfirmationActivity;
 import ru.etysoft.cute.activities.fragments.account.AccountFragment;
@@ -35,9 +32,8 @@ import ru.etysoft.cute.activities.meet.MeetActivity;
 import ru.etysoft.cute.activities.stock;
 import ru.etysoft.cute.bottomsheets.FloatingBottomSheet;
 import ru.etysoft.cute.media.AudioOutputHandler;
-import ru.etysoft.cute.media.MediaActionsReceiver;
+import ru.etysoft.cute.media.MediaActions;
 import ru.etysoft.cute.media.MediaService;
-import ru.etysoft.cute.resizer.FluidContentResizer;
 import ru.etysoft.cute.services.NotificationService;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.Permissions;
@@ -97,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
             @Override
             public void onReceive(Context context, Intent intent) {
                 int action = intent.getExtras().getInt("action", 1);
-                MediaActionsReceiver.processAction(action);
+                MediaActions.processAction(action);
                 if(MediaService.isStopped)
                 {
                     ContextCompat.startForegroundService(
@@ -108,25 +104,13 @@ public class MainActivity extends AppCompatActivity implements FloatingBottomShe
         };
 
 
-        final BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
 
-                if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
-
-                    MediaService.pause();
-                }
-            }
-        };
-        registerReceiver(
-                becomingNoisyReceiver,
-                new IntentFilter(AudioManager.ACTION_HEADSET_PLUG));
-        registerReceiver(broadcastReceiver, new IntentFilter(MediaActionsReceiver.BROADCAST_INTENT));
+        registerReceiver(broadcastReceiver, new IntentFilter(MediaActions.BROADCAST_INTENT));
 
         setupNavigation();
         Permissions.requestAll(this);
 
-        MediaService.play("КОСМОНАВТОВ НЕТ", "моя зима","https://ru.muzikavsem.org/dl/571284051/KOSMONAVTOV_NET_-_moya_zima_(ru.muzikavsem.org).mp3"
+        MediaService.play("8(913)", "Прыгай, за руки держась","https://ru.muzikavsem.org/dl/276846446/8913_-_Prygajj_za_ruki_derzhas_(ru.muzikavsem.org).mp3"
                 , null);
 
 
