@@ -69,8 +69,8 @@ public class SplashScreen extends AppCompatActivity {
         if (Cache.getUserAccount().hasToken()) {
             intent = new Intent(this, MainActivity.class);
         } else {
-            intent = new Intent(this, MainActivity.class);
-            //intent = new Intent(this, MeetActivity.class);
+           // intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, MeetActivity.class);
         }
         startActivity(intent);
 

@@ -96,7 +96,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
             public void run() {
                 while (!isDestroyed) {
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(50);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

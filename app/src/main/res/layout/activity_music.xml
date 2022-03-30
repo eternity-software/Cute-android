@@ -39,6 +39,7 @@
         android:paddingTop="5dp"
         android:paddingRight="12dp"
         android:paddingBottom="7dp"
+        android:imeOptions="actionSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lightToolbar" />

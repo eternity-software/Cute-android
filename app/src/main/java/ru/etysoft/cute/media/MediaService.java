@@ -28,6 +28,8 @@ import java.util.List;
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.music.Track;
 import ru.etysoft.cute.components.CuteToast;
+import ru.etysoft.cuteframework.methods.music.MusicGetTrackRequest;
+import ru.etysoft.cuteframework.models.TrackInfo;
 
 public class MediaService extends Service {
     private static MediaPlayer mediaPlayer = new MediaPlayer();
@@ -40,11 +42,11 @@ public class MediaService extends Service {
     private static String artistName = "..";
     private static String trackName = ".";
     private static Bitmap bitmap;
-    private static List<Track> trackList = new ArrayList<>();
+    private static List<TrackInfo> trackList = new ArrayList<>();
     private BroadcastReceiver broadcastReceiver;
     private static boolean isBuffering;
     private static MediaService mediaService;
-    private static Track track;
+    private static TrackInfo track;
 
     private static List<MediaServiceCallback> mediaServiceCallbackList = new ArrayList<>();
     public static boolean isStopped = true;
@@ -124,9 +126,13 @@ public class MediaService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        Log.d("MediaServicer", "onCreate");
+
+
         mediaService = this;
 
         isStopped = false;
+
 
         mediaNotificationManager = new MediaNotificationManager(this);
         mediaSession = new MediaSessionCompat(this, "SOME_TAG");
@@ -158,7 +164,7 @@ public class MediaService extends Service {
         });
 
         mediaPlayer = new MediaPlayer();
-
+        updateNotification("onCreate");
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
             public void onSeekComplete(MediaPlayer mp) {
@@ -178,13 +184,19 @@ public class MediaService extends Service {
             @Override
             public void onCompletion(MediaPlayer mp) {
 
-                if(!isPreparing) {
+                if(!isPreparing)
+                {
+                    if (mediaPlayer.getDuration() <= mediaPlayer.getCurrentPosition() + 100) {
+                        Log.d("MediaService", "OnCompletion");
+                         next();
+                    }
+                    else
+                    {
+                        Log.d("MediaService", "COMPLETION ERROR dur: " + (mediaPlayer.getDuration() + ", curr: " + mediaPlayer.getCurrentPosition()));
+                    }
+                }
 
 
-                }
-                if (mediaPlayer.getDuration() <= mediaPlayer.getCurrentPosition()) {
-                    next();
-                }
 
             }
         });
@@ -305,6 +317,8 @@ public class MediaService extends Service {
         registerReceiver(broadcastReceiver, new IntentFilter(MediaActions.BROADCAST_INTENT));
 
 
+
+
         mediaSession.setPlaybackState(getState());
     }
 
@@ -336,10 +350,10 @@ public class MediaService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+       // super.onDestroy();
         unregisterReceiver(becomingNoisyReceiver);
-        updateNotification("OnDestroy");
-        mediaPlayer.release();
+       // updateNotification("OnDestroy");
+        //mediaPlayer.release();
     }
 
     public void stopNotification() {
@@ -352,7 +366,7 @@ public class MediaService extends Service {
         startForeground(NOTIFICATION_ID, notification);
     }
 
-    public static void setTrackList(List<Track> trackList) {
+    public static void setTrackList(List<TrackInfo> trackList) {
         MediaService.trackList = trackList;
     }
 
@@ -379,7 +393,7 @@ public class MediaService extends Service {
     }
 
 
-    public static void play(Track track, Bitmap cover) {
+    public static void play(TrackInfo track, Bitmap cover) {
 
         isPreparing = true;
 
@@ -395,11 +409,19 @@ public class MediaService extends Service {
                 while (true) {
                     if(mediaService != null) {
 
+
                         try {
 
+                            TrackInfo trackInfo = track;
+                            if(track.getPath() == null)
+                            {
+                                MusicGetTrackRequest.MusicGetTrackResponse getTrackResponse = new MusicGetTrackRequest(track.getId()).execute();
+                                trackInfo = getTrackResponse.getTrackInfo();
+                            }
+
                             mediaPlayer.reset();
-                            MediaService.artistName = track.getArtist();
-                            MediaService.trackName = track.getName();
+                            MediaService.artistName = trackInfo.getArtist();
+                            MediaService.trackName = trackInfo.getName();
                             MediaService.track = track;
 
                             if (cover == null) {
@@ -408,8 +430,8 @@ public class MediaService extends Service {
                                 bitmap = cover;
                             }
 
-                            if (track.getUrl() != null) {
-                                mediaPlayer.setDataSource(track.getUrl());
+                            if (trackInfo.getPath() != null) {
+                                mediaPlayer.setDataSource(trackInfo.getPath());
                             }
 
 
@@ -453,6 +475,7 @@ public class MediaService extends Service {
         if (isPaused) {
             isPaused = false;
         }
+        isBackgrounded = false;
         mediaPlayer.start();
         mediaPlayer.setVolume(100, 100);
         getMediaServiceInstance().updateNotification("OnPlay");
@@ -534,8 +557,9 @@ public class MediaService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        return super.onStartCommand(intent, flags, startId);
+        Log.d("MediaService", "onStartCommand");
+        updateNotification("onCreate");
+        return Service.START_STICKY;
     }
 
     @Nullable

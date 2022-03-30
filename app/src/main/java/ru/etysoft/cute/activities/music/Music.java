@@ -2,11 +2,19 @@ package ru.etysoft.cute.activities.music;
 
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +22,17 @@ import ru.etysoft.cute.R;
 import ru.etysoft.cute.media.MediaService;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.SliderActivity;
+import ru.etysoft.cuteframework.exceptions.NotCachedException;
+import ru.etysoft.cuteframework.exceptions.ResponseException;
+import ru.etysoft.cuteframework.methods.music.MusicSearchRequest;
+import ru.etysoft.cuteframework.models.TrackInfo;
 
 public class Music extends AppCompatActivity {
 
     private RecyclerView tracksRecyclerView;
     private MusicAdapter musicAdapter;
+    private EditText searchView;
+    private List<TrackInfo> trackList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,30 +45,64 @@ public class Music extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
         tracksRecyclerView = findViewById(R.id.mainTrackList);
+        searchView = findViewById(R.id.searchBox);
+
+        searchView.setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
 
 
-        List<Track> trackList = new ArrayList<>();
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                                actionId == EditorInfo.IME_ACTION_DONE ||
+                                event != null &&
+                                        event.getAction() == KeyEvent.ACTION_DOWN &&
+                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                            if (event == null || !event.isShiftPressed()) {
+                                Thread thread = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            MusicSearchRequest.MusicSearchResponse musicSearchResponse =
+                                                    new MusicSearchRequest(searchView.getText().toString()).execute();
 
-        trackList.add(new Track("Прыгай, за руки держась", "8(913)",
-                "https://ru.muzikavsem.org/dl/276846446/8913_-_Prygajj_za_ruki_derzhas_(ru.muzikavsem.org).mp3"));
+                                            trackList.clear();
+                                            if(musicSearchResponse.isSuccess())
+                                            {
+                                                for(TrackInfo trackInfo : musicSearchResponse.getTrackInfos())
+                                                {
+                                                    System.out.println("info: " + trackInfo.getName() + " cover: " + trackInfo.getCover());
+                                                    trackList.add(trackInfo);
+                                                }
+                                            }
 
-        trackList.add(new Track("Лил Пип Умер", "ПАНЦУШОТ",
-                "https://ru.muzikavsem.org/dl/1757642664/PANCUSHOT_-_Lil_Pip_Umer_(ru.muzikavsem.org).mp3"));
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    musicAdapter.notifyDataSetChanged();
+                                                }
+                                            });
 
-        trackList.add(new Track("Не пошлая молли", "Lida",
-                "https://ru.muzikavsem.org/dl/241965757/Lida_-_Ne_poshlaya_Molli_(ru.muzikavsem.org).mp3"));
+                                        } catch (ResponseException e) {
+                                            e.printStackTrace();
+                                        } catch (SQLException throwables) {
+                                            throwables.printStackTrace();
+                                        } catch (NotCachedException e) {
+                                            e.printStackTrace();
+                                        }
 
-        trackList.add(new Track("Киси Миси", "хрися, Hotzzen",
-                "https://ru.muzikavsem.org/dl/453202660/Hotzzen_khrisya_-_Kisi_Misi_(ru.muzikavsem.org).mp3"));
+                                    }
+                                });
+                                thread.start();
 
-        trackList.add(new Track("Порно пати", "Lida",
-                "https://ru.muzikavsem.org/dl/881678811/Lida_-_Porno_pati_(ru.muzikavsem.org).mp3"));
+                                return true; // consume.
+                            }
+                        }
+                        return false; // pass on to other listeners.
+                    }
+                }
+        );
 
-        trackList.add(new Track("Молодёжная (ночь)", "Lida",
-                "https://ru.muzikavsem.org/dl/1230391283/Lida_-_Molodjozhnaya_noch_(ru.muzikavsem.org).mp3"));
-
-        trackList.add(new Track("Анапа", "Lida",
-                "https://ru.muzikavsem.org/dl/2016495946/Lida_DK_-_Anapa_(ru.muzikavsem.org).mp3"));
 
         musicAdapter = new MusicAdapter(this, trackList);
         tracksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -65,4 +113,6 @@ public class Music extends AppCompatActivity {
 
         Theme.applyBackground(findViewById(R.id.rootView));
     }
+
+
 }

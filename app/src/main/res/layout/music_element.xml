@@ -15,15 +15,26 @@
         android:paddingVertical="8dp">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/avatarView"
+
             android:layout_width="40dp"
             app:cardCornerRadius="8dp"
             android:elevation="0dp"
             android:layout_height="40dp" >
             <ImageView
+                android:id="@+id/coverView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/empty_cover"
+                />
+
+            <ru.etysoft.cute.components.dynamic.ThemeImageView
+                android:id="@+id/playIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:background="@drawable/circle_gray"
+
+                app:themeBackgroundTint="colorTextAccent"
                 />
         </androidx.cardview.widget.CardView>
 
@@ -43,6 +54,7 @@
                 android:fontFamily="@font/montserratalternates_medium"
                 android:text="Track name"
                 app:themeColor="colorTextDark"
+                android:maxLines="1"
                 android:textSize="14sp"
                 />
 

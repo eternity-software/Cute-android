@@ -31,7 +31,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/test_cover" />
+            app:srcCompat="@drawable/empty_cover" />
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
