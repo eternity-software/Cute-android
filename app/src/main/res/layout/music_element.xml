@@ -16,9 +16,10 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/avatarView"
-            android:layout_width="50dp"
-            app:cardCornerRadius="12dp"
-            android:layout_height="50dp" >
+            android:layout_width="40dp"
+            app:cardCornerRadius="8dp"
+            android:elevation="0dp"
+            android:layout_height="40dp" >
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -32,7 +33,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingVertical="4dp"
+
             android:paddingLeft="8dp">
 
             <ru.etysoft.cute.components.dynamic.DynamicTextView
@@ -42,6 +43,7 @@
                 android:fontFamily="@font/montserratalternates_medium"
                 android:text="Track name"
                 app:themeColor="colorTextDark"
+                android:textSize="14sp"
                 />
 
             <ru.etysoft.cute.components.dynamic.DynamicTextView
@@ -49,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratalternates_medium"
-                android:paddingTop="4dp"
+                android:paddingTop="2dp"
                 android:text="artist"
                 app:themeColor="colorTextAccent"
                 android:textSize="12sp" />

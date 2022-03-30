@@ -18,6 +18,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -26,6 +27,7 @@ import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.music.Track;
+import ru.etysoft.cute.components.CuteToast;
 
 public class MediaService extends Service {
     private static MediaPlayer mediaPlayer = new MediaPlayer();
@@ -53,6 +55,8 @@ public class MediaService extends Service {
 
 
     public static int getDuration() {
+
+        if(isPreparing) return 0;
         return mediaPlayer.getDuration();
     }
 
@@ -70,7 +74,7 @@ public class MediaService extends Service {
     public static void setProgress(int progress) {
 
         float progressFloat = (progress / 100f);
-        mediaPlayer.seekTo((int) (progressFloat * (float) mediaPlayer.getDuration()));
+        mediaPlayer.seekTo((int) (progressFloat * (float) getDuration()));
     }
 
     public static void addCallback(MediaServiceCallback mediaServiceCallback) {
@@ -85,6 +89,16 @@ public class MediaService extends Service {
         void onTrackChanged(String name, String artist, Bitmap bitmap);
 
         void onServiceStopped();
+    }
+
+    public static boolean canSkipNext()
+    {
+       return trackList.indexOf(track) != trackList.size() - 1;
+    }
+
+    public static boolean canSkipPrevious()
+    {
+        return trackList.indexOf(track) > 0;
     }
 
     public static Bitmap getBitmap() {
@@ -143,6 +157,7 @@ public class MediaService extends Service {
             }
         });
 
+        mediaPlayer = new MediaPlayer();
 
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
@@ -155,7 +170,7 @@ public class MediaService extends Service {
         mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
-             //   updateNotification();
+                //   updateNotification();
             }
         });
 
@@ -163,24 +178,12 @@ public class MediaService extends Service {
             @Override
             public void onCompletion(MediaPlayer mp) {
 
+                if(!isPreparing) {
 
-                if (mediaPlayer.getDuration() <= mediaPlayer.getCurrentPosition()) {
-                    if (trackList.contains(track)) {
-                        int pos = trackList.indexOf(track);
-                        if (pos != trackList.size() - 1) {
-                            pos++;
-                            play(trackList.get(pos), null);
-                        } else {
-                            isPaused = true;
-                        }
-                    } else {
-                        isPaused = true;
-                    }
+
                 }
-
-                if (!isPreparing)
-                {updateNotification("onCompletion");
-
+                if (mediaPlayer.getDuration() <= mediaPlayer.getCurrentPosition()) {
+                    next();
                 }
 
             }
@@ -336,6 +339,7 @@ public class MediaService extends Service {
         super.onDestroy();
         unregisterReceiver(becomingNoisyReceiver);
         updateNotification("OnDestroy");
+        mediaPlayer.release();
     }
 
     public void stopNotification() {
@@ -362,26 +366,42 @@ public class MediaService extends Service {
 
 
         builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART,
-               bitmap);
+                bitmap);
 
-        builder.putLong(
-                MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration()
-        );
+        if(!isPreparing)
+        {
+            builder.putLong(
+                    MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration()
+            );
+        }
+
         return builder.build();
     }
 
 
     public static void play(Track track, Bitmap cover) {
 
+        isPreparing = true;
+
+
+        if(mediaService != null)
+        {
+            getMediaServiceInstance().updateNotification("play music");
+        }
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     if(mediaService != null) {
+
                         try {
+
                             mediaPlayer.reset();
                             MediaService.artistName = track.getArtist();
                             MediaService.trackName = track.getName();
+                            MediaService.track = track;
+
                             if (cover == null) {
                                 bitmap = BitmapFactory.decodeResource(getMediaServiceInstance().getResources(), R.drawable.empty_cover);
                             } else {
@@ -391,10 +411,10 @@ public class MediaService extends Service {
                             if (track.getUrl() != null) {
                                 mediaPlayer.setDataSource(track.getUrl());
                             }
-                            isPreparing = true;
-                            mediaPlayer.prepare();
 
-                            MediaService.track = track;
+
+                            mediaPlayer.prepareAsync();
+
 
 
                             for (MediaServiceCallback mediaServiceCallback : mediaServiceCallbackList) {
@@ -403,6 +423,9 @@ public class MediaService extends Service {
 
 
                         } catch (Exception e) {
+
+                            mediaPlayer.stop();
+                            mediaPlayer.reset();
                             e.printStackTrace();
                         }
                         break;
@@ -426,6 +449,7 @@ public class MediaService extends Service {
     public static void play() {
 
         if(mediaService == null) return;
+        if(isPreparing)return;
         if (isPaused) {
             isPaused = false;
         }
@@ -447,16 +471,18 @@ public class MediaService extends Service {
                 if (isPaused) {
                     isPaused = false;
                 }
-                mediaPlayer.start();
-                mediaPlayer.setVolume(100, 100);
-                getMediaServiceInstance().updateNotification("OnNext");
+
             }
         }
 
 
     }
+
+
+
     public static void previous() {
         if(mediaService == null) return;
+
         if(trackList.contains(track)) {
             int pos = trackList.indexOf(track);
             if (pos > 0)
@@ -466,9 +492,7 @@ public class MediaService extends Service {
                 if (isPaused) {
                     isPaused = false;
                 }
-                mediaPlayer.start();
-                mediaPlayer.setVolume(100, 100);
-                getMediaServiceInstance().updateNotification("OnPrevious");
+
             }
         }
 
@@ -477,7 +501,7 @@ public class MediaService extends Service {
 
 
     public static void pause() {
-
+        if(isPreparing)return;
         if(mediaService == null) return;
         if (mediaPlayer != null) {
             isPaused = true;
