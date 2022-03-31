@@ -132,8 +132,10 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.TracksViewHo
 
             if(MediaService.getTrackName().equals(info.getName()) && MediaService.getArtistName().equals(info.getArtist()))
             {
+                holder.isAnimated = true;
+                holder.blackView.setVisibility(View.VISIBLE);
                 holder.playIndicator.setVisibility(View.VISIBLE);
-                ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 1.5f, 1.0f, 1.5f, 15f, 15f);
+                ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 2f, 1.0f, 2f, 15f, 15f);
 
                 scaleAnimation.setDuration(500);
                 scaleAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -145,6 +147,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.TracksViewHo
             }
             else
             {
+                holder.isAnimated = false;
+                holder.blackView.setVisibility(View.GONE);
                 holder.playIndicator.setVisibility(View.GONE);
             }
 
@@ -156,7 +160,24 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.TracksViewHo
 
     }
 
+    @Override
+    public void onViewAttachedToWindow(@NonNull TracksViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if(holder.isAnimated)
+        {
+            holder.blackView.setVisibility(View.VISIBLE);
+            holder.playIndicator.setVisibility(View.VISIBLE);
+            ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 2f, 1.0f, 2f, 15f, 15f);
 
+            scaleAnimation.setDuration(500);
+            scaleAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            scaleAnimation.setRepeatMode(Animation.REVERSE);
+            scaleAnimation.setRepeatCount(Animation.INFINITE);
+            holder.playIndicator.startAnimation(scaleAnimation);
+        }
+
+    }
 
     public static Bitmap getBitmapFromURL(String src) {
         try {
@@ -204,6 +225,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.TracksViewHo
         View mainView;
         ImageView coverView;
         ImageView playIndicator;
+        ImageView blackView;
+        boolean isAnimated = false;
 
         public TracksViewHolder(@NonNull View view) {
             super(view);
@@ -212,6 +235,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.TracksViewHo
             nameView = view.findViewById(R.id.trackNameView);
             coverView = view.findViewById(R.id.coverView);
             playIndicator = view.findViewById(R.id.playIndicator);
+            blackView = view.findViewById(R.id.blackView);
         }
 
 

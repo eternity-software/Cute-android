@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.activities.music.MusicAdapter;
 import ru.etysoft.cute.activities.music.Track;
 import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cuteframework.methods.music.MusicGetTrackRequest;
@@ -417,6 +418,7 @@ public class MediaService extends Service {
                             {
                                 MusicGetTrackRequest.MusicGetTrackResponse getTrackResponse = new MusicGetTrackRequest(track.getId()).execute();
                                 trackInfo = getTrackResponse.getTrackInfo();
+
                             }
 
                             mediaPlayer.reset();
@@ -425,7 +427,15 @@ public class MediaService extends Service {
                             MediaService.track = track;
 
                             if (cover == null) {
-                                bitmap = BitmapFactory.decodeResource(getMediaServiceInstance().getResources(), R.drawable.empty_cover);
+                                if((track.getPath() == null))
+                                {
+                                    bitmap = MusicAdapter.getBitmapFromURL(trackInfo.getCover());
+                                }
+                                else
+                                {
+                                    bitmap = BitmapFactory.decodeResource(getMediaServiceInstance().getResources(), R.drawable.empty_cover);
+                                }
+
                             } else {
                                 bitmap = cover;
                             }

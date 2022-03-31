@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="10dp"
-    android:paddingVertical="4dp"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="2dp"
     android:background="?android:selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -12,20 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingVertical="8dp">
+        android:paddingVertical="4dp">
 
         <androidx.cardview.widget.CardView
 
             android:layout_width="40dp"
-            app:cardCornerRadius="8dp"
+            android:layout_height="40dp"
             android:elevation="0dp"
-            android:layout_height="40dp" >
+            app:cardCornerRadius="8dp">
+
             <ImageView
                 android:id="@+id/coverView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/empty_cover"
-                />
+                app:srcCompat="@drawable/empty_cover" />
+
+            <ImageView
+                android:id="@+id/blackView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTransBlack"
+               />
 
             <ru.etysoft.cute.components.dynamic.ThemeImageView
                 android:id="@+id/playIndicator"
@@ -34,8 +41,7 @@
                 android:layout_margin="15dp"
                 android:background="@drawable/circle_gray"
 
-                app:themeBackgroundTint="colorTextAccent"
-                />
+                app:themeBackgroundTint="colorTextAccent" />
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
@@ -52,11 +58,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratalternates_medium"
-                android:text="Track name"
-                app:themeColor="colorTextDark"
                 android:maxLines="1"
+                android:text="Track name"
                 android:textSize="14sp"
-                />
+                app:themeColor="colorTextDark" />
 
             <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/artistNameView"
@@ -65,8 +70,8 @@
                 android:fontFamily="@font/montserratalternates_medium"
                 android:paddingTop="2dp"
                 android:text="artist"
-                app:themeColor="colorTextAccent"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:themeColor="colorTextAccent" />
         </LinearLayout>
     </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
 
