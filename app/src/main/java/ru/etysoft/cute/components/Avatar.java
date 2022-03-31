@@ -36,7 +36,6 @@ public class Avatar extends RelativeLayout implements Parcelable {
         initComponent(context);
     }
 
-
     private void initComponent(Context context) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.avatar, this);
@@ -139,7 +138,7 @@ public class Avatar extends RelativeLayout implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeInt(size);
     }
 
     public static class Size

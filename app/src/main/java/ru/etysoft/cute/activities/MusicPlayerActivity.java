@@ -11,21 +11,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
-import com.r0adkll.slidr.model.SlidrPosition;
+import com.r0adkll.slidr.model.SlidrListener;
+import com.r0adkll.slidr.util.ViewDragHelper;
 
 import java.util.concurrent.TimeUnit;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.components.dynamic.ThemeImageView;
 import ru.etysoft.cute.exceptions.NoSuchValueException;
-import ru.etysoft.cute.media.MediaActions;
 import ru.etysoft.cute.media.MediaService;
 import ru.etysoft.cute.themes.Theme;
 
-public class MusicPlayerActivity extends AppCompatActivity implements MediaService.MediaServiceCallback {
+public class MusicPlayerActivity extends AppCompatActivity implements MediaService.MediaServiceCallback, SlidrListener {
 
     private boolean isDestroyed = false;
     private boolean isSeeking = false;
+    private boolean isHandling = true;
     private SeekBar seekBar;
     private ImageView playButton;
     private ThemeImageView prevButton;
@@ -53,10 +54,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
         nextButton = findViewById(R.id.nextButton);
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
+        SlidrConfig slidrConfig = new SlidrConfig.Builder().listener(this).build();
+
+        Slidr.attach(this, slidrConfig);
+
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 MediaService.previous();
+                MediaService.previous();
             }
         });
 
@@ -97,61 +102,56 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
                 while (!isDestroyed) {
                     try {
                         Thread.sleep(50);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!isSeeking) seekBar.setProgress(MediaService.getProgress());
-                                if (MediaService.isPaused()) {
-                                    playButton.setImageResource(R.drawable.icon_play);
-                                } else {
-                                    playButton.setImageResource(R.drawable.icon_pause_mini);
-                                }
-
-                                if(MediaService.canSkipNext())
-                                {
-                                    try {
-                                        nextButton.setColorFilter(Theme.getColor("colorMainLight"));
-                                    } catch (NoSuchValueException e) {
-                                        nextButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorMainLight"), R.color.class)));
+                        if (isHandling) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!isSeeking) seekBar.setProgress(MediaService.getProgress());
+                                    if (MediaService.isPaused()) {
+                                        playButton.setImageResource(R.drawable.icon_play);
+                                    } else {
+                                        playButton.setImageResource(R.drawable.icon_pause_mini);
                                     }
-                                }
-                                else
-                                {
-                                    try {
-                                        nextButton.setColorFilter(Theme.getColor("colorIconSupportTint"));
-                                    } catch (NoSuchValueException e) {
-                                        nextButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorIconSupportTint"), R.color.class)));
-                                    }
-                                }
 
-                                if(MediaService.canSkipPrevious())
-                                {
-                                    try {
-                                        prevButton.setColorFilter(Theme.getColor("colorMainLight"));
-                                    } catch (NoSuchValueException e) {
-                                        prevButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorMainLight"), R.color.class)));
+                                    if (MediaService.canSkipNext()) {
+                                        try {
+                                            nextButton.setColorFilter(Theme.getColor("colorMainLight"));
+                                        } catch (NoSuchValueException e) {
+                                            nextButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorMainLight"), R.color.class)));
+                                        }
+                                    } else {
+                                        try {
+                                            nextButton.setColorFilter(Theme.getColor("colorIconSupportTint"));
+                                        } catch (NoSuchValueException e) {
+                                            nextButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorIconSupportTint"), R.color.class)));
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    try {
-                                        prevButton.setColorFilter(Theme.getColor("colorIconSupportTint"));
-                                    } catch (NoSuchValueException e) {
-                                        prevButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorIconSupportTint"), R.color.class)));
+
+                                    if (MediaService.canSkipPrevious()) {
+                                        try {
+                                            prevButton.setColorFilter(Theme.getColor("colorMainLight"));
+                                        } catch (NoSuchValueException e) {
+                                            prevButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorMainLight"), R.color.class)));
+                                        }
+                                    } else {
+                                        try {
+                                            prevButton.setColorFilter(Theme.getColor("colorIconSupportTint"));
+                                        } catch (NoSuchValueException e) {
+                                            prevButton.setColorFilter(Theme.getColor(getApplicationContext(), Theme.getResId(String.valueOf("colorIconSupportTint"), R.color.class)));
+                                        }
                                     }
-                                }
 
-                                timeCurrent.setText(getDuration(MediaService.getProgressMillis()));
-                                if(!MediaService.isPreparing)
-                                {
-                                    timeDuration.setText(getDuration(MediaService.getDuration()));
-                                }
+                                    timeCurrent.setText(getDuration(MediaService.getProgressMillis()));
+                                    if (!MediaService.isPreparing) {
+                                        timeDuration.setText(getDuration(MediaService.getDuration()));
+                                    }
 
-                                trackNameTextView.setText(MediaService.getTrackName());
-                                artistTextView.setText(MediaService.getArtistName());
-                                coverView.setImageBitmap(MediaService.getBitmap());
-                            }
-                        });
+                                    trackNameTextView.setText(MediaService.getTrackName());
+                                    artistTextView.setText(MediaService.getArtistName());
+                                    coverView.setImageBitmap(MediaService.getBitmap());
+                                }
+                            });
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -199,5 +199,34 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaServi
     @Override
     public void onServiceStopped() {
 
+    }
+
+    @Override
+    public void onPlay() {
+
+    }
+
+    @Override
+    public void onSlideStateChanged(int state) {
+        if (state == ViewDragHelper.STATE_DRAGGING) {
+            isHandling = false;
+        } else {
+            isHandling = true;
+        }
+    }
+
+    @Override
+    public void onSlideChange(float percent) {
+
+    }
+
+    @Override
+    public void onSlideOpened() {
+
+    }
+
+    @Override
+    public boolean onSlideClosed() {
+        return false;
     }
 }

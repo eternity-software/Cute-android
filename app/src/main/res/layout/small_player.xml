@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingHorizontal="12dp"
-    android:paddingVertical="2dp"
-    android:background="?android:selectableItemBackground"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:background="?selectableItemBackground"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="5dp">
 
     <ru.etysoft.cute.components.dynamic.ThemeLinearLayout
         android:id="@+id/container"
@@ -16,8 +16,8 @@
 
         <androidx.cardview.widget.CardView
 
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:elevation="0dp"
             app:cardCornerRadius="8dp">
 
@@ -27,22 +27,6 @@
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/empty_cover" />
 
-            <ImageView
-                android:id="@+id/blackView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:background="@color/colorTransBlack"
-               />
-
-            <ru.etysoft.cute.components.dynamic.ThemeImageView
-                android:id="@+id/playIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="15dp"
-                android:background="@drawable/circle_gray"
-                android:visibility="gone"
-                app:themeBackgroundTint="colorTextAccent" />
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
@@ -51,12 +35,11 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical"
-
             android:paddingLeft="8dp">
 
             <ru.etysoft.cute.components.dynamic.DynamicTextView
                 android:id="@+id/trackNameView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratalternates_medium"
                 android:maxLines="1"
@@ -74,6 +57,42 @@
                 android:textSize="12sp"
                 app:themeColor="colorTextAccent" />
         </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="right">
+
+
+            <ru.etysoft.cute.components.dynamic.ThemeImageView
+                android:id="@+id/prevButton"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="?actionBarItemBackground"
+                android:padding="3dp"
+                app:srcCompat="@drawable/icon_skip_previous"
+                app:themeImageColor="colorMainLight" />
+
+            <ru.etysoft.cute.components.dynamic.ThemeImageView
+                android:id="@+id/playButton"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="?actionBarItemBackground"
+                android:padding="3dp"
+                app:srcCompat="@drawable/icon_pause_mini"
+                app:themeImageColor="colorMainLight" />
+
+            <ru.etysoft.cute.components.dynamic.ThemeImageView
+                android:id="@+id/nextButton"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="?actionBarItemBackground"
+                android:padding="3dp"
+                app:srcCompat="@drawable/icon_skip_next"
+                app:themeImageColor="colorMainLight" />
+        </LinearLayout>
     </ru.etysoft.cute.components.dynamic.ThemeLinearLayout>
+
 
 </RelativeLayout>

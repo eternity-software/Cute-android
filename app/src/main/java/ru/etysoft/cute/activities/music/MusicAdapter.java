@@ -6,11 +6,8 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.etysoft.cute.R;
-
 import ru.etysoft.cute.media.MediaActions;
 import ru.etysoft.cute.media.MediaService;
 import ru.etysoft.cuteframework.exceptions.NotCachedException;
@@ -130,8 +126,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.TracksViewHo
 
             holder.artistView.setText(info.getArtist());
 
-            if(MediaService.getTrackName().equals(info.getName()) && MediaService.getArtistName().equals(info.getArtist()))
-            {
+            if (MediaService.getTrackName().equals(info.getName()) && MediaService.getArtistName().equals(info.getArtist()) && MediaService.getArtistName() != null) {
                 holder.isAnimated = true;
                 holder.blackView.setVisibility(View.VISIBLE);
                 holder.playIndicator.setVisibility(View.VISIBLE);
@@ -215,6 +210,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.TracksViewHo
 
     @Override
     public void onServiceStopped() {
+
+    }
+
+    @Override
+    public void onPlay() {
 
     }
 

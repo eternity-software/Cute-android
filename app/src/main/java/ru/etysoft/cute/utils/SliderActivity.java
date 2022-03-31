@@ -14,6 +14,8 @@ import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrListener;
 import com.r0adkll.slidr.util.ViewDragHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import ru.etysoft.cute.R;
@@ -28,6 +30,52 @@ public class SliderActivity {
 
     private float percent = 0;
 
+    private List<SliderChangeListener> sliderChangeListenerList = new ArrayList<>();
+
+    public void addListener(SliderChangeListener sliderChangeListener) {
+        sliderChangeListenerList.add(sliderChangeListener);
+    }
+
+    public void removeListener(SliderChangeListener sliderChangeListener) {
+        sliderChangeListenerList.remove(sliderChangeListener);
+    }
+
+    public SlidrInterface attachSlider(final Activity activity) {
+        try {
+            setAppTheme(activity, ViewDragHelper.STATE_IDLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        final SlidrConfig slidrConfig = new SlidrConfig.Builder().listener(new SlidrListener() {
+
+            @Override
+            public void onSlideStateChanged(int state) {
+
+                for (SliderChangeListener sliderChangeListener : sliderChangeListenerList) {
+                    sliderChangeListener.onDragging(state);
+                }
+                setAppTheme(activity, state);
+            }
+
+            @Override
+            public void onSlideChange(float percent) {
+                SliderActivity.this.percent = percent;
+
+            }
+
+            @Override
+            public void onSlideOpened() {
+            }
+
+            @Override
+            public boolean onSlideClosed() {
+
+                return false;
+            }
+        }).build();
+        return Slidr.attach(activity, slidrConfig);
+    }
+
     public static void setAppTheme(Activity activity, int state) {
 
 
@@ -35,8 +83,7 @@ public class SliderActivity {
             return;
         }
 
-        if(state == ViewDragHelper.STATE_DRAGGING)
-        {
+        if (state == ViewDragHelper.STATE_DRAGGING) {
             if(activity.getWindow().getCurrentFocus() != null) {
                 InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(activity.getWindow().getCurrentFocus().getWindowToken(), 0);
@@ -63,38 +110,7 @@ public class SliderActivity {
     }
 
 
-    public SlidrInterface attachSlider(final Activity activity) {
-        try {
-            setAppTheme(activity, ViewDragHelper.STATE_IDLE);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        final SlidrConfig slidrConfig = new SlidrConfig.Builder().listener(new SlidrListener() {
-
-            @Override
-            public void onSlideStateChanged(int state) {
-
-
-                setAppTheme(activity, state);
-            }
-
-            @Override
-            public void onSlideChange(float percent) {
-                SliderActivity.this.percent = percent;
-            }
-
-            @Override
-            public void onSlideOpened() {
-            }
-
-            @Override
-            public boolean onSlideClosed() {
-
-                return false;
-            }
-        }).build();
-        return Slidr.attach(activity, slidrConfig);
+    public static interface SliderChangeListener {
+        void onDragging(int state);
     }
 }

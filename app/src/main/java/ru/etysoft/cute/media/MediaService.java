@@ -12,13 +12,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.session.MediaSession;
 import android.os.IBinder;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -27,8 +25,6 @@ import java.util.List;
 
 import ru.etysoft.cute.R;
 import ru.etysoft.cute.activities.music.MusicAdapter;
-import ru.etysoft.cute.activities.music.Track;
-import ru.etysoft.cute.components.CuteToast;
 import ru.etysoft.cuteframework.methods.music.MusicGetTrackRequest;
 import ru.etysoft.cuteframework.models.TrackInfo;
 
@@ -40,8 +36,8 @@ public class MediaService extends Service {
     private MediaSessionCompat mediaSession;
     private static boolean isPaused = false;
 
-    private static String artistName = "..";
-    private static String trackName = ".";
+    private static String artistName;
+    private static String trackName;
     private static Bitmap bitmap;
     private static List<TrackInfo> trackList = new ArrayList<>();
     private BroadcastReceiver broadcastReceiver;
@@ -88,15 +84,26 @@ public class MediaService extends Service {
         mediaServiceCallbackList.remove(mediaServiceCallback);
     }
 
-    public interface MediaServiceCallback {
-        void onTrackChanged(String name, String artist, Bitmap bitmap);
+    public static void play() {
 
-        void onServiceStopped();
+        if (mediaService == null) return;
+        if (isPreparing) return;
+        if (isPaused) {
+            isPaused = false;
+        }
+        for (MediaServiceCallback mediaServiceCallback : mediaServiceCallbackList) {
+            mediaServiceCallback.onPlay();
+        }
+        isBackgrounded = false;
+        mediaPlayer.start();
+        mediaPlayer.setVolume(100, 100);
+        getMediaServiceInstance().updateNotification("OnPlay");
+
+
     }
 
-    public static boolean canSkipNext()
-    {
-       return trackList.indexOf(track) != trackList.size() - 1;
+    public static boolean canSkipNext() {
+        return trackList.indexOf(track) != trackList.size() - 1;
     }
 
     public static boolean canSkipPrevious()
@@ -478,24 +485,17 @@ public class MediaService extends Service {
     }
 
 
-    public static void play() {
+    public interface MediaServiceCallback {
+        void onTrackChanged(String name, String artist, Bitmap bitmap);
 
-        if(mediaService == null) return;
-        if(isPreparing)return;
-        if (isPaused) {
-            isPaused = false;
-        }
-        isBackgrounded = false;
-        mediaPlayer.start();
-        mediaPlayer.setVolume(100, 100);
-        getMediaServiceInstance().updateNotification("OnPlay");
+        void onServiceStopped();
 
-
+        void onPlay();
     }
 
     public static void next() {
-        if(mediaService == null) return;
-        if(trackList.contains(track)) {
+        if (mediaService == null) return;
+        if (trackList.contains(track)) {
             int pos = trackList.indexOf(track);
             if (pos != trackList.size() - 1)
             {

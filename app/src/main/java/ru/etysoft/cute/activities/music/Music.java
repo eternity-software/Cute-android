@@ -2,8 +2,6 @@ package ru.etysoft.cute.activities.music;
 
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -14,11 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.r0adkll.slidr.util.ViewDragHelper;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.etysoft.cute.R;
+import ru.etysoft.cute.components.SmallMusicPlayer;
 import ru.etysoft.cute.media.MediaService;
 import ru.etysoft.cute.themes.Theme;
 import ru.etysoft.cute.utils.SliderActivity;
@@ -32,20 +33,36 @@ public class Music extends AppCompatActivity {
     private RecyclerView tracksRecyclerView;
     private MusicAdapter musicAdapter;
     private EditText searchView;
+    private SmallMusicPlayer smallMusicPlayer;
     private List<TrackInfo> trackList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
-
+        tracksRecyclerView = findViewById(R.id.mainTrackList);
+        searchView = findViewById(R.id.searchBox);
+        smallMusicPlayer = findViewById(R.id.smallMusicPlayer);
         SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.addListener(new SliderActivity.SliderChangeListener() {
+            @Override
+            public void onDragging(int state) {
+                if (state == ViewDragHelper.STATE_DRAGGING) {
+                    smallMusicPlayer.setHandling(false);
+                } else {
+                    smallMusicPlayer.setHandling(true);
+                }
+            }
+        });
         sliderActivity.attachSlider(this);
+
 
         overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
 
-        tracksRecyclerView = findViewById(R.id.mainTrackList);
-        searchView = findViewById(R.id.searchBox);
+
+        if (!MediaService.isPaused() && MediaService.getArtistName() != null) {
+            smallMusicPlayer.setVisibility(View.VISIBLE);
+        }
 
         searchView.setOnEditorActionListener(
                 new EditText.OnEditorActionListener() {
@@ -114,5 +131,9 @@ public class Music extends AppCompatActivity {
         Theme.applyBackground(findViewById(R.id.rootView));
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        smallMusicPlayer.onDestroyed();
+    }
 }
